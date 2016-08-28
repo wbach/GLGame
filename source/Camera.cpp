@@ -1,7 +1,7 @@
 #include "Camera.h"
 
 CCamera::CCamera() {
-	distanceFromPlayer = 100;
+	distanceFromPlayer = 99;
 	angleAroundPlayer = 0;
 	position = glm::vec3(0, 0, 0);
 	pitch = 20;
