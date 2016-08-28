@@ -1,0 +1,51 @@
+﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
+C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  EnitityRenderer.cpp
+e:\projects\glgame\source\enitityrenderer.cpp(50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+e:\projects\glgame\source\enitityrenderer.cpp(52): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\projects\glgame\source\enitityrenderer.cpp(134): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Generating Code...
+  Compiling...
+  main.cpp
+e:\projects\glgame\source\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\test_scene.h(91): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\projects\glgame\source\test_scene.h(100): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\projects\glgame\source\test_scene.h(101): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\projects\glgame\source\test_scene.h(134): warning C4018: '<': signed/unsigned mismatch
+  TerrainRenderer.cpp
+e:\projects\glgame\source\terrainrenderer.cpp(34): warning C4305: 'argument': truncation from 'double' to 'float'
+e:\projects\glgame\source\terrainrenderer.cpp(38): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  Terrain.cpp
+e:\projects\glgame\source\terrain.cpp(159): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\terrain.cpp(262): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\terrain.cpp(275): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\terrain.cpp(278): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\terrain.cpp(281): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\terrain.cpp(348): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+e:\projects\glgame\source\terrain.cpp(351): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\projects\glgame\source\terrain.cpp(352): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+e:\projects\glgame\source\terrain.cpp(357): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+e:\projects\glgame\source\terrain.cpp(358): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+e:\projects\glgame\source\terrain.cpp(359): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+  Scene.cpp
+  Model.cpp
+  Loader.cpp
+e:\projects\glgame\source\loader.cpp(260): warning C4018: '<': signed/unsigned mismatch
+  GLgame.cpp
+e:\projects\glgame\source\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+e:\projects\glgame\source\glgame.cpp(82): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+e:\projects\glgame\source\glgame.cpp(207): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+e:\projects\glgame\source\glgame.cpp(230): warning C4305: 'initializing': truncation from 'double' to 'float'
+e:\projects\glgame\source\glgame.cpp(339): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+e:\projects\glgame\source\glgame.cpp(376): warning C4018: '<': signed/unsigned mismatch
+e:\projects\glgame\source\util.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  e:\projects\glgame\source\glgame.cpp(359): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+          with
+          [
+              type=float
+          ]
+  Generating Code...
+  GLGame.vcxproj -> E:\Projects\GLGame\.\bin\Windows\Debug\GLGame.exe
+  GLGame.vcxproj -> .\bin\Windows\Debug\GLGame.pdb (Partial PDB)

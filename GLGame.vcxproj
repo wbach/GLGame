@@ -1,0 +1,210 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{E16A04F3-91B8-4915-B082-CD75044D67C5}</ProjectGuid>
+    <RootNamespace>GLGame</RootNamespace>
+    <WindowsTargetPlatformVersion>8.1</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <OutDir>.\bin\Windows\Debug</OutDir>
+    <IntDir>.\Intermediate\Windows\Debug</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <OutDir>.\bin\Windows\$(Configuration)</OutDir>
+    <IntDir>.\Intermediate\Windows\$(Configuration)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <OutDir>.\bin\Windows\$(Configuration)</OutDir>
+    <IntDir>.\Intermediate\Windows\$(Configuration)</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <OutDir>.\bin\Windows\Debug</OutDir>
+    <IntDir>.\Intermediate\Windows\Debug</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <Link>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <SubSystem>Console</SubSystem>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Camera.cpp" />
+    <ClCompile Include="source\DisplayManager.cpp" />
+    <ClCompile Include="source\EnitityRenderer.cpp" />
+    <ClCompile Include="source\Entity.cpp" />
+    <ClCompile Include="source\EntityShader.cpp" />
+    <ClCompile Include="source\FirstPersonCamera.cpp" />
+    <ClCompile Include="source\FreeType.cpp" />
+    <ClCompile Include="source\GLgame.cpp" />
+    <ClCompile Include="source\GUIShader.cpp" />
+    <ClCompile Include="source\Light.cpp" />
+    <ClCompile Include="source\Loader.cpp" />
+    <ClCompile Include="source\LoadingShader.cpp" />
+    <ClCompile Include="source\main.cpp" />
+    <ClCompile Include="source\Model.cpp" />
+    <ClCompile Include="source\Player.cpp" />
+    <ClCompile Include="source\Scene.cpp" />
+    <ClCompile Include="source\ShaderProgram.cpp" />
+    <ClCompile Include="source\Terrain.cpp" />
+    <ClCompile Include="source\TerrainRenderer.cpp" />
+    <ClCompile Include="source\TerrainShader.cpp" />
+    <ClCompile Include="source\ThridPersonCamera.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\Camera.h" />
+    <ClInclude Include="source\DisplayManager.h" />
+    <ClInclude Include="source\EnitityRenderer.h" />
+    <ClInclude Include="source\Entity.h" />
+    <ClInclude Include="source\EntityShader.h" />
+    <ClInclude Include="source\FirstPersonCamera.h" />
+    <ClInclude Include="source\FontShader.h" />
+    <ClInclude Include="source\FreeType.h" />
+    <ClInclude Include="source\GLgame.h" />
+    <ClInclude Include="source\GUI.h" />
+    <ClInclude Include="source\GUIButton.h" />
+    <ClInclude Include="source\GUIRenderer.h" />
+    <ClInclude Include="source\GUIShader.h" />
+    <ClInclude Include="source\GUIText.h" />
+    <ClInclude Include="source\GUITexture.h" />
+    <ClInclude Include="source\Light.h" />
+    <ClInclude Include="source\Loader.h" />
+    <ClInclude Include="source\LoadingShader.h" />
+    <ClInclude Include="source\Material.h" />
+    <ClInclude Include="source\Model.h" />
+    <ClInclude Include="source\Player.h" />
+    <ClInclude Include="source\Scene.h" />
+    <ClInclude Include="source\ShaderProgram.h" />
+    <ClInclude Include="source\Terrain.h" />
+    <ClInclude Include="source\TerrainRenderer.h" />
+    <ClInclude Include="source\TerrainShader.h" />
+    <ClInclude Include="source\Test_MainMenu.h" />
+    <ClInclude Include="source\Test_Scene.h" />
+    <ClInclude Include="source\ThridPersonCamera.h" />
+    <ClInclude Include="source\Transform.h" />
+    <ClInclude Include="source\UTIL.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="source\GLgame.vcxproj" />
+    <None Include="source\GLgame.vcxproj.filters" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
