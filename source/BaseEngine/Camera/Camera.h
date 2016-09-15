@@ -4,45 +4,42 @@
 #include "../Utils/Utils.h"
 
 class CCamera{
-protected:
-	float distanceFromPlayer;
-    float angleAroundPlayer;
-
-	glm::vec3 position;
-    float pitch ;
-    float yaw ;
-    float roll ;
-
-	glm::mat4 viewMatrix ;
-
 public:
+	virtual void Move(SDL_Window* win);
+	virtual void CalculateZoom(float zoomLvL) {}
+	virtual void AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) = 0;
+
 	CCamera();
-	void updateViewMatrix();
-	glm::mat4 getViewMatrix();
-	void setPosition(glm::vec3 position);
+	void UpdateViewMatrix();
+	void InvertPitch();	
 
-	//virtual void move(CTerrain *terrain = NULL);
-	void invertPitch();
-	glm::vec3 getPosition();
-	glm::vec3 getRotation() { return glm::vec3(pitch, yaw, roll); }
-	float getPitch();
-	float getDistance();
-	void setDistance(float dist);
-	void setPitch(float pitch);
+	float GetDistance();
+	float GetAngleAround();
+	void SetAngleAround(float a);
+	void SetDistance(float dist);
+	void SetPitch(float pitch);
 
-	float getYaw();
+	float GetPitch();
+	float GetYaw();
+	float GetRoll();
+	
+	void SetRoll(float roll);
+	void SetYaw(float yaw);
+	
+	glm::vec3 GetPosition();
+	glm::vec3 GetRotation() { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
+	glm::mat4 GetViewMatrix();
 
-	void setYaw(float yaw);
-	float getAngleAround();
+	void SetPosition(glm::vec3 position);
 
-	void setAngleAround(float a);
-	float getRoll();
-	float getAngleAroung();
+protected:
+	float m_DistanceFromPlayer;
+	float m_AngleAroundPlayer;
 
-	void setRoll(float roll);
+	float m_Pitch;
+	float m_Yaw;
+	float m_Roll;
 
-	virtual void move(SDL_Window *win);
-	virtual void calculateZoom(float zoomLvL) {}
-	virtual void attachToObject(glm::vec3 &positionEntity, glm::vec3 &rotationEntity) = 0;
-
+	glm::vec3 m_Position;
+	glm::mat4 m_ViewMatrix;
 };

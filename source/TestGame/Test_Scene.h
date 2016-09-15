@@ -96,16 +96,16 @@ public:
 		//songo->getReferencedPosition(), songo->getReferencedRotation()
         camera.reset();
         camera = make_shared<CFirstPersonCamera>();
-		camera->setPosition(createPositionVector(songo->getPositionXZ(),10));
-		camera->setPitch(5.6);
-		camera->setYaw(94);
+		camera->SetPosition(createPositionVector(songo->getPositionXZ(),10));
+		camera->SetPitch(5.6);
+		camera->SetYaw(94);
 	}
 	void setThridCamera(){
         camera.reset();
         camera = make_shared<CThirdPersonCamera>(songo->getReferencedPosition(),songo->getReferencedRotation());
 	}
 	int update(SDL_Event &event,SDL_Window *win) override{
-		camera->move(win);
+		camera->Move(win);
 		songo->calculateMove(0.02);			 
 		songo->move(0.02, getHeightOfTerrain(songo->getPositionXZ()));
 
@@ -120,19 +120,19 @@ public:
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym)
 			{
-			case SDLK_F1: cout << "Camera position : " << to_string(camera->getPosition()); break;
-			case SDLK_F2: cout << "Camera angles : " << camera->getPitch() << " " << camera->getYaw() << " " << camera->getRoll() << endl; break;
+			case SDLK_F1: cout << "Camera position : " << to_string(camera->GetPosition()); break;
+			case SDLK_F2: cout << "Camera angles : " << camera->GetPitch() << " " << camera->GetYaw() << " " << camera->GetRoll() << endl; break;
             case SDLK_F3: thridCamera = !thridCamera; thridCamera ? setThridCamera() : setFirstCamera(); break;
 			}
 			break;
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y == 1)
 			{
-				camera->calculateZoom(-1);
+				camera->CalculateZoom(-1);
 			}
 			else if (event.wheel.y == -1)
 			{
-				camera->calculateZoom(1);
+				camera->CalculateZoom(1);
 			}break;
 		
 		break;
@@ -154,7 +154,7 @@ public:
 		camera.reset();
 		return 0;
 	}
-	glm::mat4 getViewMatrix() { return camera->getViewMatrix(); }
+	glm::mat4 getViewMatrix() { return camera->GetViewMatrix(); }
 
 
 };

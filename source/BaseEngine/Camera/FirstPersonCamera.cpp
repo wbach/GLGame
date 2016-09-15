@@ -1,117 +1,121 @@
 #include "FirstPersonCamera.h"
 
-
-
-CFirstPersonCamera::CFirstPersonCamera():lookPosition(zero),lookRotation(zero)
+CFirstPersonCamera::CFirstPersonCamera()
+: m_LookPosition(zero)
+, m_LookRotation(zero)
+, m_Mousevel(0.2)
+, m_Movevel(1)
+, m_IsFreeCamera(true)
 {
-	mousevel = 0.2f;
-	movevel = 1;
-	freeCamera = true ;
-	pitch = 9;
-	yaw = 100;
+	m_Pitch = 9;
+	m_Yaw	= 100;
 }
 
-CFirstPersonCamera::CFirstPersonCamera(glm::vec3 & positionEntity, glm::vec3 & rotationEntity) :lookPosition(positionEntity), lookRotation(rotationEntity)
+CFirstPersonCamera::CFirstPersonCamera(glm::vec3& positionEntity, glm::vec3& rotationEntity)
+: m_LookPosition(positionEntity)
+, m_LookRotation(rotationEntity)
+, m_Mousevel(0.2)
+, m_Movevel(1)
+, m_IsFreeCamera(false)
 {
-	mousevel = 0.2f;
-	movevel = 1;
-	freeCamera = false;
-	pitch = 9;
-	yaw = 100;
+	m_Pitch = 9;
+	m_Yaw	= 100;
 }
 
-void CFirstPersonCamera::lockCamera()
+void CFirstPersonCamera::LockCamera()
 {
-
-	if(pitch>90)
-		pitch=90;
-	if(pitch<-90)
-		pitch=-90;
-	if(yaw<0.0)
-		yaw+=360.0;
-	if(yaw>360.0)
-		yaw-=360;
+	if(m_Pitch>90)
+		m_Pitch =90;
+	if(m_Pitch<-90)
+		m_Pitch =-90;
+	if(m_Yaw<0.0)
+		m_Yaw +=360.0;
+	if(m_Yaw>360.0)
+		m_Yaw -=360;
 }
 
-void CFirstPersonCamera::move(SDL_Window *win)
+void CFirstPersonCamera::Move(SDL_Window* win)
 {
-	if (!freeCamera) {
-		position = lookPosition;
-		position.y += 10;
-		yaw = -lookRotation.y +180;
-		printVector("Pos: ", lookPosition);
+	if (!m_IsFreeCamera) 
+	{
+		m_Position			 = m_LookPosition;
+		m_Position.y		+= 10;
+		m_Yaw				 = -m_LookRotation.y +180;
 
-		glm::vec2 dmove = calcualteMouseMove(win);
-		lookRotation.y += dmove.x;
-		pitch -= dmove.y;
-		lockCamera();
-		this->updateViewMatrix();
+		glm::vec2 d_move	 = CalcualteMouseMove(win);
+		m_LookRotation.y	+= d_move.x;
+		m_Pitch				-= d_move.y;
+		LockCamera();
+		this->UpdateViewMatrix();
 		return;
 	}
 
-	if (  SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS)
+	if (SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS)
 	{
-		glm::vec2 dmove = calcualteMouseMove(win);
-		yaw-=dmove.x;
-		pitch-=dmove.y;
-		lockCamera();
+		glm::vec2 dmove  = CalcualteMouseMove(win);
+		m_Yaw			-= dmove.x;
+		m_Pitch			-= dmove.y;
+		LockCamera();
 	}
 	else
 	{
 		SDL_ShowCursor(SDL_ENABLE);
 	}
 
+	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	const Uint8* state=SDL_GetKeyboardState(NULL);
-
-	if(state[SDL_SCANCODE_UP])
+	if (state[SDL_SCANCODE_UP])
 	{
-		if(pitch!=90 && pitch!=-90)
-			moveCamera(movevel,0.0);
-		moveCameraUp(movevel,0.0);
-	}else if(state[SDL_SCANCODE_DOWN])
+		if(m_Pitch !=90 && m_Pitch !=-90)
+			MoveCamera(m_Movevel,0.0);
+		MoveCameraUp(m_Movevel,0.0);
+	}else if (state[SDL_SCANCODE_DOWN])
 	{
-		if(pitch!=90 && pitch!=-90)
-			moveCamera(movevel,180.0);
-		moveCameraUp(movevel,180.0);
+		if (m_Pitch !=90 && m_Pitch !=-90)
+			MoveCamera(m_Movevel,180.0);
+		MoveCameraUp(m_Movevel,180.0);
 	}
-	if(state[SDL_SCANCODE_LEFT])
+	if (state[SDL_SCANCODE_LEFT])
 	{
-		moveCamera(-movevel,90.0);
+		MoveCamera(-m_Movevel,90.0);
 	}
-	else if(state[SDL_SCANCODE_RIGHT])
+	else if (state[SDL_SCANCODE_RIGHT])
 	{
-		moveCamera(-movevel,270);
+		MoveCamera(-m_Movevel,270);
 	}
-
-
-	this->updateViewMatrix();
+	this->UpdateViewMatrix();
 }
-
-glm::vec2 CFirstPersonCamera::calcualteMouseMove(SDL_Window *win)
+void CFirstPersonCamera::AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) {
+	m_LookPosition = positionEntity;
+	m_LookRotation = rotationEntity;
+	m_IsFreeCamera = false;
+}
+glm::vec2 CFirstPersonCamera::CalcualteMouseMove(SDL_Window* win)
 {
-	int MidX=320;
-	int MidY=240;
+	int MidX = 320;
+	int MidY = 240;
 	SDL_ShowCursor(SDL_DISABLE);
+
 	int tmpx,tmpy;
 	SDL_GetMouseState(&tmpx,&tmpy);
+
 	glm::vec2 dmove ;
-	dmove.x=mousevel*(MidX-tmpx);
-	dmove.y=mousevel*(MidY-tmpy);
+	dmove.x = m_Mousevel*(MidX-tmpx);
+	dmove.y = m_Mousevel*(MidY-tmpy);
 
 	SDL_WarpMouseInWindow(win, MidX, MidY);
 	return dmove ;
 }
 
-void CFirstPersonCamera::moveCamera(float dist,float dir)
+void CFirstPersonCamera::MoveCamera(float dist, float dir)
 {
-	float rad=(yaw+dir)*M_PI/180.0;
-	position.x-=sin(-rad)*dist ;
-	position.z-=cos(-rad)*dist;
+	float rad		 = (m_Yaw +dir)*M_PI/180.0;
+	m_Position.x	-= sin(-rad)*dist ;
+	m_Position.z	-= cos(-rad)*dist;
 }
 
-void CFirstPersonCamera::moveCameraUp(float dist,float dir)
+void CFirstPersonCamera::MoveCameraUp(float dist, float dir)
 {
-	float rad=(pitch+dir)*M_PI/180.0;
-	position.y+=sin(-rad)*dist;
+	float rad		 = (m_Pitch +dir)*M_PI/180.0;
+	m_Position.y	+= sin(-rad)*dist;
 }

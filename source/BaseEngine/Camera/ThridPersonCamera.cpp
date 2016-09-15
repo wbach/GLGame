@@ -1,138 +1,125 @@
 #include "ThridPersonCamera.h"
 
-
-
-void CThirdPersonCamera::setCaptureMouse(bool capture)
+CThirdPersonCamera::CThirdPersonCamera(glm::vec3& lookAtPosition, glm::vec3& lookAtRotation)
+: m_Offset(0)
+, m_LookAtPosition(lookAtPosition)
+, m_LookAtRotation(lookAtRotation)
+, m_Mousevel(0.2)
+, m_CaptureMouse(true)
+, m_IsShowCursor(false)
 {
-	captureMouse = capture;
+	m_DistanceFromPlayer = 20;
 }
 
-CThirdPersonCamera::CThirdPersonCamera(glm::vec3 &lookAtPosition, glm::vec3 &lookAtRotation): offset(0), lookAtPosition(lookAtPosition),lookAtRotation(lookAtRotation)
+void CThirdPersonCamera::SetCaptureMouse(bool capture)
 {
-	mousevel = 0.2f;
-	captureMouse = true ;
-	showCursor = false ;
-	distanceFromPlayer = 20;
+	m_CaptureMouse = capture;
+}
+void CThirdPersonCamera::LockCamera()
+{
+	if(m_Pitch>90)
+		m_Pitch =90;
+	if(m_Pitch<-90)
+		m_Pitch =-90;
+	if(m_Yaw<0.0)
+		m_Yaw +=360.0;
+	if(m_Yaw>360.0)
+		m_Yaw -=360;
 }
 
-void CThirdPersonCamera::lockCamera()
-{
-
-	if(pitch>90)
-		pitch=90;
-	if(pitch<-90)
-		pitch=-90;
-	if(yaw<0.0)
-		yaw+=360.0;
-	if(yaw>360.0)
-		yaw-=360;
+void CThirdPersonCamera::AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) {
+	m_LookAtPosition = positionEntity;
+	m_LookAtRotation = rotationEntity;
 }
 
-void CThirdPersonCamera::attachToObject(glm::vec3 & positionEntity, glm::vec3 & rotationEntity) {
-	lookAtPosition = positionEntity;
-	lookAtRotation = rotationEntity;
-}
-
-void CThirdPersonCamera::move(SDL_Window *win)
+void CThirdPersonCamera::Move(SDL_Window* win)
 {
+	const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	const Uint8* state=SDL_GetKeyboardState(NULL);
-
-	if (  SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS && !state[SDL_SCANCODE_LCTRL])
+	if (SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS && !state[SDL_SCANCODE_LCTRL])
 	{
-		glm::vec2 dmove = calcualteMouseMove(win) ;
-		calculatePitch(dmove);
-		calculateAngleAroundPlayer(dmove);
-		lockCamera();
+		glm::vec2 dmove = CalcualteMouseMove(win) ;
+		CalculatePitch(dmove);
+		CalculateAngleAroundPlayer(dmove);
+		LockCamera();
 	}
 	else
 	{
 		SDL_ShowCursor(SDL_ENABLE);
 	}
-	if(showCursor){
-		if(!captureMouse && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))){
+	if(m_IsShowCursor){
+		if(!m_CaptureMouse && (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))){
 			SDL_ShowCursor(SDL_DISABLE);
-		}else if(!captureMouse){
+		}else if(!m_CaptureMouse){
 			SDL_ShowCursor(SDL_ENABLE);
 		}
 	}
-	float horizontalDistance = calculateHorizontalDistance() ;
-	float verticalDistance = calculateVerticalDistance() ;
-	calculateCameraPosition(horizontalDistance, verticalDistance);
-	this->yaw = 180 - (lookAtRotation.y + angleAroundPlayer) ;
+	float horizontalDistance = CalculateHorizontalDistance() ;
+	float verticalDistance	 = CalculateVerticalDistance() ;
+	CalculateCameraPosition(horizontalDistance, verticalDistance);
+	this->m_Yaw = 180 - (m_LookAtRotation.y + m_AngleAroundPlayer) ;
 
-	/*if(terrain != NULL){
-		float y = terrain->getHeightofTerrain(position.x, position.z) ;
-		if ( position.y < y + 0.5 ){
-			position.y = y + 0.5 ;
-		}
-	}*/
-
-	//printf("Yaw: %f, Pitch: %f\n",this->yaw,this->pitch );
-	//printf("Pos: %f, %f, %f\n",player->getPosition().x, player->getPosition().y, player->getPosition().z);
-	this->updateViewMatrix();
+	this->UpdateViewMatrix();
 }
 
-void CThirdPersonCamera::calculateCameraPosition(float horizontalDistance, float verticalDistance)
+void CThirdPersonCamera::CalculateCameraPosition(float horizontalDistance, float verticalDistance)
 {
-	float theata = lookAtRotation.y  + angleAroundPlayer ;
+	float theata  = m_LookAtRotation.y  + m_AngleAroundPlayer;
 	float xoffset = (float) (horizontalDistance*sin(toRadians(theata))) ;
 	float zoffset = (float) (horizontalDistance*cos(toRadians(theata))) ;
-	position.x = lookAtPosition.x - xoffset;
-	position.y = lookAtPosition.y + verticalDistance  + 10;
-	position.z = lookAtPosition.z - zoffset ;
-	position+= offset ;
+	m_Position.x  = m_LookAtPosition.x - xoffset;
+	m_Position.y  = m_LookAtPosition.y + verticalDistance  + 10;
+	m_Position.z  = m_LookAtPosition.z - zoffset ;
+	m_Position	 += m_Offset;
 }
 
-float CThirdPersonCamera::calculateHorizontalDistance()
+float CThirdPersonCamera::CalculateHorizontalDistance()
 {
-	return (float) (distanceFromPlayer * cos(toRadians(pitch))) ;
+	return (float) (m_DistanceFromPlayer * cos(toRadians(m_Pitch))) ;
 }
 
-float CThirdPersonCamera::calculateVerticalDistance()
+float CThirdPersonCamera::CalculateVerticalDistance()
 {
-	return (float) (distanceFromPlayer * sin(toRadians(pitch))) ;
+	return (float) (m_DistanceFromPlayer * sin(toRadians(m_Pitch))) ;
 }
 
-void CThirdPersonCamera::calculateZoom(float zoomLvL)
+void CThirdPersonCamera::CalculateZoom(float zoomLvL)
 {
-
-	//float zoomLevel = Mouse.getDWheel() * 0.1f ;
-	//distanceFromPlayer -= zoomLevel ;
-
-	this->distanceFromPlayer +=zoomLvL ;
+	this->m_DistanceFromPlayer += zoomLvL ;
 }
 
-glm::vec2 CThirdPersonCamera::calcualteMouseMove(SDL_Window *win)
+glm::vec2 CThirdPersonCamera::CalcualteMouseMove(SDL_Window *win)
 {
-	if(captureMouse || SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)){
-		int MidX= 320;
-		int MidY= 240;
+	if(m_CaptureMouse || SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))
+	{
+		int MidX = 320;
+		int MidY = 240;
 		SDL_ShowCursor(SDL_DISABLE);
+
 		int tmpx,tmpy;
 		SDL_GetMouseState(&tmpx,&tmpy);
+
 		glm::vec2 dmove ;
-		dmove.x=mousevel*(MidX-tmpx);
-		dmove.y=mousevel*(MidY-tmpy);
+		dmove.x = m_Mousevel*(MidX-tmpx);
+		dmove.y = m_Mousevel*(MidY-tmpy);
 		SDL_WarpMouseInWindow(win, MidX, MidY);
+
 		return dmove ;
 	}
 	return glm::vec2(0) ;
 }
 
-void CThirdPersonCamera::calculatePitch(glm::vec2 dmove)
+void CThirdPersonCamera::CalculatePitch(glm::vec2 dmove)
 {
-	//SDL_PumpEvents();
-	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-		pitch -= dmove.y;
-	}
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))
+		m_Pitch -= dmove.y;
 }
 
-void CThirdPersonCamera::calculateAngleAroundPlayer(glm::vec2 dmove)
+void CThirdPersonCamera::CalculateAngleAroundPlayer(glm::vec2 dmove)
 {
-	//SDL_PumpEvents();
-	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) {
-		float angleChange = dmove.x;
-		angleAroundPlayer -= angleChange;
+	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) 
+	{
+		float angleChange	 = dmove.x;
+		m_AngleAroundPlayer -= angleChange;
 	}
 }

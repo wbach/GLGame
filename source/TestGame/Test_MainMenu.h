@@ -39,7 +39,7 @@ public:
 
 		return 0;
 	}
-	glm::mat4 getViewMatrix() { return camera->getViewMatrix(); }
+	glm::mat4 getViewMatrix() { return camera->GetViewMatrix(); }
 
 
 };
