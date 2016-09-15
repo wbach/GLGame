@@ -3,7 +3,7 @@
 #include <vector>
 #include "Terrain.h"
 #include "TerrainShader.h"
-#include "Scene.h"
+#include "../Engine/Scene.h"
 class CTerrainRenderer{
 	TerrainShader terrainShader;
 	glm::mat4 transformationMatrix;

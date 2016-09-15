@@ -1,10 +1,9 @@
-#ifndef TEST_MAINMENUSCENE_H
-#define TEST_MAINMENUSCENE_H
 #pragma once
+
 #include <string>
 #include <vector>
-#include "Scene.h"
-#include "Camera/ThridPersonCamera.h"
+#include "../BaseEngine/Engine/Scene.h"
+#include "../BaseEngine/Camera/ThridPersonCamera.h"
 using namespace std;
 class CTestMainMenu: public CScene {
 
@@ -44,6 +43,5 @@ public:
 
 
 };
-#endif // !SCENE_H
 
 

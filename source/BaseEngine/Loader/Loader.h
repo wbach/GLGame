@@ -6,7 +6,7 @@
 #include <string>
 #include <vector>
 #include "Model.h"
-#include "UTIL.h"
+#include "../Utils/Utils.h"
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
 #include <assimp/postprocess.h>

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
-#include "UTIL.h"
+#include "../Utils/Utils.h"
 #include "Material.h"
 using namespace std;
 struct Face {

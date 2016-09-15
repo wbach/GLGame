@@ -3,11 +3,12 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "Scene.h"
-#include "Camera/ThridPersonCamera.h"
-#include "Camera/FirstPersonCamera.h"
+#include "../BaseEngine/Engine/Scene.h"
+#include "../BaseEngine/Camera/ThridPersonCamera.h"
+#include "../BaseEngine/Camera/FirstPersonCamera.h"
+#include "../BaseEngine/GUI/GUIButton.h"
 #include "Player.h"
-#include "GUIButton.h"
+
 class CTestSCene : public CScene {
     CLight dirLight;
     shared_ptr<CPlayer> songo;	

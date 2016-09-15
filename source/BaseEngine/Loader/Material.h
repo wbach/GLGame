@@ -3,7 +3,7 @@
 #pragma once
 #include <string>
 #include "glm/glm.hpp"
-#include "UTIL.h"
+#include "../Utils/Utils.h"
 using namespace std;
 enum {
 	AMBIENT_TEXTURE = 0,

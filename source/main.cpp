@@ -1,6 +1,6 @@
-#include "GLGame.h"
-#include "Test_Scene.h"
-#include "Test_MainMenu.h"
+#include "BaseEngine/Engine/GLgame.h"
+#include "TestGame/Test_Scene.h"
+#include "TestGame/Test_MainMenu.h"
 CGame myGame ;
 
 int main(int argc, char *argv[]) {

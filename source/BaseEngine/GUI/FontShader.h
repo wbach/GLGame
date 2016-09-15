@@ -1,10 +1,10 @@
-#ifndef FONT_SHADER
-#define FONT_SHADER
-#include "ShaderProgram.h"
+#pragma once
+#include "../Shaders/ShaderProgram.h"
+#include "../Lights/Light.h"
+#include "../Utils/Utils.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Camera/Camera.h"
-#include "Light.h"
-#include "UTIL.h"
+#include "../Camera/Camera.h"
+
 class FontShader : public CShaderProgram{
 	int location_translation ;
 	int location_transformationMatrix;
@@ -36,6 +36,3 @@ public:
 		loadValue(location_transformationMatrix, pos);
 	}
 };
-
-
-#endif

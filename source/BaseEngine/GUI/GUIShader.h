@@ -1,7 +1,7 @@
 #ifndef GUI_SHADER_H
 #define GUI_SHADER_H
 #include <vector>
-#include "ShaderProgram.h"
+#include "../Shaders/ShaderProgram.h"
 #include "glm/gtc/matrix_transform.hpp"
 
 class GUIShader : public CShaderProgram{

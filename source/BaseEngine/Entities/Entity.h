@@ -1,10 +1,9 @@
-#ifndef ENTITY_H
-#define ENTITY_H
 #pragma once
+
 #include <string>
 #include "glm/glm.hpp"
-#include "Transform.h"
-#include "UTIL.h"
+#include "../Engine/Transform.h"
+#include "../Utils/Utils.h"
 #include <vector>
 #include <memory>
 using namespace std;
@@ -48,7 +47,3 @@ public:
 	glm::vec3& getReferencedScale(int i = 0);
 
 };
-#endif // !ENTITY_H
-
-
-#pragma once

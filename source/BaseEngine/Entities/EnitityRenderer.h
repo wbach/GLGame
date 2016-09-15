@@ -1,13 +1,13 @@
-#ifndef ENTITY_RENDERER_H
-#define ENTITY_RENDERER_H
 #pragma once
+
+#include "../Engine/Transform.h"
 #include <string>
 #include <vector>
 #include "glm/glm.hpp"
-#include "Transform.h"
+
 #include "Entity.h"
 #include "EntityShader.h"
-#include "Scene.h"
+#include "../Engine/Scene.h"
 using namespace std;
 class CEntityRenderer {
 	EntityShader entityShader;
@@ -19,4 +19,3 @@ public :
 	void uninitialize();
 	void render(shared_ptr<CScene>scene);
 };
-#endif // !ENTITY_RENDERER_H

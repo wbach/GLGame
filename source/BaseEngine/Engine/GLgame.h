@@ -1,15 +1,14 @@
-#ifndef GL_GAME_H
-#define GL_GAME_H
 #pragma once
 #include <vector>
 #include <thread>
-#include "UTIL.h"
+#include "../Utils/Utils.h"
 #include "Scene.h"
-#include "EnitityRenderer.h"
-#include "DisplayManager.h"
-#include "LoadingShader.h"
-#include "GUIRenderer.h"
-#include "TerrainRenderer.h"
+#include "../Entities/EnitityRenderer.h"
+#include "../Display/DisplayManager.h"
+#include "../Shaders/LoadingShader.h"
+#include "../GUI/GUIRenderer.h"
+#include "../Terrain/TerrainRenderer.h"
+
 using namespace std;
 const float NEAR_PLANE = 0.1f;
 const float FAR_PLANE = 10000;
@@ -52,6 +51,6 @@ public:
 	float fadeIn(Uint32 deltaTime, Uint32 startTime, Uint32 durration);
 	float fadeOut(Uint32 deltaTime, Uint32 startTime, Uint32 durration);
 };
-#endif // !GL_GAME_H
+
 
 

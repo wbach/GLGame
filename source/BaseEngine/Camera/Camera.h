@@ -1,10 +1,7 @@
-#ifndef CAMERA_H
-#define CAMERA_H
-//#include "Terrain.h"
+#pragma once
 #include <SDL2/SDL.h>
 #include "glm/glm.hpp"
-#include "../UTIL.h"
-
+#include "../Utils/Utils.h"
 
 class CCamera{
 protected:
@@ -49,6 +46,3 @@ public:
 	virtual void attachToObject(glm::vec3 &positionEntity, glm::vec3 &rotationEntity) = 0;
 
 };
-
-
-#endif

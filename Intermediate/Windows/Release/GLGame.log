@@ -1,16 +1,16 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   main.cpp
-f:\projects\git\glgame\source\GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\Test_Scene.h(99): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\Test_Scene.h(108): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\Test_Scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\Test_Scene.h(144): warning C4018: '<': signed/unsigned mismatch
+f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+f:\projects\git\glgame\source\TestGame/Test_Scene.h(100): warning C4305: 'argument': truncation from 'double' to 'float'
+f:\projects\git\glgame\source\TestGame/Test_Scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
+f:\projects\git\glgame\source\TestGame/Test_Scene.h(110): warning C4305: 'argument': truncation from 'double' to 'float'
+f:\projects\git\glgame\source\TestGame/Test_Scene.h(145): warning C4018: '<': signed/unsigned mismatch
   Generating code
-  42 of 2587 functions ( 1.6%) were compiled, the rest were copied from previous compilation.
+  0 of 2587 functions ( 0.0%) were compiled, the rest were copied from previous compilation.
     0 functions were new in current compilation
-    18 functions had inline decision re-evaluated but remain unchanged
+    27 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
   GLGame.vcxproj -> F:\Projects\Git\GLGame\.\bin\Windows\Release\GLGame.exe
   GLGame.vcxproj -> .\bin\Windows\Release\GLGame.pdb (Full PDB)

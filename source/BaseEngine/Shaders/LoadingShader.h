@@ -1,11 +1,9 @@
-#ifndef LOADING_SHADER_H
-#define LOADING_SHADER_H
-#define _CRT_SECURE_NO_WARNINGS
+#pragma once
 #include <vector>
 #include "ShaderProgram.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Camera/Camera.h"
-#include "Light.h"
+#include "../Camera/Camera.h"
+#include "../Lights/Light.h"
 class LoadingShader : public CShaderProgram {
 
 	int location_isTextured;
@@ -30,5 +28,3 @@ public:
 
 	// void loadViewMatrix(Camera camera);
 };
-
-#endif

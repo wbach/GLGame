@@ -2,7 +2,7 @@
 #define  GUI_RENDERER_H
 #include <vector>
 #include <GL/glew.h>
-#include  "Loader.h"
+#include "../Loader/Loader.h"
 #include "GUIShader.h"
 #include "GUITexture.h"
 #include "GUIText.h"

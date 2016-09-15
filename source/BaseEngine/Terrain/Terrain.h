@@ -1,20 +1,20 @@
-#ifndef TERRAIN_H
-#define TERRAIN_H
+#pragma once
 
 static const float SIZE = 2000.0f;
 static const float MAX_HEIGHT = 50.0f;
 static const float MAX_PIXEL_COLOUR = 256.0f * 256.0f * 256.0f;
 
 //#define VERTEX_COUNT 128
-#include "Material.h"
-#include "Model.h"
+#include "../Entities/Entity.h"
+#include "../Loader/Material.h"
+#include "../Loader/Model.h"
+#include "../Loader/Loader.h"
+#include "../Engine/Transform.h"
+#include "../Utils/Utils.h"
 #include <math.h>
 #include "glm/glm.hpp"
-#include "Loader.h"
-#include "UTIL.h"
 #include <SDL2/SDL.h>
-#include "Transform.h"
-#include "Entity.h"
+
 
 struct Element{
 	int value ;
@@ -91,4 +91,3 @@ public:
 	Element* findElement(int value ,bool &finded);
 	void saveCorrectedFloraMap();
 };
-#endif

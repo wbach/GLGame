@@ -1,15 +1,14 @@
-#ifndef SCENE_H
-#define SCENE_H
 #pragma once
+#include "../Entities/Entity.h"
+#include "../Loader/Loader.h"
+#include "../Lights/Light.h"
+#include "../Camera/Camera.h"
+#include "../Terrain/Terrain.h"
+#include "../GUI/GUI.h"
 #include <memory>
 #include <string>
 #include <vector>
-#include "Entity.h"
-#include "Loader.h"
-#include "Light.h"
-#include "Camera/Camera.h"
-#include "Terrain.h"
-#include "GUI.h"
+
 using namespace std;
 
 
@@ -50,6 +49,6 @@ public:
 	int terrainNumber(glm::vec2 xzPos);
 	~CScene();
 };
-#endif // !SCENE_H
+
 
 

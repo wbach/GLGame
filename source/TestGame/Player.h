@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 #include <SDL2/SDL.h>
-#include "Entity.h"
+#include "../BaseEngine/Entities/Entity.h"
 enum {
 	IDLE = 0,
 	RUN,
