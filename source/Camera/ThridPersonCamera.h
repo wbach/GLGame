@@ -1,5 +1,4 @@
-#ifndef THRID_PERSON_CAMERA_H
-#define THRID_PERSON_CAMERA_H
+#pragma once
 #include "Camera.h"
 #include <stdio.h>
 #include <stdlib.h>
@@ -30,4 +29,3 @@ public:
 	void move(SDL_Window *win) override;
 	void calculateZoom(float zoomLvL) override;
 };
-#endif

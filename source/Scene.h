@@ -7,7 +7,7 @@
 #include "Entity.h"
 #include "Loader.h"
 #include "Light.h"
-#include "Camera.h"
+#include "Camera/Camera.h"
 #include "Terrain.h"
 #include "GUI.h"
 using namespace std;

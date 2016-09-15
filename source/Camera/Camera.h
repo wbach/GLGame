@@ -3,7 +3,7 @@
 //#include "Terrain.h"
 #include <SDL2/SDL.h>
 #include "glm/glm.hpp"
-#include "UTIL.h"
+#include "../UTIL.h"
 
 
 class CCamera{

@@ -66,15 +66,6 @@
     <ClCompile Include="source\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\Camera.cpp">
-      <Filter>Source Files\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="source\FirstPersonCamera.cpp">
-      <Filter>Source Files\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="source\ThridPersonCamera.cpp">
-      <Filter>Source Files\Camera</Filter>
-    </ClCompile>
     <ClCompile Include="source\DisplayManager.cpp">
       <Filter>Source Files\BaseEngine</Filter>
     </ClCompile>
@@ -126,17 +117,17 @@
     <ClCompile Include="source\FreeType.cpp">
       <Filter>Source Files\Font</Filter>
     </ClCompile>
+    <ClCompile Include="source\Camera\Camera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Camera\ThridPersonCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Camera\FirstPersonCamera.cpp">
+      <Filter>Source Files\Camera</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Camera.h">
-      <Filter>Header Files\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="source\FirstPersonCamera.h">
-      <Filter>Header Files\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="source\ThridPersonCamera.h">
-      <Filter>Header Files\Camera</Filter>
-    </ClInclude>
     <ClInclude Include="source\EnitityRenderer.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -220,6 +211,15 @@
     </ClInclude>
     <ClInclude Include="source\UTIL.h">
       <Filter>Header Files\BaseEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Camera\Camera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Camera\ThridPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Camera\FirstPersonCamera.h">
+      <Filter>Header Files\Camera</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

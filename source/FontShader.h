@@ -2,7 +2,7 @@
 #define FONT_SHADER
 #include "ShaderProgram.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Camera.h"
+#include "Camera/Camera.h"
 #include "Light.h"
 #include "UTIL.h"
 class FontShader : public CShaderProgram{

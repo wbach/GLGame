@@ -4,8 +4,8 @@
 #include <string>
 #include <vector>
 #include "Scene.h"
-#include "ThridPersonCamera.h"
-#include "FirstPersonCamera.h"
+#include "Camera/ThridPersonCamera.h"
+#include "Camera/FirstPersonCamera.h"
 #include "Player.h"
 #include "GUIButton.h"
 class CTestSCene : public CScene {

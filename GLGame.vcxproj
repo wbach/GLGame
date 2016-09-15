@@ -145,12 +145,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="source\Camera.cpp" />
+    <ClCompile Include="source\Camera\Camera.cpp" />
     <ClCompile Include="source\DisplayManager.cpp" />
     <ClCompile Include="source\EnitityRenderer.cpp" />
     <ClCompile Include="source\Entity.cpp" />
     <ClCompile Include="source\EntityShader.cpp" />
-    <ClCompile Include="source\FirstPersonCamera.cpp" />
+    <ClCompile Include="source\Camera\FirstPersonCamera.cpp" />
     <ClCompile Include="source\FreeType.cpp" />
     <ClCompile Include="source\GLgame.cpp" />
     <ClCompile Include="source\GUIShader.cpp" />
@@ -165,15 +165,15 @@
     <ClCompile Include="source\Terrain.cpp" />
     <ClCompile Include="source\TerrainRenderer.cpp" />
     <ClCompile Include="source\TerrainShader.cpp" />
-    <ClCompile Include="source\ThridPersonCamera.cpp" />
+    <ClCompile Include="source\Camera\ThridPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="source\Camera.h" />
+    <ClInclude Include="source\Camera\Camera.h" />
     <ClInclude Include="source\DisplayManager.h" />
     <ClInclude Include="source\EnitityRenderer.h" />
     <ClInclude Include="source\Entity.h" />
     <ClInclude Include="source\EntityShader.h" />
-    <ClInclude Include="source\FirstPersonCamera.h" />
+    <ClInclude Include="source\Camera\FirstPersonCamera.h" />
     <ClInclude Include="source\FontShader.h" />
     <ClInclude Include="source\FreeType.h" />
     <ClInclude Include="source\GLgame.h" />
@@ -196,7 +196,7 @@
     <ClInclude Include="source\TerrainShader.h" />
     <ClInclude Include="source\Test_MainMenu.h" />
     <ClInclude Include="source\Test_Scene.h" />
-    <ClInclude Include="source\ThridPersonCamera.h" />
+    <ClInclude Include="source\Camera\ThridPersonCamera.h" />
     <ClInclude Include="source\Transform.h" />
     <ClInclude Include="source\UTIL.h" />
   </ItemGroup>

@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include "Scene.h"
-#include "ThridPersonCamera.h"
+#include "Camera/ThridPersonCamera.h"
 using namespace std;
 class CTestMainMenu: public CScene {
 

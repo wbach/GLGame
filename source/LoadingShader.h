@@ -4,7 +4,7 @@
 #include <vector>
 #include "ShaderProgram.h"
 #include "glm/gtc/matrix_transform.hpp"
-#include "Camera.h"
+#include "Camera/Camera.h"
 #include "Light.h"
 class LoadingShader : public CShaderProgram {
 
