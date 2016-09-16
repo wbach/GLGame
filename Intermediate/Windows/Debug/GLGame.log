@@ -1,121 +1,123 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
   ThridPersonCamera.cpp
-f:\projects\git\glgame\source\util.h(13): warning C4005: 'M_PI': macro redefinition
-  f:\projects\git\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
-f:\projects\git\glgame\source\util.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  f:\projects\git\glgame\source\thridpersoncamera.cpp(79): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
+d:\gitprojects\glgame\source\baseengine\camera\thridpersoncamera.cpp(10): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  d:\gitprojects\glgame\source\baseengine\camera\thridpersoncamera.cpp(68): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
           with
           [
               type=float
           ]
   TerrainShader.cpp
   TerrainRenderer.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrainrenderer.cpp(34): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\terrainrenderer.cpp(38): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrainrenderer.cpp(34): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\terrain\terrainrenderer.cpp(38): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
   Terrain.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.cpp(135): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(167): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(270): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(283): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(286): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(289): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(356): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(359): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(360): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(365): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(366): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
-f:\projects\git\glgame\source\terrain.cpp(367): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(135): warning C4267: '=': conversion from 'size_t' to 'int', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(167): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(270): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(283): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(286): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(289): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(356): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(359): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(360): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(365): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(366): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.cpp(367): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
   ShaderProgram.cpp
   Scene.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
   Player.cpp
-f:\projects\git\glgame\source\util.h(13): warning C4005: 'M_PI': macro redefinition
-  f:\projects\git\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
-f:\projects\git\glgame\source\player.cpp(27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
-f:\projects\git\glgame\source\util.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  f:\projects\git\glgame\source\player.cpp(18): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
+d:\gitprojects\glgame\source\testgame\player.cpp(27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  d:\gitprojects\glgame\source\testgame\player.cpp(18): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
           with
           [
               type=float
           ]
   Model.cpp
   main.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\test_scene.h(99): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\test_scene.h(108): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\test_scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\gui\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\gui\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\testgame\test_scene.h(100): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\testgame\test_scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\testgame\test_scene.h(110): warning C4305: 'argument': truncation from 'double' to 'float'
   LoadingShader.cpp
-f:\projects\git\glgame\source\util.h(13): warning C4005: 'M_PI': macro redefinition
-  f:\projects\git\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
   Loader.cpp
-f:\projects\git\glgame\source\loader.cpp(285): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
+d:\gitprojects\glgame\source\baseengine\loader\loader.cpp(285): warning C4267: 'return': conversion from 'size_t' to 'int', possible loss of data
   Light.cpp
   GUIShader.cpp
   GLgame.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\glgame.cpp(82): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
-f:\projects\git\glgame\source\glgame.cpp(200): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-f:\projects\git\glgame\source\glgame.cpp(207): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
-f:\projects\git\glgame\source\glgame.cpp(230): warning C4305: 'initializing': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\glgame.cpp(301): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
-f:\projects\git\glgame\source\glgame.cpp(340): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
-f:\projects\git\glgame\source\util.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
-  f:\projects\git\glgame\source\glgame.cpp(360): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\gui\guirenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\gui\guirenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(82): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(200): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(207): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(230): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(301): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(340): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  d:\gitprojects\glgame\source\baseengine\engine\glgame.cpp(360): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
           with
           [
               type=float
           ]
   FreeType.cpp
-f:\projects\git\glgame\source\freetype.cpp(297): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
+d:\gitprojects\glgame\source\baseengine\gui\freetype.cpp(297): warning C4267: 'argument': conversion from 'size_t' to 'GLsizei', possible loss of data
   FirstPersonCamera.cpp
-f:\projects\git\glgame\source\util.h(13): warning C4005: 'M_PI': macro redefinition
-  f:\projects\git\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
-f:\projects\git\glgame\source\firstpersoncamera.cpp(108): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-f:\projects\git\glgame\source\firstpersoncamera.cpp(115): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
+d:\gitprojects\glgame\source\baseengine\camera\firstpersoncamera.cpp(9): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\camera\firstpersoncamera.cpp(20): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\camera\firstpersoncamera.cpp(112): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\camera\firstpersoncamera.cpp(119): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
   EntityShader.cpp
   Entity.cpp
   EnitityRenderer.cpp
-f:\projects\git\glgame\source\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(30): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
-  f:\projects\git\glgame\source\terrain.h(48): note: consider using '%zi' in the format string
-f:\projects\git\glgame\source\enitityrenderer.cpp(50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
-f:\projects\git\glgame\source\enitityrenderer.cpp(52): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\enitityrenderer.cpp(134): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(30): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): warning C4477: 'printf' : format string '%i' requires an argument of type 'int', but variadic argument 1 has type 'unsigned __int64'
+  d:\gitprojects\glgame\source\baseengine\terrain\terrain.h(48): note: consider using '%zi' in the format string
+d:\gitprojects\glgame\source\baseengine\entities\enitityrenderer.cpp(50): warning C4244: 'argument': conversion from 'unsigned __int64' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\entities\enitityrenderer.cpp(52): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\entities\enitityrenderer.cpp(134): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
   DisplayManager.cpp
-f:\projects\git\glgame\source\displaymanager.cpp(29): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\displaymanager.cpp(30): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\displaymanager.cpp(45): warning C4244: 'return': conversion from 'Uint32' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\display\displaymanager.cpp(23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\display\displaymanager.cpp(24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\display\displaymanager.cpp(39): warning C4244: 'return': conversion from 'Uint32' to 'float', possible loss of data
   Generating Code...
   Compiling...
   Camera.cpp
-f:\projects\git\glgame\source\util.h(13): warning C4005: 'M_PI': macro redefinition
-  f:\projects\git\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
+d:\gitprojects\glgame\source\baseengine\utils\utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\sdl_stdinc.h(428): note: see previous definition of 'M_PI'
   Generating Code...
-  LINK : .\bin\Windows\Debug\GLGame.exe not found or not built by the last incremental link; performing full link
-Camera.obj : error LNK2019: unresolved external symbol SDL_GetKeyboardState referenced in function "public: virtual void __cdecl CCamera::move(struct SDL_Window *)" (?move@CCamera@@UEAAXPEAUSDL_Window@@@Z)
+Camera.obj : error LNK2019: unresolved external symbol SDL_GetKeyboardState referenced in function "public: virtual void __cdecl CCamera::Move(struct SDL_Window *)" (?Move@CCamera@@UEAAXPEAUSDL_Window@@@Z)
 FirstPersonCamera.obj : error LNK2001: unresolved external symbol SDL_GetKeyboardState
 Player.obj : error LNK2001: unresolved external symbol SDL_GetKeyboardState
 ThridPersonCamera.obj : error LNK2001: unresolved external symbol SDL_GetKeyboardState
@@ -170,16 +172,16 @@ Terrain.obj : error LNK2001: unresolved external symbol __imp___glewDeleteVertex
 EnitityRenderer.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
 GLgame.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
 Model.obj : error LNK2001: unresolved external symbol __imp___glewGenVertexArrays
-FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_GetWindowFlags referenced in function "public: virtual void __cdecl CFirstPersonCamera::move(struct SDL_Window *)" (?move@CFirstPersonCamera@@UEAAXPEAUSDL_Window@@@Z)
+FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_GetWindowFlags referenced in function "public: virtual void __cdecl CFirstPersonCamera::Move(struct SDL_Window *)" (?Move@CFirstPersonCamera@@UEAAXPEAUSDL_Window@@@Z)
 ThridPersonCamera.obj : error LNK2001: unresolved external symbol SDL_GetWindowFlags
 ThridPersonCamera.obj : error LNK2001: unresolved external symbol SDL_GetMouseState
 FirstPersonCamera.obj : error LNK2001: unresolved external symbol SDL_GetMouseState
 GLgame.obj : error LNK2001: unresolved external symbol SDL_GetMouseState
 main.obj : error LNK2001: unresolved external symbol SDL_GetMouseState
 Player.obj : error LNK2001: unresolved external symbol SDL_GetMouseState
-FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_WarpMouseInWindow referenced in function "public: struct glm::detail::tvec2<float> __cdecl CFirstPersonCamera::calcualteMouseMove(struct SDL_Window *)" (?calcualteMouseMove@CFirstPersonCamera@@QEAA?AU?$tvec2@M@detail@glm@@PEAUSDL_Window@@@Z)
+FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_WarpMouseInWindow referenced in function "private: struct glm::detail::tvec2<float> __cdecl CFirstPersonCamera::CalcualteMouseMove(struct SDL_Window *)" (?CalcualteMouseMove@CFirstPersonCamera@@AEAA?AU?$tvec2@M@detail@glm@@PEAUSDL_Window@@@Z)
 ThridPersonCamera.obj : error LNK2001: unresolved external symbol SDL_WarpMouseInWindow
-FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_ShowCursor referenced in function "public: struct glm::detail::tvec2<float> __cdecl CFirstPersonCamera::calcualteMouseMove(struct SDL_Window *)" (?calcualteMouseMove@CFirstPersonCamera@@QEAA?AU?$tvec2@M@detail@glm@@PEAUSDL_Window@@@Z)
+FirstPersonCamera.obj : error LNK2019: unresolved external symbol SDL_ShowCursor referenced in function "private: struct glm::detail::tvec2<float> __cdecl CFirstPersonCamera::CalcualteMouseMove(struct SDL_Window *)" (?CalcualteMouseMove@CFirstPersonCamera@@AEAA?AU?$tvec2@M@detail@glm@@PEAUSDL_Window@@@Z)
 GLgame.obj : error LNK2001: unresolved external symbol SDL_ShowCursor
 ThridPersonCamera.obj : error LNK2001: unresolved external symbol SDL_ShowCursor
 FreeType.obj : error LNK2019: unresolved external symbol FT_Init_FreeType referenced in function "public: void __cdecl freetype::font_data::init(char const *,unsigned int)" (?init@font_data@freetype@@QEAAXPEBDI@Z)

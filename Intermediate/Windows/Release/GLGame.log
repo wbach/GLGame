@@ -1,34 +1,109 @@
 ﻿C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(367,5): warning MSB8004: Intermediate Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Intermediate Directory.
 C:\Program Files (x86)\MSBuild\Microsoft.Cpp\v4.0\V140\Microsoft.CppBuild.targets(368,5): warning MSB8004: Output Directory does not end with a trailing slash.  This build instance will add the slash as it is required to allow proper evaluation of the Output Directory.
+  Camera.cpp
+d:\gitprojects\glgame\source\baseengine\camera\../Utils/Utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\SDL_stdinc.h(428): note: see previous definition of 'M_PI'
   DisplayManager.cpp
 source\BaseEngine\Display\DisplayManager.cpp(23): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 source\BaseEngine\Display\DisplayManager.cpp(24): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 source\BaseEngine\Display\DisplayManager.cpp(39): warning C4244: 'return': conversion from 'Uint32' to 'float', possible loss of data
+  EnitityRenderer.cpp
+source\BaseEngine\Entities\EnitityRenderer.cpp(50): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+source\BaseEngine\Entities\EnitityRenderer.cpp(52): warning C4305: 'argument': truncation from 'double' to 'float'
+source\BaseEngine\Entities\EnitityRenderer.cpp(134): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+  Entity.cpp
+source\BaseEngine\Entities\Entity.cpp(5): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(12): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(19): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(26): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(33): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(39): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(45): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(51): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(73): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(78): warning C4018: '>': signed/unsigned mismatch
+source\BaseEngine\Entities\Entity.cpp(126): warning C4018: '>': signed/unsigned mismatch
+  EntityShader.cpp
+  FirstPersonCamera.cpp
+d:\gitprojects\glgame\source\baseengine\camera\../Utils/Utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\SDL_stdinc.h(428): note: see previous definition of 'M_PI'
+source\BaseEngine\Camera\FirstPersonCamera.cpp(9): warning C4305: 'initializing': truncation from 'double' to 'float'
+source\BaseEngine\Camera\FirstPersonCamera.cpp(20): warning C4305: 'initializing': truncation from 'double' to 'float'
+source\BaseEngine\Camera\FirstPersonCamera.cpp(112): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+source\BaseEngine\Camera\FirstPersonCamera.cpp(119): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+  FreeType.cpp
   GLgame.cpp
-f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
 source\BaseEngine\Engine\GLgame.cpp(82): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
 source\BaseEngine\Engine\GLgame.cpp(207): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
 source\BaseEngine\Engine\GLgame.cpp(230): warning C4305: 'initializing': truncation from 'double' to 'float'
 source\BaseEngine\Engine\GLgame.cpp(340): warning C4244: 'argument': conversion from 'double' to 'Uint32', possible loss of data
 source\BaseEngine\Engine\GLgame.cpp(377): warning C4018: '<': signed/unsigned mismatch
-f:\projects\git\glgame\source\baseengine\engine\../Utils/Utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\../Utils/Utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
   source\BaseEngine\Engine\GLgame.cpp(360): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
           with
           [
               type=float
           ]
+  GUIShader.cpp
+  Light.cpp
+  Loader.cpp
+source\BaseEngine\Loader\Loader.cpp(264): warning C4018: '<': signed/unsigned mismatch
+  LoadingShader.cpp
+d:\gitprojects\glgame\source\baseengine\camera\../Utils/Utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\SDL_stdinc.h(428): note: see previous definition of 'M_PI'
   main.cpp
-f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
-f:\projects\git\glgame\source\TestGame/Test_Scene.h(100): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\TestGame/Test_Scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\TestGame/Test_Scene.h(110): warning C4305: 'argument': truncation from 'double' to 'float'
-f:\projects\git\glgame\source\TestGame/Test_Scene.h(145): warning C4018: '<': signed/unsigned mismatch
+d:\gitprojects\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(40): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\engine\../GUI/GUIRenderer.h(41): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+d:\gitprojects\glgame\source\TestGame/Test_Scene.h(100): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\TestGame/Test_Scene.h(109): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\TestGame/Test_Scene.h(110): warning C4305: 'argument': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\TestGame/Test_Scene.h(145): warning C4018: '<': signed/unsigned mismatch
+  Model.cpp
+  Player.cpp
+d:\gitprojects\glgame\source\baseengine\entities\../Utils/Utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\SDL_stdinc.h(428): note: see previous definition of 'M_PI'
+source\TestGame\Player.cpp(27): warning C4244: 'argument': conversion from 'double' to 'float', possible loss of data
+d:\gitprojects\glgame\source\baseengine\entities\../Utils/Utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  source\TestGame\Player.cpp(18): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+          with
+          [
+              type=float
+          ]
+  Scene.cpp
+  ShaderProgram.cpp
+  Terrain.cpp
+source\BaseEngine\Terrain\Terrain.cpp(167): warning C4244: 'initializing': conversion from 'int' to 'float', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(270): warning C4244: '=': conversion from 'int' to 'float', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(283): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(286): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(289): warning C4244: 'argument': conversion from 'int' to 'float', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(356): warning C4244: 'argument': conversion from 'float' to 'int', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(359): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(360): warning C4244: 'initializing': conversion from 'float' to 'int', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(365): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(366): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+source\BaseEngine\Terrain\Terrain.cpp(367): warning C4244: '=': conversion from 'float' to 'BYTE', possible loss of data
+  TerrainRenderer.cpp
+source\BaseEngine\Terrain\TerrainRenderer.cpp(34): warning C4305: 'argument': truncation from 'double' to 'float'
+source\BaseEngine\Terrain\TerrainRenderer.cpp(38): warning C4244: 'argument': conversion from 'unsigned int' to 'float', possible loss of data
+  TerrainShader.cpp
+  Compiling...
+  ThridPersonCamera.cpp
+d:\gitprojects\glgame\source\baseengine\camera\../Utils/Utils.h(13): warning C4005: 'M_PI': macro redefinition
+  d:\gitprojects\glgame\tools\windows\sdl2-2.0.3\include\sdl2\SDL_stdinc.h(428): note: see previous definition of 'M_PI'
+source\BaseEngine\Camera\ThridPersonCamera.cpp(10): warning C4305: 'initializing': truncation from 'double' to 'float'
+d:\gitprojects\glgame\source\baseengine\camera\../Utils/Utils.h(22): warning C4244: 'return': conversion from 'double' to 'float', possible loss of data
+  source\BaseEngine\Camera\ThridPersonCamera.cpp(68): note: see reference to function template instantiation 'type toRadians<float>(type)' being compiled
+          with
+          [
+              type=float
+          ]
   Generating code
-  7 of 2586 functions ( 0.3%) were compiled, the rest were copied from previous compilation.
-    0 functions were new in current compilation
-    10 functions had inline decision re-evaluated but remain unchanged
+  2584 of 2586 functions (99.9%) were compiled, the rest were copied from previous compilation.
+    5 functions were new in current compilation
+    0 functions had inline decision re-evaluated but remain unchanged
   Finished generating code
-  GLGame.vcxproj -> F:\Projects\Git\GLGame\.\bin\Windows\Release\GLGame.exe
+  GLGame.vcxproj -> D:\GitProjects\GLGame\.\bin\Windows\Release\GLGame.exe
   GLGame.vcxproj -> .\bin\Windows\Release\GLGame.pdb (Full PDB)
