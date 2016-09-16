@@ -8,13 +8,7 @@ int CDisplayManager::initialize(int w, int h)
 		cout << "failed to create window\n";
 		exit(-1);
 	}
-
-	//SDL_GL_SetAttribute(SDL_GL_SHARE_WITH_CURRENT_CONTEXT, 1);
-	//if (!(glLoadingContext = SDL_GL_CreateContext(window))) {
-	//	cout << "failed to create OpenGL loading context\n";
-	//	exit(-1);
-	//}
-	if (!(glContext = SDL_GL_CreateContext(window))) {
+	if (!(m_GlContext = SDL_GL_CreateContext(window))) {
 		cout << "failed to create OpenGL context\n";
 		exit(-1);
 	}
@@ -46,31 +40,21 @@ float CDisplayManager::getCurrentTime() {
 }
 void CDisplayManager::uninitialize()
 {
-	SDL_GL_DeleteContext(glContext);
-	//SDL_GL_DeleteContext(glLoadingContext);
+	SDL_GL_DeleteContext(m_GlContext);
 	SDL_Quit();
 }
 void CDisplayManager::calculateFPS()
 {
-	//  Increase frame count
 	frameCount++;
 
-	//  Get the number of milliseconds since glutInit called
-	//  (or first call to glutGet(GLUT ELAPSED TIME)).
 	currentTime = SDL_GetTicks();
 
-	//  Calculate time passed
 	int timeInterval = currentTime - previousTime;
 
 	if(timeInterval > 1000)
 	{
-		//  calculate the number of frames per second
 		fps = frameCount / (timeInterval / 1000.0f);
-
-		//  Set time
 		previousTime = currentTime;
-
-		//  Reset frame count
 		frameCount = 0;
 	}
 }
@@ -87,6 +71,6 @@ void CDisplayManager::setFullScreen()
 		SDL_SetWindowFullscreen(window, SDL_FALSE);
 }
 
-glm::vec2 CDisplayManager::getWindowSize() {
+const glm::vec2& CDisplayManager::getWindowSize() {
 	return windowsSize;
 }

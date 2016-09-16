@@ -12,30 +12,35 @@ using namespace std;
 
 class CDisplayManager {
 public:
-	SDL_GLContext glContext,glLoadingContext;
-	SDL_atomic_t stuffIsReady;
+	int initialize(int w, int h);
+	void update();
+	void uninitialize();
+
+	void setFullScreen();
+	void calculateFPS();
+	int getFps();
+	int getFPSCap() { return FPS_CAP; }
+
+	float getCurrentTime();
+	float getDeltaTime() { return static_cast<float>(delta/1000); }
+
+	const glm::vec2& getWindowSize();
+	SDL_Window * getWindow() { return window; }
+	const SDL_GLContext& GetLoadingContext() { return m_GlLoadingContext; }
+	const SDL_GLContext& GetGlContext() { return m_GlContext; }
+private:
+	SDL_GLContext m_GlContext;
+	SDL_GLContext m_GlLoadingContext;
 
 	long lastFrameTime;
 	float delta;
 	Uint32 currentTime, previousTime;
-	float frameCount,fps;
+	float frameCount, fps;
 
 	SDL_Window *window;
 	int FPS_CAP;
 	bool fullScreen;
 	glm::vec2 windowsSize;
-    void calculateFPS();
-	int getFps();
-	int getFPSCap() { return FPS_CAP; }
-	int initialize(int w, int h);
-	void update();
-	void uninitialize();
-	void setFullScreen();
-	float getCurrentTime();
-	float getDeltaTime() { return static_cast<float>(delta/1000); }
-	glm::vec2 getWindowSize();
-	SDL_Window * getWindow() { return window; }
-	SDL_GLContext getLoadingContext() { return glLoadingContext; }
 };
 #endif // !DISPLAY_MANAGER_H
 
