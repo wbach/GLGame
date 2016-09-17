@@ -48,17 +48,17 @@ public:
 		cursor = cur;
 	}
 
-	void render(CGUI &gui) {		
+	void render(const CGUI &gui) {		
 		renderTextures(gui.guiTextures);
 		renderButtons(gui.guiButtons);
 		renderText(gui.guiTexts);
 	}
-	void renderText(vector<CGUIText> &texts) {
+	void renderText(const vector<CGUIText> &texts) {
 		for (CGUIText text : texts) {
 			text.drawText(&fontshader, &textFont);
 		}
 	}
-	void renderButtons(vector<CGUIButton>&buttons) {
+	void renderButtons(const vector<CGUIButton>&buttons) {
 		if (buttons.size() <= 0) return;
 		shader.start();
 		glBindVertexArray(quadVao);
@@ -88,7 +88,7 @@ public:
 		glBindVertexArray(0);
 		shader.stop();
 	}
-	void renderTextures(vector<CGUITexture> &guis){
+	void renderTextures(const vector<CGUITexture> &guis){
 		shader.start();
 		glBindVertexArray(quadVao);
 		glEnableVertexAttribArray(0);

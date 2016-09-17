@@ -13,41 +13,44 @@ using namespace std;
 
 
 class CScene {
-protected:
-	string name;
-	vector<shared_ptr<CEntity>> entities;
-
-	vector<CLight> lights;
-
-	shared_ptr<CCamera> camera;
 public:
-	CLoader loader;
-	vector<CTerrain> terrains;
-	CGUI gui;
+	void AddTerrain(CTerrain terrain) { m_Terrains.push_back(terrain); }
+	void AddEntity(shared_ptr<CEntity> entity) { m_Entities.push_back(entity); }
 
-	void addTerrain(CTerrain terrain) { terrains.push_back(terrain); }
-	void addEntity(shared_ptr<CEntity> entity) { entities.push_back(entity); }
+	const vector<shared_ptr<CEntity>>& GetEntities();
+	const vector<CTerrain>& GetTerrains();
+	const vector<CLight>& GetLights();
 
-	vector<shared_ptr<CEntity>> getEntities();
-	vector<CTerrain> getTerrains();
-	vector<CLight> getLights();
+	const string& GetName();
 
-	string getName();
-
-	virtual int initialize() = 0;
-	virtual int update(SDL_Event &event,SDL_Window *win) = 0;
-	virtual int cleanUp() = 0;
-	virtual glm::mat4 getViewMatrix();
+	virtual int Initialize() = 0;
+	virtual int Update(SDL_Event &event, SDL_Window *win) = 0;
+	virtual int CleanUp() = 0;
+	const virtual glm::mat4& GetViewMatrix();
 
 	// create position vector (x, heightTerrain(x,z),z)
-	glm::vec3 createPositionVector(float x, float z, float yOffset = 0);
-	glm::vec3 createPositionVector(glm::vec2 xzPos, float yOffset = 0);
+	glm::vec3 CreatePositionVector(float x, float z, float y_offset = 0);
+	glm::vec3 CreatePositionVector(glm::vec2 xzPos, float y_offset = 0);
+
 	//return height form current terrain
-	float getHeightOfTerrain(float x, float z);
-	float getHeightOfTerrain(glm::vec2 xzPos);
-	int terrainNumber(float x, float z);
-	int terrainNumber(glm::vec2 xzPos);
+	const float GetHeightOfTerrain(float x, float z);
+	const float GetHeightOfTerrain(glm::vec2 xz_pos);
+	const int TerrainNumber(float x, float z);
+	const int TerrainNumber(glm::vec2 xz_pos);
+
+	CLoader& GetLoader() { return m_Loader; }
+	const CGUI& GetGui() { return m_Gui; }
+
 	~CScene();
+protected:
+	CLoader m_Loader;
+	string m_Name;
+
+	CGUI m_Gui;
+	vector<shared_ptr<CEntity>> m_Entities;
+	vector<CTerrain> m_Terrains;
+	vector<CLight> m_Lights;
+	shared_ptr<CCamera> m_Camera;
 };
 
 

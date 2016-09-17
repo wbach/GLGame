@@ -17,21 +17,21 @@ class CTestSCene : public CScene {
 public:
     bool thridCamera = true;
 	CTestSCene(){
-		name = "Test Scene";
+		m_Name = "Test Scene";
 	}
-	int initialize() override{
-		CGUIButton testButton(loader.loadTexture("Data/GUI/startGameButton.png"), loader.loadTexture("Data/GUI/hoverStartGameButton.png"), loader.loadTexture("Data/GUI/pushStartGamebutton.png"),"test", glm::vec2(-0.9,-0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
-		gui.guiButtons.push_back(testButton);
+	int Initialize() override{
+		CGUIButton testButton(m_Loader.loadTexture("Data/GUI/startGameButton.png"), m_Loader.loadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.loadTexture("Data/GUI/pushStartGamebutton.png"),"test", glm::vec2(-0.9,-0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
+		m_Gui.guiButtons.push_back(testButton);
 
 		cout << " Loading..." << endl;
 
         string terrainTexturePath = "Data/Terrain/TerrainTextures/";//TdkWN.png
 
-		terrains.push_back( CTerrain(loader, terrainTexturePath + "TdkWN.png", 0, 0, loader.loadTexture(terrainTexturePath + "blendMap.png"),
-			loader.loadTexture(terrainTexturePath + "grass.bmp"), loader.loadTexture(terrainTexturePath + "grassNormal.jpg"),
-			loader.loadTexture(terrainTexturePath + "156.JPG"), loader.loadTexture(terrainTexturePath + "156.JPG"),
-			loader.loadTexture(terrainTexturePath + "sand.jpg"), loader.loadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-			loader.loadTexture(terrainTexturePath + "177.JPG"), loader.loadTexture(terrainTexturePath + "177_norm.JPG")
+		m_Terrains.push_back( CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.loadTexture(terrainTexturePath + "blendMap.png"),
+			m_Loader.loadTexture(terrainTexturePath + "grass.bmp"), m_Loader.loadTexture(terrainTexturePath + "grassNormal.jpg"),
+			m_Loader.loadTexture(terrainTexturePath + "156.JPG"), m_Loader.loadTexture(terrainTexturePath + "156.JPG"),
+			m_Loader.loadTexture(terrainTexturePath + "sand.jpg"), m_Loader.loadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
+			m_Loader.loadTexture(terrainTexturePath + "177.JPG"), m_Loader.loadTexture(terrainTexturePath + "177_norm.JPG")
 			) );
 
 		//terrains.push_back( CTerrain(loader, terrainTexturePath + "heightmap.png", -1, -1, loader.loadTexture(terrainTexturePath + "blendMap.png"),
@@ -65,23 +65,23 @@ public:
 
 
 		shared_ptr<CEntity> smallHause;
-		smallHause = make_shared<CEntity>(createPositionVector(138,128,2.5), glm::vec3(0), glm::vec3(4));
-		smallHause->model_id = loader.assimpLoad("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
-		int tnr = terrainNumber(smallHause->getPositionXZ());
+		smallHause = make_shared<CEntity>(CreatePositionVector(138,128,2.5), glm::vec3(0), glm::vec3(4));
+		smallHause->m_ModelId = m_Loader.assimpLoad("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
+		int tnr = TerrainNumber(smallHause->GetPositionXZ());
 		if (tnr > 0)
-			terrains[tnr].addTerrainEntity(smallHause);
+			m_Terrains[tnr].addTerrainEntity(smallHause);
 		else
-			addEntity(smallHause);
+			AddEntity(smallHause);
 
 
-		songo = make_shared<CPlayer>(createPositionVector(86, 47),glm::vec3(0),glm::vec3(2));
-		songo->model_id = loader.assimpLoad("Data/Meshes/Songo/songo2.obj");
+		songo = make_shared<CPlayer>(CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
+		songo->m_ModelId = m_Loader.assimpLoad("Data/Meshes/Songo/songo2.obj");
 
 		
 	/*	m9 = make_shared<CEntity>(createPositionVector(86, 47,5), glm::vec3(-90,0,0), glm::vec3(0.25));
 		m9->model_id = loader.assimpLoad("Data/Meshes/M4A1/M4A1.obj");
 		songo->addSubbEntity(m9);*/
-		addEntity(songo);
+		AddEntity(songo);
 	
 
 		setThridCamera();
@@ -89,27 +89,27 @@ public:
 	//	camera->attachToObject();
 
 		dirLight = CLight(glm::vec3(5000),glm::vec3(1.0));
-		lights.push_back(dirLight);
+		m_Lights.push_back(dirLight);
 		return 0;
 	}
 	void setFirstCamera(){
 		//songo->getReferencedPosition(), songo->getReferencedRotation()
-        camera.reset();
-        camera = make_shared<CFirstPersonCamera>();
-		camera->SetPosition(createPositionVector(songo->getPositionXZ(),10));
-		camera->SetPitch(5.6);
-		camera->SetYaw(94);
+        m_Camera.reset();
+		m_Camera = make_shared<CFirstPersonCamera>();
+		m_Camera->SetPosition(CreatePositionVector(songo->GetPositionXZ(),10));
+		m_Camera->SetPitch(5.6);
+		m_Camera->SetYaw(94);
 	}
 	void setThridCamera(){
-        camera.reset();
-        camera = make_shared<CThirdPersonCamera>(songo->getReferencedPosition(),songo->getReferencedRotation());
+		m_Camera.reset();
+		m_Camera = make_shared<CThirdPersonCamera>(songo->GetReferencedPosition(), songo->GetReferencedRotation());
 	}
-	int update(SDL_Event &event,SDL_Window *win) override{
-		camera->Move(win);
+	int Update(SDL_Event &event,SDL_Window *win) override{
+		m_Camera->Move(win);
 		songo->calculateMove(0.02);			 
-		songo->move(0.02, getHeightOfTerrain(songo->getPositionXZ()));
+		songo->move(0.02, GetHeightOfTerrain(songo->GetPositionXZ()));
 
-		if (gui.guiButtons[0].isPressedButton(glm::vec2(1000, 600)))
+		if (m_Gui.guiButtons[0].isPressedButton(glm::vec2(1000, 600)))
 			return 2;
 
 //		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));
@@ -120,19 +120,19 @@ public:
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym)
 			{
-			case SDLK_F1: cout << "Camera position : " << to_string(camera->GetPosition()); break;
-			case SDLK_F2: cout << "Camera angles : " << camera->GetPitch() << " " << camera->GetYaw() << " " << camera->GetRoll() << endl; break;
+			case SDLK_F1: cout << "Camera position : " << to_string(m_Camera->GetPosition()); break;
+			case SDLK_F2: cout << "Camera angles : " << m_Camera->GetPitch() << " " << m_Camera->GetYaw() << " " << m_Camera->GetRoll() << endl; break;
             case SDLK_F3: thridCamera = !thridCamera; thridCamera ? setThridCamera() : setFirstCamera(); break;
 			}
 			break;
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y == 1)
 			{
-				camera->CalculateZoom(-1);
+				m_Camera->CalculateZoom(-1);
 			}
 			else if (event.wheel.y == -1)
 			{
-				camera->CalculateZoom(1);
+				m_Camera->CalculateZoom(1);
 			}break;
 		
 		break;
@@ -140,23 +140,21 @@ public:
 		event = SDL_Event();
 		return 0;
 	}
-	int cleanUp() override{
-		loader.cleanUp();
-		for (int x = 0; x < terrains.size(); x++) {
-			terrains[x].cleanUp();
+	int CleanUp() override{
+		m_Loader.cleanUp();
+		for (int x = 0; x < m_Terrains.size(); x++) {
+			m_Terrains[x].cleanUp();
 		}
-		terrains.clear();
-		entities.clear();
-		gui.guiButtons.clear();
-		gui.guiTexts.clear();
-		gui.guiTextures.clear();
-		lights.clear();
-		camera.reset();
+		m_Terrains.clear();
+		m_Entities.clear();
+		m_Gui.guiButtons.clear();
+		m_Gui.guiTexts.clear();
+		m_Gui.guiTextures.clear();
+		m_Lights.clear();
+		m_Camera.reset();
 		return 0;
 	}
-	glm::mat4 getViewMatrix() { return camera->GetViewMatrix(); }
-
-
+	const glm::mat4& GetViewMatrix() { return m_Camera->GetViewMatrix(); }
 };
 #endif // !SCENE_H
 

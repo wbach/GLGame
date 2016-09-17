@@ -6,8 +6,8 @@
 class CCamera{
 public:
 	virtual void Move(SDL_Window* win);
-	virtual void CalculateZoom(float zoomLvL) {}
-	virtual void AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) = 0;
+	virtual void CalculateZoom(float zoom_lvl) {}
+	virtual void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) = 0;
 
 	CCamera();
 	void UpdateViewMatrix();

@@ -1,76 +1,81 @@
 #include "DisplayManager.h"
 
-int CDisplayManager::initialize(int w, int h)
+int CDisplayManager::Initialize(int w, int h)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	unsigned int flags = SDL_WINDOW_OPENGL;
-	if (!(window = SDL_CreateWindow("My OpenGL Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags))) {
+	if (!(m_Window = SDL_CreateWindow("My OpenGL Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags)))
+	{
 		cout << "failed to create window\n";
 		exit(-1);
 	}
-	if (!(m_GlContext = SDL_GL_CreateContext(window))) {
+	if (!(m_GlContext = SDL_GL_CreateContext(m_Window)))
+	{
 		cout << "failed to create OpenGL context\n";
 		exit(-1);
 	}
 
-	GLint GlewInitResult = glewInit();
-	if (GlewInitResult != GLEW_OK) {
-		printf("ERROR: %s\n", glewGetErrorString(GlewInitResult));
+	GLint glew_init_result = glewInit();
+	if (glew_init_result != GLEW_OK)
+	{
+		printf("ERROR: %s\n", glewGetErrorString(glew_init_result));
 		exit(-1);
 	}
 	printf("GL version: %s\n\n", glGetString(GL_VERSION));
 
-	windowsSize.x = w;
-	windowsSize.y = h;
+	m_WindowsSize.x = w;
+	m_WindowsSize.y = h;
 
-	FPS_CAP = 120;
+	m_FPS_CAP = 120;
 
 	return 0;
 }
 
-void CDisplayManager::update()
+void CDisplayManager::Update()
 {
-    calculateFPS();
-	float currentFrameTime = getCurrentTime();
-	delta = (currentFrameTime - lastFrameTime) / 1000.0f;
-	SDL_GL_SwapWindow(window);
+    CalculateFPS();
+	float current_frame_time= GetCurrentTime();
+	m_Delta = (current_frame_time - m_LastFrameTime) / 1000.0f;
+	SDL_GL_SwapWindow(m_Window);
 }
-float CDisplayManager::getCurrentTime() {
+const float CDisplayManager::GetCurrentTime()
+{
 	return SDL_GetTicks();
 }
-void CDisplayManager::uninitialize()
+void CDisplayManager::Uninitialize()
 {
 	SDL_GL_DeleteContext(m_GlContext);
 	SDL_Quit();
 }
-void CDisplayManager::calculateFPS()
+void CDisplayManager::CalculateFPS()
 {
-	frameCount++;
+	m_FrameCount++;
 
-	currentTime = SDL_GetTicks();
+	m_CurrentTime = SDL_GetTicks();
 
-	int timeInterval = currentTime - previousTime;
+	int time_interval = m_CurrentTime - m_PreviousTime;
 
-	if(timeInterval > 1000)
+	if(time_interval > 1000)
 	{
-		fps = frameCount / (timeInterval / 1000.0f);
-		previousTime = currentTime;
-		frameCount = 0;
+		m_Fps = m_FrameCount / (time_interval / 1000.0f);
+		m_PreviousTime = m_CurrentTime;
+		m_FrameCount = 0;
 	}
 }
-int CDisplayManager::getFps()
+const int CDisplayManager::GetFps()
 {
-	return (int)fps;
+	return (int) m_Fps;
 }
-void CDisplayManager::setFullScreen()
+void CDisplayManager::SetFullScreen()
 {
-	fullScreen = !fullScreen;
-	if (fullScreen) {
-		SDL_SetWindowFullscreen(window, SDL_TRUE);
+	m_IsFullScreen = !m_IsFullScreen;
+	if (m_IsFullScreen) {
+		SDL_SetWindowFullscreen(m_Window, SDL_TRUE);
 	}else
-		SDL_SetWindowFullscreen(window, SDL_FALSE);
+		SDL_SetWindowFullscreen(m_Window, SDL_FALSE);
 }
 
-const glm::vec2& CDisplayManager::getWindowSize() {
-	return windowsSize;
+const glm::vec2& CDisplayManager::GetWindowSize()
+{
+	return m_WindowsSize;
 }

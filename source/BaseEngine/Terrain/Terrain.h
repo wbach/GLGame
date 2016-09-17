@@ -65,7 +65,7 @@ class CTerrain{
 	float floraSize;
 public:
 	vector<shared_ptr<CEntity>>terrainEntities;
-	Transform transform;
+	STransform transform;
 	GLuint blendMap;
 	GLuint backgroundTexture[2];
 	GLuint rTexture[2];

@@ -1,67 +1,69 @@
 #include "Light.h"
 
-
-
-CLight::CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation,float cutOff)
+CLight::CLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation, float cutOff)
+: m_Type(LightType::SPOT_LIGHT)
+, m_Position(position)
+, m_Colour(colour)
+, m_Attenuation(attenuation)
+, m_CutOff(cutOff)
 {
-	this->type = SPOT_LIGHT;
-	this->position = position;
-	this->colour = colour;	
-	this->attenuation = attenuation;
-	this->cutOff = cutOff;
 }
 
 CLight::CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation)
+: m_Type(LightType::POINT_LIGHT)
+, m_Position(position)
+, m_Colour(colour)
+, m_Attenuation(attenuation)
+, m_CutOff(0)
 {
-	this->type = POINT_LIGHT;
-	this->position = position;
-	this->colour = colour;	
-	this->attenuation = attenuation;
 }
 
 CLight::CLight(glm::vec3 position,glm::vec3 colour)
+: m_Type(LightType::DIRECTIONAL_LIGHT)
+, m_Position(position)
+, m_Colour(colour)
+, m_Attenuation(0)
+, m_CutOff(0)
 {
-	this->type = DIRECTIONAL_LIGHT;
-	this->position = position;
-	this->colour = colour;
-	this->attenuation = glm::vec3(1,0,0);
 }
 CLight::CLight(glm::vec3 colour)
+: m_Type(LightType::DIRECTIONAL_LIGHT)
+, m_Position(100000, 150000, 100000)
+, m_Colour(colour)
+, m_Attenuation(0)
+, m_CutOff(0)
 {
-	this->type = DIRECTIONAL_LIGHT;
-	this->position = glm::vec3(100000,150000,100000);
-	this->colour = colour;
-	this->attenuation = glm::vec3(1,0,0);
 }
 CLight::CLight()
+: m_Type(LightType::DIRECTIONAL_LIGHT)
+, m_Position(100000, 150000, 100000)
+, m_Colour(0.8)
+, m_Attenuation(0)
+, m_CutOff(0)
 {
-	this->type = DIRECTIONAL_LIGHT;
-	this->position = glm::vec3(100000,150000,100000);
-	this->colour = glm::vec3(0.8);
-	this->attenuation = glm::vec3(1,0,0);
 }
 
-int CLight::getType()
+const int& CLight::GetType()
 {
-	return type;
+	return m_Type;
 }
 
-glm::vec3 CLight::getPosition()
+const glm::vec3& CLight::GetPosition()
 {
-	return position;
+	return m_Position;
 }
 
-glm::vec3 CLight::getColour()
+const glm::vec3& CLight::GetColour()
 {
-	return colour;
+	return m_Colour;
 }
 
-glm::vec3 CLight::getAttenuation()
+const glm::vec3& CLight::GetAttenuation()
 {
-	return attenuation;
+	return m_Attenuation;
 }
 
-float CLight::getCutoff()
+const float& CLight::GetCutoff()
 {
-	return cutOff;
+	return m_CutOff;
 }

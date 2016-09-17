@@ -1,30 +1,30 @@
 #include "Scene.h"
 
-vector<shared_ptr<CEntity>> CScene::getEntities() {
-	return entities;
+const vector<shared_ptr<CEntity>>& CScene::GetEntities() {
+	return m_Entities;
 }
 
-vector<CTerrain> CScene::getTerrains() { return terrains; }
+const vector<CTerrain>& CScene::GetTerrains() { return m_Terrains; }
 
-vector<CLight> CScene::getLights() { return lights; }
+const vector<CLight>& CScene::GetLights() { return m_Lights; }
 
-string CScene::getName() { return name; }
+const string& CScene::GetName() { return m_Name; }
 
-glm::mat4 CScene::getViewMatrix() { return glm::mat4(1.0); }
+const glm::mat4& CScene::GetViewMatrix() { return glm::mat4(1.0); }
 
 // create position vector (x, heightTerrain(x,z),z)
 
-glm::vec3 CScene::createPositionVector(float x, float z, float yOffset) {
-	return glm::vec3(x, getHeightOfTerrain(x, z) + yOffset, z);
+glm::vec3 CScene::CreatePositionVector(float x, float z, float y_offset) {
+	return glm::vec3(x, GetHeightOfTerrain(x, z) + y_offset, z);
 }
 
-glm::vec3 CScene::createPositionVector(glm::vec2 xzPos, float yOffset) {
-	return createPositionVector(xzPos.x, xzPos.y, yOffset);
+glm::vec3 CScene::CreatePositionVector(glm::vec2 xzPos, float yOffset) {
+	return CreatePositionVector(xzPos.x, xzPos.y, yOffset);
 }
 
 //return height form current terrain
-float CScene::getHeightOfTerrain(float x, float z) {
-	for (CTerrain ter : terrains) {
+const float CScene::GetHeightOfTerrain(float x, float z) {
+	for (CTerrain ter : m_Terrains) {
 		if (x > ter.transform.position.x && x <  ter.transform.position.x + SIZE)
 			if (z > ter.transform.position.z && z <  ter.transform.position.z + SIZE) {
 				return ter.getHeightofTerrain(x, z);
@@ -33,13 +33,13 @@ float CScene::getHeightOfTerrain(float x, float z) {
 	return -1;
 }
 
-float CScene::getHeightOfTerrain(glm::vec2 xzPos) {
-	return getHeightOfTerrain(xzPos.x, xzPos.y);
+const float CScene::GetHeightOfTerrain(glm::vec2 xzPos) {
+	return GetHeightOfTerrain(xzPos.x, xzPos.y);
 }
 
-int CScene::terrainNumber(float x, float z) {
+const int CScene::TerrainNumber(float x, float z) {
 	int nr = 0;
-	for (CTerrain ter : terrains) {
+	for (CTerrain ter : m_Terrains) {
 		if (x > ter.transform.position.x && x <  ter.transform.position.x + SIZE)
 			if (z > ter.transform.position.z && z <  ter.transform.position.z + SIZE) {
 				return nr;
@@ -49,11 +49,11 @@ int CScene::terrainNumber(float x, float z) {
 	return -1;
 }
 
-int CScene::terrainNumber(glm::vec2 xzPos)
+const int CScene::TerrainNumber(glm::vec2 xzPos)
 {
-	return terrainNumber(xzPos.x, xzPos.y);
+	return TerrainNumber(xzPos.x, xzPos.y);
 }
 
 CScene::~CScene() {
-	loader.cleanUp();
+	m_Loader.cleanUp();
 }

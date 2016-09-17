@@ -6,16 +6,16 @@ CGame myGame ;
 int main(int argc, char *argv[]) {
 
 	//Test git cooment
-    myGame.initialize();
+    myGame.Initialize();
     shared_ptr<CScene> mainMenu = make_shared<CTestMainMenu>();
 	shared_ptr<CScene> testScene = make_shared<CTestSCene>();
 	//myGame.addScene(mainMenu);
-	myGame.addScene(testScene);
-	if (myGame.setCurrentScene(0) < 0)
+	myGame.AddScene(testScene);
+	if (myGame.SetCurrentScene(0) < 0)
 	{
 		cout << "Scene not found." << endl;
 	}
-    myGame.gameLoop();
-    myGame.uninitialize();
+    myGame.GameLoop();
+    myGame.Uninitialize();
 	return 0;
 }

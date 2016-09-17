@@ -11,9 +11,9 @@ CFirstPersonCamera::CFirstPersonCamera()
 	m_Yaw	= 100;
 }
 
-CFirstPersonCamera::CFirstPersonCamera(glm::vec3& positionEntity, glm::vec3& rotationEntity)
-: m_LookPosition(positionEntity)
-, m_LookRotation(rotationEntity)
+CFirstPersonCamera::CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity)
+: m_LookPosition(position_entity)
+, m_LookRotation(rotation_entity)
 , m_Mousevel(0.2)
 , m_Movevel(1)
 , m_IsFreeCamera(false)
@@ -24,14 +24,14 @@ CFirstPersonCamera::CFirstPersonCamera(glm::vec3& positionEntity, glm::vec3& rot
 
 void CFirstPersonCamera::LockCamera()
 {
-	if(m_Pitch>90)
-		m_Pitch =90;
-	if(m_Pitch<-90)
-		m_Pitch =-90;
-	if(m_Yaw<0.0)
-		m_Yaw +=360.0;
-	if(m_Yaw>360.0)
-		m_Yaw -=360;
+	if(m_Pitch > 90)
+		m_Pitch = 90;
+	if(m_Pitch < -90)
+		m_Pitch = -90;
+	if(m_Yaw < 0.0)
+		m_Yaw += 360.0;
+	if(m_Yaw > 360.0)
+		m_Yaw -= 360;
 }
 
 void CFirstPersonCamera::Move(SDL_Window* win)
@@ -66,45 +66,45 @@ void CFirstPersonCamera::Move(SDL_Window* win)
 
 	if (state[SDL_SCANCODE_UP])
 	{
-		if(m_Pitch !=90 && m_Pitch !=-90)
-			MoveCamera(m_Movevel,0.0);
-		MoveCameraUp(m_Movevel,0.0);
+		if(m_Pitch != 90 && m_Pitch != -90)
+			MoveCamera(m_Movevel, 0.0);
+		MoveCameraUp(m_Movevel, 0.0);
 	}else if (state[SDL_SCANCODE_DOWN])
 	{
-		if (m_Pitch !=90 && m_Pitch !=-90)
-			MoveCamera(m_Movevel,180.0);
-		MoveCameraUp(m_Movevel,180.0);
+		if (m_Pitch != 90 && m_Pitch != -90)
+			MoveCamera(m_Movevel, 180.0);
+		MoveCameraUp(m_Movevel, 180.0);
 	}
 	if (state[SDL_SCANCODE_LEFT])
 	{
-		MoveCamera(-m_Movevel,90.0);
+		MoveCamera(-m_Movevel, 90.0);
 	}
 	else if (state[SDL_SCANCODE_RIGHT])
 	{
-		MoveCamera(-m_Movevel,270);
+		MoveCamera(-m_Movevel, 270);
 	}
 	this->UpdateViewMatrix();
 }
-void CFirstPersonCamera::AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) {
-	m_LookPosition = positionEntity;
-	m_LookRotation = rotationEntity;
+void CFirstPersonCamera::AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) {
+	m_LookPosition = position_entity;
+	m_LookRotation = rotation_entity;
 	m_IsFreeCamera = false;
 }
 glm::vec2 CFirstPersonCamera::CalcualteMouseMove(SDL_Window* win)
 {
-	int MidX = 320;
-	int MidY = 240;
+	int mid_x = 320;
+	int mid_y = 240;
 	SDL_ShowCursor(SDL_DISABLE);
 
-	int tmpx,tmpy;
-	SDL_GetMouseState(&tmpx,&tmpy);
+	int tmp_x,tmp_y;
+	SDL_GetMouseState(&tmp_x, &tmp_y);
 
-	glm::vec2 dmove ;
-	dmove.x = m_Mousevel*(MidX-tmpx);
-	dmove.y = m_Mousevel*(MidY-tmpy);
+	glm::vec2 d_move ;
+	d_move.x = m_Mousevel*(mid_x - tmp_x);
+	d_move.y = m_Mousevel*(mid_y - tmp_y);
 
-	SDL_WarpMouseInWindow(win, MidX, MidY);
-	return dmove ;
+	SDL_WarpMouseInWindow(win, mid_x, mid_y);
+	return d_move ;
 }
 
 void CFirstPersonCamera::MoveCamera(float dist, float dir)

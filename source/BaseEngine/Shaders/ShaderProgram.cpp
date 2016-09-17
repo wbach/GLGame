@@ -101,35 +101,35 @@ void CShaderProgram::cleanUp() {
 	glDeleteShader(fragmentShaderID);
 	glDeleteProgram(programID);
 }
-int CShaderProgram::getUniformLocation(string uniformName) {
+int CShaderProgram::getUniformLocation(const string& uniformName) {
 	return glGetUniformLocation(programID, uniformName.c_str());
 }
-void CShaderProgram::bindAttribute(int attribute, string variableName) {
+void CShaderProgram::bindAttribute(int attribute, const string& variableName) {
 	glBindAttribLocation(programID, attribute, variableName.c_str());
 }
-void CShaderProgram::loadValue(unsigned int loacation, glm::mat4 value) {
+void CShaderProgram::loadValue(unsigned int loacation, const glm::mat4& value) {
 	glUniformMatrix4fv(loacation, 1, GL_FALSE, glm::value_ptr(value));
 }
-void CShaderProgram::loadValue(unsigned int loacation, glm::mat3 value) {
+void CShaderProgram::loadValue(unsigned int loacation, const glm::mat3& value) {
 	glUniformMatrix3fv(loacation, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, float value) {
+void CShaderProgram::loadValue(unsigned int loacation, const float& value) {
 	glUniform1f(loacation, value);
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, int value) {
+void CShaderProgram::loadValue(unsigned int loacation, const int& value) {
 	glUniform1i(loacation, value);
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, glm::vec2 value) {
+void CShaderProgram::loadValue(unsigned int loacation, const glm::vec2& value) {
 	glUniform2fv(loacation, 1, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, glm::vec3 value) {
+void CShaderProgram::loadValue(unsigned int loacation, const glm::vec3& value) {
 	glUniform3fv(loacation, 1, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, glm::vec4 value) {
+void CShaderProgram::loadValue(unsigned int loacation, const glm::vec4& value) {
 	glUniform4fv(loacation, 1, glm::value_ptr(value));
 }

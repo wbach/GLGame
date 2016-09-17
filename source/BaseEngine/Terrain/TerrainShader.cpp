@@ -106,9 +106,9 @@ void TerrainShader::loadLightNumber(float i) {
 	loadValue(location_numberOfLights,i);
 }
 void TerrainShader::loadLight(CLight light, int i) {
-	loadValue(location_attenuation[i],light.getAttenuation()) ;
-	loadValue(location_lightPosition[i],light.getPosition()) ;
-	loadValue(location_lightColour[i],light.getColour()) ;
+	loadValue(location_attenuation[i],light.GetAttenuation()) ;
+	loadValue(location_lightPosition[i],light.GetPosition()) ;
+	loadValue(location_lightColour[i],light.GetColour()) ;
 }
 void TerrainShader::bindAttributes(){
 	bindAttribute(0, "position");

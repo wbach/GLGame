@@ -13,25 +13,26 @@ CPlayer::CPlayer(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : CEntity(pos, r
 void CPlayer::calculateMove(float deltaTime)
 {
 	checkInputs();
-	increaseRotation(0, this->currentTurnSpeed * deltaTime, 0);
+	IncreaseRotation(0, this->currentTurnSpeed * deltaTime, 0);
 	float distance = this->currentSpeed  * deltaTime;
-	float dx = static_cast<float>(distance * sin(toRadians(this->getRotation().y)));
-	float dz = static_cast<float>(distance * cos(toRadians(this->getRotation().y)));
+	float dx = static_cast<float>(distance * sin(toRadians(this->GetRotation().y)));
+	float dz = static_cast<float>(distance * cos(toRadians(this->GetRotation().y)));
 	//	upwardsSpeed += GRAVITY* deltaTime;	
-	incrasePosition(dx, 0, dz);
+	IncrasePosition(dx, 0, dz);
 }
 
 void CPlayer::move(float deltaTime,float terrainHeight)
 {
 	upwardsSpeed += GRAVITY* deltaTime;
-	incrasePosition(0, upwardsSpeed * 0.01, 0);
+	IncrasePosition(0, upwardsSpeed * 0.01, 0);
 
 	float yvalue = 0;
 	yvalue = terrainHeight;		
 	
-	if (getPosition().y < yvalue) {
+	if (GetPosition().y < yvalue)
+	{
 		upwardsSpeed = 0;
-		getReferencedPosition().y = yvalue;
+		GetReferencedPosition().y = yvalue;
 		isInAir = false;
 	}
 
@@ -70,7 +71,7 @@ void CPlayer::checkInputs()
 	const Uint8* state = SDL_GetKeyboardState(NULL);
 	if (state[SDL_SCANCODE_P]) {
 		system("cls");
-		printf("Current player position: %.2f, %.2f, %.2f", getPosition().x, getPosition().y, getPosition().z);
+		printf("Current player position: %.2f, %.2f, %.2f", GetPosition().x, GetPosition().y, GetPosition().z);
 	}
 	if (state[SDL_SCANCODE_W]) {
 		this->currentSpeed = RUN_SPEED;

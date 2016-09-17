@@ -27,17 +27,17 @@ void CTerrainRenderer::init(glm::mat4 projectionMatrix)
 
 void CTerrainRenderer::render(shared_ptr<CScene>scene,glm::mat4 toShadowSpace)
 {
-	if (scene->terrains.size() <= 0) return;
+	if (scene->GetTerrains().size() <= 0) return;
 
 	terrainShader.start();
 	terrainShader.loadIsShadows(0.0f);
 	terrainShader.loadSkyColour(0.6, 0.6, 0.8);
 	terrainShader.loadViewDistance(625);
-	terrainShader.loadViewMatrix(scene->getViewMatrix());
+	terrainShader.loadViewMatrix(scene->GetViewMatrix());
 	terrainShader.loadClipPlaneVector(glm::vec4(0, 1, 0, 100000));
-	terrainShader.loadLightNumber(scene->getLights().size());
+	terrainShader.loadLightNumber(scene->GetLights().size());
 	terrainShader.loadToShadowSpaceMatrix(toShadowSpace);
-	for (CTerrain terrain : scene->terrains)
+	for (CTerrain terrain : scene->GetTerrains())
 	{
 		prepareTerrain(terrain);
 		loadModelMatrix(terrain) ;

@@ -1,135 +1,139 @@
 #include "Entity.h"
 
-void CEntity::setPosition(glm::vec3 position, int i)
+void CEntity::SetPosition(glm::vec3 position, int i)
 {
-	if (i < 0 || i > transforms.size()) return;
-		transforms[i].position = position;
-	calculateEntityTransformMatrix(i);
+	if (i < 0 || i > m_Transforms.size()) return;
+	m_Transforms[i].position = position;
+	CalculateEntityTransformMatrix(i);
 }
 
-void CEntity::setRotation(glm::vec3 rotation, int i)
+void CEntity::SetRotation(glm::vec3 rotation, int i)
 {
-	if (i < 0 || i > transforms.size()) return;
-	transforms[i].rotation = rotation;
-	calculateEntityTransformMatrix(i);
+	if (i < 0 || i > m_Transforms.size()) return;
+	m_Transforms[i].rotation = rotation;
+	CalculateEntityTransformMatrix(i);
 }
 
-void CEntity::setScale(glm::vec3 scale, int i)
+void CEntity::SetScale(glm::vec3 scale, int i)
 {
-	if (i < 0 || i > transforms.size()) return;
-	transforms[i].scale = scale;
-	calculateEntityTransformMatrix(i);
+	if (i < 0 || i > m_Transforms.size()) return;
+	m_Transforms[i].scale = scale;
+	CalculateEntityTransformMatrix(i);
 }
 
-void CEntity::setTransform(Transform transform, int i)
+void CEntity::SetTransform(STransform transform, int i)
 {
-	if (i < 0 || i > transforms.size()) return;
-	transforms[i] = transform;
-	calculateEntityTransformMatrix(i);
+	if (i < 0 || i > m_Transforms.size()) return;
+	m_Transforms[i] = transform;
+	CalculateEntityTransformMatrix(i);
 }
 
-glm::vec2 CEntity::getPositionXZ(int i)
+glm::vec2 CEntity::GetPositionXZ(int i)
 {
-	if (i < 0 || i > transforms.size()) return glm::vec2(0);
-	return glm::vec2(transforms[i].position.x, transforms[i].position.z);
+	if (i < 0 || i > m_Transforms.size()) return glm::vec2(0);
+	return glm::vec2(m_Transforms[i].position.x, m_Transforms[i].position.z);
 }
 
-glm::vec3 CEntity::getPosition(int i)
+const glm::vec3& CEntity::GetPosition(int i)
 {
-	if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].position;
+	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	return m_Transforms[i].position;
 }
 
-glm::vec3 CEntity::getRotation(int i)
+const glm::vec3& CEntity::GetRotation(int i)
 {
-	if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].rotation;
+	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	return m_Transforms[i].rotation;
 }
 
-glm::vec3 CEntity::getScale(int i)
+const glm::vec3& CEntity::GetScale(int i)
 {
-	if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].scale;
+	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	return m_Transforms[i].scale;
 }
-glm::vec3 & CEntity::getReferencedPosition(int i)
-{
-	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].position;
-}
-
-glm::vec3 & CEntity::getReferencedRotation(int i)
+glm::vec3& CEntity::GetReferencedPosition(int i)
 {
 	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].rotation;
+	return m_Transforms[i].position;
 }
 
-glm::vec3 & CEntity::getReferencedScale(int i)
+glm::vec3& CEntity::GetReferencedRotation(int i)
 {
 	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
-	return transforms[i].scale;
+	return m_Transforms[i].rotation;
 }
-Transform CEntity::getTransform(int i)
+
+glm::vec3& CEntity::GetReferencedScale(int i)
 {
-	if (i < 0 || i > transformMatrixes.size()) return Transform();
-	return transforms[i];
+	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
+	return m_Transforms[i].scale;
 }
-
-glm::mat4 CEntity::getTransformMatrix(int i) {
-	if (i < 0 || i > transformMatrixes.size()) return glm::mat4(1);
-	return transformMatrixes[i];
-}
-
-
-CEntity::CEntity() {
-	addTransform(Transform());
-}
-
-CEntity::CEntity(glm::vec3 pos) {
-	addTransform(Transform(pos));
-}
-
-CEntity::CEntity(glm::vec3 pos, glm::vec3 rot) {
-	addTransform(Transform(pos, rot));
-}
-
-CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) {
-	addTransform(Transform(pos, rot, scale));
-}
-
-void CEntity::addTransform(Transform transform) {
-	transforms.push_back(transform);
-	transformMatrixes.push_back(createTransformationMatrix(transform.position, transform.rotation, transform.scale));
-}
-
-void CEntity::incrasePosition(float dx, float dy, float dz, int index)
+const STransform& CEntity::GetTransform(int i)
 {
-	this->transforms[index].position.x += dx;
-	this->transforms[index].position.y += dy;
-	this->transforms[index].position.z += dz;
-	calculateEntityTransformMatrix(index);
+	if (i < 0 || i > m_TransformMatrixes.size()) return STransform();
+	return m_Transforms[i];
 }
 
-void CEntity::addSubbEntity(shared_ptr<CEntity> e) {
-	entities.push_back(e);
-}
-
-void CEntity::increaseRotation(float dx, float dy, float dz, int index)
+const glm::mat4& CEntity::GetTransformMatrix(int i)
 {
-	this->transforms[index].rotation.x += dx;
-	this->transforms[index].rotation.y += dy;
-	this->transforms[index].rotation.z += dz;
-	calculateEntityTransformMatrix(index);
+	if (i < 0 || i > m_TransformMatrixes.size()) return glm::mat4(1);
+	return m_TransformMatrixes[i];
 }
 
-void CEntity::calculateEntityTransformMatrix(int x)
+CEntity::CEntity()
 {
-	if (x < 0 || x > transforms.size()) {
+	AddTransform(STransform());
+}
+
+CEntity::CEntity(glm::vec3 pos)
+{
+	AddTransform(STransform(pos));
+}
+
+CEntity::CEntity(glm::vec3 pos, glm::vec3 rot)
+{
+	AddTransform(STransform(pos, rot));
+}
+
+CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+{
+	AddTransform(STransform(pos, rot, scale));
+}
+
+void CEntity::AddTransform(STransform transform)
+{
+	m_Transforms.push_back(transform);
+	m_TransformMatrixes.push_back(createTransformationMatrix(transform.position, transform.rotation, transform.scale));
+}
+
+void CEntity::IncrasePosition(float dx, float dy, float dz, int index)
+{
+	this->m_Transforms[index].position.x += dx;
+	this->m_Transforms[index].position.y += dy;
+	this->m_Transforms[index].position.z += dz;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::IncreaseRotation(float dx, float dy, float dz, int index)
+{
+	this->m_Transforms[index].rotation.x += dx;
+	this->m_Transforms[index].rotation.y += dy;
+	this->m_Transforms[index].rotation.z += dz;
+	CalculateEntityTransformMatrix(index);
+}
+void CEntity::AddSubbEntity(shared_ptr<CEntity> e)
+{
+	m_ChildrenEntities.push_back(e);
+}
+void CEntity::CalculateEntityTransformMatrix(int x)
+{
+	if (x < 0 || x > m_Transforms.size()) {
 		int i = 0;
-		for (Transform transform : transforms)
-			transformMatrixes[i++] = createTransformationMatrix(transform.position, transform.rotation, transform.scale);
+		for (STransform transform : m_Transforms)
+			m_TransformMatrixes[i++] = createTransformationMatrix(transform.position, transform.rotation, transform.scale);
 	}
 	else
 	{
-		transformMatrixes[x] = createTransformationMatrix(transforms[x].position, transforms[x].rotation, transforms[x].scale);
+		m_TransformMatrixes[x] = createTransformationMatrix(m_Transforms[x].position, m_Transforms[x].rotation, m_Transforms[x].scale);
 	}
 }

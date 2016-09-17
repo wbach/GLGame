@@ -24,15 +24,15 @@ public:
 	void start();
 	void stop();
 	void cleanUp();
-	int getUniformLocation(string uniformName);
-	void bindAttribute(int attribute, string variableName);
-	void loadValue(unsigned int loacation, glm::mat4 value);
-	void loadValue(unsigned int loacation, glm::mat3 value);
-	void loadValue(unsigned int loacation, float value);
-	void loadValue(unsigned int loacation, int value);
-	void loadValue(unsigned int loacation, glm::vec2 value);
-	void loadValue(unsigned int loacation, glm::vec3 value);
-	void loadValue(unsigned int loacation, glm::vec4 value);
+	int getUniformLocation(const string& uniformName);
+	void bindAttribute(int attribute, const string& variableName);
+	void loadValue(unsigned int loacation, const glm::mat4& value);
+	void loadValue(unsigned int loacation, const glm::mat3& value);
+	void loadValue(unsigned int loacation, const float& value);
+	void loadValue(unsigned int loacation, const int& value);
+	void loadValue(unsigned int loacation, const glm::vec2& value);
+	void loadValue(unsigned int loacation, const glm::vec3& value);
+	void loadValue(unsigned int loacation, const glm::vec4& value);
 protected:
 	virtual void getAllUniformLocations() {}
 	virtual void bindAttributes() {}

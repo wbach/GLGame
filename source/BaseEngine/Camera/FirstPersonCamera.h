@@ -8,10 +8,10 @@ class CFirstPersonCamera : public CCamera
 {	
 public:
 	CFirstPersonCamera();
-	CFirstPersonCamera(glm::vec3& positionEntity, glm::vec3& rotationEntity);
-	
+	CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity);
+
 	void Move(SDL_Window* win) override;
-	void AttachToObject(glm::vec3& positionEntity, glm::vec3& rotationEntity) override;	
+	void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) override;	
 
 private:
 	void MoveCamera(float dist, float dir);
