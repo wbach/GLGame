@@ -1,12 +1,9 @@
-#ifndef GUITEXT_H
-#define GUITEXT_H
+#pragma once
 #include "GUITexture.h"
 #include "FreeType.h"
 #include "FontShader.h"
-class CGUIText{
-
-
-	float fontSize ;
+class CGUIText
+{	
 public:
     string text;
 	glm::vec2 position ;
@@ -16,24 +13,25 @@ public:
 		this->position = position;
 		this->colour = colour;
 		this->text = text ;
-		this->fontSize = fontSize ;
+		this->m_FontSize = fontSize ;
 	}
 	void updateText(string text){this->text = text;}
 	void drawText(FontShader *shader,freetype::font_data *font) const
 	{
 		//glUseProgram(0);
-		shader->start();
+		shader->Start();
 		glActiveTexture(GL_TEXTURE0) ;
 		GLfloat ActiveColor[]={colour.x,colour.y,colour.z,1};
 		glPushMatrix();
 		glLoadIdentity();
 		glColor4fv(ActiveColor);
 		shader->loadTranslation(position);
-		glScalef(fontSize,fontSize,fontSize);
+		glScalef(m_FontSize, m_FontSize, m_FontSize);
 		freetype::print(*font,position.x, position.y,text.c_str());
 		glPopMatrix() ;
-		shader->stop();
+		shader->Stop();
 	}
+private:
+	float m_FontSize;
 
 };
-#endif

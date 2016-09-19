@@ -1,126 +1,137 @@
 #include "TerrainShader.h"
 
-void TerrainShader::init(int numberOfLights){
+void TerrainShader::Init(int number_of_lights)
+{
 	//initShaderProgram("Data/Shaders/terrainShader.vs" ,"Data/Shaders/terrainShader.fs", "Data/Shaders/terrainShader.ts", "Data/Shaders/terrainShader.tes") ;
-	initShaderProgram("Data/Shaders/terrainShader.vs", "Data/Shaders/terrainShader.fs");
-	this->numberOfLights = numberOfLights;
-	start() ;
-	getAllUniformLocations();
-	connectTextureUnits();
-	stop();
-	//
+	InitShaderProgram("Data/Shaders/terrainShader.vs", "Data/Shaders/terrainShader.fs");
+	m_NumberOfLights = number_of_lights;
+	Start() ;
+	GetAllUniformLocations();
+	ConnectTextureUnits();
+	Stop();
 }
-void TerrainShader::getAllUniformLocations(){
-	location_isElementOfTerrain = getUniformLocation("isElementOfTerrain");
-	location_useFakeLighting = getUniformLocation("useFakeLighting");
-	location_skyColour = getUniformLocation("skyColour");
-	location_transformationMatrix = getUniformLocation("transformationMatrix");
-    location_projectionMatrix = getUniformLocation("projectionMatrix");
-    location_viewMatrix = getUniformLocation("viewMatrix");
-	location_numberOfLights = getUniformLocation("numberOfLights");
-	location_useNormalMap = getUniformLocation("useNormalMap");
-	location_backgroundTexture = getUniformLocation("backgroundTexture");
-	location_rTexture = getUniformLocation("rTexture");
-	location_bTexture = getUniformLocation("bTexture");
-	location_gTexture = getUniformLocation("gTexture");
-	location_blendMap = getUniformLocation("blendMap");
-	location_backgroundTextureNormal = getUniformLocation("backgroundTextureNormal");
-	location_rTextureNormal = getUniformLocation("rTextureNormal");
-	location_bTextureNormal = getUniformLocation("bTextureNormal");
-	location_gTextureNormal = getUniformLocation("gTextureNormal");
-	location_numberOfRows = getUniformLocation("numberOfRows");
-	location_offset = getUniformLocation("offset");
-	location_toShadowMapSpace = getUniformLocation("toShadowMapSpace");
-	location_shadowMap = getUniformLocation("shadowMap");
-	location_plane = getUniformLocation("plane");
-	location_isShadows = getUniformLocation("isShadows");
-	location_viewDistance = getUniformLocation("viewDistance");
-	for(int i =0 ; i < numberOfLights; i++){
+void TerrainShader::GetAllUniformLocations()
+{
+	location_isElementOfTerrain = GetUniformLocation("isElementOfTerrain");
+	location_useFakeLighting = GetUniformLocation("useFakeLighting");
+	location_skyColour = GetUniformLocation("skyColour");
+	location_transformationMatrix = GetUniformLocation("transformationMatrix");
+    location_projectionMatrix = GetUniformLocation("projectionMatrix");
+    location_viewMatrix = GetUniformLocation("viewMatrix");
+	location_numberOfLights = GetUniformLocation("numberOfLights");
+	location_useNormalMap = GetUniformLocation("useNormalMap");
+	location_backgroundTexture = GetUniformLocation("backgroundTexture");
+	location_rTexture = GetUniformLocation("rTexture");
+	location_bTexture = GetUniformLocation("bTexture");
+	location_gTexture = GetUniformLocation("gTexture");
+	location_blendMap = GetUniformLocation("blendMap");
+	location_backgroundTextureNormal = GetUniformLocation("backgroundTextureNormal");
+	location_rTextureNormal = GetUniformLocation("rTextureNormal");
+	location_bTextureNormal = GetUniformLocation("bTextureNormal");
+	location_gTextureNormal = GetUniformLocation("gTextureNormal");
+	location_numberOfRows = GetUniformLocation("numberOfRows");
+	location_offset = GetUniformLocation("offset");
+	location_toShadowMapSpace = GetUniformLocation("toShadowMapSpace");
+	location_shadowMap = GetUniformLocation("shadowMap");
+	location_plane = GetUniformLocation("plane");
+	location_isShadows = GetUniformLocation("isShadows");
+	location_viewDistance = GetUniformLocation("viewDistance");
+	for(int i =0 ; i < m_NumberOfLights; i++){
 		char tmpVariableName[50] ; ; memset(tmpVariableName,0,50) ;
 		sprintf(tmpVariableName,"lightColour[%i]",i);
-        location_lightColour.push_back(getUniformLocation(tmpVariableName));
+        location_lightColour.push_back(GetUniformLocation(tmpVariableName));
 		sprintf(tmpVariableName,"lightPosition[%i]",i);
-        location_lightPosition.push_back(getUniformLocation(tmpVariableName));
+        location_lightPosition.push_back(GetUniformLocation(tmpVariableName));
 		sprintf(tmpVariableName,"attenuation[%i]",i);
-        location_attenuation.push_back(getUniformLocation(tmpVariableName));
-
+        location_attenuation.push_back(GetUniformLocation(tmpVariableName));
        }
-
 }
 
-void TerrainShader::loadViewDistance(float distance)
+void TerrainShader::LoadViewDistance(const float& distance) const
 {
-	loadValue(location_viewDistance,distance);
+	LoadValue(location_viewDistance, distance);
 }
 
-void TerrainShader::loadUseFakeLight(float use){
-	loadValue(location_useFakeLighting,use);
-}
-
-void TerrainShader::loadIsElementOfTerrain(float is)
+void TerrainShader::LoadUseFakeLight(const float& use)const 
 {
-	loadValue(location_isElementOfTerrain,is);
-}
-void TerrainShader::loadNumberOfRows(float numberOfRows){
-	loadValue(location_numberOfRows,numberOfRows);
-}
-void TerrainShader::loadOffset(glm::vec2 offset){
-	loadValue(location_offset,offset);
+	LoadValue(location_useFakeLighting, use);
 }
 
-void TerrainShader::loadToShadowSpaceMatrix(glm::mat4 matrix)
+void TerrainShader::LoadIsElementOfTerrain(const float& is)const
 {
-	loadValue(location_toShadowMapSpace, matrix);
+	LoadValue(location_isElementOfTerrain, is);
+}
+void TerrainShader::LoadNumberOfRows(const float& number_of_rows) const 
+{
+	LoadValue(location_numberOfRows, number_of_rows);
+}
+void TerrainShader::LoadOffset(const glm::vec2& offset) const 
+{
+	LoadValue(location_offset, offset);
 }
 
-void TerrainShader::loadClipPlaneVector(glm::vec4 plane)
+void TerrainShader::LoadToShadowSpaceMatrix(const glm::mat4& matrix) const
 {
-	loadValue(location_plane, plane);
+	LoadValue(location_toShadowMapSpace, matrix);
 }
 
-void TerrainShader::loadIsShadows(float is)
+void TerrainShader::LoadClipPlaneVector(const glm::vec4& plane)const
 {
-	loadValue(location_isShadows,is);
+	LoadValue(location_plane, plane);
 }
 
-void TerrainShader::loadSkyColour(float r, float g, float b)
+void TerrainShader::LoadIsShadows(const float& is) const
 {
-	loadValue(location_skyColour,glm::vec3(r,g,b));
+	LoadValue(location_isShadows, is);
 }
-void TerrainShader::connectTextureUnits(){
-		loadValue(location_backgroundTexture, 0);
-		loadValue(location_rTexture, 1);
-		loadValue(location_gTexture, 2);
-		loadValue(location_bTexture, 3);
-		loadValue(location_blendMap, 4);
-		loadValue(location_backgroundTextureNormal,5);
-		loadValue(location_rTextureNormal,6);
-		loadValue(location_gTextureNormal,7);
-		loadValue(location_bTextureNormal,8);
-		loadValue(location_shadowMap, 9);
+
+void TerrainShader::LoadSkyColour(const float& r, const float& g, const float& b) const
+{
+	LoadValue(location_skyColour,glm::vec3(r,g,b));
+}
+void TerrainShader::ConnectTextureUnits() const
+{
+		LoadValue(location_backgroundTexture, 0);
+		LoadValue(location_rTexture, 1);
+		LoadValue(location_gTexture, 2);
+		LoadValue(location_bTexture, 3);
+		LoadValue(location_blendMap, 4);
+		LoadValue(location_backgroundTextureNormal,5);
+		LoadValue(location_rTextureNormal,6);
+		LoadValue(location_gTextureNormal,7);
+		LoadValue(location_bTextureNormal,8);
+		LoadValue(location_shadowMap, 9);
 	}
-void TerrainShader::loadUseNormalMap(float use) {
-	loadValue(location_useNormalMap,use) ;
+void TerrainShader::LoadUseNormalMap(const float& use) const
+{
+	LoadValue(location_useNormalMap, use) ;
 }
-void TerrainShader::loadLightNumber(float i) {
-	loadValue(location_numberOfLights,i);
+void TerrainShader::LoadLightNumber(const float& i) const
+{
+	LoadValue(location_numberOfLights, i);
 }
-void TerrainShader::loadLight(CLight light, int i) {
-	loadValue(location_attenuation[i],light.GetAttenuation()) ;
-	loadValue(location_lightPosition[i],light.GetPosition()) ;
-	loadValue(location_lightColour[i],light.GetColour()) ;
+void TerrainShader::LoadLight(const CLight& light, const int& i) const
+{
+	LoadValue(location_attenuation[i], light.GetAttenuation()) ;
+	LoadValue(location_lightPosition[i], light.GetPosition()) ;
+	LoadValue(location_lightColour[i], light.GetColour()) ;
 }
-void TerrainShader::bindAttributes(){
-	bindAttribute(0, "position");
+void TerrainShader::BindAttributes()
+{
+	BindAttribute(0, "position");
 }
-void TerrainShader::loadTransformMatrix(glm::mat4 matrix){
-    loadValue(location_transformationMatrix, matrix);
+void TerrainShader::LoadTransformMatrix(const glm::mat4& matrix) const 
+{
+    LoadValue(location_transformationMatrix, matrix);
 }
-void TerrainShader::loadProjectionMatrix(glm::mat4 matrix){
-    loadValue(location_projectionMatrix, matrix);
+void TerrainShader::LoadProjectionMatrix(const glm::mat4& matrix) const
+{
+    LoadValue(location_projectionMatrix, matrix);
 }
-void TerrainShader::loadViewMatrix(glm::mat4 matrix){
-	loadValue(location_viewMatrix, matrix);
+void TerrainShader::LoadViewMatrix(const glm::mat4& matrix) const 
+{
+	LoadValue(location_viewMatrix, matrix);
 }
-TerrainShader::~TerrainShader(){
+TerrainShader::~TerrainShader()
+{
 }

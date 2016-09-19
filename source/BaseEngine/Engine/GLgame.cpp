@@ -154,7 +154,7 @@ void CGame::RenderStartSeries()
 	GLuint vbo_id	   = Utils::StoreDataInAttributesList(0, 3, vertex);
 	GLuint vbo_text_id = Utils::StoreDataInAttributesList(1, 2, text_coords);
 	Utils::UnbindVao();
-	m_LoadingShader.init();
+	m_LoadingShader.Init();
 
 	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/start1.png",true);
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
@@ -172,18 +172,18 @@ void CGame::RenderStartSeries()
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(0, 0, 0, 1);
 
-		m_LoadingShader.start();
+		m_LoadingShader.Start();
 
 		if (delta_time > 500 && delta_time < 2500) {
-			m_LoadingShader.loadAlphaValue(FadeIn(delta_time, 500, 2000));
+			m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 500, 2000));
 		}
 		if (delta_time > 4000) {
-			m_LoadingShader.loadAlphaValue(FadeOut(delta_time, 4000, 2000));
+			m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 4000, 2000));
 		}
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
-		m_LoadingShader.loadTransformMatrix(transformation_matrix);
+		m_LoadingShader.LoadTransformMatrix(transformation_matrix);
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -191,13 +191,13 @@ void CGame::RenderStartSeries()
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		m_LoadingShader.stop();
+		m_LoadingShader.Stop();
 		m_DisplayManager.Update();
 
 		if (1000.0 / m_DisplayManager.GetFPSCap()>SDL_GetTicks() - start)  SDL_Delay(1000.0 / m_DisplayManager.GetFPSCap() - (SDL_GetTicks() - start));
 	}
-	m_LoadingShader.stop();
-	m_LoadingShader.cleanUp();
+	m_LoadingShader.Stop();
+	m_LoadingShader.CleanUp();
 	glDeleteTextures(1, &texture);
 	glDeleteBuffers(1, &i_vbo);
 	glDeleteBuffers(1, &vbo_id);
@@ -227,7 +227,7 @@ void CGame::InitializeScene()
 	GLuint vbo_id		= Utils::StoreDataInAttributesList(0, 3, vertex);
 	GLuint vbo_text_id  = Utils::StoreDataInAttributesList(1, 2, text_coords);
 	Utils::UnbindVao();
-	m_LoadingShader.init();
+	m_LoadingShader.Init();
 
 	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/circle2.png");
 	m_CurrScene->GetLoader().textures.clear();
@@ -256,11 +256,11 @@ void CGame::InitializeScene()
 	//	glClearColor(backgroundColour.x, green, backgroundColour.z, 1);
 		glClearColor(0, 0, 0, 1);
 
-		m_LoadingShader.start();
+		m_LoadingShader.Start();
 
 		if (delta_time > 0 && delta_time < 2000)
 		{
-			m_LoadingShader.loadAlphaValue(FadeIn(delta_time, 0, 1500));
+			m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 0, 1500));
 		}
 
 		if (!m_IsLoading)
@@ -273,13 +273,13 @@ void CGame::InitializeScene()
 		if (ending_fade)
 		{
 			if (delta_time > 2000) break;
-			m_LoadingShader.loadAlphaValue(FadeOut(delta_time, 0, 2000));
+			m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 0, 2000));
 		}
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		transformation_matrix *= glm::rotate(-1.0f, 0.0f, 0.0f, 1.0f);
-		m_LoadingShader.loadTransformMatrix(transformation_matrix);
+		m_LoadingShader.LoadTransformMatrix(transformation_matrix);
 		glBindVertexArray(vao);
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
@@ -323,8 +323,8 @@ void CGame::InitializeScene()
 
 		if (1000.0 / m_DisplayManager.GetFPSCap()>SDL_GetTicks() - start)  SDL_Delay(1000.0 / m_DisplayManager.GetFPSCap() - (SDL_GetTicks() - start));
 	}
-	m_LoadingShader.stop();
-	m_LoadingShader.cleanUp();
+	m_LoadingShader.Stop();
+	m_LoadingShader.CleanUp();
 	glDeleteTextures(1, &texture);
 	glDeleteBuffers(1, &i_vbo);
 	glDeleteBuffers(1, &vbo_id);

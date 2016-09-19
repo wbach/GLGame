@@ -1,26 +1,26 @@
 #include "GUIShader.h"
 
-void GUIShader::init()
+void GUIShader::Init()
 {
-	initShaderProgram("Data/Shaders/guiVertexShader.vs" ,"Data/Shaders/guiFragmentShader.fs" ) ;
-	this->start() ;
-	this->getAllUniformLocations();
-	this->stop();
+	InitShaderProgram("Data/Shaders/guiVertexShader.vs" ,"Data/Shaders/guiFragmentShader.fs" ) ;
+	Start() ;
+	GetAllUniformLocations();
+	Stop();
 }
 
-void GUIShader::getAllUniformLocations()
+void GUIShader::GetAllUniformLocations()
 {
-	location_transformationMatrix = getUniformLocation("transformationMatrix");
+	location_transformationMatrix = GetUniformLocation("transformationMatrix");
 }
 
-void GUIShader::bindAttributes()
+void GUIShader::BindAttributes()
 {
-	bindAttribute(0, "position");
+	BindAttribute(0, "position");
 }
 
-void GUIShader::loadTransformMatrix(glm::mat4 matrix)
+void GUIShader::LoadTransformMatrix(const glm::mat4& matrix) const
 {
-	loadValue(location_transformationMatrix, matrix);
+	LoadValue(location_transformationMatrix, matrix);
 }
 
 GUIShader::~GUIShader()

@@ -3,9 +3,9 @@
 void CEntityRenderer::Initialize(const glm::mat4& projection_matrix)
 {
 	m_EntityShader.Init(1);
-	m_EntityShader.start();
+	m_EntityShader.Start();
 	m_EntityShader.LoadProjectionMatrix(projection_matrix);
-	m_EntityShader.stop();
+	m_EntityShader.Stop();
 
 	vector<float> vertex = {-0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0};
 	vector<float> text_coords = {
@@ -28,13 +28,13 @@ void CEntityRenderer::Uninitialize()
 	glDeleteBuffers(1, &m_VboId);
 	glDeleteBuffers(1, &m_VboTextId);
 	glDeleteVertexArrays(1, &m_Vao);
-	m_EntityShader.cleanUp();
+	m_EntityShader.CleanUp();
 }
 
 void CEntityRenderer::Render(shared_ptr<CScene>& scene)
 {
 	if (scene->GetEntities().size() <= 0) return;
-	m_EntityShader.start();
+	m_EntityShader.Start();
 
 	m_EntityShader.LoadViewMatrix(scene->GetViewMatrix());
 	m_EntityShader.LoadIsShadows(0.0f);
@@ -76,7 +76,7 @@ void CEntityRenderer::Render(shared_ptr<CScene>& scene)
 		RenderEntity(entity, model);
 	}
 
-	m_EntityShader.stop();
+	m_EntityShader.Stop();
 }
 void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 {

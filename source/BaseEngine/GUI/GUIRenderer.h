@@ -32,8 +32,8 @@ public:
 		vertexVbo = Utils::StoreDataInAttributesList(0,2,postions);
 		Utils::UnbindVao();
 
-		shader.init();
-		fontshader.init();
+		shader.Init();
+		fontshader.Init();
 		textFont.init("Data/GUI/CRYSISB.ttf", 50);
 		//textFont.init("CRYSISB.ttf", 50);//"bgothm.ttf"
 		cursor = nullptr ;
@@ -60,7 +60,7 @@ public:
 	}
 	void renderButtons(const vector<CGUIButton> &buttons) {
 		if (buttons.size() <= 0) return;
-		shader.start();
+		shader.Start();
 		glBindVertexArray(quadVao);
 		glEnableVertexAttribArray(0);
 		glEnable(GL_BLEND);
@@ -78,7 +78,7 @@ public:
 			}
 			
 			transformationMatrix = Utils::CreateTransformationMatrix(button.position, button.size);
-			shader.loadTransformMatrix(transformationMatrix);
+			shader.LoadTransformMatrix(transformationMatrix);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
 
@@ -86,10 +86,10 @@ public:
 		glEnable(GL_DEPTH_TEST);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		shader.stop();
+		shader.Stop();
 	}
 	void renderTextures(const vector<CGUITexture> &guis){
-		shader.start();
+		shader.Start();
 		glBindVertexArray(quadVao);
 		glEnableVertexAttribArray(0);
 		glEnable(GL_BLEND);
@@ -99,7 +99,7 @@ public:
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gui.getTextureId());
 			transformationMatrix = Utils::CreateTransformationMatrix(gui.getPosition(), gui.getScale());
-			shader.loadTransformMatrix(transformationMatrix);
+			shader.LoadTransformMatrix(transformationMatrix);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
 
@@ -107,10 +107,10 @@ public:
 		glEnable(GL_DEPTH_TEST);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		shader.stop();
+		shader.Stop();
 
 
-		shader.start();
+		shader.Start();
 
 
 		if(cursor!= nullptr){
@@ -130,21 +130,21 @@ public:
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cursor->getTextureId());
 		transformationMatrix = Utils::CreateTransformationMatrix(cursor->getPosition(), cursor->getScale());
-		shader.loadTransformMatrix(transformationMatrix);
+		shader.LoadTransformMatrix(transformationMatrix);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0,4);
 		glDisable(GL_BLEND);
 		glEnable(GL_DEPTH_TEST);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
-		shader.stop();
+		shader.Stop();
 		}
 	}
 	void cleanUP(){
 		if (cursor != nullptr) {
 			cursor->cleanUp();
 		}
-		shader.cleanUp();
-		fontshader.cleanUp();
+		shader.CleanUp();
+		fontshader.CleanUp();
 
 		glDeleteBuffers(1, &vertexVbo);
 		glDeleteVertexArrays(1, &quadVao);

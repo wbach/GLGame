@@ -7,14 +7,38 @@
 #include "glm/gtc/matrix_transform.hpp"
 
 
-class TerrainShader : public CShaderProgram{
+class TerrainShader : public CShaderProgram
+{
+public:
+	TerrainShader(){}
+	void Init(int number_of_lights);
+	void GetAllUniformLocations() override;
+	void BindAttributes() override;
+	
+	void LoadViewDistance(const float& distance) const;
+	void LoadTransformMatrix(const glm::mat4& matrix) const;
+    void LoadProjectionMatrix(const glm::mat4& matrix) const;
+	void LoadViewMatrix(const glm::mat4& matrix) const;
+	void LoadLight(const CLight& light, const int& i) const;
+	void LoadLightNumber(const float& i) const;
+	void LoadUseNormalMap(const float& use) const;
+	void ConnectTextureUnits() const;
+	void LoadSkyColour(const float& r, const float& g, const float& b) const;
+	void LoadUseFakeLight(const float& use) const;
+	void LoadIsElementOfTerrain(const float& is) const;
+	void LoadNumberOfRows(const float& numberOfRows) const;
+	void LoadOffset(const glm::vec2& offset) const;
+	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
+	void LoadClipPlaneVector(const glm::vec4& plane) const;
+	void LoadIsShadows(const float& is) const;
+	~TerrainShader();
+private:
 	int location_isElementOfTerrain;
 	int location_useFakeLighting;
-	int location_skyColour;
-	int numberOfLights ;
-	int location_transformationMatrix ;
-    int location_projectionMatrix ;
-    int location_viewMatrix ;
+	int location_skyColour;	
+	int location_transformationMatrix;
+	int location_projectionMatrix;
+	int location_viewMatrix;
 	int location_numberOfLights;
 	int location_useNormalMap;
 	int location_backgroundTexture;
@@ -28,38 +52,16 @@ class TerrainShader : public CShaderProgram{
 	int location_gTextureNormal;
 	int location_numberOfRows;
 	int location_offset;
-	int location_toShadowMapSpace ;
+	int location_toShadowMapSpace;
 	int location_shadowMap;
 	int location_isShadows;
-	int location_viewDistance ;
+	int location_viewDistance;
 	int location_plane; // clipdistance
-	vector<int> location_lightColour ;
-	vector<int> location_lightPosition ;
-	vector<int> location_attenuation ;
-public:
-	TerrainShader(){}
-	void init(int numberOfLights);
-	void getAllUniformLocations();
-	void loadViewDistance(float distance);
-	void bindAttributes();
-	void loadTransformMatrix(glm::mat4 matrix);
-    void loadProjectionMatrix(glm::mat4 matrix);
-	void loadViewMatrix(glm::mat4 matrix);
-	void loadLight(CLight light, int i);
-	void loadLightNumber(float i) ;
-	void loadUseNormalMap(float use) ;
-	void connectTextureUnits();
-	void loadSkyColour(float r, float g, float b);
-	void loadUseFakeLight(float use);
-	void loadIsElementOfTerrain(float is);
-	void loadNumberOfRows(float numberOfRows);
-	void loadOffset(glm::vec2 offset);
-	void loadToShadowSpaceMatrix(glm::mat4 matrix);
-	void loadClipPlaneVector(glm::vec4 plane);
-	void loadIsShadows(float is);
-	~TerrainShader();
+	vector<int> location_lightColour;
+	vector<int> location_lightPosition;
+	vector<int> location_attenuation;
 
-   // void loadViewMatrix(Camera camera);
+	int m_NumberOfLights;
 };
 
 #endif

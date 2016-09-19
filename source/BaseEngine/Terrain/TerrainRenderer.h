@@ -1,5 +1,4 @@
-#ifndef TERRAIN_RENDERER_H
-#define TERRAIN_RENDERER_H
+#pragma once
 #include <vector>
 #include "Terrain.h"
 #include "TerrainShader.h"
@@ -17,6 +16,5 @@ public:
     void unBindTextureModel();
     void loadModelMatrix(const CTerrain &terrain);
 	void renderElements(CTerrain &terrain);
-	void cleanUp() { terrainShader.cleanUp(); }
+	void cleanUp() { terrainShader.CleanUp(); }
 };
-#endif

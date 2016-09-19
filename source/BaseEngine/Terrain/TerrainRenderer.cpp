@@ -2,13 +2,9 @@
 
 
 
-CTerrainRenderer::CTerrainRenderer(glm::mat4 projectionMatrix)
+CTerrainRenderer::CTerrainRenderer(glm::mat4 projection_matrix)
 {
-	terrainShader.init(1);
-	terrainShader.start();
-	terrainShader.loadProjectionMatrix(projectionMatrix);
-	terrainShader.connectTextureUnits() ;
-	terrainShader.stop();
+	init(projection_matrix);
 }
 
 CTerrainRenderer::CTerrainRenderer()
@@ -18,36 +14,36 @@ CTerrainRenderer::CTerrainRenderer()
 
 void CTerrainRenderer::init(glm::mat4 projectionMatrix)
 {
-	terrainShader.init(0);
-	terrainShader.start();
-	terrainShader.loadProjectionMatrix(projectionMatrix);
-	terrainShader.connectTextureUnits();
-	terrainShader.stop();
+	terrainShader.Init(0);
+	terrainShader.Start();
+	terrainShader.LoadProjectionMatrix(projectionMatrix);
+	terrainShader.ConnectTextureUnits();
+	terrainShader.Stop();
 }
 
 void CTerrainRenderer::render(shared_ptr<CScene>scene,glm::mat4 toShadowSpace)
 {
 	if (scene->GetTerrains().size() <= 0) return;
 
-	terrainShader.start();
-	terrainShader.loadIsShadows(0.0f);
-	terrainShader.loadSkyColour(0.6, 0.6, 0.8);
-	terrainShader.loadViewDistance(625);
-	terrainShader.loadViewMatrix(scene->GetViewMatrix());
-	terrainShader.loadClipPlaneVector(glm::vec4(0, 1, 0, 100000));
-	terrainShader.loadLightNumber(scene->GetLights().size());
-	terrainShader.loadToShadowSpaceMatrix(toShadowSpace);
+	terrainShader.Start();
+	terrainShader.LoadIsShadows(0.0f);
+	terrainShader.LoadSkyColour(0.6, 0.6, 0.8);
+	terrainShader.LoadViewDistance(625);
+	terrainShader.LoadViewMatrix(scene->GetViewMatrix());
+	terrainShader.LoadClipPlaneVector(glm::vec4(0, 1, 0, 100000));
+	terrainShader.LoadLightNumber(scene->GetLights().size());
+	terrainShader.LoadToShadowSpaceMatrix(toShadowSpace);
 
 
 	for (const CTerrain &terrain : scene->GetTerrains())
 	{
 		prepareTerrain(terrain);
 		loadModelMatrix(terrain);
-		terrainShader.loadIsElementOfTerrain(0.0);
+		terrainShader.LoadIsElementOfTerrain(0.0);
 		glDrawElements(GL_TRIANGLES, terrain.model.meshes[0].vertexCount, GL_UNSIGNED_INT, 0);
 		unBindTextureModel();
 	}
-	terrainShader.stop();
+	terrainShader.Stop();
 }
 
 void CTerrainRenderer::renderElements(CTerrain &terrain){
@@ -123,7 +119,7 @@ void CTerrainRenderer::bindTextures(const CTerrain &terrain)
 	glActiveTexture(GL_TEXTURE8);
 	glBindTexture(GL_TEXTURE_2D, terrain.bTexture[1]);
 
-	terrainShader.loadUseNormalMap(0.0f);
+	terrainShader.LoadUseNormalMap(0.0f);
 }
 
 void CTerrainRenderer::unBindTextureModel()
@@ -139,5 +135,5 @@ void CTerrainRenderer::unBindTextureModel()
 void CTerrainRenderer::loadModelMatrix(const CTerrain &terrain)
 {
 	transformationMatrix = Utils::CreateTransformationMatrix(glm::vec3(terrain.transform.position.x,0 , terrain.transform.position.z),glm::vec3(0),glm::vec3(1));
-	terrainShader.loadTransformMatrix(transformationMatrix);
+	terrainShader.LoadTransformMatrix(transformationMatrix);
 }

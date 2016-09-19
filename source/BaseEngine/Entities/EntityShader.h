@@ -11,7 +11,7 @@ public:
 	void Init(int numberOfLights);
 	void LoadIsTextured(float isTex);
 	void LoadViewDistance(float distance);
-	void GetAllUniformLocations();
+	void GetAllUniformLocations() override;
 	void BindAttributes() override;
 
 	void LoadTransformMatrix(const glm::mat4& matrix);

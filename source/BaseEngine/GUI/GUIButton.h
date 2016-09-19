@@ -79,7 +79,7 @@ public:
 	void drawText(FontShader *shader, freetype::font_data *font)
 	{
 		//glUseProgram(0);
-		shader->start();
+		shader->Start();
 		glActiveTexture(GL_TEXTURE0);
 		GLfloat ActiveColor[] = { colour.x,colour.y,colour.z,1 };
 		glPushMatrix();
@@ -89,7 +89,7 @@ public:
 		glScalef(fontSize, fontSize, fontSize);
 		freetype::print(*font, position.x, position.y, text.c_str());
 		glPopMatrix();
-		shader->stop();
+		shader->Stop();
 	}
 
 };
