@@ -19,7 +19,7 @@ public:
 		this->fontSize = fontSize ;
 	}
 	void updateText(string text){this->text = text;}
-	void drawText(FontShader *shader,freetype::font_data *font)
+	void drawText(FontShader *shader,freetype::font_data *font) const
 	{
 		//glUseProgram(0);
 		shader->start();

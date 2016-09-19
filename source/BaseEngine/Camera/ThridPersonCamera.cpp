@@ -69,8 +69,8 @@ void CThirdPersonCamera::Move(SDL_Window* win)
 void CThirdPersonCamera::CalculateCameraPosition(float horizontal_distance, float vertical_distance)
 {
 	float theata  = m_LookAtRotation.y  + m_AngleAroundPlayer;
-	float x_offset = (float) (horizontal_distance * sin(toRadians(theata))) ;
-	float z_offset = (float) (horizontal_distance * cos(toRadians(theata))) ;
+	float x_offset = (float) (horizontal_distance * sin(Utils::ToRadians(theata))) ;
+	float z_offset = (float) (horizontal_distance * cos(Utils::ToRadians(theata))) ;
 	m_Position.x  = m_LookAtPosition.x - x_offset;
 	m_Position.y  = m_LookAtPosition.y + vertical_distance + 10;
 	m_Position.z  = m_LookAtPosition.z - z_offset;
@@ -79,12 +79,12 @@ void CThirdPersonCamera::CalculateCameraPosition(float horizontal_distance, floa
 
 float CThirdPersonCamera::CalculateHorizontalDistance()
 {
-	return (float) (m_DistanceFromPlayer * cos(toRadians(m_Pitch))) ;
+	return (float) (m_DistanceFromPlayer * cos(Utils::ToRadians(m_Pitch))) ;
 }
 
 float CThirdPersonCamera::CalculateVerticalDistance()
 {
-	return (float) (m_DistanceFromPlayer * sin(toRadians(m_Pitch))) ;
+	return (float) (m_DistanceFromPlayer * sin(Utils::ToRadians(m_Pitch))) ;
 }
 
 void CThirdPersonCamera::CalculateZoom(float zoom_lvl)

@@ -15,8 +15,8 @@ void CPlayer::calculateMove(float deltaTime)
 	checkInputs();
 	IncreaseRotation(0, this->currentTurnSpeed * deltaTime, 0);
 	float distance = this->currentSpeed  * deltaTime;
-	float dx = static_cast<float>(distance * sin(toRadians(this->GetRotation().y)));
-	float dz = static_cast<float>(distance * cos(toRadians(this->GetRotation().y)));
+	float dx = static_cast<float>(distance * sin(Utils::ToRadians(this->GetRotation().y)));
+	float dz = static_cast<float>(distance * cos(Utils::ToRadians(this->GetRotation().y)));
 	//	upwardsSpeed += GRAVITY* deltaTime;	
 	IncrasePosition(dx, 0, dz);
 }

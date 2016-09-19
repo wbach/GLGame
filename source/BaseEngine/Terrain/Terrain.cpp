@@ -186,10 +186,10 @@ float CTerrain::getHeightofTerrain(float worldX,float worldZ)
 	float zCoord = (fmod(terrainZ,gridSquereSize)) /gridSquereSize;
 	float answer ;
 	if (xCoord <= (1-zCoord)) {
-		answer = barryCentric(glm::vec3(0,heights[gridX][gridZ] , 0), glm::vec3(1,heights[gridX + 1][gridZ], 0),
+		answer = Utils::BarryCentric(glm::vec3(0,heights[gridX][gridZ] , 0), glm::vec3(1,heights[gridX + 1][gridZ], 0),
 			glm::vec3(0,heights[gridX][gridZ + 1], 1),glm::vec2(xCoord, zCoord));
 	} else {
-		answer = barryCentric(glm::vec3(1, heights[gridX + 1][gridZ], 0),glm::vec3(1,heights[gridX + 1][gridZ + 1], 1),
+		answer = Utils::BarryCentric(glm::vec3(1, heights[gridX + 1][gridZ], 0),glm::vec3(1,heights[gridX + 1][gridZ + 1], 1),
 			glm::vec3(0,heights[gridX][gridZ + 1], 1),glm::vec2(xCoord, zCoord));
 	}
 	return answer;

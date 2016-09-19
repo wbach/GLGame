@@ -21,10 +21,9 @@ public:
 	CLight(glm::vec3 position,glm::vec3 colour);
 	CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation);
 	CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation,float cutOff);
-	const int& GetType();
-	const glm::vec3& GetPosition();
-	const glm::vec3& GetColour();
-	const glm::vec3& GetIColour(){return m_Colour;}
-	const glm::vec3& GetAttenuation();
-	const float& GetCutoff();
+	const int& GetType() const;
+	const glm::vec3& GetPosition() const;
+	const glm::vec3& GetColour() const;
+	const glm::vec3& GetAttenuation() const;
+	const float& GetCutoff() const;
 };

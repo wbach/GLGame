@@ -149,15 +149,15 @@ void CGame::RenderStartSeries()
 		1, 0 };
 	vector<unsigned int>indices = { 0, 1, 3, 3, 1, 2 };
 
-	GLuint vao		 = createVAO();
-	GLuint i_vbo		 = bindIndicesBuffer(indices);
-	GLuint vbo_id	 = storeDataInAttributesList(0, 3, vertex);
-	GLuint vbo_text_id = storeDataInAttributesList(1, 2, text_coords);
-	unbindVAO();
+	GLuint vao		   = Utils::CreateVao();
+	GLuint i_vbo	   = Utils::BindIndicesBuffer(indices);
+	GLuint vbo_id	   = Utils::StoreDataInAttributesList(0, 3, vertex);
+	GLuint vbo_text_id = Utils::StoreDataInAttributesList(1, 2, text_coords);
+	Utils::UnbindVao();
 	m_LoadingShader.init();
 
 	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/start1.png",true);
-	glm::mat4 transformation_matrix = createTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
+	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
 
 	Uint32 start,start2 = SDL_GetTicks();
 
@@ -222,16 +222,16 @@ void CGame::InitializeScene()
 		1, 0};
 	vector<unsigned int> indices = {0, 1, 3, 3, 1, 2};
 
-	GLuint vao			= createVAO();
-	GLuint i_vbo		= bindIndicesBuffer(indices);
-	GLuint vbo_id		= storeDataInAttributesList(0, 3, vertex);
-	GLuint vbo_text_id  = storeDataInAttributesList(1, 2, text_coords);
-	unbindVAO();
+	GLuint vao			= Utils::CreateVao();
+	GLuint i_vbo		= Utils::BindIndicesBuffer(indices);
+	GLuint vbo_id		= Utils::StoreDataInAttributesList(0, 3, vertex);
+	GLuint vbo_text_id  = Utils::StoreDataInAttributesList(1, 2, text_coords);
+	Utils::UnbindVao();
 	m_LoadingShader.init();
 
 	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/circle2.png");
 	m_CurrScene->GetLoader().textures.clear();
-	glm::mat4 transformation_matrix = createTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(0.25));
+	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(0.25));
 
 	string loading_text = "Loading";
 	vector<CGUIText> texts;
@@ -339,7 +339,7 @@ void CGame::InitializeScene()
 void CGame::CreateProjectionMatrix()
 {
 	float aspect_ratio = (float)m_WindowSize.x / (float)m_WindowSize.y;
-	float y_scale = (float)((1.0f / tan(toRadians(m_Fov / 2.0f))));
+	float y_scale = (float)((1.0f / tan(Utils::ToRadians(m_Fov / 2.0f))));
 	float x_scale = y_scale / aspect_ratio;
 	float frustum_length = m_FarPlane - m_NearPlane;
 

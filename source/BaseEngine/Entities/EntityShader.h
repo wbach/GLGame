@@ -12,20 +12,20 @@ public:
 	void LoadIsTextured(float isTex);
 	void LoadViewDistance(float distance);
 	void GetAllUniformLocations();
-	void BindAttributes();
+	void BindAttributes() override;
 
 	void LoadTransformMatrix(const glm::mat4& matrix);
     void LoadProjectionMatrix(const glm::mat4& matrix);
 	void LoadViewMatrix(const glm::mat4& viewMatrix);
 	void LoadToShadowSpaceMatrix(const glm::mat4& matrix);
 
-	void LoadLight(CLight& light, int i);
+	void LoadLight(const CLight& light, int i);
 	void LoadLightNumber(float i) ;
 	void LoadUseNormalMap(float use) ;
 	void ConnectTextureUnits();
 	void LoadSkyColour(float r, float g, float b);
 	void LoadUseFakeLight(float use);
-	void LoadMaterial(glm::vec3 diffuse, glm::vec3 specular, float shineDamper, float reflectivity);
+	void LoadMaterial(glm::vec3 diffuse, glm::vec3 specular, float shine_damper, float reflectivity);
 	void LoadNumberOfRows(float numberOfRows);
 	void LoadOffset(glm::vec2 offset);	
 	void LoadClipPlaneVector(glm::vec4& plane);

@@ -9,11 +9,11 @@
 #include "../BaseEngine/GUI/GUIButton.h"
 #include "Player.h"
 
-class CTestSCene : public CScene {
+class CTestSCene : public CScene
+{
     CLight dirLight;
     shared_ptr<CPlayer> songo;	
 	shared_ptr<CEntity> m9;
-//	CGUITexture testTexture;
 public:
     bool thridCamera = true;
 	CTestSCene(){
@@ -120,7 +120,7 @@ public:
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym)
 			{
-			case SDLK_F1: cout << "Camera position : " << to_string(m_Camera->GetPosition()); break;
+			case SDLK_F1: cout << "Camera position : " << Utils::ToString(m_Camera->GetPosition()); break;
 			case SDLK_F2: cout << "Camera angles : " << m_Camera->GetPitch() << " " << m_Camera->GetYaw() << " " << m_Camera->GetRoll() << endl; break;
             case SDLK_F3: thridCamera = !thridCamera; thridCamera ? setThridCamera() : setFirstCamera(); break;
 			}

@@ -46,25 +46,25 @@ int CModel::addMesh(string name, vector<float> &positions, vector<float>&textCoo
 
 	mesh.calculateBoudnigBox(positions);
 
-	mesh.vao = createVAO();
-	GLuint vboId = bindIndicesBuffer(indices); mesh.vbos.push_back(vboId);
+	mesh.vao = Utils::CreateVao();
+	GLuint vboId = Utils::BindIndicesBuffer(indices); mesh.vbos.push_back(vboId);
 	if (positions.size() >0) {
-		GLuint vboId = storeDataInAttributesList(0, 3, positions);
+		GLuint vboId = Utils::StoreDataInAttributesList(0, 3, positions);
 		mesh.vbos.push_back(vboId);
 	}
 	if (textCoords.size() >0) {
-		GLuint vboId = storeDataInAttributesList(1, 2, textCoords);
+		GLuint vboId = Utils::StoreDataInAttributesList(1, 2, textCoords);
 		mesh.vbos.push_back(vboId);
 	}
 	if (normals.size() >0) {
-		GLuint vboId = storeDataInAttributesList(2, 3, normals);
+		GLuint vboId = Utils::StoreDataInAttributesList(2, 3, normals);
 		mesh.vbos.push_back(vboId);
 	}
 	if (tangents.size() >0) {
-		GLuint vboId = storeDataInAttributesList(3, 3, tangents);
+		GLuint vboId = Utils::StoreDataInAttributesList(3, 3, tangents);
 		mesh.vbos.push_back(vboId);
 	}
-	unbindVAO();
+	Utils::UnbindVao();
 	meshes.push_back(mesh);
 	return 0;
 }

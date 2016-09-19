@@ -23,14 +23,14 @@ class CGUIRenderer{
 	string fontName ;
 public:
 	void init(int windowW, int windowH){
-		vector<float>postions= {
+		vector<float> postions= {
 			-1,1,
 			-1,-1,
 			1,1,
 			1,-1 };
-		quadVao = createVAO();
-		vertexVbo = storeDataInAttributesList(0,2,postions);
-		unbindVAO();
+		quadVao = Utils::CreateVao();
+		vertexVbo = Utils::StoreDataInAttributesList(0,2,postions);
+		Utils::UnbindVao();
 
 		shader.init();
 		fontshader.init();
@@ -40,11 +40,11 @@ public:
 		windowSize.x = windowW ;
 		windowSize.y = windowH ;
 	}
-	void setFont(string filename){
+	void setFont(string& filename){
 		textFont.clean();
 		textFont.init(filename.c_str(), 50) ;
 	}
-	void loadCursor(shared_ptr<CGUITexture>cur){
+	void loadCursor(shared_ptr<CGUITexture> cur){
 		cursor = cur;
 	}
 
@@ -54,11 +54,11 @@ public:
 		renderText(gui.guiTexts);
 	}
 	void renderText(const vector<CGUIText> &texts) {
-		for (CGUIText text : texts) {
+		for (const CGUIText& text : texts) {
 			text.drawText(&fontshader, &textFont);
 		}
 	}
-	void renderButtons(const vector<CGUIButton>&buttons) {
+	void renderButtons(const vector<CGUIButton> &buttons) {
 		if (buttons.size() <= 0) return;
 		shader.start();
 		glBindVertexArray(quadVao);
@@ -66,7 +66,7 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_DEPTH_TEST);
-		for (CGUIButton button : buttons) {
+		for (const CGUIButton& button : buttons) {
 			if (!button.buttonTexture.loaded) continue;
 
 
@@ -77,7 +77,7 @@ public:
 			case HOVER_BUTTON_STATE:  glBindTexture(GL_TEXTURE_2D, button.hoverTexture.getTextureId());  break;
 			}
 			
-			transformationMatrix = createTransformationMatrix(button.position, button.size);
+			transformationMatrix = Utils::CreateTransformationMatrix(button.position, button.size);
 			shader.loadTransformMatrix(transformationMatrix);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
@@ -95,10 +95,10 @@ public:
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_DEPTH_TEST);
-		for(CGUITexture gui : guis){
+		for(const CGUITexture& gui : guis){
 			glActiveTexture(GL_TEXTURE0);
 			glBindTexture(GL_TEXTURE_2D, gui.getTextureId());
-			transformationMatrix = createTransformationMatrix(gui.getPosition(), gui.getScale());
+			transformationMatrix = Utils::CreateTransformationMatrix(gui.getPosition(), gui.getScale());
 			shader.loadTransformMatrix(transformationMatrix);
 			glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
 		}
@@ -129,7 +129,7 @@ public:
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, cursor->getTextureId());
-		transformationMatrix = createTransformationMatrix(cursor->getPosition(), cursor->getScale());
+		transformationMatrix = Utils::CreateTransformationMatrix(cursor->getPosition(), cursor->getScale());
 		shader.loadTransformMatrix(transformationMatrix);
 		glDrawArrays(GL_TRIANGLE_STRIP, 0,4);
 		glDisable(GL_BLEND);

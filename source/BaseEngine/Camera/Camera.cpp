@@ -13,7 +13,7 @@ CCamera::CCamera()
 
 void CCamera::SetPosition(glm::vec3 position)
 {
-	this->m_Position = position;
+	m_Position = position;
 }
 void CCamera::Move(SDL_Window* win){
 	const Uint8* state=SDL_GetKeyboardState(NULL);
@@ -38,7 +38,7 @@ void CCamera::Move(SDL_Window* win){
 
 void CCamera::InvertPitch()
 {
-	this->m_Pitch *= -1.0f;
+	m_Pitch *= -1.0f;
 }
 
 const glm::vec3& CCamera::GetPosition()
@@ -63,7 +63,7 @@ void CCamera::SetDistance(float dist)
 
 void CCamera::SetPitch(float pitch)
 {
-	this->m_Pitch = pitch;
+	m_Pitch = pitch;
 }
 
 const float& CCamera::GetYaw()
@@ -73,7 +73,7 @@ const float& CCamera::GetYaw()
 
 void CCamera::SetYaw(float yaw)
 {
-	this->m_Yaw = yaw;
+	m_Yaw = yaw;
 }
 
 const float& CCamera::GetAngleAround()
@@ -83,7 +83,7 @@ const float& CCamera::GetAngleAround()
 
 void CCamera::SetAngleAround(float a)
 {
-	this->m_AngleAroundPlayer = a;
+	m_AngleAroundPlayer = a;
 }
 
 const float& CCamera::GetRoll()
@@ -92,10 +92,11 @@ const float& CCamera::GetRoll()
 }
 void CCamera::SetRoll(float roll)
 {
-	this->m_Roll = roll;
+	m_Roll = roll;
 }
 
-void CCamera::UpdateViewMatrix() {
+void CCamera::UpdateViewMatrix() 
+{
 	m_ViewMatrix  = glm::mat4(1.0);
 	m_ViewMatrix *= glm::rotate(m_Pitch, 1.0f, 0.0f, 0.0f);
 	m_ViewMatrix *= glm::rotate(m_Yaw, 0.0f, 1.0f, 0.0f);

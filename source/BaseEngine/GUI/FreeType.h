@@ -1,5 +1,4 @@
-#ifndef FREE_NEHE_H
-#define FREE_NEHE_H
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 //FreeType Headers
 #include <freetype2/ft2build.h>
@@ -59,5 +58,3 @@ struct font_data {
 void print(const font_data &ft_font, float x, float y, const char *fmt, ...) ;
 
 }
-
-#endif

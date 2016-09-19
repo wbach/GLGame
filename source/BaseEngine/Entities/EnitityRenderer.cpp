@@ -15,11 +15,11 @@ void CEntityRenderer::Initialize(const glm::mat4& projection_matrix)
 		1,0 };
 	vector<unsigned int>indices = {0, 1, 3, 3, 1, 2};
 
-	m_Vao = createVAO();
-	m_Ivbo = bindIndicesBuffer(indices);
-	m_VboId = storeDataInAttributesList(0, 3, vertex);
-	m_VboTextId = storeDataInAttributesList(1, 2, text_coords);
-	unbindVAO();
+	m_Vao = Utils::CreateVao();
+	m_Ivbo = Utils::BindIndicesBuffer(indices);
+	m_VboId = Utils::StoreDataInAttributesList(0, 3, vertex);
+	m_VboTextId = Utils::StoreDataInAttributesList(1, 2, text_coords);
+	Utils::UnbindVao();
 }
 
 void CEntityRenderer::Uninitialize()
@@ -46,16 +46,16 @@ void CEntityRenderer::Render(shared_ptr<CScene>& scene)
 	m_EntityShader.LoadViewDistance(625);
 
 	int nr = 0;
-	for (CLight light : scene->GetLights())
+	for (const CLight& light : scene->GetLights())
 	{
 		m_EntityShader.LoadLight(light, nr++);
 	}
 
-	for (CTerrain terr : scene->GetTerrains())
+	for (const CTerrain& terr : scene->GetTerrains())
 	{		
 		for (shared_ptr<CEntity> entity : terr.terrainEntities)
 		{
-			for (shared_ptr<CEntity> subEntity : entity->GetChildrenEntities())
+			for (shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 			{
 				CModel &subModel = scene->GetLoader().models[subEntity->m_ModelId];
 				RenderEntity(subEntity, subModel);
@@ -80,7 +80,7 @@ void CEntityRenderer::Render(shared_ptr<CScene>& scene)
 }
 void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 {
-	for (Mesh mesh : model.meshes) 
+	for (Mesh& mesh : model.meshes) 
 	{
 		glBindVertexArray(mesh.vao);
 		glEnableVertexAttribArray(0);
@@ -90,7 +90,7 @@ void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 
 		int is_texture = 0, is_normalMap = 0, is_specularMap = 0, is_blendMap = 0; char tmp_name[50] = "";
 		int i = 0;
-		for (TextInfo td : mesh.material.textures)
+		for (TextInfo& td : mesh.material.textures)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, td.id);
@@ -116,7 +116,7 @@ void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 		else
 			m_EntityShader.LoadUseNormalMap(0.0f);
 		
-		for (glm::mat4 mat : entity->GetTransformMatrixes())
+		for (glm::mat4& mat : entity->GetTransformMatrixes())
 		{
 			m_EntityShader.LoadTransformMatrix(mat);
 
@@ -126,7 +126,7 @@ void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 				m_EntityShader.LoadUseFakeLight(0.0f);
 
 			if (mesh.material.isTransparency)
-				disableCulling();
+				Utils::DisableCulling();
 			
 			m_EntityShader.LoadMaterial(mesh.material.diffuse, mesh.material.specular, mesh.material.shineDamper, mesh.material.reflectivity);
 			m_EntityShader.LoadNumberOfRows(mesh.material.numberOfRows);

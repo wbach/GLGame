@@ -1,5 +1,4 @@
-#ifndef SHADERPROGRAM_H
-#define SHADERPROGRAM_H
+#pragma once
 #define _CRT_SECURE_NO_WARNINGS
 #include <string>
 #include <fstream>
@@ -11,33 +10,36 @@
 #include "glm/gtc/type_ptr.hpp"
 using namespace std;
 class CShaderProgram {
-	int programID; 
-	int vertexShaderID;
-	int fragmentShaderID;
-	int tesselationControlShaderID;
-	int tesselationEvaluationShaderID;
-	void loadFile(const char* fn, std::string& str);
-	unsigned int loadShader(char *filename, unsigned int mode);
 public:
-	void initShaderProgram(char* vertexShaderFile, char* fragmentShaderFile);
-	void initShaderProgram(char* vertexShaderFile, char* fragmentShaderFile,char *tesselationShaderFile, char * tesselationEvaluationShaderFile);
-	void start();
-	void stop();
-	void cleanUp();
-	int getUniformLocation(const string& uniformName);
-	void bindAttribute(int attribute, const string& variableName);
-	void loadValue(unsigned int loacation, const glm::mat4& value);
-	void loadValue(unsigned int loacation, const glm::mat3& value);
-	void loadValue(unsigned int loacation, const float& value);
-	void loadValue(unsigned int loacation, const int& value);
-	void loadValue(unsigned int loacation, const glm::vec2& value);
-	void loadValue(unsigned int loacation, const glm::vec3& value);
-	void loadValue(unsigned int loacation, const glm::vec4& value);
-protected:
-	virtual void getAllUniformLocations() {}
-	virtual void bindAttributes() {}
+	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file);
+	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file, char *tesselation_shader_file, char * tesselation_evaluation_shader_file);
+	void Start();
+	void Stop();
+	void CleanUp();	
+	void BindAttribute(int attribute, const string& variableName) const;
+	int GetUniformLocation(const string& uniformName) const;
 
+	void LoadValue(unsigned int loacation, const int& value) const;
+	void LoadValue(unsigned int loacation, const float& value) const;
+	void LoadValue(unsigned int loacation, const glm::vec2& value) const;
+	void LoadValue(unsigned int loacation, const glm::vec3& value) const;
+	void LoadValue(unsigned int loacation, const glm::vec4& value) const;
+	void LoadValue(unsigned int loacation, const glm::mat3& value) const;
+	void LoadValue(unsigned int loacation, const glm::mat4& value) const;
+
+protected:
+	virtual void GetAllUniformLocations() {}
+	virtual void BindAttributes() {}
+
+private:
+	void LoadFile(const char* fn, std::string& str);
+	unsigned int LoadShader(char *filename, unsigned int mode);
+
+	int m_ProgramID;
+	int m_VertexShaderID;
+	int m_FragmentShaderID;
+	int m_TesselationControlShaderID;
+	int m_TesselationEvaluationShaderID;
+	
 
 };
-
-#endif

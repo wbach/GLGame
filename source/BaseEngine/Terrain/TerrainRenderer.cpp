@@ -37,18 +37,15 @@ void CTerrainRenderer::render(shared_ptr<CScene>scene,glm::mat4 toShadowSpace)
 	terrainShader.loadClipPlaneVector(glm::vec4(0, 1, 0, 100000));
 	terrainShader.loadLightNumber(scene->GetLights().size());
 	terrainShader.loadToShadowSpaceMatrix(toShadowSpace);
-	for (CTerrain terrain : scene->GetTerrains())
+
+
+	for (const CTerrain &terrain : scene->GetTerrains())
 	{
 		prepareTerrain(terrain);
-		loadModelMatrix(terrain) ;
+		loadModelMatrix(terrain);
 		terrainShader.loadIsElementOfTerrain(0.0);
-		//printf("%i\n",terrain->getModel()->getVertexCount()) ;
-		glDrawElements(GL_TRIANGLES,terrain.model.meshes[0].vertexCount,GL_UNSIGNED_INT, 0);
-		//glDrawElements(GL_LINES,terrain->getModel()->getVertexCount(),GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, terrain.model.meshes[0].vertexCount, GL_UNSIGNED_INT, 0);
 		unBindTextureModel();
-
-		//renderElements(terrain);
-
 	}
 	terrainShader.stop();
 }
@@ -92,7 +89,7 @@ void CTerrainRenderer::renderElements(CTerrain &terrain){
 		}
 	}*/
 }
-void CTerrainRenderer::prepareTerrain(CTerrain &terrain)
+void CTerrainRenderer::prepareTerrain(const CTerrain &terrain)
 {
 	
 	glBindVertexArray(terrain.model.meshes[0].vao);
@@ -104,7 +101,7 @@ void CTerrainRenderer::prepareTerrain(CTerrain &terrain)
 	// shader.loadShineVariables(0,0);
 }
 
-void CTerrainRenderer::bindTextures(CTerrain &terrain)
+void CTerrainRenderer::bindTextures(const CTerrain &terrain)
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, terrain.backgroundTexture[0]);
@@ -131,7 +128,7 @@ void CTerrainRenderer::bindTextures(CTerrain &terrain)
 
 void CTerrainRenderer::unBindTextureModel()
 {
-	enableCulling();
+	Utils::EnableCulling();
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(1);
@@ -139,8 +136,8 @@ void CTerrainRenderer::unBindTextureModel()
 	glBindVertexArray(0);
 }
 
-void CTerrainRenderer::loadModelMatrix(CTerrain &terrain)
+void CTerrainRenderer::loadModelMatrix(const CTerrain &terrain)
 {
-	transformationMatrix = createTransformationMatrix(glm::vec3(terrain.transform.position.x,0 , terrain.transform.position.z),glm::vec3(0),glm::vec3(1));
+	transformationMatrix = Utils::CreateTransformationMatrix(glm::vec3(terrain.transform.position.x,0 , terrain.transform.position.z),glm::vec3(0),glm::vec3(1));
 	terrainShader.loadTransformMatrix(transformationMatrix);
 }

@@ -103,7 +103,7 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 void CEntity::AddTransform(STransform transform)
 {
 	m_Transforms.push_back(transform);
-	m_TransformMatrixes.push_back(createTransformationMatrix(transform.position, transform.rotation, transform.scale));
+	m_TransformMatrixes.push_back(Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale));
 }
 
 void CEntity::IncrasePosition(float dx, float dy, float dz, int index)
@@ -130,10 +130,10 @@ void CEntity::CalculateEntityTransformMatrix(int x)
 	if (x < 0 || x > m_Transforms.size()) {
 		int i = 0;
 		for (STransform transform : m_Transforms)
-			m_TransformMatrixes[i++] = createTransformationMatrix(transform.position, transform.rotation, transform.scale);
+			m_TransformMatrixes[i++] = Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale);
 	}
 	else
 	{
-		m_TransformMatrixes[x] = createTransformationMatrix(m_Transforms[x].position, m_Transforms[x].rotation, m_Transforms[x].scale);
+		m_TransformMatrixes[x] = Utils::CreateTransformationMatrix(m_Transforms[x].position, m_Transforms[x].rotation, m_Transforms[x].scale);
 	}
 }

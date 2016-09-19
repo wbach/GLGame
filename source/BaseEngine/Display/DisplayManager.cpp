@@ -26,7 +26,7 @@ int CDisplayManager::Initialize(int w, int h)
 	m_WindowsSize.x = w;
 	m_WindowsSize.y = h;
 
-	m_FPS_CAP = 120;
+	m_FPS_CAP = 999;
 
 	return 0;
 }

@@ -43,27 +43,27 @@ CLight::CLight()
 {
 }
 
-const int& CLight::GetType()
+const int& CLight::GetType() const
 {
 	return m_Type;
 }
 
-const glm::vec3& CLight::GetPosition()
+const glm::vec3& CLight::GetPosition() const
 {
 	return m_Position;
 }
 
-const glm::vec3& CLight::GetColour()
+const glm::vec3& CLight::GetColour() const
 {
 	return m_Colour;
 }
 
-const glm::vec3& CLight::GetAttenuation()
+const glm::vec3& CLight::GetAttenuation() const
 {
 	return m_Attenuation;
 }
 
-const float& CLight::GetCutoff()
+const float& CLight::GetCutoff() const
 {
 	return m_CutOff;
 }

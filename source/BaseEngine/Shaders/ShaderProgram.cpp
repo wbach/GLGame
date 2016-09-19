@@ -1,30 +1,30 @@
 #include "ShaderProgram.h"
-void CShaderProgram::initShaderProgram(char* vertexShaderFile, char* fragmentShaderFile) {
-	vertexShaderID = loadShader(vertexShaderFile, GL_VERTEX_SHADER);
-	fragmentShaderID = loadShader(fragmentShaderFile, GL_FRAGMENT_SHADER);
-	programID = glCreateProgram();
-	glAttachShader(programID, vertexShaderID);
-	glAttachShader(programID, fragmentShaderID);
-	bindAttributes();
-	glLinkProgram(programID);
-	glValidateProgram(programID);
+void CShaderProgram::InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file) {
+	m_VertexShaderID = LoadShader(vertex_shader_file, GL_VERTEX_SHADER);
+	m_FragmentShaderID = LoadShader(fragment_shader_file, GL_FRAGMENT_SHADER);
+	m_ProgramID = glCreateProgram();
+	glAttachShader(m_ProgramID, m_VertexShaderID);
+	glAttachShader(m_ProgramID, m_FragmentShaderID);
+	BindAttributes();
+	glLinkProgram(m_ProgramID);
+	glValidateProgram(m_ProgramID);
 }
-void CShaderProgram::initShaderProgram(char * vertexShaderFile, char * fragmentShaderFile, char * tesselationShaderFile, char * tesselationEvaluationShaderFile)
+void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragment_shader_file, char * tesselation_shader_file, char * tesselation_evaluation_shader_file)
 {	
-	vertexShaderID = loadShader(vertexShaderFile, GL_VERTEX_SHADER);
-	fragmentShaderID = loadShader(fragmentShaderFile, GL_FRAGMENT_SHADER);
-	tesselationControlShaderID = loadShader(tesselationShaderFile, GL_TESS_CONTROL_SHADER);
-	tesselationEvaluationShaderID = loadShader(tesselationEvaluationShaderFile, GL_TESS_EVALUATION_SHADER);	
-	programID = glCreateProgram();
-	glAttachShader(programID, vertexShaderID);
-	glAttachShader(programID, fragmentShaderID);
-	glAttachShader(programID, tesselationControlShaderID);
-	glAttachShader(programID, tesselationEvaluationShaderID);
-	bindAttributes();
-	glLinkProgram(programID);
-	glValidateProgram(programID);
+	m_VertexShaderID = LoadShader(vertex_shader_file, GL_VERTEX_SHADER);
+	m_FragmentShaderID = LoadShader(fragment_shader_file, GL_FRAGMENT_SHADER);
+	m_TesselationControlShaderID = LoadShader(tesselation_shader_file, GL_TESS_CONTROL_SHADER);
+	m_TesselationEvaluationShaderID = LoadShader(tesselation_evaluation_shader_file, GL_TESS_EVALUATION_SHADER);
+	m_ProgramID = glCreateProgram();
+	glAttachShader(m_ProgramID, m_VertexShaderID);
+	glAttachShader(m_ProgramID, m_FragmentShaderID);
+	glAttachShader(m_ProgramID, m_TesselationControlShaderID);
+	glAttachShader(m_ProgramID, m_TesselationEvaluationShaderID);
+	BindAttributes();
+	glLinkProgram(m_ProgramID);
+	glValidateProgram(m_ProgramID);
 }
-void CShaderProgram::loadFile(const char* fn, std::string& str)
+void CShaderProgram::LoadFile(const char* fn, std::string& str)
 {
     std::ifstream in(fn);
         if(!in.is_open())
@@ -38,7 +38,6 @@ void CShaderProgram::loadFile(const char* fn, std::string& str)
             in.getline(tmp,300);
             str+=tmp;
             str+='\n';
-          //  cout << tmp <<endl ;
         }
         in.close();
 	/*std::ifstream in;
@@ -60,10 +59,10 @@ void CShaderProgram::loadFile(const char* fn, std::string& str)
 	}*/
 }
 
-unsigned int CShaderProgram::loadShader(char *filename, unsigned int mode)
+unsigned int CShaderProgram::LoadShader(char *filename, unsigned int mode)
 {
 	std::string source;
-	loadFile(filename, source);
+	LoadFile(filename, source);
 
 	unsigned int id;
 	id = glCreateShader(mode);
@@ -87,49 +86,58 @@ unsigned int CShaderProgram::loadShader(char *filename, unsigned int mode)
 	}
 	return id;
 }
-void CShaderProgram::start() {
-	glUseProgram(programID);
+void CShaderProgram::Start() {
+	glUseProgram(m_ProgramID);
 }
-void CShaderProgram::stop() {
+void CShaderProgram::Stop() {
 	glUseProgram(0);
 }
-void CShaderProgram::cleanUp() {
-	stop();
-	glDetachShader(programID, vertexShaderID);
-	glDetachShader(programID, fragmentShaderID);
-	glDeleteShader(vertexShaderID);
-	glDeleteShader(fragmentShaderID);
-	glDeleteProgram(programID);
+void CShaderProgram::CleanUp() {
+	Stop();
+	glDetachShader(m_ProgramID, m_VertexShaderID);
+	glDetachShader(m_ProgramID, m_FragmentShaderID);
+	glDeleteShader(m_VertexShaderID);
+	glDeleteShader(m_FragmentShaderID);
+	glDeleteProgram(m_ProgramID);
 }
-int CShaderProgram::getUniformLocation(const string& uniformName) {
-	return glGetUniformLocation(programID, uniformName.c_str());
+int CShaderProgram::GetUniformLocation(const string& uniformName) const
+{
+	return glGetUniformLocation(m_ProgramID, uniformName.c_str());
 }
-void CShaderProgram::bindAttribute(int attribute, const string& variableName) {
-	glBindAttribLocation(programID, attribute, variableName.c_str());
+void CShaderProgram::BindAttribute(int attribute, const string& variableName) const
+{
+	glBindAttribLocation(m_ProgramID, attribute, variableName.c_str());
 }
-void CShaderProgram::loadValue(unsigned int loacation, const glm::mat4& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const glm::mat4& value) const 
+{
 	glUniformMatrix4fv(loacation, 1, GL_FALSE, glm::value_ptr(value));
 }
-void CShaderProgram::loadValue(unsigned int loacation, const glm::mat3& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const glm::mat3& value) const 
+{
 	glUniformMatrix3fv(loacation, 1, GL_FALSE, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, const float& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const float& value) const 
+{
 	glUniform1f(loacation, value);
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, const int& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const int& value) const 
+{
 	glUniform1i(loacation, value);
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, const glm::vec2& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const glm::vec2& value) const
+{
 	glUniform2fv(loacation, 1, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, const glm::vec3& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const glm::vec3& value) const 
+{
 	glUniform3fv(loacation, 1, glm::value_ptr(value));
 }
 
-void CShaderProgram::loadValue(unsigned int loacation, const glm::vec4& value) {
+void CShaderProgram::LoadValue(unsigned int loacation, const glm::vec4& value) const 
+{
 	glUniform4fv(loacation, 1, glm::value_ptr(value));
 }
