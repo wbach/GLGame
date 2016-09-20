@@ -41,17 +41,17 @@ void CCamera::InvertPitch()
 	m_Pitch *= -1.0f;
 }
 
-const glm::vec3& CCamera::GetPosition()
+const glm::vec3& CCamera::GetPosition() const
 {
 	return m_Position;
 }
 
-const float& CCamera::GetPitch()
+const float& CCamera::GetPitch() const
 {
 	return m_Pitch;
 }
 
-const float& CCamera::GetDistance()
+const float& CCamera::GetDistance() const
 {
 	return m_DistanceFromPlayer;
 }
@@ -66,7 +66,7 @@ void CCamera::SetPitch(float pitch)
 	m_Pitch = pitch;
 }
 
-const float& CCamera::GetYaw()
+const float& CCamera::GetYaw() const
 {
 	return m_Yaw;
 }
@@ -76,7 +76,7 @@ void CCamera::SetYaw(float yaw)
 	m_Yaw = yaw;
 }
 
-const float& CCamera::GetAngleAround()
+const float& CCamera::GetAngleAround() const
 {
 	return m_AngleAroundPlayer;
 }
@@ -86,7 +86,7 @@ void CCamera::SetAngleAround(float a)
 	m_AngleAroundPlayer = a;
 }
 
-const float& CCamera::GetRoll()
+const float& CCamera::GetRoll() const
 {
 	return m_Roll;
 }
@@ -104,7 +104,7 @@ void CCamera::UpdateViewMatrix()
 	m_ViewMatrix *= glm::translate(-m_Position);
 }
 
-const glm::mat4& CCamera::GetViewMatrix()
+const glm::mat4& CCamera::GetViewMatrix() const
 {
 	return m_ViewMatrix;
 }

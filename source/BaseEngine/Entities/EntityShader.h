@@ -9,27 +9,27 @@ class EntityShader : public CShaderProgram
 public:
 	EntityShader(){}
 	void Init(int numberOfLights);
-	void LoadIsTextured(float isTex);
-	void LoadViewDistance(float distance);
+	void LoadIsTextured(const float& isTex) const;
+	void LoadViewDistance(const float& distance) const;
 	void GetAllUniformLocations() override;
 	void BindAttributes() override;
 
-	void LoadTransformMatrix(const glm::mat4& matrix);
-    void LoadProjectionMatrix(const glm::mat4& matrix);
-	void LoadViewMatrix(const glm::mat4& viewMatrix);
-	void LoadToShadowSpaceMatrix(const glm::mat4& matrix);
+	void LoadTransformMatrix(const glm::mat4& matrix) const;
+    void LoadProjectionMatrix(const glm::mat4& matrix) const;
+	void LoadViewMatrix(const glm::mat4& viewMatrix) const;
+	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
 
-	void LoadLight(const CLight& light, int i);
-	void LoadLightNumber(float i) ;
-	void LoadUseNormalMap(float use) ;
+	void LoadLight(const CLight& light, const int& i) const;
+	void LoadLightNumber(const float& i) const;
+	void LoadUseNormalMap(const float& use) const;
 	void ConnectTextureUnits();
-	void LoadSkyColour(float r, float g, float b);
-	void LoadUseFakeLight(float use);
-	void LoadMaterial(glm::vec3 diffuse, glm::vec3 specular, float shine_damper, float reflectivity);
-	void LoadNumberOfRows(float numberOfRows);
-	void LoadOffset(glm::vec2 offset);	
-	void LoadClipPlaneVector(glm::vec4& plane);
-	void LoadIsShadows(float is);
+	void LoadSkyColour(const float& r, const float& g, const float& b) const;
+	void LoadUseFakeLight(const float& use) const;
+	void LoadMaterial(const glm::vec3& diffuse, const glm::vec3& specular, const float& shine_damper, const float& reflectivity) const;
+	void LoadNumberOfRows(const float& numberOfRows) const;
+	void LoadOffset(const glm::vec2& offset) const;
+	void LoadClipPlaneVector(const glm::vec4& plane) const;
+	void LoadIsShadows(const float& is) const;
 	~EntityShader();
 private:
 	int location_isTextured;

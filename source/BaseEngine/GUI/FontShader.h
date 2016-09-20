@@ -27,13 +27,16 @@ public:
 	//	bindAttribute(0, "position");
 	//	bindAttribute(1, "textureCoords");
 	}
-	void loadColour(glm::vec3 colour){
+	void loadColour(const glm::vec3& colour) const
+	{
 	//	loadValue(location_colour, colour);
 	}
-	void loadTranslation(glm::vec2 pos){
+	void loadTranslation(const glm::vec2& pos) const
+	{
 		LoadValue(location_translation, pos);
 	}
-	void loadTransformation(glm::mat4 pos){
+	void loadTransformation(const glm::mat4& pos) const
+	{
 		LoadValue(location_transformationMatrix, pos);
 	}
 private:

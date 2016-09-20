@@ -13,7 +13,7 @@ void GUIShader::GetAllUniformLocations()
 	location_transformationMatrix = GetUniformLocation("transformationMatrix");
 }
 
-void GUIShader::BindAttributes()
+void GUIShader::BindAttributes() 
 {
 	BindAttribute(0, "position");
 }

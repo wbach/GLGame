@@ -1,12 +1,12 @@
 #include "Scene.h"
 
-const vector<shared_ptr<CEntity>>& CScene::GetEntities() {
+const vector<shared_ptr<CEntity>>& CScene::GetEntities() const {
 	return m_Entities;
 }
 
-const vector<CTerrain>& CScene::GetTerrains() { return m_Terrains; }
+const vector<CTerrain>& CScene::GetTerrains() const { return m_Terrains; }
 
-const vector<CLight>& CScene::GetLights() { return m_Lights; }
+const vector<CLight>& CScene::GetLights() const  { return m_Lights; }
 
 const string& CScene::GetName() { return m_Name; }
 

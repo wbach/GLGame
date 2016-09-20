@@ -17,9 +17,9 @@ public:
 	void AddTerrain(CTerrain terrain) { m_Terrains.push_back(terrain); }
 	void AddEntity(shared_ptr<CEntity> entity) { m_Entities.push_back(entity); }
 
-	const vector<shared_ptr<CEntity>>& GetEntities();
-	const vector<CTerrain>& GetTerrains();
-	const vector<CLight>& GetLights();
+	const vector<shared_ptr<CEntity>>& GetEntities() const;
+	const vector<CTerrain>& GetTerrains() const;
+	const vector<CLight>& GetLights() const;
 
 	const string& GetName();
 
@@ -39,14 +39,14 @@ public:
 	const int TerrainNumber(glm::vec2 xz_pos);
 
 	CLoader& GetLoader() { return m_Loader; }
-	const CGUI& GetGui() { return m_Gui; }
+	const SGUI& GetGui() { return m_Gui; }
 
 	~CScene();
 protected:
 	CLoader m_Loader;
 	string m_Name;
 
-	CGUI m_Gui;
+	SGUI m_Gui;
 	vector<shared_ptr<CEntity>> m_Entities;
 	vector<CTerrain> m_Terrains;
 	vector<CLight> m_Lights;

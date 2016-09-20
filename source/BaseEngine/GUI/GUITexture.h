@@ -1,29 +1,29 @@
-#ifndef GUI_TEXTURE_H
-#define GUI_TEXTURE_H
+#pragma once
+#include <gl/glew.h>
 #include "glm/gtc/matrix_transform.hpp"
-class CGUITexture{
-	GLuint textureID;	
+class CGUITexture
+{	
 public:
-	bool loaded;
-	glm::vec2 position ;
-	glm::vec2 scale ;
-	CGUITexture() { loaded = false; }
-	CGUITexture(GLuint textureID, glm::vec2 position, glm::vec2 scale) :textureID(textureID), position(position), scale(scale) { loaded = true; }
-	const glm::vec2& getPosition() const {return position;}
-	const glm::vec2& getScale() const {return scale;}
-	const int getTextureId() const {return textureID;}
-	void setTexture(int id){textureID = id ;}
-	void setPosition(glm::vec2 position){this->position = position;}
-	void setXScale(float x){
-		scale.x = x ;
-	}
-	void setXposition(float x){
-		position.x = x ;
-	}
-	void setScale(glm::vec2 scale){this->scale = scale;}
-	void cleanUp(){
-		//usuwanie w loader
-		//glDeleteTextures(1,&textureID);
-	}
+	bool m_IsLoaded;
+	
+	CGUITexture();
+	CGUITexture(GLuint textureID, glm::vec2 position, glm::vec2 scale);
+	
+	const glm::vec2& GetPosition() const;
+	const glm::vec2& GetScale() const;
+	const int& GetTextureId() const;
+	
+	void SetTexture(const int& id);
+	void SetPosition(const glm::vec2& position);
+	void SetXScale(const float& x);
+	void SetXposition(const float& x);
+	void SetScale(const glm::vec2& scale);
+	//void CleanUp(){
+	//	//usuwanie w loader
+	//	//glDeleteTextures(1,&textureID);
+	//}
+private:
+	GLuint m_TextureId;
+	glm::vec2 m_Position;
+	glm::vec2 m_Scale;
 };
-#endif

@@ -12,14 +12,14 @@ void CGame::Initialize()
 	CreateProjectionMatrix();
     m_EntityRenderer.Initialize(m_ProjectionMatrix);
 	m_TerrainRenderer.init(m_ProjectionMatrix);
-	m_GuiRenderer.init(m_WindowSize.x, m_WindowSize.y);
+	m_GuiRenderer.Init(m_WindowSize.x, m_WindowSize.y);
 }
 void CGame::Uninitialize()
 {
 	if (m_CurrScene != nullptr)
 		m_CurrScene->CleanUp();
 	
-	m_GuiRenderer.cleanUP();
+	m_GuiRenderer.CleanUP();
 	m_EntityRenderer.Uninitialize();
 	m_TerrainRenderer.cleanUp();
 	m_DisplayManager.Uninitialize();
@@ -76,10 +76,10 @@ void CGame::GameLoop()
 			}
 			m_TerrainRenderer.render(m_CurrScene,glm::mat4(0));
 			m_EntityRenderer.Render(m_CurrScene);
-			m_GuiRenderer.render(m_CurrScene->GetGui());
+			m_GuiRenderer.Render(m_CurrScene->GetGui());
 		}
-		texts[0].text = "FPS : " + std::to_string(m_DisplayManager.GetFps() ) ;
-		m_GuiRenderer.renderText(texts);
+		texts[0].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps() ) );
+		m_GuiRenderer.RenderText(texts);
 		
 		m_DisplayManager.Update();
 
@@ -208,7 +208,7 @@ void CGame::InitializeScene()
 {
 	SDL_GLContext gl_loading_context = SDL_GL_CreateContext(m_DisplayManager.GetWindow());
 	CGUIRenderer grenderer;
-	grenderer.init(m_WindowSize.x, m_WindowSize.y);
+	grenderer.Init(m_WindowSize.x, m_WindowSize.y);
 
 	SDL_Event event;
 	float green = 1.0;
@@ -305,7 +305,7 @@ void CGame::InitializeScene()
 		/*green += value;
 		if (green > 1.0 || green < 0) value = -value;*/
 		//grenderer.render(currScene->getGUI().guiTextures);
-		grenderer.renderText(texts);
+		grenderer.RenderText(texts);
 		m_DisplayManager.Update();
 
 		if ( start - xx > 500) 
@@ -331,7 +331,7 @@ void CGame::InitializeScene()
 	glDeleteBuffers(1, &vbo_text_id);
 	glDeleteVertexArrays(1, &vao);
 
-	grenderer.cleanUP();
+	grenderer.CleanUP();
 	SDL_GL_DeleteContext(gl_loading_context);
 }
 

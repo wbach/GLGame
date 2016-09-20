@@ -5,9 +5,8 @@
 #include "../BaseEngine/Engine/Scene.h"
 #include "../BaseEngine/Camera/ThridPersonCamera.h"
 using namespace std;
-class CTestMainMenu: public CScene {
-
-
+class CTestMainMenu: public CScene
+{
 public:
 	CTestMainMenu()  {
 		m_Name = "Test Main menu scene";
@@ -22,12 +21,12 @@ public:
 		return 0;
 	}
 	int Update(SDL_Event &event, SDL_Window *win) override {
-		if (m_Gui.guiButtons[0].isPressedButton(glm::vec2(1000, 600))) {
+		if (m_Gui.guiButtons[0].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE) {
 			cout << "Pressed button 0... " << endl;
 			return 2;
 		}
 			
-		if (m_Gui.guiButtons[1].isPressedButton(glm::vec2(1000, 600))) {
+		if (m_Gui.guiButtons[1].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE) {
 			cout << "Pressed button 1... " << endl;
 			return 1;
 		}
@@ -40,8 +39,6 @@ public:
 		return 0;
 	}
 	const glm::mat4& getViewMatrix() { return m_Camera->GetViewMatrix(); }
-
-
 };
 
 

@@ -5,33 +5,12 @@
 class CGUIText
 {	
 public:
-    string text;
-	glm::vec2 position ;
-	glm::vec3 colour;
-	CGUIText() {}
-	CGUIText(string text, glm::vec2 position, float fontSize,glm::vec3 colour){
-		this->position = position;
-		this->colour = colour;
-		this->text = text ;
-		this->m_FontSize = fontSize ;
-	}
-	void updateText(string text){this->text = text;}
-	void drawText(FontShader *shader,freetype::font_data *font) const
-	{
-		//glUseProgram(0);
-		shader->Start();
-		glActiveTexture(GL_TEXTURE0) ;
-		GLfloat ActiveColor[]={colour.x,colour.y,colour.z,1};
-		glPushMatrix();
-		glLoadIdentity();
-		glColor4fv(ActiveColor);
-		shader->loadTranslation(position);
-		glScalef(m_FontSize, m_FontSize, m_FontSize);
-		freetype::print(*font,position.x, position.y,text.c_str());
-		glPopMatrix() ;
-		shader->Stop();
-	}
+	CGUIText(string text, glm::vec2 position, float font_size, glm::vec3 colour);
+	void updateText(string text);
+	void DrawText(const FontShader &shader, const freetype::font_data& font) const;
 private:
 	float m_FontSize;
-
+	string m_Text;
+	glm::vec2 m_Position;
+	glm::vec3 m_Colour;
 };

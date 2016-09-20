@@ -13,8 +13,8 @@ class CShaderProgram {
 public:
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file);
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file, char *tesselation_shader_file, char * tesselation_evaluation_shader_file);
-	void Start();
-	void Stop();
+	void Start() const;
+	void Stop() const;
 	void CleanUp();	
 	void BindAttribute(int attribute, const string& variableName) const;
 	int GetUniformLocation(const string& uniformName) const;

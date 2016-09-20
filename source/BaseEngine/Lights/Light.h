@@ -9,21 +9,23 @@ namespace LightType
 	};
 }
 
-class CLight{
-	int m_Type ;
-	glm::vec3 m_Position ;
-    glm::vec3 m_Colour ;
-    glm::vec3 m_Attenuation;
-	float m_CutOff;
+class CLight
+{	
 public:
 	CLight();
 	CLight(glm::vec3 colour);
-	CLight(glm::vec3 position,glm::vec3 colour);
-	CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation);
-	CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation,float cutOff);
+	CLight(glm::vec3 position, glm::vec3 colour);
+	CLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation);
+	CLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation, float cutOff);
 	const int& GetType() const;
 	const glm::vec3& GetPosition() const;
 	const glm::vec3& GetColour() const;
 	const glm::vec3& GetAttenuation() const;
 	const float& GetCutoff() const;
+private:
+	int m_Type;
+	glm::vec3 m_Position;
+	glm::vec3 m_Colour;
+	glm::vec3 m_Attenuation;
+	float m_CutOff;
 };

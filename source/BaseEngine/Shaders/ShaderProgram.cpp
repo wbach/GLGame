@@ -86,10 +86,12 @@ unsigned int CShaderProgram::LoadShader(char *filename, unsigned int mode)
 	}
 	return id;
 }
-void CShaderProgram::Start() {
+void CShaderProgram::Start() const
+{
 	glUseProgram(m_ProgramID);
 }
-void CShaderProgram::Stop() {
+void CShaderProgram::Stop() const 
+{
 	glUseProgram(0);
 }
 void CShaderProgram::CleanUp() {

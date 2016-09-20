@@ -109,7 +109,7 @@ public:
 		songo->calculateMove(0.02);			 
 		songo->move(0.02, GetHeightOfTerrain(songo->GetPositionXZ()));
 
-		if (m_Gui.guiButtons[0].isPressedButton(glm::vec2(1000, 600)))
+		if (m_Gui.guiButtons[0].CheckStatus(glm::vec2(1000, 600))  == GuiButtonState::ACTIVE)
 			return 2;
 
 //		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));

@@ -3,7 +3,7 @@
 void EntityShader::Init(int number_of_lights)
 {
 	InitShaderProgram("Data/Shaders/enitytyShader.vs" ,"Data/Shaders/enitytyShader.fs" ) ;
-	this->m_NumberOfLights = number_of_lights;
+	m_NumberOfLights = number_of_lights;
 	Start() ;
 	GetAllUniformLocations();
 	ConnectTextureUnits();
@@ -34,7 +34,7 @@ void EntityShader::GetAllUniformLocations()
 	location_isShadows = GetUniformLocation("isShadows");
 	for(int i =0 ; i < m_NumberOfLights; i++)
 	{
-		char tmpVariableName[50] ; memset(tmpVariableName,0,50) ;//ZeroMemory(tmpVariableName,50) ;
+		char tmpVariableName[50] ; memset(tmpVariableName,0,50) ;
 		sprintf(tmpVariableName,"lightColour[%i]",i);
 		location_lightColour.push_back(GetUniformLocation(tmpVariableName));
 		sprintf(tmpVariableName,"lightPosition[%i]",i);
@@ -43,47 +43,48 @@ void EntityShader::GetAllUniformLocations()
 		location_attenuation.push_back(GetUniformLocation(tmpVariableName));
 	}
 }
-void EntityShader::LoadIsTextured(float isTex)
+void EntityShader::LoadIsTextured(const float& isTex) const
 {
 	LoadValue(location_isTextured, isTex);
 }
-void EntityShader::LoadIsShadows(float is)
+void EntityShader::LoadIsShadows(const float& is) const
 {
 	LoadValue(location_isShadows, is);
 }
-void EntityShader::LoadViewDistance(float distance)
+void EntityShader::LoadViewDistance(const float& distance) const
 {
 	LoadValue(location_viewDistance, distance);
 }
 
-void EntityShader::LoadNumberOfRows(float numberOfRows)
+void EntityShader::LoadNumberOfRows(const float& numberOfRows) const
 {
 	LoadValue(location_numberOfRows, numberOfRows);
 }
-void EntityShader::LoadOffset(glm::vec2 offset){
+void EntityShader::LoadOffset(const glm::vec2& offset) const
+{
 	LoadValue(location_offset, offset);
 }
-void EntityShader::LoadMaterial(glm::vec3 diffuse, glm::vec3 specular, float shine_damper, float reflectivity)
+void EntityShader::LoadMaterial(const glm::vec3& diffuse, const glm::vec3& specular, const float& shine_damper, const float& reflectivity) const
 {
 	LoadValue(location_modelDiffuse, diffuse);
 	LoadValue(location_modelSpecular, specular);
 	LoadValue(location_shineDamper, shine_damper);
 	LoadValue(location_reflectivity, reflectivity);
 }
-void EntityShader::LoadUseFakeLight(float use)
+void EntityShader::LoadUseFakeLight(const float& use) const
 {
 	LoadValue(location_useFakeLighting, use);
 }
-void EntityShader::LoadSkyColour(float r, float g, float b)
+void EntityShader::LoadSkyColour(const float& r, const float& g, const float& b) const
 {
 	LoadValue(location_skyColour,glm::vec3(r , g, b));
 }
-void EntityShader::LoadToShadowSpaceMatrix(const glm::mat4& matrix)
+void EntityShader::LoadToShadowSpaceMatrix(const glm::mat4& matrix) const
 {
 	LoadValue(location_toShadowMapSpace, matrix);
 }
 
-void EntityShader::LoadClipPlaneVector(glm::vec4& plane)
+void EntityShader::LoadClipPlaneVector(const glm::vec4& plane) const
 {
 	LoadValue(location_plane, plane);
 }
@@ -94,15 +95,15 @@ void EntityShader::ConnectTextureUnits()
 	LoadValue(location_normalMap, 1);
 	LoadValue(location_shadowMap, 2);
 }
-void EntityShader::LoadUseNormalMap(float use)
+void EntityShader::LoadUseNormalMap(const float& use) const
 {
 	LoadValue(location_useNormalMap, use) ;
 }
-void EntityShader::LoadLightNumber(float i)
+void EntityShader::LoadLightNumber(const float& i) const
 {
 	LoadValue(location_numberOfLights, i);
 }
-void EntityShader::LoadLight(const CLight& light, int i)
+void EntityShader::LoadLight(const CLight& light, const int& i) const
 {
 	LoadValue(location_attenuation[i], light.GetAttenuation()) ;
 	LoadValue(location_lightPosition[i], light.GetPosition()) ;
@@ -115,15 +116,15 @@ void EntityShader::BindAttributes()
 	BindAttribute(2, "normal");
 	BindAttribute(3, "tangent");
 }
-void EntityShader::LoadTransformMatrix(const glm::mat4& matrix)
+void EntityShader::LoadTransformMatrix(const glm::mat4& matrix) const
 {
     LoadValue(location_transformationMatrix, matrix);
 }
-void EntityShader::LoadProjectionMatrix(const glm::mat4& matrix)
+void EntityShader::LoadProjectionMatrix(const glm::mat4& matrix) const
 {
     LoadValue(location_projectionMatrix, matrix);
 }
-void EntityShader::LoadViewMatrix(const glm::mat4& view_matrix)
+void EntityShader::LoadViewMatrix(const glm::mat4& view_matrix) const
 {
 	LoadValue(location_viewMatrix, view_matrix);
 }

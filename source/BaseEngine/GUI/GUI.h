@@ -1,17 +1,12 @@
-#ifndef GUI_H
-#define GUI_H
+#pragma once
 #include "GUITexture.h"
 #include "GUIText.h"
 #include "GUIButton.h"
 #include "FreeType.h"
 #include "FontShader.h"
 #include <vector>
-using namespace std;
-struct CGUI {
+struct SGUI {
 	vector<CGUIButton> guiButtons;
 	vector<CGUITexture> guiTextures;
-	vector<CGUIText>guiTexts;
-	CGUI() {}		
-
+	vector<CGUIText> guiTexts;	
 };
-#endif

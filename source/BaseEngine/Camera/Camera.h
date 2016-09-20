@@ -13,22 +13,22 @@ public:
 	void UpdateViewMatrix();
 	void InvertPitch();	
 
-	const float& GetDistance();
-	const float& GetAngleAround();
+	const float& GetDistance() const;
+	const float& GetAngleAround() const;
 	void SetAngleAround(float a);
 	void SetDistance(float dist);
 	void SetPitch(float pitch);
 
-	const float& GetPitch();
-	const float& GetYaw();
-	const float& GetRoll();
+	const float& GetPitch() const;
+	const float& GetYaw() const;
+	const float& GetRoll() const;
 	
 	void SetRoll(float roll);
 	void SetYaw(float yaw);
 	
-	const glm::vec3& GetPosition();
-	const glm::vec3& GetRotation() { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
-	const glm::mat4& GetViewMatrix();
+	const glm::vec3& GetPosition() const;
+	const glm::vec3& GetRotation() const { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
+	const glm::mat4& GetViewMatrix() const;
 
 	void SetPosition(glm::vec3 position);
 
