@@ -1,14 +1,14 @@
 #include "ThridPersonCamera.h"
 
 CThirdPersonCamera::CThirdPersonCamera(glm::vec3& look_at_position, glm::vec3& look_at_rotation)
-: m_Offset(0)
+: m_Offset(0.0f)
 , m_LookAtPosition(look_at_position)
 , m_LookAtRotation(look_at_rotation)
-, m_Mousevel(0.2)
+, m_Mousevel(0.2f)
 , m_CaptureMouse(true)
 , m_IsShowCursor(false)
 {
-	m_DistanceFromPlayer = 20;
+	m_DistanceFromPlayer = 20.0f;
 }
 
 void CThirdPersonCamera::SetCaptureMouse(bool capture)
@@ -17,14 +17,14 @@ void CThirdPersonCamera::SetCaptureMouse(bool capture)
 }
 void CThirdPersonCamera::LockCamera()
 {
-	if(m_Pitch > 90)
-		m_Pitch = 90;
-	if(m_Pitch < -90)
-		m_Pitch = -90;
-	if(m_Yaw < 0.0)
-		m_Yaw += 360.0;
-	if(m_Yaw > 360.0)
-		m_Yaw -= 360;
+	if(m_Pitch > 90.0f)
+		m_Pitch = 90.0f;
+	if(m_Pitch < -90.0f)
+		m_Pitch = -90.0f;
+	if(m_Yaw < 0.0f)
+		m_Yaw += 360.0f;
+	if(m_Yaw > 360.0f)
+		m_Yaw -= 360.0f;
 }
 
 void CThirdPersonCamera::AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) {

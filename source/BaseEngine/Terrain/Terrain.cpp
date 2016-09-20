@@ -1,42 +1,40 @@
 #include "Terrain.h"
 
 
-glm::vec3 calculateTangents(Face f) {
-						   glm::vec3 delatPos1 = f.vertex[1] - f.vertex[0] ;
-						   glm::vec3 delatPos2 = f.vertex[2] - f.vertex[0] ;
+glm::vec3 CalculateTangents(const SFace& f) 
+{
+	glm::vec3 delat_pos_1 = f.vertex[1] - f.vertex[0] ;
+	glm::vec3 delat_pos_2 = f.vertex[2] - f.vertex[0] ;
 
-						   glm::vec2 deltaUv1 = f.uv[1] - f.uv[0];
-						   glm::vec2 deltaUv2 =f.uv[2] - f.uv[0] ;
+	glm::vec2 delta_uv_1 = f.uv[1] - f.uv[0];
+	glm::vec2 delta_uv_2 = f.uv[2] - f.uv[0] ;
 
-						   float r = 1.0f / (deltaUv1.x * deltaUv2.y - deltaUv1.y * deltaUv2.x);
-						   delatPos1*= deltaUv2.y ;
-						   delatPos2*= deltaUv1.y ;
-						  // delatPos1.scale(deltaUv2.y);
-						  // delatPos2.scale(deltaUv1.y);
-						   glm::vec3 tangent = delatPos1 - delatPos2;
-						   tangent *= r ;
-						   return tangent;
+	float r = 1.0f / (delta_uv_1.x * delta_uv_2.y - delta_uv_1.y * delta_uv_2.x);
+	delat_pos_1 *= delta_uv_2.y ;
+	delat_pos_1 *= delta_uv_1.y ;
+	glm::vec3 tangent = delat_pos_1 - delat_pos_2;
+	tangent *= r ;
+	return tangent;
 }
-Face createFace(int i1,int i2, int i3, vector<float> &vertices,std::vector<float> &textureCoords){ //,std::vector<float> normals
-	Face f1 ;
-	f1.vertex[0] = glm::vec3(vertices[3*i1],vertices[3*i1 +1 ],vertices[3*i1 + 2]);
-	f1.vertex[1] = glm::vec3(vertices[3*i2],vertices[3*i2 +1 ],vertices[3*i2 + 2]);
-	f1.vertex[2] = glm::vec3(vertices[3*i3],vertices[3*i3 +1 ],vertices[3*i3 + 2]);
+SFace CreateFace(const int& i1, const int& i2, const int& i3, vector<float>& vertices, std::vector<float>& texture_coords)
+{ 
+	SFace f1 ;
+	f1.vertex[0] = glm::vec3(vertices[3*i1], vertices[3*i1 +1 ], vertices[3*i1 + 2]);
+	f1.vertex[1] = glm::vec3(vertices[3*i2], vertices[3*i2 +1 ], vertices[3*i2 + 2]);
+	f1.vertex[2] = glm::vec3(vertices[3*i3], vertices[3*i3 +1 ], vertices[3*i3 + 2]);
 
-	f1.uv[0] = glm::vec2(textureCoords[2*i1],textureCoords[2*i1 +1 ]);
-	f1.uv[1] = glm::vec2(textureCoords[2*i2],textureCoords[2*i2 +1 ]);
-	f1.uv[2] = glm::vec2(textureCoords[2*i3],textureCoords[2*i3 +1 ]);
-
+	f1.uv[0] = glm::vec2(texture_coords[2*i1], texture_coords[2*i1 +1 ]);
+	f1.uv[1] = glm::vec2(texture_coords[2*i2], texture_coords[2*i2 +1 ]);
+	f1.uv[2] = glm::vec2(texture_coords[2*i3], texture_coords[2*i3 +1 ]);
 	return f1 ;
-
 }
-void CTerrain::generateTerrainMap(CLoader &loader,string heightMap){
+void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
+{
 	std::vector<unsigned int> indices;
 	std::vector<float> vertices;
 	std::vector<float> normals;
 	std::vector<float> tangens;
 	std::vector<float> textureCoords;
-
 
 	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(heightMap.c_str(), 0);
 
@@ -45,62 +43,63 @@ void CTerrain::generateTerrainMap(CLoader &loader,string heightMap){
 	if(!imagen2) {printf( "%s : wrong image format or file does not exist.",heightMap.c_str());return;}
 	FIBITMAP* imagen = FreeImage_ConvertTo32Bits(imagen2);
 	FreeImage_Unload(imagen2);
-	imageHeight =  FreeImage_GetHeight(imagen);
-	imageWidth = FreeImage_GetWidth(imagen);
+	m_ImageHeight =  FreeImage_GetHeight(imagen);
+	m_ImageWidth = FreeImage_GetWidth(imagen);
 
 	int scale = 4;
 	FreeImage_FlipHorizontal(imagen);
-	imagen = FreeImage_Rescale(imagen, imageWidth / scale, imageHeight / scale, FILTER_BILINEAR);
+	imagen = FreeImage_Rescale(imagen, m_ImageWidth / scale, m_ImageHeight / scale, FILTER_BILINEAR);
 
-	imageWidth /= scale;
-	imageHeight /= scale;
+	m_ImageWidth /= scale;
+	m_ImageHeight /= scale;
 
-	VERTEX_COUNT = imageHeight;
-	cout << "Creating terrain size: " << VERTEX_COUNT << endl;
+	m_VertexCount = m_ImageHeight;
+	cout << "Creating terrain size: " << m_VertexCount << endl;
 	Uint32 start;
 	start = SDL_GetTicks();
 
-
-	heights = new float*[VERTEX_COUNT];
-	for(int i = 0; i < VERTEX_COUNT; ++i)
-		heights[i] = new float[VERTEX_COUNT];
+	m_Heights = new float*[m_VertexCount];
+	for(int i = 0; i < m_VertexCount; ++i)
+		m_Heights[i] = new float[m_VertexCount];
+		
 		int i=0;
 		cout << "Time 1: " << SDL_GetTicks() - start;
-		start = SDL_GetTicks();
-		
-		
-		for(i=0;i<VERTEX_COUNT;i++){
-			for(int j=0;j<VERTEX_COUNT;j++){
-				float height = getHeightMap(j, i, imagen);
-				heights[j][i] = height;
-				vertices.push_back(static_cast<float>(j)/(static_cast<float>(VERTEX_COUNT - 1)) * SIZE) ;
+		start = SDL_GetTicks();		
+		for(i=0; i < m_VertexCount; i++)
+		{
+			for(int j=0; j < m_VertexCount; j++)
+			{
+				float height = GetHeightMap(j, i, imagen);
+				m_Heights[j][i] = height;
+				vertices.push_back(static_cast<float>(j)/(static_cast<float>(m_VertexCount - 1)) * m_Size) ;
 				vertices.push_back(height);
-				vertices.push_back(static_cast<float>(i)/(static_cast<float>(VERTEX_COUNT) - 1) * SIZE);
+				vertices.push_back(static_cast<float>(i)/(static_cast<float>(m_VertexCount) - 1) * m_Size);
 
-				glm::vec3 normal = calculateNormalMap(i,j,imagen);
+				glm::vec3 normal = CalculateNormalMap(i,j,imagen);
 
 				normals.push_back(normal.x);
 				normals.push_back(normal.y);
 				normals.push_back(normal.z);
-				textureCoords.push_back(static_cast<float>(j)/ static_cast<float>(VERTEX_COUNT - 1));
-				textureCoords.push_back(static_cast<float>(i)/static_cast<float>(VERTEX_COUNT - 1));
+				textureCoords.push_back(static_cast<float>(j)/ static_cast<float>(m_VertexCount - 1));
+				textureCoords.push_back(static_cast<float>(i)/static_cast<float>(m_VertexCount - 1));
 			}
 		}
 
 		cout << "Time 2: " << SDL_GetTicks() - start <<endl ;
 		start = SDL_GetTicks();
 
-
 		int pointer = 0;
-		for(int gz=0;gz<VERTEX_COUNT-1;gz++){
-			for(int gx=0;gx<VERTEX_COUNT-1;gx++){
-				int topLeft = (gz*VERTEX_COUNT)+gx;
+		for(int gz=0; gz <m_VertexCount - 1; gz++)
+		{
+			for(int gx=0; gx <m_VertexCount -1; gx++)
+			{
+				int topLeft = (gz*m_VertexCount) + gx;
 				int topRight = topLeft + 1;
-				int bottomLeft = ((gz+1)*VERTEX_COUNT)+gx;
+				int bottomLeft = ((gz+1)*m_VertexCount) + gx;
 				int bottomRight = bottomLeft + 1;
 
-				Face tmp = createFace(topLeft,bottomLeft,topRight,vertices,textureCoords);
-				glm::vec3 tang = calculateTangents(tmp);
+				SFace tmp = CreateFace(topLeft,bottomLeft,topRight,vertices,textureCoords);
+				glm::vec3 tang = CalculateTangents(tmp);
 				tangens.push_back(tang.x);
 				tangens.push_back(tang.y);
 				tangens.push_back(tang.z);
@@ -109,10 +108,8 @@ void CTerrain::generateTerrainMap(CLoader &loader,string heightMap){
 				indices.push_back(bottomLeft);
 				indices.push_back(topRight);
 
-				//system("cls"); int t1 =  glutGet(GLUT_ELAPSED_TIME) ;
-				tmp = createFace(topRight,bottomLeft,bottomRight,vertices,textureCoords);
-				//printf("End crate Face, time : %i\n",  glutGet(GLUT_ELAPSED_TIME) - t1);
-				tang = calculateTangents(tmp);
+				tmp = CreateFace(topRight,bottomLeft,bottomRight,vertices,textureCoords);
+				tang = CalculateTangents(tmp);
 
 				tangens.push_back(tang.x);
 				tangens.push_back(tang.y);
@@ -130,102 +127,98 @@ void CTerrain::generateTerrainMap(CLoader &loader,string heightMap){
 		FreeImage_Unload(imagen);
 		glm::vec3 diffuse(1.0),specular(0.0);
 		float shineDamper =0,reflectivity = 0 ;
-        Material material;
-        model.addMesh("Terrain",vertices,textureCoords,normals, tangens,indices,material);
-		model.meshes[0].vertexCount = indices.size();
+        SMaterial material;
+        m_Model.AddMesh("Terrain",vertices,textureCoords,normals, tangens,indices,material);
+		m_Model.m_Meshes[0].m_VertexCount = indices.size();
 		cout << "Terrain created. Vertexses : "<< indices .size() <<" \n" ;
-
-        //	model.addMesh(filepath, postions, textCoords, normals, tangents,indices, material);
-		//this->model = new CMeshModel(false,&vertices,&textureCoords,&normals,&tangens,&diffuse,&specular,&shineDamper,&reflectivity,&indices,1,0) ;
-		//CMeshModel(vector<float>*positions,vector<float>*textCoords,vector<float>*normals,vector<float>*tangents,/*vector<float>*diffuse,vector<float>*specular,*/vector<unsigned int>* indices,vector<textureData> *tData =NULL ) {
-		return;
-
 }
 
-glm::vec3 CTerrain::calculateNormalMap(int x, int z, FIBITMAP* image)
+glm::vec3 CTerrain::CalculateNormalMap(int x, int z, FIBITMAP* image)
 {
-	float heightL = getHeightMap(x-1, z, image);
-	float heightR = getHeightMap(x+1, z, image);
-	float heightD = getHeightMap(x, z-1, image);
-	float heightU = getHeightMap(x, z+1, image);
+	float heightL = GetHeightMap(x-1, z, image);
+	float heightR = GetHeightMap(x+1, z, image);
+	float heightD = GetHeightMap(x, z-1, image);
+	float heightU = GetHeightMap(x, z+1, image);
 	glm::vec3 normal(heightL -heightR, 8.0f,heightD-heightU  ) ;
 	glm::normalize(normal);
 	return normal ;
 }
 
-float CTerrain::getHeightMap(int x, int z, FIBITMAP* image){
+float CTerrain::GetHeightMap(int x, int z, FIBITMAP* image){
 
-	if (x < 0 || x>= imageHeight || z < 0 || z >= imageWidth) {
+	if (x < 0 || x>= m_ImageHeight || z < 0 || z >= m_ImageWidth) {
 		return 0;
 	}
 	RGBQUAD color;
 	FreeImage_GetPixelColor(image,x,z,&color) ;
-	BYTE r = color.rgbRed ;
-	BYTE g = color.rgbGreen ;
-	BYTE b = color.rgbBlue ;
+	float r = static_cast<float>(color.rgbRed) ;
+	float g = static_cast<float>(color.rgbGreen) ;
+	float b = static_cast<float>(color.rgbBlue) ;
 	//float gray = 0.21 * r + 0.72 *g + 0.07 *b ;
 	float height = r*g*b;
 	height += MAX_PIXEL_COLOUR/2.0f ;
 	height /= MAX_PIXEL_COLOUR/2.0f ;
-	height *= MAX_HEIGHT ;
+	height *= m_MaxHeight ;
 	return height;
 }
 
-float CTerrain::getHeightofTerrain(float worldX,float worldZ)
+float CTerrain::GetHeightofTerrain(float worldX, float worldZ)
 {
-	float terrainX = worldX - this->transform.position.x ;
-	float terrainZ = worldZ - this->transform.position.z ;
-	//float heightsLength = sizeof(heights)/sizeof(heights[0]) ;
-	float gridSquereSize = SIZE / ((float) VERTEX_COUNT-1) ;
-	int gridX=(int) floor(terrainX/gridSquereSize);
-	int gridZ=(int) floor(terrainZ/gridSquereSize);
-	if(gridX >= VERTEX_COUNT-1 || gridZ >= VERTEX_COUNT-1 || gridX < 0 || gridZ < 0 ){
+	float terrain_x = worldX - m_Transform.position.x ;
+	float terrain_z = worldZ - m_Transform.position.z ;
+
+	float grid_squere_size = m_Size / ((float) m_VertexCount - 1) ;
+	int grid_x = (int) floor(terrain_x / grid_squere_size);
+	int grid_z = (int) floor(terrain_z / grid_squere_size);
+
+	if(grid_x >= m_VertexCount -1 || grid_z >= m_VertexCount -1 || grid_x < 0 || grid_z < 0 )
 		return 0 ;
-	}
-	float xCoord = (fmod(terrainX,gridSquereSize))/ gridSquereSize;
-	float zCoord = (fmod(terrainZ,gridSquereSize)) /gridSquereSize;
+	
+
+	float x_coord = (fmod(terrain_x, grid_squere_size))/ grid_squere_size;
+	float z_coord = (fmod(terrain_z, grid_squere_size)) / grid_squere_size;
+
 	float answer ;
-	if (xCoord <= (1-zCoord)) {
-		answer = Utils::BarryCentric(glm::vec3(0,heights[gridX][gridZ] , 0), glm::vec3(1,heights[gridX + 1][gridZ], 0),
-			glm::vec3(0,heights[gridX][gridZ + 1], 1),glm::vec2(xCoord, zCoord));
-	} else {
-		answer = Utils::BarryCentric(glm::vec3(1, heights[gridX + 1][gridZ], 0),glm::vec3(1,heights[gridX + 1][gridZ + 1], 1),
-			glm::vec3(0,heights[gridX][gridZ + 1], 1),glm::vec2(xCoord, zCoord));
+	if (x_coord <= (1 - z_coord)) 
+	{
+		answer = Utils::BarryCentric(glm::vec3(0, m_Heights[grid_x][grid_z], 0), glm::vec3(1, m_Heights[grid_x + 1][grid_z], 0),
+			glm::vec3(0, m_Heights[grid_x][grid_z + 1], 1),glm::vec2(x_coord, z_coord));
+	} else 
+	{
+		answer = Utils::BarryCentric(glm::vec3(1, m_Heights[grid_x + 1][grid_z], 0), glm::vec3(1, m_Heights[grid_x + 1][grid_z + 1], 1),
+			glm::vec3(0, m_Heights[grid_x][grid_z + 1], 1),glm::vec2(x_coord, z_coord));
 	}
 	return answer;
 }
 
-void CTerrain::filtrElementOffTerrain()
+void CTerrain::FiltrElementOffTerrain()
 {
-	vector<Element>::iterator iter;
-	for(iter = elementsMap.begin(); iter != elementsMap.end() ; iter++){
+	vector<SElement>::iterator iter;
+	for(iter = m_ElementsMap.begin(); iter != m_ElementsMap.end() ; iter++)
 			iter->filtr();
-	}
-
 }
 
-float CTerrain::getSIZE()
+float CTerrain::GetSize()
 {
-	return SIZE;
+	return m_Size;
 }
 
-
-
-CTerrain::CTerrain(CLoader &loader, string heightMap, float x, float z, GLuint blendMap, GLuint backgroundTexture, GLuint backgroundNormalTexture,
-	GLuint rTexture, GLuint rnormalTexture, GLuint gTexture, GLuint gnormalTexture, GLuint bTexture, GLuint bnormalTexture)
+CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
+	GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture)
+: m_BlendMap(blend_map)
 {
-	this->transform.position.x = x * SIZE ;
-	this->transform.position.z = z * SIZE ;
-	this->blendMap = blendMap;
-	this->backgroundTexture[0] = backgroundTexture;
-	this->rTexture[0] = rTexture;
-	this->gTexture[0] = gTexture;
-	this->bTexture[0] = bTexture;
-	this->backgroundTexture[1] = backgroundNormalTexture;
-	this->rTexture[1] = rnormalTexture;
-	this->gTexture[1] = gnormalTexture;
-	this->bTexture[1] = bnormalTexture;
-	generateTerrainMap(loader,heightMap);
+	m_Transform.position.x = x * m_Size ;
+	m_Transform.position.z = z * m_Size;
+
+	m_BackgroundTexture[0] = background_texture;
+	m_RTexture[0] = r_texture;
+	m_GTexture[0] = g_texture;
+	m_BTexture[0] = b_texture;
+	m_BackgroundTexture[1] = background_normal_texture;
+	m_RTexture[1] = r_normal_texture;
+	m_GTexture[1] = g_normal_texture;
+	m_BTexture[1] = b_normal_texture;
+	GenerateTerrainMap(loader, height_map);
 }
 
 CTerrain::CTerrain()
@@ -233,31 +226,26 @@ CTerrain::CTerrain()
 
 }
 
-void CTerrain::cleanUp()
+void CTerrain::CleanUp()
 {
-	for(int i = 0; i < VERTEX_COUNT; ++i) {
-		delete [] heights[i];
+	for(int i = 0; i < m_VertexCount; ++i) {
+		delete [] m_Heights[i];
 	}
-	delete [] heights;
-	// usuwa loader
-//	rTexture.cleanUp();
-//	bTexture.cleanUp();
-//	gTexture.cleanUp();
-//	blendMap.cleanUp();
-//	backgroundTexture.cleanUp();
-	model.cleanUp() ;
+	delete [] m_Heights;
+	// tekstury usuwa loader
+	m_Model.CleanUp() ;
 }
 
 
-bool compareColour(RGBQUAD colour,BYTE r, BYTE g, BYTE b){
+bool CompareColour(RGBQUAD colour,BYTE r, BYTE g, BYTE b){
 	if(colour.rgbRed == r && colour.rgbGreen == g && colour.rgbBlue == b)
 		return true ;
 	else
 		return false;
 }
-void CTerrain::loadFloora(string flooraMap)
+void CTerrain::LoadFloora(string flooraMap)
 {
-	this->flooraMap = flooraMap;
+	m_FlooraMap = flooraMap;
 	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(flooraMap.c_str(), 0);
 
 	if(formato  == FIF_UNKNOWN) { printf( "%s : wrong image format or file does not exist.",flooraMap.c_str());return;}
@@ -267,82 +255,65 @@ void CTerrain::loadFloora(string flooraMap)
 	FreeImage_Unload(imagen2);
 	int floraHeight =  FreeImage_GetHeight(imagen);
 	int floraWidth = FreeImage_GetWidth(imagen);
-	floraSize = floraHeight ;
-	//FreeImage_FlipVertical(imagen);
-	//FreeImage_FlipHorizontal(imagen);
+	m_FloraSize = static_cast<float>(floraHeight);
+
 	for (int i = 0; i < floraWidth; i++)
 	{
 		for (int j = 0; j < floraHeight; j++)
 		{
 			RGBQUAD colour;
 			FreeImage_GetPixelColor(imagen,i,j,&colour) ;
-			//printf("%d",(int)colour.rgbRed);
-			//system("pause");
-			if(compareColour(colour,0,0,0)) continue;
-			if(compareColour(colour,255,0,0)){
-				addElementToList(glm::vec3(255,0,0),0,floraHeight,i,j,25);
+
+			if(CompareColour(colour,0,0,0)) continue;
+			if(CompareColour(colour,255,0,0)){
+				AddElementToList(glm::vec3(255.0f, .0f, .0f), 0, static_cast<float>(floraHeight), i, j, 25);
 			 }
-			if(compareColour(colour,0,0,255)){
-				addElementToList(glm::vec3(0,0,255),1,floraHeight,i,j,30);
+			if(CompareColour(colour,0,0,255)){
+				AddElementToList(glm::vec3(.0f, .0f, 255.0f), 1, static_cast<float>(floraHeight), i, j, 30);
 			}
-			if(compareColour(colour,0,255,0)){
-				addElementToList(glm::vec3(0,255,0),2,floraHeight,i,j,10);
+			if(CompareColour(colour,0,255,0)){
+				AddElementToList(glm::vec3(0.0f, 255.0f, .0f), 2, static_cast<float>(floraHeight), i, j, 10);
 			}
 		}
 	}
 	FreeImage_Unload(imagen);
-	// first time create, flora map with high resolution can have multiple objects in small distance, so flitr that, and save new one
-	//filtrElementOffTerrain() ;
-	//saveCorrectedFloraMap() ;
 	return ;
-	//wypisywanie elementow
-	//vector<Element>::iterator it;
-	//for (it = elementsMap.begin() ; it != elementsMap.end() ; ++it){
-	//	printf("VALUE: %i\n",it->value);
-	//	vector<glm::vec3>::iterator iter;
-	//	for (iter = it->positions.begin() ; iter !=  it->positions.end() ; ++iter){
-	//		printf("POS: %.2f, %.2f, %.2f\n",iter->x, iter->y,iter->z );
-	//
-
-	//		//printf("POS: %.2f, %.2f\n",xx,zz);
-	//	}
-	//}
-
 }
 
-vector<Element> CTerrain::getElementsMap()
+vector<SElement> CTerrain::GetElementsMap()
 {
-	return elementsMap;
+	return m_ElementsMap;
 }
 
-void CTerrain::addElementToList(glm::vec3 colorOnMap,int value, float floraSize, int i, int j, float distanceFilter)
+void CTerrain::AddElementToList(glm::vec3 colorOnMap,int value, float floraSize, int i, int j, float distanceFilter)
 {
-	float xx = i * ((float)SIZE/floraSize) ;
-	float zz = j * ((float)SIZE/floraSize) ;
-	float height = getHeightofTerrain(xx,zz);
+	float xx = i * ((float)m_Size/floraSize) ;
+	float zz = j * ((float)m_Size/floraSize) ;
+	float height = GetHeightofTerrain(xx,zz);
 	bool isElement = false ;
-	Element *a = findElement(value,isElement);
-	if (!isElement){
-		//	printf("%d",(int)colour.rgbRed);
-		Element nowy;
+	SElement *a = FindElement(value,isElement);
+	if (!isElement)
+	{
+		SElement nowy;
 		nowy.flitrDistance  = distanceFilter ;
 		nowy.value = value ;
 		nowy.colorOnMap = colorOnMap ;
 		nowy.positions.push_back(glm::vec3(xx,height,zz));
-		elementsMap.push_back(nowy);
+		m_ElementsMap.push_back(nowy);
 	}
 	else
 		a->positions.push_back(glm::vec3(xx,height,zz));
 }
 
-Element* CTerrain::findElement(int value ,bool &finded)
+SElement* CTerrain::FindElement(int value ,bool &finded)
 {
-	Element* element = NULL;
+	SElement* element = NULL;
 	finded = false;
-	vector<Element>::iterator it;
-	for (it = elementsMap.begin() ; it != elementsMap.end() ; ++it){
-
-		if ((*it).value == value){
+	vector<SElement>::iterator it;
+	for (it = m_ElementsMap.begin() ; it != m_ElementsMap.end() ; ++it)
+	{
+		if ((*it).value == value)
+		{
 			element = &*it;
 			finded = true ;
 			return element;
@@ -351,25 +322,22 @@ Element* CTerrain::findElement(int value ,bool &finded)
 	return element;
 }
 
-void CTerrain::saveCorrectedFloraMap()
+void CTerrain::SaveCorrectedFloraMap()
 {
-	FIBITMAP *bitmap = FreeImage_Allocate(floraSize,floraSize, 24);
-	for ( Element element : elementsMap){
-		for( glm::vec3 pos : element.positions){
-			int i = floor( pos.x / ((float)SIZE/floraSize) );
-			int j = floor( pos.z / ((float)SIZE/floraSize) );
+	FIBITMAP *bitmap = FreeImage_Allocate(static_cast<int>(m_FloraSize), static_cast<int>(m_FloraSize), 24);
+	for ( SElement element : m_ElementsMap)
+	{
+		for( glm::vec3 pos : element.positions)
+		{
+			int i = static_cast<int>( floor( pos.x / ((float)m_Size / m_FloraSize) ) );
+			int j = static_cast<int>( floor( pos.z / ((float)m_Size / m_FloraSize) ) );
 
-
-
-				RGBQUAD color;
-				color.rgbRed = element.colorOnMap.x ;
-				color.rgbGreen = element.colorOnMap.y ;
-				color.rgbBlue = element.colorOnMap.z ;
-				FreeImage_SetPixelColor(bitmap, i, j, &color);
-
-
-
+			RGBQUAD color;
+			color.rgbRed = static_cast<BYTE>(element.colorOnMap.x) ;
+			color.rgbGreen = static_cast<BYTE>(element.colorOnMap.y);
+			color.rgbBlue = static_cast<BYTE>(element.colorOnMap.z);
+			FreeImage_SetPixelColor(bitmap, i, j, &color);
 		}
 	}
-	FreeImage_Save(FIF_BMP, bitmap, flooraMap.c_str(), 0);
+	FreeImage_Save(FIF_BMP, bitmap, m_FlooraMap.c_str(), 0);
 }

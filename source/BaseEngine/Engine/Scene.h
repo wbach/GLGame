@@ -26,7 +26,7 @@ public:
 	virtual int Initialize() = 0;
 	virtual int Update(SDL_Event &event, SDL_Window *win) = 0;
 	virtual int CleanUp() = 0;
-	const virtual glm::mat4& GetViewMatrix();
+	const virtual glm::mat4& GetViewMatrix() = 0;
 
 	// create position vector (x, heightTerrain(x,z),z)
 	glm::vec3 CreatePositionVector(float x, float z, float y_offset = 0);

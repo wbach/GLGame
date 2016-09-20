@@ -18,26 +18,26 @@ public:
 	CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);	
 	
 	void AddSubbEntity(shared_ptr<CEntity> e);
-	void IncrasePosition(float dx, float dy, float dz, int index = 0);
-	void IncreaseRotation(float dx, float dy, float dz, int index = 0);
-	void CalculateEntityTransformMatrix(int x = 0);
+	void IncrasePosition(float dx, float dy, float dz, unsigned int index = 0);
+	void IncreaseRotation(float dx, float dy, float dz, unsigned int index = 0);
+	void CalculateEntityTransformMatrix(unsigned int x = 0);
 	void AddTransform(STransform transform);
 	
-	void SetPosition(glm::vec3 position, int i = 0);
-	void SetRotation(glm::vec3 rotation, int i = 0);
-	void SetScale(glm::vec3 scale, int i = 0);
-	void SetTransform(STransform transform, int i = 0);
+	void SetPosition(glm::vec3 position, unsigned int i = 0);
+	void SetRotation(glm::vec3 rotation, unsigned int i = 0);
+	void SetScale(glm::vec3 scale, unsigned int i = 0);
+	void SetTransform(STransform transform, unsigned int i = 0);
 
-	glm::vec2 GetPositionXZ(int i = 0);
-	const glm::vec3& GetPosition(int i = 0);
-	const glm::vec3& GetRotation(int i = 0);
-	const glm::vec3& GetScale(int i = 0);
-	const STransform& GetTransform(int i = 0);
-	const glm::mat4& GetTransformMatrix(int i = 0);
+	glm::vec2 GetPositionXZ(unsigned int i = 0);
+	const glm::vec3& GetPosition(unsigned int i = 0);
+	const glm::vec3& GetRotation(unsigned int i = 0);
+	const glm::vec3& GetScale(unsigned int i = 0);
+	const STransform& GetTransform(unsigned int i = 0);
+	const glm::mat4& GetTransformMatrix(unsigned int i = 0);
 	vector<glm::mat4>& GetTransformMatrixes() { return m_TransformMatrixes; }
-	glm::vec3& GetReferencedPosition(int i = 0);
-	glm::vec3& GetReferencedRotation(int i = 0);
-	glm::vec3& GetReferencedScale(int i = 0);
+	glm::vec3& GetReferencedPosition(unsigned int i = 0);
+	glm::vec3& GetReferencedRotation(unsigned int i = 0);
+	glm::vec3& GetReferencedScale(unsigned int i = 0);
 	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
 
 private:

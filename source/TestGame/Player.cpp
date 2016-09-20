@@ -21,10 +21,10 @@ void CPlayer::calculateMove(float deltaTime)
 	IncrasePosition(dx, 0, dz);
 }
 
-void CPlayer::move(float deltaTime,float terrainHeight)
+void CPlayer::move(float deltaTime, float terrainHeight)
 {
-	upwardsSpeed += GRAVITY* deltaTime;
-	IncrasePosition(0, upwardsSpeed * 0.01, 0);
+	upwardsSpeed += GRAVITY * deltaTime;
+	IncrasePosition(0, upwardsSpeed * 0.01f, 0);
 
 	float yvalue = 0;
 	yvalue = terrainHeight;		
@@ -37,22 +37,22 @@ void CPlayer::move(float deltaTime,float terrainHeight)
 	}
 
 	if (currentSpeed <= 0 && !attacking)
-		action = IDLE;
+		action = CharacterActions::IDLE;
 	else if (currentSpeed >0 && !attacking)
-		action = RUN;
+		action = CharacterActions::RUN;
 	else if (attacking)
-		action = ATTACK;
+		action = CharacterActions::ATTACK;
 
 
 
 	switch (action) {
-	case IDLE:
+	case CharacterActions::IDLE:
 	//	setCurrentFBXmesh(0);
 		break;
-	case RUN:
+	case CharacterActions::RUN:
 	//	setCurrentFBXmesh(1);
 		break;
-	case ATTACK:
+	case CharacterActions::ATTACK:
 	//	setCurrentFBXmesh(2);
 		break;
 	}

@@ -9,20 +9,26 @@
 #include <sstream>
 #include <iostream>
 
-#define M_PI  3.14159265359
+#ifndef M_PI
+#define M_PI    3.14159265358979323846264338327950288   /* pi */
+#endif
+
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
 namespace Utils{
 	template<class type>
-	type ToRadians(type a) {
-		return a * M_PI / 180.0f;
+	type ToRadians(type a)
+	{
+		return a * static_cast<float>(M_PI) / 180.0f;
 	}
 	template<class type>
-	type ToDegrees(type a) {
-		return a * 180.0f / M_PI;
+	type ToDegrees(type a)
+	{
+		return a * 180.0f / static_cast<float>(M_PI);
 	}
-	static float GetMaxFromVector(const glm::vec3& vector) {
+	static float GetMaxFromVector(const glm::vec3& vector)
+	{
 
 		if (vector.x > vector.y && vector.x > vector.z)
 			return vector.x;

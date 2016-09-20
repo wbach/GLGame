@@ -16,8 +16,8 @@ void CGUIRenderer::Init(int window_width, int window_height)
 	m_TextFont.init("Data/GUI/CRYSISB.ttf", 50);
 	//textFont.init("CRYSISB.ttf", 50);//"bgothm.ttf"
 	m_Cursor = nullptr;
-	m_WindowSize.x = window_width;
-	m_WindowSize.y = window_height;
+	m_WindowSize.x = static_cast<float>(window_width);
+	m_WindowSize.y = static_cast<float>(window_height);
 }
 
 void CGUIRenderer::SetFont(const string & filename)

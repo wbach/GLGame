@@ -1,22 +1,25 @@
 #include "Model.h"
 
 
-int CModel::addMesh(string name, vector<float> &positions, vector<float>&textCoords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, Material &material) {
+int CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, SMaterial &material) {
 	
-	Mesh mesh;
-	mesh.vertexCount = 0;
-	this->name = name;
+	CMesh mesh;
+	mesh.m_VertexCount = 0;
+	this->m_Name = name;
 	mesh.material = material;
 	vector<glm::vec3> norm, vertexes;
-	for (unsigned int x = 0; x < positions.size(); x += 3) {
+	for (unsigned int x = 0; x < positions.size(); x += 3) 
+	{
 		vertexes.push_back(glm::vec3(positions[x], positions[x + 1], positions[x + 2]));
-		mesh.vertexCount++;
+		mesh.m_VertexCount++;
 	}
-	for (unsigned int x = 0; x < normals.size(); x += 3) {
+	for (unsigned int x = 0; x < normals.size(); x += 3)
+	{
 		norm.push_back(glm::vec3(normals[x], normals[x + 1], normals[x + 2]));
 	}
-	for (unsigned int x = 0; x < indices.size(); x += 3) {
-		Face face;
+	for (unsigned int x = 0; x < indices.size(); x += 3)
+	{
+		SFace face;
 		face.vertex[0] = vertexes[indices[x]];
 		face.vertex[1] = vertexes[indices[x + 1]];
 		face.vertex[2] = vertexes[indices[x + 2]];
@@ -41,49 +44,61 @@ int CModel::addMesh(string name, vector<float> &positions, vector<float>&textCoo
 
 		face.normal = glm::normalize(face.normal);
 
-		mesh.faces.push_back(face);
+		mesh.m_Faces.push_back(face);
 	}
 
-	mesh.calculateBoudnigBox(positions);
+	mesh.CalculateBoudnigBox(positions);
 
-	mesh.vao = Utils::CreateVao();
-	GLuint vboId = Utils::BindIndicesBuffer(indices); mesh.vbos.push_back(vboId);
-	if (positions.size() >0) {
+	mesh.m_Vao = Utils::CreateVao();
+	GLuint vboId = Utils::BindIndicesBuffer(indices); mesh.m_Vbos.push_back(vboId);
+	if (positions.size() > 0)
+	{
 		GLuint vboId = Utils::StoreDataInAttributesList(0, 3, positions);
-		mesh.vbos.push_back(vboId);
+		mesh.m_Vbos.push_back(vboId);
 	}
-	if (textCoords.size() >0) {
-		GLuint vboId = Utils::StoreDataInAttributesList(1, 2, textCoords);
-		mesh.vbos.push_back(vboId);
+	if (text_coords.size() > 0)
+	{
+		GLuint vboId = Utils::StoreDataInAttributesList(1, 2, text_coords);
+		mesh.m_Vbos.push_back(vboId);
 	}
-	if (normals.size() >0) {
+	if (normals.size() > 0)
+	{
 		GLuint vboId = Utils::StoreDataInAttributesList(2, 3, normals);
-		mesh.vbos.push_back(vboId);
+		mesh.m_Vbos.push_back(vboId);
 	}
-	if (tangents.size() >0) {
+	if (tangents.size() > 0) 
+	{
 		GLuint vboId = Utils::StoreDataInAttributesList(3, 3, tangents);
-		mesh.vbos.push_back(vboId);
+		mesh.m_Vbos.push_back(vboId);
 	}
 	Utils::UnbindVao();
-	meshes.push_back(mesh);
+	m_Meshes.push_back(mesh);
 	return 0;
 }
-void Mesh::calculateBoudnigBox(vector<float>& positions)
+void CMesh::CalculateBoudnigBox(vector<float>& positions)
 {
 	if (positions.size() == 0)
 		return;
 
-	boundingBoxMin.x = boundingBoxMax.x = positions[0];
-	boundingBoxMin.y = boundingBoxMax.y = positions[1];
-	boundingBoxMin.z = boundingBoxMax.z = positions[2];
+	m_BoundingBoxMin.x = m_BoundingBoxMax.x = positions[0];
+	m_BoundingBoxMin.y = m_BoundingBoxMax.y = positions[1];
+	m_BoundingBoxMin.z = m_BoundingBoxMax.z = positions[2];
 	for (unsigned int i = 0; i < positions.size(); i += 3) {
-		if (positions[i] < boundingBoxMin.x) boundingBoxMin.x = positions[i];
-		if (positions[i] > boundingBoxMax.x) boundingBoxMax.x = positions[i];
-		if (positions[i + 1] < boundingBoxMin.y) boundingBoxMin.y = positions[i + 1];
-		if (positions[i + 1] > boundingBoxMax.y) boundingBoxMax.y = positions[i + 1];
-		if (positions[i + 2] < boundingBoxMin.z) boundingBoxMin.z = positions[i + 2];
-		if (positions[i + 2] > boundingBoxMax.z) boundingBoxMax.z = positions[i + 2];
+		if (positions[i] < m_BoundingBoxMin.x) m_BoundingBoxMin.x = positions[i];
+		if (positions[i] > m_BoundingBoxMax.x) m_BoundingBoxMax.x = positions[i];
+		if (positions[i + 1] < m_BoundingBoxMin.y) m_BoundingBoxMin.y = positions[i + 1];
+		if (positions[i + 1] > m_BoundingBoxMax.y) m_BoundingBoxMax.y = positions[i + 1];
+		if (positions[i + 2] < m_BoundingBoxMin.z) m_BoundingBoxMin.z = positions[i + 2];
+		if (positions[i + 2] > m_BoundingBoxMax.z) m_BoundingBoxMax.z = positions[i + 2];
 	}
-	boundingSize = glm::vec3(boundingBoxMax.x - boundingBoxMin.x, boundingBoxMax.y - boundingBoxMin.y, boundingBoxMax.z - boundingBoxMin.z);
-	boundingCenter = glm::vec3((boundingBoxMin.x + boundingBoxMax.x) / 2, (boundingBoxMin.y + boundingBoxMax.y) / 2, (boundingBoxMin.z + boundingBoxMax.z) / 2);
+	m_BoundingSize = glm::vec3(m_BoundingBoxMax.x - m_BoundingBoxMin.x, m_BoundingBoxMax.y - m_BoundingBoxMin.y, m_BoundingBoxMax.z - m_BoundingBoxMin.z);
+	m_BoundingCenter = glm::vec3((m_BoundingBoxMin.x + m_BoundingBoxMax.x) / 2, (m_BoundingBoxMin.y + m_BoundingBoxMax.y) / 2, (m_BoundingBoxMin.z + m_BoundingBoxMax.z) / 2);
+}
+
+void CMesh::CleanUp()
+{
+	for (unsigned int x = 0; x < m_Vbos.size(); x++) {
+		glDeleteBuffers(1, &m_Vbos[x]);
+	}
+	glDeleteVertexArrays(1, &m_Vao);
 }

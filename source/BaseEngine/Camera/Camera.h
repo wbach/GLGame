@@ -3,7 +3,8 @@
 #include "glm/glm.hpp"
 #include "../Utils/Utils.h"
 
-class CCamera{
+class CCamera
+{
 public:
 	virtual void Move(SDL_Window* win);
 	virtual void CalculateZoom(float zoom_lvl) {}
@@ -15,6 +16,7 @@ public:
 
 	const float& GetDistance() const;
 	const float& GetAngleAround() const;
+
 	void SetAngleAround(float a);
 	void SetDistance(float dist);
 	void SetPitch(float pitch);
@@ -27,7 +29,7 @@ public:
 	void SetYaw(float yaw);
 	
 	const glm::vec3& GetPosition() const;
-	const glm::vec3& GetRotation() const { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
+	const glm::vec3& GetRotation() const;
 	const glm::mat4& GetViewMatrix() const;
 
 	void SetPosition(glm::vec3 position);

@@ -11,7 +11,7 @@ public:
 	
 	const glm::vec2& GetPosition() const;
 	const glm::vec2& GetScale() const;
-	const int& GetTextureId() const;
+	const GLuint& GetTextureId() const;
 	
 	void SetTexture(const int& id);
 	void SetPosition(const glm::vec2& position);

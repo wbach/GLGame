@@ -13,17 +13,17 @@ CGUITexture::CGUITexture(GLuint textureID, glm::vec2 position, glm::vec2 scale)
 {
 }
 
-const glm::vec2 & CGUITexture::GetPosition() const
+const glm::vec2& CGUITexture::GetPosition() const
 { 
 	return m_Position; 
 }
 
-const glm::vec2 & CGUITexture::GetScale() const 
+const glm::vec2& CGUITexture::GetScale() const 
 { 
 	return m_Scale;
 }
 
-const int & CGUITexture::GetTextureId() const 
+const GLuint& CGUITexture::GetTextureId() const 
 { 
 	return m_TextureId;
 }

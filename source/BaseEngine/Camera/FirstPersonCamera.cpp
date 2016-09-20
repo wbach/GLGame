@@ -3,8 +3,8 @@
 CFirstPersonCamera::CFirstPersonCamera()
 : m_LookPosition(zero)
 , m_LookRotation(zero)
-, m_Mousevel(0.2)
-, m_Movevel(1)
+, m_Mousevel(0.2f)
+, m_Movevel(1.0f)
 , m_IsFreeCamera(true)
 {
 	m_Pitch = 9;
@@ -14,12 +14,12 @@ CFirstPersonCamera::CFirstPersonCamera()
 CFirstPersonCamera::CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity)
 : m_LookPosition(position_entity)
 , m_LookRotation(rotation_entity)
-, m_Mousevel(0.2)
-, m_Movevel(1)
+, m_Mousevel(0.2f)
+, m_Movevel(1.0f)
 , m_IsFreeCamera(false)
 {
-	m_Pitch = 9;
-	m_Yaw	= 100;
+	m_Pitch = 9.0f;
+	m_Yaw	= 100.0f;
 }
 
 void CFirstPersonCamera::LockCamera()
@@ -109,13 +109,13 @@ glm::vec2 CFirstPersonCamera::CalcualteMouseMove(SDL_Window* win)
 
 void CFirstPersonCamera::MoveCamera(float dist, float dir)
 {
-	float rad		 = (m_Yaw +dir)*M_PI/180.0;
+	float rad		 = (m_Yaw +dir)*static_cast<float>(M_PI) / 180.0f;
 	m_Position.x	-= sin(-rad)*dist ;
 	m_Position.z	-= cos(-rad)*dist;
 }
 
 void CFirstPersonCamera::MoveCameraUp(float dist, float dir)
 {
-	float rad		 = (m_Pitch +dir)*M_PI/180.0;
+	float rad		 = (m_Pitch +dir)*static_cast<float>(M_PI) / 180.0f;
 	m_Position.y	+= sin(-rad)*dist;
 }

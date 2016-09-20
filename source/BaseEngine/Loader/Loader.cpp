@@ -1,48 +1,38 @@
 #include "Loader.h"
-GLuint CLoader::loadFullTexture(string filename, bool keepData, GLubyte *&texture, int &width, int &height, bool verticalFlip) {
+GLuint CLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&texture, int &width, int &height, bool vertical_flip, float quality)
+{
+	cout << "Loading texture : " << file_name << endl;
 
-	cout << "Loading texture : " << filename << endl;
+	string file = file_name.substr(file_name.find_last_of('/') + 1);
 
-	string file = filename.substr(filename.find_last_of('/') + 1);
-	//system("cls");
-	//printf("%s\n",file.c_str());
-
-
-	//	printf("######################################\n");
-	for (TextInfo t : textures) {
-		//printf("%s\n",t.filename.c_str());
-		if (file.compare(t.filename) == 0) {
-			return t.id;
-		}
+	for (const STextInfo& t : m_Textures)
+	{
+		if (file.compare(t.filename) == 0) 
+			return t.id;		
 	}
-	//printf("######################################\n");
-	//system("pause");
-	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(filename.c_str(), 0);
+	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(file_name.c_str(), 0);
 
-	if (formato == FIF_UNKNOWN) { printf("%s : wrong image format or file does not exist.\n", filename.c_str()); return 0; }
-	FIBITMAP* imagen2 = FreeImage_Load(formato, filename.c_str());
-	if (!imagen2) { printf("%s : wrong image format or file does not exist.\n", filename.c_str()); return 0; }
+	if (formato == FIF_UNKNOWN) { printf("%s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
+	FIBITMAP* imagen2 = FreeImage_Load(formato, file_name.c_str());
+	if (!imagen2) { printf("%s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
 	FIBITMAP* imagen = FreeImage_ConvertTo32Bits(imagen2);	
 	FreeImage_Unload(imagen2);
 
-	//FIBITMAP temp = imagen;
-
-	//FreeImage_Unload(temp);
-	if(verticalFlip)	FreeImage_FlipVertical(imagen);
+	if(vertical_flip)
+		FreeImage_FlipVertical(imagen);
 
 	int w = FreeImage_GetWidth(imagen);
 	int h = FreeImage_GetHeight(imagen);
 
-	//imagen = FreeImage_Rescale(imagen, w / 4, h / 4, FILTER_BILINEAR);
-
-	//w /= 4;
-	//h /= 4;
-	//printf( "%s : wrong image format or file does not exist.",filename);
-	//cout << "The size of the image in " << filePath << " is: " << w << "x" << h <<endl; //Some debugging code
+	if (quality < 1)
+	{
+		w = static_cast<int>(w / quality);
+		h = static_cast<int>(h / quality);
+		imagen = FreeImage_Rescale(imagen, w, h, FILTER_BILINEAR);
+	}
+	
 	if (keepData) {
 		FreeImage_FlipVertical(imagen);
-		//FreeImage_FlipHorizontal(imagen);
-
 	}
 	char* pixeles = (char*)FreeImage_GetBits(imagen);
 
@@ -65,16 +55,17 @@ GLuint CLoader::loadFullTexture(string filename, bool keepData, GLubyte *&textur
 	}
 
 	// Create one OpenGL texture
-	GLuint textureID;
-	glGenTextures(1, &textureID);
-	GLenum huboError = glGetError();
-	if (huboError) {
-		printf("%s : There was an error loading the texture : %s\n", filename.c_str(), glewGetErrorString(huboError));
+	GLuint texture_id;
+	glGenTextures(1, &texture_id);
+	GLenum hubo_error = glGetError();
+	if (hubo_error)
+	{
+		printf("%s : There was an error loading the texture : %s\n", file_name.c_str(), glewGetErrorString(hubo_error));
 		delete[] texture;
 		return 0;
 	}
 	// "Bind" the newly created texture : all future texture functions will modify this texture
-	glBindTexture(GL_TEXTURE_2D, textureID);
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 
 	// Give the image to OpenGL
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, w, h, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)texture);
@@ -87,35 +78,35 @@ GLuint CLoader::loadFullTexture(string filename, bool keepData, GLubyte *&textur
 	delete[] texture;
 	FreeImage_Unload(imagen);
 
-	TextInfo text;
-	text.id = textureID;
+	STextInfo text;
+	text.id = texture_id;
 	text.filename = file;
-	textures.push_back(text);
-	return textureID;
+	m_Textures.push_back(text);
+	return texture_id;
 }
 
-GLuint CLoader::loadTexture(string filename, bool verticalFlip)
+GLuint CLoader::LoadTexture(string filename, bool verticalFlip)
 {
 	int w, h; GLubyte* data;
-	return loadFullTexture(filename, false, data, w, h, verticalFlip);
+	return LoadFullTexture(filename, false, data, w, h, verticalFlip);
 }
 
 
-void CLoader::processMesh(CModel &model,string filepath, aiMesh *mesh, const aiScene *scene)
+void CLoader::ProcessMesh(CModel &model,string file_path, aiMesh *mesh, const aiScene *scene)
 {
-	vector<float>postions;
-	vector<float>textCoords;
-	vector<float>normals;
-	vector<float>tangents;
-	vector<float>diffuse;
-	vector<float>specular;
-	vector<float>ambient;
+	vector<float> postions;
+	vector<float> text_coords;
+	vector<float> normals;
+	vector<float> tangents;
+	vector<float> diffuse;
+	vector<float> specular;
+	vector<float> ambient;
 	vector<unsigned int> indices;
 
 	aiColor4D diff;
 	aiColor4D amb;
 	aiColor4D spec;
-	float shineDamper;
+	float shine_damper;
 	float transparent;
 	float reflectivity;
 	aiMaterial *mat = scene->mMaterials[mesh->mMaterialIndex];
@@ -124,7 +115,7 @@ void CLoader::processMesh(CModel &model,string filepath, aiMesh *mesh, const aiS
 	aiGetMaterialColor(mat, AI_MATKEY_COLOR_DIFFUSE, &diff);
 	aiGetMaterialColor(mat, AI_MATKEY_COLOR_AMBIENT, &amb);
 	aiGetMaterialColor(mat, AI_MATKEY_COLOR_SPECULAR, &spec);
-	aiGetMaterialFloat(mat, AI_MATKEY_SHININESS, &shineDamper);
+	aiGetMaterialFloat(mat, AI_MATKEY_SHININESS, &shine_damper);
 	aiGetMaterialFloat(mat, AI_MATKEY_REFLECTIVITY, &reflectivity);
 	aiGetMaterialFloat(mat, AI_MATKEY_OPACITY, &transparent);
 
@@ -169,14 +160,13 @@ void CLoader::processMesh(CModel &model,string filepath, aiMesh *mesh, const aiS
 
 		if (mesh->mTextureCoords[0])
 		{
-			textCoords.push_back(mesh->mTextureCoords[0][i].x);
-			textCoords.push_back(mesh->mTextureCoords[0][i].y);
-			//tmpVec.z = mesh->mTextureCoords[0][i].z ;
+			text_coords.push_back(mesh->mTextureCoords[0][i].x);
+			text_coords.push_back(mesh->mTextureCoords[0][i].y);
 		}
 		else
 		{
-			textCoords.push_back(0);
-			textCoords.push_back(0);
+			text_coords.push_back(0);
+			text_coords.push_back(0);
 		}
 	}
 
@@ -190,97 +180,89 @@ void CLoader::processMesh(CModel &model,string filepath, aiMesh *mesh, const aiS
 	}
 
 
-	Material material;
+	SMaterial material;
 	material.diffuse = defaultDiff;
 	material.specular = defaultSpec;
-	material.shineDamper = shineDamper;
+	material.shineDamper = shine_damper;
 	material.reflectivity = reflectivity;
-
-
 
 	for (unsigned int i = 0; i <mat->GetTextureCount(aiTextureType_DIFFUSE); i++)
 	{
 		aiString str;
 		mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
-		TextInfo texture;
-		texture.id = loadTexture(filepath + str.C_Str());
-		texture.type = DIFFUSE_TEXTURE;
+		STextInfo texture;
+		texture.id = LoadTexture(file_path + str.C_Str());
+		texture.type = MaterialTexture::DIFFUSE;
 		material.textures.push_back(texture);
 	}
 	for (unsigned int i = 0; i <mat->GetTextureCount(aiTextureType_HEIGHT); i++)
 	{
 		aiString str;
 		mat->GetTexture(aiTextureType_HEIGHT, i, &str);
-		TextInfo texture;
-		texture.id = loadTexture(filepath + str.C_Str());
-		texture.type = NORMAL_TEXTURE;
+		STextInfo texture;
+		texture.id = LoadTexture(file_path + str.C_Str());
+		texture.type = MaterialTexture::NORMAL;
 		material.textures.push_back(texture);
 	}
-
-
-	model.addMesh(filepath, postions, textCoords, normals, tangents,indices, material);
-
+	model.AddMesh(file_path, postions, text_coords, normals, tangents, indices, material);
 }
 
-void CLoader::recursiveProcess(CModel &model,string filepath, aiNode *node, const aiScene *scene)
+void CLoader::RecursiveProcess(CModel &model,string file_path, aiNode *node, const aiScene *scene)
 {
 	//proces
 	for (unsigned int i = 0; i<node->mNumMeshes; i++)
 	{
 		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];
-		processMesh(model, filepath, mesh, scene);
+		ProcessMesh(model, file_path, mesh, scene);
 	}
 
 	//r
 	for (unsigned int i = 0; i <node->mNumChildren; i++)
 	{
-		recursiveProcess(model, filepath, node->mChildren[i], scene);
+		RecursiveProcess(model, file_path, node->mChildren[i], scene);
 	}
 }
 
-void CLoader::cleanUp()
+void CLoader::CleanUp()
 {
-	for (CModel model : models) {
-		model.cleanUp();
-	}
-	for (TextInfo text : textures) {
-		text.cleanUp();
-	}
-	textures.clear();
-	models.clear();
+	for (CModel& model : m_Models) 
+		model.CleanUp();
+	
+	for (STextInfo& text : m_Textures)
+		text.CleanUp();
+
+	m_Textures.clear();
+	m_Models.clear();
 }
 
-int CLoader::assimpLoad(string filename)
+int CLoader::AssimpLoad(string file_name)
 {
-	std::ifstream tryfile(filename);
-	if(!tryfile.is_open()){
-        std::cout << "The file " << filename <<" wasnt successfuly opened ";
+	std::ifstream try_file(file_name);
+	if(!try_file.is_open()){
+        std::cout << "The file " << file_name <<" wasnt successfuly opened ";
 		return -1;
 	}
-    tryfile.close();
+	try_file.close();
 
-	string path = filename.substr(0, filename.find_last_of('/'));
+	string path = file_name.substr(0, file_name.find_last_of('/'));
 
-	for (int x = 0; x < models.size(); x++) {
-		if (filename.compare(models[x].getName()) == 0) {
+	for (unsigned int x = 0; x < m_Models.size(); x++)
+		if (file_name.compare(m_Models[x].GetName()) == 0)
 			return x;
-		}
-	}
 
 	Assimp::Importer importer;
 	unsigned int flags = aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals;
 	//if(normals == "flat" ) flags |= aiProcess_GenNormals ;
 	//if(normals == "smooth" ) flags |= aiProcess_GenSmoothNormals ;
 
-	const aiScene *scene = importer.ReadFile(filename.c_str(), flags);
+	const aiScene *scene = importer.ReadFile(file_name.c_str(), flags);
 	if (scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		std::cout << "The file %s wasnt successfuly opened " << filename;
+		std::cout << "The file %s wasnt successfuly opened " << file_name;
 		return -1;
 	}
 
-
 	CModel model;
-	recursiveProcess(model,path + "/", scene->mRootNode, scene);
-	models.push_back(model);
-	return models.size()-1;
+	RecursiveProcess(model,path + "/", scene->mRootNode, scene);
+	m_Models.push_back(model);
+	return m_Models.size()-1;
 }

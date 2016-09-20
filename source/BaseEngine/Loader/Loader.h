@@ -1,5 +1,3 @@
-#ifndef LOADER_H
-#define LOADER_H
 #pragma once
 #include <iostream>
 #include <fstream>
@@ -13,23 +11,22 @@
 #include <stdlib.h>
 #include <FreeImage.h>
 using namespace std;
-class CLoader {
+class CLoader
+{
 public:
-	vector<CModel> models;
-	vector<TextInfo> textures;
+	vector<CModel> m_Models;
+	vector<STextInfo> m_Textures;
 
-	int assimpLoad(string filename);
+	int AssimpLoad(string filename);
 
-	GLuint loadFullTexture(string filename, bool keepData, GLubyte *&data, int &width, int &height, bool verticalFlip);
-	GLuint loadTexture(string filename,bool verticalFlip = false);
-	void updateTexture(GLuint id, string filename);
-	GLuint loadCubeMap(vector<string> filenames);
+	GLuint LoadFullTexture(string filename, bool keep_data, GLubyte *&data, int &width, int &height, bool vertical_flip, float quality = 1);
+	GLuint LoadTexture(string filename,bool verticalFlip = false);
+	void UpdateTexture(GLuint id, string filename);
+	GLuint LoadCubeMap(vector<string> filenames);
 
-	void processMesh(CModel &model,string filepath, aiMesh *mesh, const aiScene *scene);
-	void recursiveProcess(CModel &model,string filepath, aiNode *node, const aiScene *scene);
+	void ProcessMesh(CModel &model,string filepath, aiMesh *mesh, const aiScene *scene);
+	void RecursiveProcess(CModel &model,string filepath, aiNode *node, const aiScene *scene);
 
-	void cleanUp();
+	void CleanUp();
 };
-#endif // !ENTITY_H
-
 

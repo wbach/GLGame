@@ -5,39 +5,45 @@
 #include "glm/glm.hpp"
 #include "../Utils/Utils.h"
 using namespace std;
-enum {
-	AMBIENT_TEXTURE = 0,
-	DIFFUSE_TEXTURE,
-	SPECULAR_TEXTURE,
-	NORMAL_TEXTURE,
-	REFLECTION_TEXTURE,
-	BLEND_MAP_TEXTURE,
-	GUI_TEXTURE
-};
-struct TextInfo {
+namespace MaterialTexture 
+{
+	enum {
+		AMBIENT = 0,
+		DIFFUSE,
+		SPECULAR,
+		NORMAL,
+		REFLECTION,
+		BLEND_MAP,
+		GUI
+	};
+}
+
+struct STextInfo 
+{
 	GLuint id;
 	string filename;
 	unsigned int type;
-	TextInfo() {
+	STextInfo() {
 		id = 0;
 		type = 0;
 	}
-	void cleanUp() {
+	void CleanUp() {
 		glDeleteTextures(1, &id);
 	}
 };
-struct Material {
+struct SMaterial
+{
 	glm::vec3 diffuse;
 	glm::vec3 specular;
 	float shineDamper;
 	float reflectivity;
-	vector<TextInfo> textures;
+	vector<STextInfo> textures;
 	bool isTransparency;
 	bool useFakeLighting;
 	int numberOfRows;
 	int textureIndex;
 
-	Material() {
+	SMaterial() {
 		textureIndex = 0;
 		numberOfRows = 1;
 		useFakeLighting = false;

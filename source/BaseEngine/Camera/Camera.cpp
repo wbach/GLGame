@@ -46,6 +46,8 @@ const glm::vec3& CCamera::GetPosition() const
 	return m_Position;
 }
 
+const glm::vec3 & CCamera::GetRotation() const { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
+
 const float& CCamera::GetPitch() const
 {
 	return m_Pitch;

@@ -8,11 +8,11 @@ CGame::CGame()
 
 void CGame::Initialize()
 {
-	m_DisplayManager.Initialize(m_WindowSize.x, m_WindowSize.y);
+	m_DisplayManager.Initialize(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 	CreateProjectionMatrix();
     m_EntityRenderer.Initialize(m_ProjectionMatrix);
-	m_TerrainRenderer.init(m_ProjectionMatrix);
-	m_GuiRenderer.Init(m_WindowSize.x, m_WindowSize.y);
+	m_TerrainRenderer.Init(m_ProjectionMatrix);
+	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 }
 void CGame::Uninitialize()
 {
@@ -21,7 +21,7 @@ void CGame::Uninitialize()
 	
 	m_GuiRenderer.CleanUP();
 	m_EntityRenderer.Uninitialize();
-	m_TerrainRenderer.cleanUp();
+	m_TerrainRenderer.CleanUp();
 	m_DisplayManager.Uninitialize();
 }
 void CGame::GameLoop()
@@ -74,7 +74,7 @@ void CGame::GameLoop()
 			case 1: running = false; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
-			m_TerrainRenderer.render(m_CurrScene,glm::mat4(0));
+			m_TerrainRenderer.Render(m_CurrScene,glm::mat4(0));
 			m_EntityRenderer.Render(m_CurrScene);
 			m_GuiRenderer.Render(m_CurrScene->GetGui());
 		}
@@ -83,7 +83,7 @@ void CGame::GameLoop()
 		
 		m_DisplayManager.Update();
 
-		if (1000.0 / m_DisplayManager.GetFPSCap() > SDL_GetTicks() - start)  SDL_Delay(1000.0 / m_DisplayManager.GetFPSCap() - (SDL_GetTicks() - start));
+		if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
 	}
 }
 void CGame::LoadScene()
@@ -156,7 +156,7 @@ void CGame::RenderStartSeries()
 	Utils::UnbindVao();
 	m_LoadingShader.Init();
 
-	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/start1.png",true);
+	GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/start1.png",true);
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
 
 	Uint32 start,start2 = SDL_GetTicks();
@@ -194,7 +194,7 @@ void CGame::RenderStartSeries()
 		m_LoadingShader.Stop();
 		m_DisplayManager.Update();
 
-		if (1000.0 / m_DisplayManager.GetFPSCap()>SDL_GetTicks() - start)  SDL_Delay(1000.0 / m_DisplayManager.GetFPSCap() - (SDL_GetTicks() - start));
+		if ( static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
 	}
 	m_LoadingShader.Stop();
 	m_LoadingShader.CleanUp();
@@ -208,11 +208,11 @@ void CGame::InitializeScene()
 {
 	SDL_GLContext gl_loading_context = SDL_GL_CreateContext(m_DisplayManager.GetWindow());
 	CGUIRenderer grenderer;
-	grenderer.Init(m_WindowSize.x, m_WindowSize.y);
+	grenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
 	SDL_Event event;
-	float green = 1.0;
-	float value = 0.01;
+	float green = 1.0f;
+	float value = 0.01f;
 
 	vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0};
 	vector<float> text_coords = {
@@ -229,8 +229,8 @@ void CGame::InitializeScene()
 	Utils::UnbindVao();
 	m_LoadingShader.Init();
 
-	GLuint texture = m_CurrScene->GetLoader().loadTexture("Data/GUI/circle2.png");
-	m_CurrScene->GetLoader().textures.clear();
+	GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/circle2.png");
+	m_CurrScene->GetLoader().m_Textures.clear();
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(0.25));
 
 	string loading_text = "Loading";
@@ -321,7 +321,7 @@ void CGame::InitializeScene()
 		}
 
 
-		if (1000.0 / m_DisplayManager.GetFPSCap()>SDL_GetTicks() - start)  SDL_Delay(1000.0 / m_DisplayManager.GetFPSCap() - (SDL_GetTicks() - start));
+		if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
 	}
 	m_LoadingShader.Stop();
 	m_LoadingShader.CleanUp();
@@ -356,7 +356,7 @@ void CGame::AddScene(shared_ptr<CScene> scene)
 }
 int CGame::SetCurrentScene(int i)
 {
-	for (int x = 0 ; x < m_Scenes.size() ; x++ )
+	for (unsigned int x = 0 ; x < m_Scenes.size() ; x++ )
 	{
 		if (x == i)
 		{

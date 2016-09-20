@@ -1,5 +1,3 @@
-#ifndef MODEL_H
-#define MODEL_H
 #pragma once
 #include <string>
 #include <vector>
@@ -7,52 +5,52 @@
 #include "../Utils/Utils.h"
 #include "Material.h"
 using namespace std;
-struct Face {
+struct SFace
+{
 	glm::vec3 vertex[3];
 	glm::vec3 normal;
 	glm::vec2 uv[3];
 	glm::vec3 center;
 	float skipDistance;
 };
-struct Mesh {
-	GLuint vao;
-	vector<GLuint> vbos;
-	vector<Face> faces;
-	int vertexCount;
-	glm::vec3 boundingBoxMin, boundingBoxMax, boundingCenter, boundingSize;
-	Material material;
-	Mesh() {}
-	Mesh(Material material) :material(material){}
-	void calculateBoudnigBox(vector<float>& positions);
-	void cleanUp() {
-
-		//for (unsigned int x = 0; x < material.textures.size(); x++) {
-		//	glDeleteTextures(1, &material.textures[x].id);
-		//}
-		for (unsigned int x = 0; x < vbos.size(); x++) {
-			glDeleteBuffers(1, &vbos[x]);
-		}
-		glDeleteVertexArrays(1, &vao);
-
-	};
-};
-class CModel {
-	string name;
+class CMesh
+{
 public:
-	vector<Mesh> meshes;
+	GLuint m_Vao;
+	vector<GLuint> m_Vbos;
+	vector<SFace> m_Faces;
+	int m_VertexCount;
+	glm::vec3 m_BoundingBoxMin, m_BoundingBoxMax, m_BoundingCenter, m_BoundingSize;
+	SMaterial material;
 
-	int addMesh(string name,vector<float> &positions, vector<float>&textCoords, vector<float>&normals, vector<float>&tangents,
-		 vector<unsigned int> &indices, Material &material);
-
-	string getName() { return name; }
-	void cleanUp() {
-		for (Mesh mesh : meshes) {
-			mesh.cleanUp();
-		}
+	CMesh() {}
+	CMesh(SMaterial material)
+	:material(material)
+	{
 	}
 
+	void CalculateBoudnigBox(vector<float>& positions);
+	void CleanUp();
 };
-#endif // !MODEL_H
+class CModel
+{	
+public:
+	vector<CMesh> m_Meshes;
 
+	int AddMesh(string name,vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,
+		 vector<unsigned int> &indices, SMaterial &material);
 
+	const string& GetName() const
+	{ 
+		return m_Name;
+	}
+	void CleanUp()
+	{
+		for (CMesh mesh : m_Meshes) {
+			mesh.CleanUp();
+		}
+	}
+private:
+	string m_Name;
+};
 #pragma once

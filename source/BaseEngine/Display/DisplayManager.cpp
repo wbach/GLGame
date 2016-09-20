@@ -23,8 +23,8 @@ int CDisplayManager::Initialize(int w, int h)
 	}
 	printf("GL version: %s\n\n", glGetString(GL_VERSION));
 
-	m_WindowsSize.x = w;
-	m_WindowsSize.y = h;
+	m_WindowsSize.x = static_cast<float>(w);
+	m_WindowsSize.y = static_cast<float>(h);
 
 	m_FPS_CAP = 999;
 
@@ -40,7 +40,7 @@ void CDisplayManager::Update()
 }
 const float CDisplayManager::GetCurrentTime()
 {
-	return SDL_GetTicks();
+	return static_cast<float>(SDL_GetTicks());
 }
 void CDisplayManager::Uninitialize()
 {

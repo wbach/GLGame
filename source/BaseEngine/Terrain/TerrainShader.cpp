@@ -101,7 +101,7 @@ void TerrainShader::ConnectTextureUnits() const
 		LoadValue(location_gTextureNormal,7);
 		LoadValue(location_bTextureNormal,8);
 		LoadValue(location_shadowMap, 9);
-	}
+}
 void TerrainShader::LoadUseNormalMap(const float& use) const
 {
 	LoadValue(location_useNormalMap, use) ;

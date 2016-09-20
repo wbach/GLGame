@@ -1,12 +1,15 @@
-#ifndef PLAYER_H
-#define PLAYER_H
+#pragma once
 #include <SDL2/SDL.h>
 #include "../BaseEngine/Entities/Entity.h"
-enum {
-	IDLE = 0,
-	RUN,
-	ATTACK
-};
+namespace CharacterActions
+{
+	enum {
+		IDLE = 0,
+		RUN,
+		ATTACK
+	};
+}
+
 class CPlayer : public CEntity{
 	float RUN_SPEED = 20;
 	float TURN_SPEED = 160;
@@ -16,7 +19,7 @@ class CPlayer : public CEntity{
 	float currentTurnSpeed = 0;
 	float upwardsSpeed = 0;
 	bool isInAir = false;
-	int action = IDLE;
+	int action = CharacterActions::IDLE;
 	bool attacking = false;
 public:
 	CPlayer();
@@ -32,5 +35,3 @@ public:
 	void attack();
 	int getAction() { return action; }
 };
-
-#endif
