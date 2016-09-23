@@ -111,12 +111,12 @@ void CGUIRenderer::RenderTextures(const vector<CGUITexture>& guis)
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 		glDisable(GL_DEPTH_TEST);
 
-		int tmpx, tmpy;
-		SDL_GetMouseState(&tmpx, &tmpy);
+		int tmpx = 0, tmpy = 0;
+//		SDL_GetMouseState(&tmpx, &tmpy);
 		float x = (((float)tmpx) / (float)m_WindowSize.x) * 2 - 1;
 		float y = (1 - (((float)tmpy) / (float)m_WindowSize.y)) * 2 - 1;
 		m_Cursor->SetPosition(glm::vec2(x + m_Cursor->GetScale().x / 2, y - m_Cursor->GetScale().y / 2));
-		SDL_ShowCursor(SDL_DISABLE);
+//		SDL_ShowCursor(SDL_DISABLE);
 
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, m_Cursor->GetTextureId());

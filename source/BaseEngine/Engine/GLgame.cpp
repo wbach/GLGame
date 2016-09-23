@@ -1,5 +1,6 @@
 #include "GLgame.h"
-
+#include "../Input/InputSDL.h"
+#include "../Input/InputManager.h"
 CGame::CGame()
 : m_BackgroundColour(0.6, 0.6, 0.8)
 , m_WindowSize(1000, 600)
@@ -8,11 +9,14 @@ CGame::CGame()
 
 void CGame::Initialize()
 {
-	m_DisplayManager.Initialize(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	m_DisplayManager.Initialize(API::SDL2, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 	CreateProjectionMatrix();
     m_EntityRenderer.Initialize(m_ProjectionMatrix);
 	m_TerrainRenderer.Init(m_ProjectionMatrix);
 	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+
+	m_DisplayManager.SetInput(m_InputManager.m_Input);
+	//m_InputManager.m_Input = make_shared<CInputSDL>(m_DisplayManager.GetWindow());
 }
 void CGame::Uninitialize()
 {
@@ -36,8 +40,13 @@ void CGame::GameLoop()
 	vector<CGUIText> texts;
 	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1.5, glm::vec3(0, 0, 1)));
 
+	
+	
 	while (running)
 	{
+		
+
+
 		start = SDL_GetTicks();
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -69,7 +78,7 @@ void CGame::GameLoop()
 
 		if (m_CurrScene != nullptr)
 		{
-			switch (m_CurrScene->Update(event, m_DisplayManager.GetWindow()))
+			switch (m_CurrScene->Update())
 			{
 			case 1: running = false; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
@@ -91,13 +100,13 @@ void CGame::LoadScene()
 	if (m_CurrScene == nullptr) return;
 
 	m_IsLoading = true;
-	thread loading_thread(&CGame::InitializeScene,this) ;
+//	thread loading_thread(&CGame::InitializeScene,this) ;
 
 	m_CurrScene->Initialize();
 
 	m_IsLoading = false;
 
-	loading_thread.join();
+	//loading_thread.join();
 }
 float CGame::Fade(Uint32 delta_time)
 {
@@ -206,7 +215,7 @@ void CGame::RenderStartSeries()
 }
 void CGame::InitializeScene()
 {
-	SDL_GLContext gl_loading_context = SDL_GL_CreateContext(m_DisplayManager.GetWindow());
+//	SDL_GLContext gl_loading_context = SDL_GL_CreateContext(m_DisplayManager.GetWindow());
 	CGUIRenderer grenderer;
 	grenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
@@ -332,7 +341,7 @@ void CGame::InitializeScene()
 	glDeleteVertexArrays(1, &vao);
 
 	grenderer.CleanUP();
-	SDL_GL_DeleteContext(gl_loading_context);
+//	SDL_GL_DeleteContext(gl_loading_context);
 }
 
 

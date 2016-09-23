@@ -22,7 +22,7 @@ CLight::CLight(glm::vec3 position,glm::vec3 colour)
 : m_Type(LightType::DIRECTIONAL_LIGHT)
 , m_Position(position)
 , m_Colour(colour)
-, m_Attenuation(0)
+, m_Attenuation(glm::vec3(1, 0, 0))
 , m_CutOff(0)
 {
 }
@@ -30,7 +30,7 @@ CLight::CLight(glm::vec3 colour)
 : m_Type(LightType::DIRECTIONAL_LIGHT)
 , m_Position(100000, 150000, 100000)
 , m_Colour(colour)
-, m_Attenuation(0)
+, m_Attenuation(glm::vec3(1, 0, 0))
 , m_CutOff(0)
 {
 }
@@ -38,7 +38,7 @@ CLight::CLight()
 : m_Type(LightType::DIRECTIONAL_LIGHT)
 , m_Position(100000, 150000, 100000)
 , m_Colour(0.8)
-, m_Attenuation(0)
+, m_Attenuation(glm::vec3(1, 0, 0))
 , m_CutOff(0)
 {
 }

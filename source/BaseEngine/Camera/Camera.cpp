@@ -15,23 +15,12 @@ void CCamera::SetPosition(glm::vec3 position)
 {
 	m_Position = position;
 }
-void CCamera::Move(SDL_Window* win){
-	const Uint8* state=SDL_GetKeyboardState(NULL);
-	if (state[SDL_SCANCODE_UP])
-	{
-		m_Position.y+=0.02f;
-	}else if(state[SDL_SCANCODE_DOWN])
-	{
-		m_Position.y-=0.02f;
-	}
-	if (state[SDL_SCANCODE_LEFT])
-	{
-		m_Position.x-=0.02f;
-	}
-	else if (state[SDL_SCANCODE_RIGHT])
-	{
-		m_Position.x+=0.02f;
-	}
+void CCamera::CalculateInput()
+{
+}
+void CCamera::Move()
+{
+
 	UpdateViewMatrix();
 }
 

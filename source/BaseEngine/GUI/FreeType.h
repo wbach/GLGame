@@ -9,7 +9,6 @@
 #include <fstream>
 #include <iostream>
 //OpenGL Headers
-#include <SDL2/SDL.h>
 #include <GL/glew.h>
 //Some STL headers
 #include <vector>

@@ -1,6 +1,11 @@
 #include "Scene.h"
 
-const vector<shared_ptr<CEntity>>& CScene::GetEntities() const 
+CScene::CScene(CGame& game) 
+: m_Game(game)
+{
+}
+
+const vector<shared_ptr<CEntity>>& CScene::GetEntities() const
 {
 	return m_Entities;
 }
@@ -33,7 +38,7 @@ glm::vec3 CScene::CreatePositionVector(glm::vec2 xzPos, float yOffset)
 //return height form current terrain
 const float CScene::GetHeightOfTerrain(float x, float z)
 {
-	for (CTerrain ter : m_Terrains) 
+	for (const CTerrain& ter : m_Terrains) 
 		if (x > ter.m_Transform.position.x && x <  ter.m_Transform.position.x + ter.GetSize())
 			if (z > ter.m_Transform.position.z && z <  ter.m_Transform.position.z + ter.GetSize()) 
 				return ter.GetHeightofTerrain(x, z);			

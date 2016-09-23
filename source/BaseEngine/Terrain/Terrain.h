@@ -7,7 +7,7 @@
 #include "../Utils/Utils.h"
 #include <math.h>
 #include "glm/glm.hpp"
-#include <SDL2/SDL.h>
+
 
 static const float MAX_PIXEL_COLOUR = 256.0f * 256.0f * 256.0f;
 
@@ -68,9 +68,9 @@ public:
 	void GenerateTerrainMap(CLoader &loader,string heightMap);
 	glm::vec3 CalculateNormalMap(int x, int z, FIBITMAP*  image);
 	float GetHeightMap(int x, int z, FIBITMAP*  image);
-	float GetHeightofTerrain(float worldX,float worldZ);
+	const float GetHeightofTerrain(float worldX, float worldZ) const;
 	void FiltrElementOffTerrain();
-	float GetSize();
+	const float& GetSize() const;
 	vector<SElement> GetElementsMap();
 	void AddElementToList(glm::vec3 colorOnMap,int value, float floraSize, int i, int j, float distanceFilter);
 	SElement* FindElement(int value ,bool &finded);

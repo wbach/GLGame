@@ -8,6 +8,7 @@
 #include "../Shaders/LoadingShader.h"
 #include "../GUI/GUIRenderer.h"
 #include "../Terrain/TerrainRenderer.h"
+#include "../Input/InputManager.h"
 using namespace std;
 
 class CGame {
@@ -18,7 +19,8 @@ public:
 	void GameLoop();
 	void Uninitialize();
 
-	const CDisplayManager& GetDisplayManager() { return m_DisplayManager; }
+	CInputManager& GetInputManager() { return m_InputManager; }
+	CDisplayManager& GetDisplayManager() { return m_DisplayManager; }
 	void CreateProjectionMatrix();
 
     int SetCurrentScene(int i);
@@ -33,6 +35,7 @@ public:
 
 private:
 	CDisplayManager m_DisplayManager;
+	CInputManager m_InputManager;
 
 	LoadingShader m_LoadingShader;
 

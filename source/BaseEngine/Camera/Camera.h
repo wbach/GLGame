@@ -1,12 +1,12 @@
 #pragma once
-#include <SDL2/SDL.h>
 #include "glm/glm.hpp"
 #include "../Utils/Utils.h"
 
 class CCamera
 {
 public:
-	virtual void Move(SDL_Window* win);
+	virtual void CalculateInput();
+	virtual void Move();
 	virtual void CalculateZoom(float zoom_lvl) {}
 	virtual void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) = 0;
 

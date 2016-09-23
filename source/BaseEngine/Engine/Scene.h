@@ -11,9 +11,11 @@
 
 using namespace std;
 
-
-class CScene {
+class CGame;
+class CScene
+{
 public:
+	CScene(CGame& game);
 	void AddTerrain(CTerrain terrain) { m_Terrains.push_back(terrain); }
 	void AddEntity(shared_ptr<CEntity> entity) { m_Entities.push_back(entity); }
 
@@ -24,7 +26,7 @@ public:
 	const string& GetName();
 
 	virtual int Initialize() = 0;
-	virtual int Update(SDL_Event &event, SDL_Window *win) = 0;
+	virtual int Update() = 0;
 	virtual int CleanUp() = 0;
 	const virtual glm::mat4& GetViewMatrix() = 0;
 
@@ -45,7 +47,7 @@ public:
 protected:
 	CLoader m_Loader;
 	string m_Name;
-
+	CGame& m_Game;
 	SGUI m_Gui;
 	vector<shared_ptr<CEntity>> m_Entities;
 	vector<CTerrain> m_Terrains;

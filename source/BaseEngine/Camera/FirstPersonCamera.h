@@ -10,14 +10,14 @@ public:
 	CFirstPersonCamera();
 	CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity);
 
-	void Move(SDL_Window* win) override;
+	void Move() override;
 	void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) override;	
 
 private:
 	void MoveCamera(float dist, float dir);
 	void MoveCameraUp(float dist, float dir);	
 	void LockCamera();
-	glm::vec2 CalcualteMouseMove(SDL_Window* win);
+	glm::vec2 CalcualteMouseMove();
 
 	float m_Mousevel;
 	float m_Movevel;

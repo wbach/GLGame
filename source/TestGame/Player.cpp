@@ -4,11 +4,11 @@ CPlayer::CPlayer()
 	
 }
 
-CPlayer::CPlayer(glm::vec3 pos) :CEntity(pos) {}
+CPlayer::CPlayer(CInputManager* input_manager, glm::vec3 pos) : m_InputManager(input_manager), CEntity(pos) {}
 
-CPlayer::CPlayer(glm::vec3 pos, glm::vec3 rot) : CEntity(pos, rot) {}
+CPlayer::CPlayer(CInputManager* input_manager, glm::vec3 pos, glm::vec3 rot) : m_InputManager(input_manager), CEntity(pos, rot) {}
 
-CPlayer::CPlayer(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : CEntity(pos, rot, scale) {}
+CPlayer::CPlayer(CInputManager* input_manager, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale) : m_InputManager(input_manager), CEntity(pos, rot, scale) {}
 
 void CPlayer::calculateMove(float deltaTime)
 {
@@ -17,7 +17,6 @@ void CPlayer::calculateMove(float deltaTime)
 	float distance = this->currentSpeed  * deltaTime;
 	float dx = static_cast<float>(distance * sin(Utils::ToRadians(this->GetRotation().y)));
 	float dz = static_cast<float>(distance * cos(Utils::ToRadians(this->GetRotation().y)));
-	//	upwardsSpeed += GRAVITY* deltaTime;	
 	IncrasePosition(dx, 0, dz);
 }
 
@@ -68,39 +67,48 @@ void CPlayer::jump()
 
 void CPlayer::checkInputs()
 {
-	const Uint8* state = SDL_GetKeyboardState(NULL);
-	if (state[SDL_SCANCODE_P]) {
+	if (m_InputManager == nullptr) return;
+
+	
+	if (m_InputManager->GetKey(KeyCodes::P))
+	{
 		system("cls");
 		printf("Current player position: %.2f, %.2f, %.2f", GetPosition().x, GetPosition().y, GetPosition().z);
 	}
-	if (state[SDL_SCANCODE_W]) {
+	if (m_InputManager->GetKey(KeyCodes::W))
+	{
 		this->currentSpeed = RUN_SPEED;
-		//setCurrentFBXmesh(1);
 	}
-	else if (state[SDL_SCANCODE_S]) {
+	else if (m_InputManager->GetKey(KeyCodes::S))
+	{
 		this->currentSpeed = -RUN_SPEED;
-		//	setCurrentFBXmesh(1);
 	}
 	else
 	{
 		this->currentSpeed = 0;
 	}
-	if (state[SDL_SCANCODE_D]) {
+	if (m_InputManager->GetKey(KeyCodes::D))
+	{
 		this->currentTurnSpeed = -TURN_SPEED;
 	}
-	else if (state[SDL_SCANCODE_A]) {
+	else if (m_InputManager->GetKey(KeyCodes::A))
+	{
 		this->currentTurnSpeed = TURN_SPEED;
 	}
-	else {
+	else 
+	{
 		this->currentTurnSpeed = 0;
 	}
-	if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_LEFT)) {
+	if (m_InputManager->GetMouseKey(KeyCodes::LMOUSE))
+	{
 		attack();
 		attacking = true;
 	}
 	else
 		attacking = false;
-	if (state[SDL_SCANCODE_SPACE]) {
+
+	if (m_InputManager->GetKey(KeyCodes::SPACE))
+	{
 		jump();
 	}
 }

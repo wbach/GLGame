@@ -116,7 +116,7 @@ void CEntityRenderer::RenderEntity(shared_ptr<CEntity>& entity, CModel& model)
 		else
 			m_EntityShader.LoadUseNormalMap(0.0f);
 		
-		for (glm::mat4& mat : entity->GetTransformMatrixes())
+		for (const glm::mat4& mat : entity->GetTransformMatrixes())
 		{
 			m_EntityShader.LoadTransformMatrix(mat);
 

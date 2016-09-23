@@ -54,17 +54,13 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 	m_ImageHeight /= scale;
 
 	m_VertexCount = m_ImageHeight;
-	cout << "Creating terrain size: " << m_VertexCount << endl;
-	Uint32 start;
-	start = SDL_GetTicks();
+
 
 	m_Heights = new float*[m_VertexCount];
 	for(int i = 0; i < m_VertexCount; ++i)
 		m_Heights[i] = new float[m_VertexCount];
-		
+
 		int i=0;
-		cout << "Time 1: " << SDL_GetTicks() - start;
-		start = SDL_GetTicks();		
 		for(i=0; i < m_VertexCount; i++)
 		{
 			for(int j=0; j < m_VertexCount; j++)
@@ -84,9 +80,6 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 				textureCoords.push_back(static_cast<float>(i)/static_cast<float>(m_VertexCount - 1));
 			}
 		}
-
-		cout << "Time 2: " << SDL_GetTicks() - start <<endl ;
-		start = SDL_GetTicks();
 
 		int pointer = 0;
 		for(int gz=0; gz <m_VertexCount - 1; gz++)
@@ -120,9 +113,6 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 				indices.push_back(bottomRight);
 			}
 		}
-
-		cout << "Time 3: " << SDL_GetTicks() - start << endl;
-		start = SDL_GetTicks();
 
 		FreeImage_Unload(imagen);
 		glm::vec3 diffuse(1.0),specular(0.0);
@@ -162,7 +152,7 @@ float CTerrain::GetHeightMap(int x, int z, FIBITMAP* image){
 	return height;
 }
 
-float CTerrain::GetHeightofTerrain(float worldX, float worldZ)
+const float CTerrain::GetHeightofTerrain(float worldX, float worldZ) const
 {
 	float terrain_x = worldX - m_Transform.position.x ;
 	float terrain_z = worldZ - m_Transform.position.z ;
@@ -171,18 +161,22 @@ float CTerrain::GetHeightofTerrain(float worldX, float worldZ)
 	int grid_x = (int) floor(terrain_x / grid_squere_size);
 	int grid_z = (int) floor(terrain_z / grid_squere_size);
 
-	if(grid_x >= m_VertexCount -1 || grid_z >= m_VertexCount -1 || grid_x < 0 || grid_z < 0 )
-		return 0 ;
 	
+
+	if(grid_x >= m_VertexCount -1 || grid_z >= m_VertexCount - 1 || grid_x < 0 || grid_z < 0 )
+		return 0 ;	
 
 	float x_coord = (fmod(terrain_x, grid_squere_size))/ grid_squere_size;
 	float z_coord = (fmod(terrain_z, grid_squere_size)) / grid_squere_size;
 
-	float answer ;
+
+
+	float answer  = 0;
 	if (x_coord <= (1 - z_coord)) 
 	{
 		answer = Utils::BarryCentric(glm::vec3(0, m_Heights[grid_x][grid_z], 0), glm::vec3(1, m_Heights[grid_x + 1][grid_z], 0),
 			glm::vec3(0, m_Heights[grid_x][grid_z + 1], 1),glm::vec2(x_coord, z_coord));
+	
 	} else 
 	{
 		answer = Utils::BarryCentric(glm::vec3(1, m_Heights[grid_x + 1][grid_z], 0), glm::vec3(1, m_Heights[grid_x + 1][grid_z + 1], 1),
@@ -198,7 +192,7 @@ void CTerrain::FiltrElementOffTerrain()
 			iter->filtr();
 }
 
-float CTerrain::GetSize()
+const float& CTerrain::GetSize() const
 {
 	return m_Size;
 }
@@ -208,6 +202,7 @@ CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint 
 : m_BlendMap(blend_map)
 {
 	m_Transform.position.x = x * m_Size ;
+	m_Transform.position.y = .0f;
 	m_Transform.position.z = z * m_Size;
 
 	m_BackgroundTexture[0] = background_texture;

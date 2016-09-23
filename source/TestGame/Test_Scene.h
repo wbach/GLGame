@@ -16,11 +16,13 @@ class CTestSCene : public CScene
 	shared_ptr<CEntity> m9;
 public:
     bool thridCamera = true;
-	CTestSCene(){
+	CTestSCene(CGame& game)
+		: CScene(game)
+	{
 		m_Name = "Test Scene";
 	}
 	int Initialize() override{
-		CGUIButton testButton(m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"),"test", glm::vec2(-0.9,-0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
+		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"),"test", glm::vec2(-0.9,-0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
 		cout << " Loading..." << endl;
@@ -74,7 +76,7 @@ public:
 			AddEntity(smallHause);
 
 
-		songo = make_shared<CPlayer>(CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
 		songo->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Songo/songo2.obj");
 
 		
@@ -102,20 +104,35 @@ public:
 	}
 	void setThridCamera(){
 		m_Camera.reset();
-		m_Camera = make_shared<CThirdPersonCamera>(songo->GetReferencedPosition(), songo->GetReferencedRotation());
+		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(),songo->GetReferencedPosition(), songo->GetReferencedRotation());
 	}
-	int Update(SDL_Event &event,SDL_Window *win) override{
-		m_Camera->Move(win);
-		songo->calculateMove(0.02f);			 
-		songo->move(0.02f, GetHeightOfTerrain(songo->GetPositionXZ()));
+	int Update() override{
 
-		if (m_Gui.guiButtons[0].CheckStatus(glm::vec2(1000, 600))  == GuiButtonState::ACTIVE)
+		if ( m_Game.GetDisplayManager().CheckActiveWindow() && !m_Game.GetInputManager().GetKey(KeyCodes::LCTRL) )
+		{
+			m_Camera->CalculateInput();
+			m_Game.GetDisplayManager().ShowCoursor(false);
+		}
+		else
+		{
+			m_Game.GetDisplayManager().ShowCoursor(true);
+		}
+		m_Camera->Move();
+
+
+		float dt = m_Game.GetDisplayManager().GetDeltaTime();
+		songo->calculateMove(dt);
+		songo->move(dt, GetHeightOfTerrain(songo->GetPositionXZ()));
+
+		glm::vec2 window_size = m_Game.GetDisplayManager().GetWindowSize();		
+
+		if (m_Gui.guiButtons[0].CheckStatus(window_size) == GuiButtonState::ACTIVE)
 			return 2;
 
 //		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));
 //		m9->setRotation(songo->getRotation()+ glm::vec3(camera->getPitch(),0,0));
 
-		switch (event.type)
+	/*	switch (event.type)
 		{
 		case SDL_KEYDOWN:
 			switch (event.key.keysym.sym)
@@ -137,7 +154,7 @@ public:
 		
 		break;
 		}
-		event = SDL_Event();
+		event = SDL_Event(); */
 		return 0;
 	}
 	int CleanUp() override{

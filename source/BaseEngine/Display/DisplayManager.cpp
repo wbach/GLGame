@@ -1,42 +1,44 @@
 #include "DisplayManager.h"
 
-int CDisplayManager::Initialize(int w, int h)
+int CDisplayManager::Initialize(int api, int renderer, int w, int h)
 {
-	SDL_Init(SDL_INIT_EVERYTHING);
-	unsigned int flags = SDL_WINDOW_OPENGL;
-	if (!(m_Window = SDL_CreateWindow("My OpenGL Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, w, h, flags)))
+	switch (api) 
 	{
-		cout << "failed to create window\n";
-		exit(-1);
-	}
-	if (!(m_GlContext = SDL_GL_CreateContext(m_Window)))
-	{
-		cout << "failed to create OpenGL context\n";
-		exit(-1);
+	case API::SDL2:
+		m_Api = std::make_shared<CSdlOpenGlApi>();
+		break;
 	}
 
-	GLint glew_init_result = glewInit();
-	if (glew_init_result != GLEW_OK)
+	if (m_Api == nullptr) return -1;
+	m_Api->CreateWindow(w, h);
+
+	switch (renderer)
 	{
-		printf("ERROR: %s\n", glewGetErrorString(glew_init_result));
-		exit(-1);
+	case Renderer::OPENGL:
+		m_Renderer = std::make_shared<COpenGLRenderer>();
+		break;
 	}
-	printf("GL version: %s\n\n", glGetString(GL_VERSION));
+	if (m_Renderer == nullptr) return -1;
+	m_Renderer->InitializeRenderer();
+
 
 	m_WindowsSize.x = static_cast<float>(w);
 	m_WindowsSize.y = static_cast<float>(h);
 
 	m_FPS_CAP = 999;
-
+	m_LastFrameTime = 0;
 	return 0;
 }
 
 void CDisplayManager::Update()
 {
     CalculateFPS();
-	float current_frame_time= GetCurrentTime();
-	m_Delta = (current_frame_time - m_LastFrameTime) / 1000.0f;
-	SDL_GL_SwapWindow(m_Window);
+	float current_frame_time = GetCurrentTime();
+	m_Delta = (current_frame_time - m_LastFrameTime) ;
+	m_LastFrameTime = current_frame_time;
+
+	if (m_Api != nullptr)
+		m_Api->UpdateWindow();
 }
 const float CDisplayManager::GetCurrentTime()
 {
@@ -44,8 +46,10 @@ const float CDisplayManager::GetCurrentTime()
 }
 void CDisplayManager::Uninitialize()
 {
-	SDL_GL_DeleteContext(m_GlContext);
-	SDL_Quit();
+	if (m_Renderer != nullptr)
+		m_Renderer->UninitializeRenderer();
+	if (m_Api != nullptr)
+		m_Api->CleanUp();
 }
 void CDisplayManager::CalculateFPS()
 {
@@ -69,13 +73,31 @@ const int CDisplayManager::GetFps()
 void CDisplayManager::SetFullScreen()
 {
 	m_IsFullScreen = !m_IsFullScreen;
-	if (m_IsFullScreen) {
-		SDL_SetWindowFullscreen(m_Window, SDL_TRUE);
-	}else
-		SDL_SetWindowFullscreen(m_Window, SDL_FALSE);
+	
+	if (m_Api != nullptr)
+		m_Api->SetFullScreen(m_IsFullScreen);
 }
 
 const glm::vec2& CDisplayManager::GetWindowSize()
 {
 	return m_WindowsSize;
+}
+
+void CDisplayManager::ShowCoursor(bool show)
+{
+	if (m_Api != nullptr)
+		m_Api->ShowCoursor(show);
+}
+
+bool CDisplayManager::CheckActiveWindow()
+{
+	if (m_Api != nullptr)
+		return m_Api->CheckActiveWindow();
+	return false;
+}
+
+void CDisplayManager::SetInput(std::shared_ptr<CInput>& input)
+{
+	if (m_Api != nullptr)
+		m_Api->SetInput(input);
 }
