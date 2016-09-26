@@ -27,12 +27,13 @@ namespace Renderer
 class CDisplayManager 
 {
 public:
-	int Initialize(int api, int renderer, int w, int h);
+	int Initialize(string window_name, int api, int renderer, int w, int h);
 	int PeekMessage();
 	void Update();
 	void Uninitialize();
 
-	void SetFullScreen();
+	void SetRefreshRate(float rate);
+	void SetFullScreen(bool full_screen);
 	void CalculateFPS();
 	const int GetFps();
 	const int& GetFPSCap() { return m_FPS_CAP; }

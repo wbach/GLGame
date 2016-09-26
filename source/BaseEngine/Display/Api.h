@@ -16,7 +16,7 @@ namespace ApiMessages
 class CApi 
 {
 public:
-	virtual void CreateWindow(int width, int height) = 0;
+	virtual void CreateWindow(std::string window_name, int width, int height) = 0;
 	virtual void CleanUp() = 0;
 	virtual int PeekMessage() = 0;
 	virtual void UpdateWindow() = 0;

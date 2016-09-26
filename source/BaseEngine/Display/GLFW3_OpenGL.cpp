@@ -2,7 +2,7 @@
 #include "../Input/Input.h"
 #include "../Input/InputGLFW.h"
 #include <thread>
-void CGlfwOpenGlApi::CreateWindow(int width, int height)
+void CGlfwOpenGlApi::CreateWindow(std::string window_name, int width, int height)
 {
 	if (glfwInit() != 1)
 		exit(1);
@@ -13,18 +13,14 @@ void CGlfwOpenGlApi::CreateWindow(int width, int height)
 
 	printf("GLFW %d.%d.%d initialized\n", major, minor, rev);
 
-
 	GLFWmonitor* monitor = NULL;
 
-	m_Window = glfwCreateWindow(width, height, " GLFW OpenGL", monitor, NULL);
+	m_Window = glfwCreateWindow(width, height, window_name.c_str(), monitor, NULL);
 
 	if (!m_Window)
 		exit(1);
 
-
-	glfwMakeContextCurrent(m_Window);
-
-	
+	glfwMakeContextCurrent(m_Window);	
 }
 
 void CGlfwOpenGlApi::CleanUp()
@@ -41,6 +37,12 @@ void CGlfwOpenGlApi::UpdateWindow()
 
 void CGlfwOpenGlApi::SetFullScreen(bool full_screen)
 {
+	GLFWmonitor* monitor = full_screen ? glfwGetPrimaryMonitor() : NULL;
+
+	if (monitor == NULL) return;
+
+	const GLFWvidmode* mode = glfwGetVideoMode(monitor);
+	glfwSetWindowMonitor(m_Window, monitor, 0, 0, mode->width, mode->height, mode->refreshRate);
 }
 
 bool CGlfwOpenGlApi::CheckActiveWindow()
@@ -103,9 +105,9 @@ void CGlfwOpenGlApi::BeginFrame()
 
 void CGlfwOpenGlApi::LockFps(float fps)
 {
-	//double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
-//	std::cout << t << std::endl;
-//	if (static_cast<double>(1000.0f / fps) >  glfwGetTime() - m_StartTime)  std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>( t * 1000000 )));
+	double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
+	std::cout << t << std::endl;
+	if (static_cast<double>(1000.0f / fps) >  glfwGetTime() - m_StartTime)  std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>( t * 1000000 )));
 }
 
 void CGlfwOpenGlApi::SetCursorPosition(int x, int y)

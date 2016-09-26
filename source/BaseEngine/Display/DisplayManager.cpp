@@ -1,6 +1,6 @@
 #include "DisplayManager.h"
 
-int CDisplayManager::Initialize(int api, int renderer, int w, int h)
+int CDisplayManager::Initialize(string window_name, int api, int renderer, int w, int h)
 {
 	switch (api) 
 	{
@@ -13,7 +13,7 @@ int CDisplayManager::Initialize(int api, int renderer, int w, int h)
 	}
 
 	if (m_Api == nullptr) return -1;
-	m_Api->CreateWindow(w, h);
+	m_Api->CreateWindow(window_name, w, h);
 	
 
 	switch (renderer)
@@ -87,10 +87,12 @@ const int CDisplayManager::GetFps()
 {
 	return (int) m_Fps;
 }
-void CDisplayManager::SetFullScreen()
+void CDisplayManager::SetRefreshRate(float rate)
 {
-	m_IsFullScreen = !m_IsFullScreen;
-	
+	m_FPS_CAP = rate;
+}
+void CDisplayManager::SetFullScreen(bool full_screen)
+{
 	if (m_Api != nullptr)
 		m_Api->SetFullScreen(m_IsFullScreen);
 }

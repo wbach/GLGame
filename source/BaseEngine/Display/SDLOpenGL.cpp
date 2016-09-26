@@ -1,10 +1,10 @@
 #include "SDLOpenGL.h"
 
-void CSdlOpenGlApi::CreateWindow(int width, int height)
+void CSdlOpenGlApi::CreateWindow(std::string window_name, int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	unsigned int flags = SDL_WINDOW_OPENGL;// | SDL_WINDOW_BORDERLESS;
-	if (!(m_Window = SDL_CreateWindow("My OpenGL Game", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags)))
+	if (!(m_Window = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags)))
 	{
 	//	cout << "failed to create window\n";
 		exit(-1);

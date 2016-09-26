@@ -5,7 +5,7 @@
 class CSdlOpenGlApi : public CApi
 {
 public:
-	virtual void CreateWindow(int width, int height) override;
+	virtual void CreateWindow(std::string window_name, int width, int height) override;
 	virtual void CleanUp() override;
 	virtual int PeekMessage() override;
 	virtual void UpdateWindow() override;

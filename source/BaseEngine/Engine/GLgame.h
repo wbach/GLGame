@@ -1,4 +1,5 @@
 #pragma once
+#include <fstream>
 #include <vector>
 #include <thread>
 #include "../Utils/Utils.h"
@@ -9,6 +10,7 @@
 #include "../GUI/GUIRenderer.h"
 #include "../Terrain/TerrainRenderer.h"
 #include "../Input/InputManager.h"
+
 using namespace std;
 
 class CGame {
@@ -33,6 +35,7 @@ public:
 	float FadeIn(Uint32 delta_time, Uint32 start_time, Uint32 durration);
 	float FadeOut(Uint32 delta_time, Uint32 start_time, Uint32 durration);
 
+	int ReadConfiguration(string file_name);
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager m_InputManager;
@@ -49,13 +52,28 @@ private:
 	glm::vec3 m_BackgroundColour;
 	glm::mat4 m_ProjectionMatrix;
 
+	float m_ViewDistance;
+	float m_GrassViewDistance;
+
+	bool m_IsShadows;
+	float m_ShadowMapSize;
+
+	float m_WaterQuality;
+
+
 	bool m_IsLoading;
+	bool m_IsFullScreen;	
 
 	glm::vec2 m_WindowSize;
+	string m_WindowName;
+	float m_RefreshRate;
 
 	const float m_NearPlane = 0.1f;
 	const float m_FarPlane = 10000;
 	const float m_Fov = 50;
+
+	bool m_IsSound;
+	float m_SoundVolume;
 };
 
 

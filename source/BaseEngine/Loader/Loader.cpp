@@ -12,9 +12,9 @@ GLuint CLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&textu
 	}
 	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(file_name.c_str(), 0);
 
-	if (formato == FIF_UNKNOWN) { printf("%s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
+	if (formato == FIF_UNKNOWN) { printf("[Error] %s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
 	FIBITMAP* imagen2 = FreeImage_Load(formato, file_name.c_str());
-	if (!imagen2) { printf("%s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
+	if (!imagen2) { printf("[Error] %s : wrong image format or file does not exist.\n", file_name.c_str()); return 0; }
 	FIBITMAP* imagen = FreeImage_ConvertTo32Bits(imagen2);	
 	FreeImage_Unload(imagen2);
 
@@ -60,7 +60,7 @@ GLuint CLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&textu
 	GLenum hubo_error = glGetError();
 	if (hubo_error)
 	{
-		printf("%s : There was an error loading the texture : %s\n", file_name.c_str(), glewGetErrorString(hubo_error));
+		printf("[Error] %s : There was an error loading the texture : %s\n", file_name.c_str(), glewGetErrorString(hubo_error));
 		delete[] texture;
 		return 0;
 	}
@@ -239,7 +239,7 @@ int CLoader::AssimpLoad(string file_name)
 {
 	std::ifstream try_file(file_name);
 	if(!try_file.is_open()){
-        std::cout << "The file " << file_name <<" wasnt successfuly opened ";
+		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
 		return -1;
 	}
 	try_file.close();
@@ -257,7 +257,7 @@ int CLoader::AssimpLoad(string file_name)
 
 	const aiScene *scene = importer.ReadFile(file_name.c_str(), flags);
 	if (scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode) {
-		std::cout << "The file %s wasnt successfuly opened " << file_name;
+		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
 		return -1;
 	}
 

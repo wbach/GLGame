@@ -3,20 +3,31 @@
 CGame::CGame()
 : m_BackgroundColour(0.6, 0.6, 0.8)
 , m_WindowSize(1000, 600)
+, m_WindowName("GL game")
+, m_IsSound(true)
+, m_IsShadows(true)
+, m_GrassViewDistance(500)
+, m_IsFullScreen(false)
+, m_RefreshRate(60)
+, m_ShadowMapSize(2048)
+, m_SoundVolume(1.0)
+, m_WaterQuality(1)
+, m_ViewDistance(1000)
 {
+	ReadConfiguration("./Data/Conf.ini");
 }
 
 void CGame::Initialize()
 {	
-	m_DisplayManager.Initialize(API::GLFW3, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	m_DisplayManager.Initialize(m_WindowName, API::GLFW3, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 	CreateProjectionMatrix();
     m_EntityRenderer.Initialize(m_ProjectionMatrix);
 	m_TerrainRenderer.Init(m_ProjectionMatrix);
 	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
-
-
 	m_DisplayManager.SetInput(m_InputManager.m_Input);
 
+	m_DisplayManager.SetFullScreen(m_IsFullScreen);
+	m_DisplayManager.SetRefreshRate(m_RefreshRate);
 }
 void CGame::Uninitialize()
 {
@@ -72,8 +83,6 @@ void CGame::GameLoop()
 		texts[0].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps() ) );
 		m_GuiRenderer.RenderText(texts);
 		m_DisplayManager.Update();
-
-	//	if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
 	}
 }
 void CGame::LoadScene()
@@ -128,6 +137,79 @@ float CGame::FadeOut(Uint32 delta_time, Uint32 start_time, Uint32 durration)
 		alpha = 0;
 
 	return alpha;
+}
+int CGame::ReadConfiguration(string file_name)
+{
+	ifstream file;
+	file.open(file_name);
+	if (!file.is_open())
+	{
+		std::cout << "[Error] Cant open configuration file." << std::endl;
+		return -1;
+	}
+	string line;
+
+	struct Get 
+	{
+		static float Float(string line)
+		{
+			return stof(line);
+		}
+		static int Int(string line)
+		{
+			return stoi(line);
+		}
+		static glm::vec2 Vector2d(string line)
+		{
+			float x = stof(line.substr(0, line.find_last_of("x")));
+			float y = stof(line.substr(line.find_last_of("x") + 1));
+			return glm::vec2(x, y);
+		}
+		static bool Boolean(string line)
+		{
+			return stof(line) > 0 ? true : false;
+		}
+	};
+	
+
+	while (std::getline(file, line))
+	{
+		string var = line.substr(0, line.find_last_of("="));
+		string value = line.substr(line.find_last_of("=") + 1);
+
+		if (var.compare("Name") == 0)				m_WindowName	= value; 
+		if (var.compare("Resolution") == 0)			m_WindowSize	= Get::Vector2d(value);
+		if (var.compare("FullScreen") == 0)			m_IsFullScreen	= Get::Boolean(value);
+		if (var.compare("RefreshRate") == 0)		m_RefreshRate	= Get::Float(value);
+		if (var.compare("Sound") == 0)				m_IsSound		= Get::Boolean(value);
+		if (var.compare("SoundVolume") == 0)		m_SoundVolume	= Get::Float(value);
+		if (var.compare("WaterQuality") == 0)		m_WaterQuality	= Get::Float(value);
+		if (var.compare("Shadows") == 0)			m_IsShadows		= Get::Boolean(value);
+		if (var.compare("ShadowMapSize") == 0)		m_ShadowMapSize	= Get::Float(value);
+		if (var.compare("ViewDistance") == 0)		m_ViewDistance  = Get::Float(value);
+		if (var.compare("GrassViewDistance") == 0)	m_GrassViewDistance = Get::Float(value);
+	}
+
+	file.close();
+
+	return 0;
+	//FILE *f = fopen("Data/Conf.ini", "r");
+	//if (f == NULL)
+	//{
+	//	return -1;
+	//}
+	//int k;
+	//fscanf(f, "Resolution=%ix%i\n", &m_WindowSize.x, &m_WindowSize.y);
+	//fscanf(f, "FullScreen=%i\n", &k); if (k == 1) m_IsFullScreen = true; else m_IsFullScreen = false;
+	//fscanf(f, "Sound=%i\n", &k); if (k == 1) m_IsSound = true; else m_IsSound = false;
+	//fscanf(f, "SoundVolume=%f\n", &m_SoundVolume);
+	//fscanf(f, "WaterQuality=%i\n", &m_WaterQuality); 
+	//fscanf(f, "Shadows=%i\n", &k); if (k == 1) m_IsShadows = true; else m_IsShadows = false;
+	//fscanf(f, "ShadowsResolution=%f\n", &m_ShadowMapSize);
+	//fscanf(f, "ViewDistance=%f\n", &m_ViewDistance);
+	//fscanf(f, "GrassViewDistance=%f\n", &m_GrassViewDistance);
+	//fclose(f);
+	return 0;
 }
 void CGame::RenderStartSeries()
 {
@@ -286,7 +368,7 @@ void CGame::InitializeScene()
 			case SDL_KEYDOWN:
 				switch (event.key.keysym.sym)
 				{
-				case SDLK_F9: m_DisplayManager.SetFullScreen(); break;
+				case SDLK_F9: m_DisplayManager.SetFullScreen(true); break;
 				case SDLK_ESCAPE: m_IsLoading = false; break;
 				}
 				break;
