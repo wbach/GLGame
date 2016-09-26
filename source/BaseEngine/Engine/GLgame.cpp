@@ -1,5 +1,4 @@
 #include "GLgame.h"
-#include "../Input/InputSDL.h"
 #include "../Input/InputManager.h"
 CGame::CGame()
 : m_BackgroundColour(0.6, 0.6, 0.8)
@@ -8,15 +7,16 @@ CGame::CGame()
 }
 
 void CGame::Initialize()
-{
-	m_DisplayManager.Initialize(API::SDL2, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+{	
+	m_DisplayManager.Initialize(API::GLFW3, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 	CreateProjectionMatrix();
     m_EntityRenderer.Initialize(m_ProjectionMatrix);
 	m_TerrainRenderer.Init(m_ProjectionMatrix);
 	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
+
 	m_DisplayManager.SetInput(m_InputManager.m_Input);
-	//m_InputManager.m_Input = make_shared<CInputSDL>(m_DisplayManager.GetWindow());
+
 }
 void CGame::Uninitialize()
 {
@@ -31,21 +31,23 @@ void CGame::Uninitialize()
 void CGame::GameLoop()
 {
 	Uint32 start;
-	SDL_Event event;
-	bool running = true;
+	
+	int api_message = ApiMessages::NONE;
 	//renderStartSeries();
     LoadScene();
 
     string loading_text = "FPS : ";
 	vector<CGUIText> texts;
 	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1.5, glm::vec3(0, 0, 1)));
-
 	
 	
-	while (running)
-	{
-		
+	while (api_message != ApiMessages::QUIT)
+	{		
+		api_message = m_DisplayManager.PeekMessage();
 
+
+		if (m_InputManager.GetKey(KeyCodes::ESCAPE))
+			api_message = ApiMessages::QUIT;
 
 		start = SDL_GetTicks();
 		glEnable(GL_DEPTH_TEST);
@@ -54,33 +56,13 @@ void CGame::GameLoop()
 		glEnable(GL_CULL_FACE);
 		glCullFace(GL_BACK);
 
-		while (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-				case SDL_QUIT: running = false; break;
-				case SDL_MOUSEBUTTONDOWN:
-
-					break;
-				case SDL_KEYDOWN:
-					switch (event.key.keysym.sym)
-					{
-					case SDLK_F9: m_DisplayManager.SetFullScreen(); break;
-					case SDLK_ESCAPE: running = false; break;
-					}
-					break;
-				case SDL_FINGERDOWN:
-				{
-					cout << "Touch " << endl;
-				}
-			}
-		}
-
+	
+	
 		if (m_CurrScene != nullptr)
 		{
 			switch (m_CurrScene->Update())
 			{
-			case 1: running = false; break;
+			case 1: api_message = ApiMessages::QUIT; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
 			m_TerrainRenderer.Render(m_CurrScene,glm::mat4(0));
@@ -89,10 +71,9 @@ void CGame::GameLoop()
 		}
 		texts[0].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps() ) );
 		m_GuiRenderer.RenderText(texts);
-		
 		m_DisplayManager.Update();
 
-		if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
+	//	if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
 	}
 }
 void CGame::LoadScene()

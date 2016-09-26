@@ -89,12 +89,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -102,12 +102,12 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3;glfw3dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -117,14 +117,14 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -134,20 +134,21 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3;glfw3dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
+    <ClCompile Include="source\BaseEngine\Display\GLFW3_OpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Display\OpenGLRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Entities\EnitityRenderer.cpp" />
@@ -161,6 +162,7 @@
     <ClCompile Include="source\BaseEngine\GUI\GUIShader.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUIText.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUITexture.cpp" />
+    <ClCompile Include="source\BaseEngine\Input\InputGLFW.cpp" />
     <ClCompile Include="source\BaseEngine\Input\InputManager.cpp" />
     <ClCompile Include="source\BaseEngine\Input\InputSDL.cpp" />
     <ClCompile Include="source\BaseEngine\Lights\Light.cpp" />
@@ -181,6 +183,7 @@
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
     <ClInclude Include="source\BaseEngine\Display\Api.h" />
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h" />
+    <ClInclude Include="source\BaseEngine\Display\GLFW3_OpenGL.h" />
     <ClInclude Include="source\BaseEngine\Display\OpenGLRenderer.h" />
     <ClInclude Include="source\BaseEngine\Display\Renderer.h" />
     <ClInclude Include="source\BaseEngine\Display\SDLOpenGL.h" />
@@ -198,6 +201,7 @@
     <ClInclude Include="source\BaseEngine\GUI\GUIText.h" />
     <ClInclude Include="source\BaseEngine\GUI\GUITexture.h" />
     <ClInclude Include="source\BaseEngine\Input\Input.h" />
+    <ClInclude Include="source\BaseEngine\Input\InputGLFW.h" />
     <ClInclude Include="source\BaseEngine\Input\InputManager.h" />
     <ClInclude Include="source\BaseEngine\Input\InputSDL.h" />
     <ClInclude Include="source\BaseEngine\Lights\Light.h" />

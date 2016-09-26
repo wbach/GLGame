@@ -5,6 +5,8 @@ class CInputManager
 {
 public:	
 	CInputManager();
+	void ClearBuffer();
+
 	bool GetKeyDown(int key);
 	bool GetKeyUp(int key) ;
 	bool GetKey(int key);

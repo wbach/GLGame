@@ -6,6 +6,14 @@ CInputManager::CInputManager()
 
 }
 
+void CInputManager::ClearBuffer()
+{
+	if (m_Input != nullptr)
+	{
+		m_Input->ClearKeyBuffer();
+	}
+}
+
 bool CInputManager::GetKeyDown(int key)
 {
 	return false;

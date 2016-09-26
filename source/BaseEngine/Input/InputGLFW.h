@@ -1,16 +1,16 @@
 #pragma once
 #include "Input.h"
-#include <SDL2/SDL.h>
+#include <GLFW/glfw3.h>
 
-class CInputSDL : public CInput
+class CInputGLFW : public CInput
 {
 public:
-	CInputSDL(SDL_Window* sdl_window);
+	CInputGLFW(GLFWwindow* window);
 	// Keyboard
 	virtual bool GetKeyUp(int i) override;
 	virtual bool GetKey(int i) override;
 	virtual bool GetKeyDown(int i) override;
-	
+
 	//Mouse
 	virtual bool GetMouseKeyDown(int key) override;
 	virtual bool GetMouseKeyUp(int key) override;
@@ -18,12 +18,15 @@ public:
 	virtual glm::vec2 CalcualteMouseMove() override;
 	virtual glm::vec2 GetMousePosition() override;
 
-	//not use in SDL
-	virtual void SetKeyToBuffer(int key, bool value) override;
+	//Callbacks
 	virtual void ClearKeyBuffer() override;
+	virtual void SetKeyToBuffer(int key, bool value) override;
 	virtual void SetCursorPosition(int x, int y) override;
 private:
-	int KeyToSDL(int i);
+	int KeyToGlfw(int key);
 
-	SDL_Window* m_SdlWindow;	
+	static const int m_KeyCount = 350;
+	bool m_KeyStates[m_KeyCount];
+	GLFWwindow* m_Window;
+	glm::vec2 m_CurentMousePosition = glm::vec2(0);
 };

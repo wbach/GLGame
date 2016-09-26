@@ -7,10 +7,14 @@ int CDisplayManager::Initialize(int api, int renderer, int w, int h)
 	case API::SDL2:
 		m_Api = std::make_shared<CSdlOpenGlApi>();
 		break;
+	case API::GLFW3:
+		m_Api = std::make_shared<CGlfwOpenGlApi>();
+		break;
 	}
 
 	if (m_Api == nullptr) return -1;
 	m_Api->CreateWindow(w, h);
+	
 
 	switch (renderer)
 	{
@@ -25,24 +29,37 @@ int CDisplayManager::Initialize(int api, int renderer, int w, int h)
 	m_WindowsSize.x = static_cast<float>(w);
 	m_WindowsSize.y = static_cast<float>(h);
 
-	m_FPS_CAP = 999;
+	m_FPS_CAP = 30;
 	m_LastFrameTime = 0;
 	return 0;
+}
+
+int CDisplayManager::PeekMessage()
+{
+	if (m_Api != nullptr)
+		return	m_Api->PeekMessage();
+	return -1;
 }
 
 void CDisplayManager::Update()
 {
     CalculateFPS();
-	float current_frame_time = GetCurrentTime();
+	double current_frame_time = GetCurrentTime();
 	m_Delta = (current_frame_time - m_LastFrameTime) ;
-	m_LastFrameTime = current_frame_time;
+	m_LastFrameTime = current_frame_time;	
 
 	if (m_Api != nullptr)
 		m_Api->UpdateWindow();
+
+	if (m_Api != nullptr && m_Sync)
+		m_Api->LockFps(m_FPS_CAP);
+
 }
 const float CDisplayManager::GetCurrentTime()
 {
-	return static_cast<float>(SDL_GetTicks());
+	if (m_Api != nullptr)
+		return m_Api->GetTime();
+	return 0;
 }
 void CDisplayManager::Uninitialize()
 {
@@ -86,7 +103,7 @@ const glm::vec2& CDisplayManager::GetWindowSize()
 void CDisplayManager::ShowCoursor(bool show)
 {
 	if (m_Api != nullptr)
-		m_Api->ShowCoursor(show);
+		m_Api->ShowCursor(show);
 }
 
 bool CDisplayManager::CheckActiveWindow()

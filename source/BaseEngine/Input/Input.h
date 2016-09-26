@@ -1,6 +1,7 @@
 #pragma once
 #include <iostream>
 #include "glm/glm.hpp"
+#include "../Display/Api.h"
 namespace KeyCodes
 {
 	enum
@@ -9,9 +10,10 @@ namespace KeyCodes
 		W, E, R, T, Y, U, I, O, P,
 		A, S, D, F, G, H, J, K, L,
 		Z, X, C, V, B, N, M,
-		LCTRL, ENTER, LMOUSE, RMOUSE, SPACE
+		LCTRL, ENTER, LMOUSE, RMOUSE, SPACE, ESCAPE
 	};
 }
+class CApi;
 class CInput 
 {
 public:
@@ -24,4 +26,10 @@ public:
 	virtual bool GetMouseKey(int key) = 0;
 	virtual glm::vec2 CalcualteMouseMove() = 0;
 	virtual glm::vec2 GetMousePosition() = 0;
+
+	virtual void SetCursorPosition(int x, int y) = 0;
+	virtual void SetKeyToBuffer(int key, bool value) = 0;
+	virtual void ClearKeyBuffer() = 0;
+
+	CApi* m_Api;
 };

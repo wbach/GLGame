@@ -153,6 +153,12 @@
     <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Display\GLFW3_OpenGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Input\InputGLFW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -270,6 +276,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Display\SDLOpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Display\GLFW3_OpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Input\InputGLFW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

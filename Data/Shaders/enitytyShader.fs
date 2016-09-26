@@ -71,7 +71,7 @@ void main()
 		lightFactor = calculateShadowFactor();
 	}
 	vec3 normal = surfaceNormal ;
-	if ( useNormalMapping > 0.5f) normal = CalcBumpedNormal(normal,pass_tangent,normalMap,textCoords) ;
+//	if ( useNormalMapping > 0.5f) normal = CalcBumpedNormal(normal,pass_tangent,normalMap,textCoords) ;
 
 	vec3 unitNormal = normalize(normal) ;
 	vec3 uintVectorToCamera = normalize(toCameraVector) ;

@@ -112,7 +112,20 @@ int CInputSDL::KeyToSDL(int key)
 	if (key == KeyCodes::LCTRL) return SDL_SCANCODE_LCTRL;
 	if (key == KeyCodes::ENTER) return SDL_SCANCODE_RETURN;
 	if (key == KeyCodes::SPACE) return SDL_SCANCODE_SPACE;
+	if (key == KeyCodes::ESCAPE) return SDL_SCANCODE_ESCAPE;
 	return -1;
+}
+
+void CInputSDL::SetCursorPosition(int x, int y)
+{
+}
+
+void CInputSDL::SetKeyToBuffer(int key, bool value)
+{
+}
+
+void CInputSDL::ClearKeyBuffer()
+{
 }
 
 
