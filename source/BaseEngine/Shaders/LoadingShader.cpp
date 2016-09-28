@@ -2,7 +2,7 @@
 
 void LoadingShader::Init()
 {
-	InitShaderProgram("Data/Shaders/loadingShader.vs", "Data/Shaders/loadingShader.fs");
+	InitShaderProgram("Data/Shaders/loadingShader.vert", "Data/Shaders/loadingShader.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();

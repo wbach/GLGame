@@ -1,5 +1,5 @@
 #pragma once
-#include "OpenGLRenderer.h"
+#include "../Engine/OpenGLRenderer.h"
 #include "SDLOpenGL.h"
 #include "GLFW3_OpenGL.h"
 #include <iostream>

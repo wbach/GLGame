@@ -4,13 +4,11 @@
 #include <thread>
 #include "../Utils/Utils.h"
 #include "Scene.h"
-#include "../Entities/EnitityRenderer.h"
 #include "../Display/DisplayManager.h"
 #include "../Shaders/LoadingShader.h"
 #include "../GUI/GUIRenderer.h"
-#include "../Terrain/TerrainRenderer.h"
 #include "../Input/InputManager.h"
-
+#include "../Renderers/MasterRenderer.h"
 using namespace std;
 
 class CGame {
@@ -45,9 +43,8 @@ private:
 	vector<shared_ptr<CScene>> m_Scenes;
 	shared_ptr<CScene> m_CurrScene;
 
-	CEntityRenderer m_EntityRenderer;
-	CTerrainRenderer m_TerrainRenderer;
 	CGUIRenderer m_GuiRenderer;
+	CMasterRenderer m_MasterRenderer;
 
 	glm::vec3 m_BackgroundColour;
 	glm::mat4 m_ProjectionMatrix;

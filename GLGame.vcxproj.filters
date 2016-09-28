@@ -93,9 +93,6 @@
     <ClCompile Include="source\BaseEngine\Terrain\Terrain.cpp">
       <Filter>Source Files\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\Terrain\TerrainRenderer.cpp">
-      <Filter>Source Files\Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="source\BaseEngine\Terrain\TerrainShader.cpp">
       <Filter>Source Files\Terrain</Filter>
     </ClCompile>
@@ -113,12 +110,6 @@
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Camera\ThridPersonCamera.cpp">
       <Filter>Source Files\Camera</Filter>
-    </ClCompile>
-    <ClCompile Include="source\TestGame\Player.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseEngine\Entities\EnitityRenderer.cpp">
-      <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp">
       <Filter>Source Files\Entity</Filter>
@@ -147,9 +138,6 @@
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\Display\OpenGLRenderer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -158,6 +146,27 @@
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Input\InputGLFW.cpp">
       <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\EnitityRenderer.cpp">
+      <Filter>Source Files\Entity</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\MasterRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\TerrainRenderer.cpp">
+      <Filter>Source Files\Terrain</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shaders\EntityGeometryPassShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\TestGame\Player.cpp">
+      <Filter>Source Files\Entity</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -200,9 +209,6 @@
     <ClInclude Include="source\BaseEngine\Terrain\Terrain.h">
       <Filter>Header Files\Terrain</Filter>
     </ClInclude>
-    <ClInclude Include="source\BaseEngine\Terrain\TerrainRenderer.h">
-      <Filter>Header Files\Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="source\BaseEngine\GUI\GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -236,18 +242,6 @@
     <ClInclude Include="source\BaseEngine\Camera\ThridPersonCamera.h">
       <Filter>Header Files\Camera</Filter>
     </ClInclude>
-    <ClInclude Include="source\TestGame\Test_MainMenu.h">
-      <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TestGame\Test_Scene.h">
-      <Filter>Header Files\Scenes</Filter>
-    </ClInclude>
-    <ClInclude Include="source\TestGame\Player.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Entities\EnitityRenderer.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
     <ClInclude Include="source\BaseEngine\Entities\Entity.h">
       <Filter>Header Files\Entity</Filter>
     </ClInclude>
@@ -266,12 +260,6 @@
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\BaseEngine\Display\OpenGLRenderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Display\Renderer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\BaseEngine\Display\Api.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -283,6 +271,36 @@
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Input\InputGLFW.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Engine\OpenGLRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Engine\Renderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\EnitityRenderer.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\MasterRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\TerrainRenderer.h">
+      <Filter>Header Files\Terrain</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shaders\EntityGeometryPassShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestGame\Player.h">
+      <Filter>Header Files\Entity</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestGame\Test_MainMenu.h">
+      <Filter>Header Files\Scenes</Filter>
+    </ClInclude>
+    <ClInclude Include="source\TestGame\Test_Scene.h">
+      <Filter>Header Files\Scenes</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

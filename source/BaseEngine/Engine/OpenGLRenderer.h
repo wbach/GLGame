@@ -5,6 +5,7 @@
 #include <thread>
 #include "glm/glm.hpp"
 #include <memory>
+
 class COpenGLRenderer : public CRenderer
 {
 public:
@@ -13,5 +14,9 @@ public:
 	virtual void CalculateFPS() override;
 	virtual void UninitializeRenderer() override;
 private:
+
+
+	// Inherited via CRenderer
+	virtual void Clear(int c) override;
 
 };

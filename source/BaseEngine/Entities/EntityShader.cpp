@@ -2,7 +2,7 @@
 
 void EntityShader::Init(int number_of_lights)
 {
-	InitShaderProgram("Data/Shaders/enitytyShader.vs" ,"Data/Shaders/enitytyShader.fs" ) ;
+	InitShaderProgram("Data/Shaders/enitytyShader.vert" ,"Data/Shaders/enitytyShader.frag" ) ;
 	m_NumberOfLights = number_of_lights;
 	Start() ;
 	GetAllUniformLocations();

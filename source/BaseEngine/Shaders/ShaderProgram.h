@@ -9,7 +9,8 @@
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
 using namespace std;
-class CShaderProgram {
+class CShaderProgram 
+{
 public:
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file);
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file, char *tesselation_shader_file, char * tesselation_evaluation_shader_file);
@@ -40,6 +41,4 @@ private:
 	int m_FragmentShaderID;
 	int m_TesselationControlShaderID;
 	int m_TesselationEvaluationShaderID;
-	
-
 };

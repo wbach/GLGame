@@ -9,7 +9,7 @@ class FontShader : public CShaderProgram
 {
 public:
 	void Init(){
-		InitShaderProgram("Data/Shaders/fontVertex.vs" ,"Data/Shaders/fontFragment.fs" ) ;
+		InitShaderProgram("Data/Shaders/fontVertex.vert" ,"Data/Shaders/fontFragment.frag" ) ;
 		Start() ;
 		GetAllUniformLocations();
 		glm::mat4 scaleMat = Utils::CreateTransformationMatrix(glm::vec2(0),glm::vec2(0.0005,0.001));

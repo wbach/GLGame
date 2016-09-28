@@ -3,7 +3,7 @@
 void TerrainShader::Init(int number_of_lights)
 {
 	//initShaderProgram("Data/Shaders/terrainShader.vs" ,"Data/Shaders/terrainShader.fs", "Data/Shaders/terrainShader.ts", "Data/Shaders/terrainShader.tes") ;
-	InitShaderProgram("Data/Shaders/terrainShader.vs", "Data/Shaders/terrainShader.fs");
+	InitShaderProgram("Data/Shaders/terrainShader.vert", "Data/Shaders/terrainShader.frag");
 	m_NumberOfLights = number_of_lights;
 	Start() ;
 	GetAllUniformLocations();

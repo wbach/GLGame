@@ -2,7 +2,7 @@
 
 void GUIShader::Init()
 {
-	InitShaderProgram("Data/Shaders/guiVertexShader.vs" ,"Data/Shaders/guiFragmentShader.fs" ) ;
+	InitShaderProgram("Data/Shaders/guiVertexShader.vert" ,"Data/Shaders/guiFragmentShader.frag" ) ;
 	Start() ;
 	GetAllUniformLocations();
 	Stop();

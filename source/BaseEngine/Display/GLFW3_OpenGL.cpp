@@ -105,9 +105,9 @@ void CGlfwOpenGlApi::BeginFrame()
 
 void CGlfwOpenGlApi::LockFps(float fps)
 {
-	double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
-	std::cout << t << std::endl;
-	if (static_cast<double>(1000.0f / fps) >  glfwGetTime() - m_StartTime)  std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>( t * 1000000 )));
+	//double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
+	//std::cout << t << std::endl;
+	//if (static_cast<double>(1000.0f / fps) >  glfwGetTime() - m_StartTime)  std::this_thread::sleep_for(std::chrono::nanoseconds(static_cast<int>( t * 1000000 )));
 }
 
 void CGlfwOpenGlApi::SetCursorPosition(int x, int y)

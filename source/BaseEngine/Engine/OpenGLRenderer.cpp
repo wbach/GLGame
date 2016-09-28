@@ -25,3 +25,8 @@ void COpenGLRenderer::UninitializeRenderer()
 
 }
 
+void COpenGLRenderer::Clear(int c)
+{
+	//glClear()
+}
+
