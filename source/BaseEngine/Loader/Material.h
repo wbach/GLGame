@@ -33,6 +33,7 @@ struct STextInfo
 };
 struct SMaterial
 {
+	glm::vec3 ambient;
 	glm::vec3 diffuse;
 	glm::vec3 specular;
 	float shineDamper;
@@ -48,6 +49,8 @@ struct SMaterial
 		numberOfRows = 1;
 		useFakeLighting = false;
 		isTransparency = false;
+		ambient = specular = glm::vec3(0);
+		diffuse = glm::vec3(0.8);
 	}
 	float getTextureXOffset() {
 		int column = textureIndex%numberOfRows;

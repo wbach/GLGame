@@ -13,10 +13,14 @@ public:
 	void LoadTransformMatrix(const glm::mat4&) const;
 	void LoadProjectionMatrix(const glm::mat4&) const;
 	void LoadViewMatrix(const glm::mat4&) const;
+
 	void LoadLightNumber(const int& i) const;
 	void LoadLight(const CLight& light, const int& i) const;
+	void LoadCameraPosition(const glm::vec3& camera_position) const;
+
 	void LoadScreenSize(glm::vec2 screen_size);
 	void ConnectTextureUnits() const;
+	
 private:
 	int m_NumberOfLights;
 	int location_ScreenSize;
@@ -28,6 +32,9 @@ private:
 	int location_PositionMap;
 	int location_ColorMap;
 	int location_NormalMap;
+
+	int location_SpecularMap;
+	int location_CameraPosition;
 
 	int location_NumberOfLights;
 	std::vector<int> location_LightType;

@@ -7,7 +7,7 @@ in vec3 WorldPos0;
 layout (location = 0) out vec3 WorldPosOut;   
 layout (location = 1) out vec3 DiffuseOut;     
 layout (location = 2) out vec3 NormalOut;     
-layout (location = 3) out vec3 TexCoordOut;    
+layout (location = 3) out vec3 SpecularOut;    
 
 uniform sampler2D BlendMap ;									
 uniform sampler2D BackgroundTexture ;
@@ -41,5 +41,5 @@ void main()
 	WorldPosOut     = WorldPos0;					
 	DiffuseOut      = CalculateTerrainColor().xyz;	
 	NormalOut       = normalize(Normal0);					
-	TexCoordOut     = vec3(TexCoord0, 0.0);				
+	SpecularOut     = vec3(0.f);				
 }

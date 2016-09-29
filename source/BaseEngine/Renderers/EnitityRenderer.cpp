@@ -40,7 +40,7 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& mo
 		glEnableVertexAttribArray(2);
 		glEnableVertexAttribArray(3);
 
-		int is_texture = 0, is_normalMap = 0, is_specularMap = 0, is_blendMap = 0; char tmp_name[50] = "";
+		int is_texture = 0, is_normal_map = 0, is_specular_map = 0, is_blend_map = 0;
 		int i = 0;
 		for (STextInfo& td : mesh.material.textures)
 		{
@@ -48,14 +48,20 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& mo
 			glBindTexture(GL_TEXTURE_2D, td.id);
 			switch (td.type)
 			{
-			case MaterialTexture::DIFFUSE: is_texture++;  break;
-			case MaterialTexture::NORMAL: is_normalMap++; ; break;
-			case MaterialTexture::SPECULAR: is_specularMap++; break;
-			case MaterialTexture::BLEND_MAP: is_blendMap ++; break;
+			case MaterialTexture::DIFFUSE:	 is_texture++;		break;
+			case MaterialTexture::NORMAL:	 is_normal_map++;   break;
+			case MaterialTexture::SPECULAR:  is_specular_map++; break;
+			case MaterialTexture::BLEND_MAP: is_blend_map++;	break;
 			}
 			i++;
 		}
-		
+		if (is_normal_map > 0)
+			geomentry_shader.LoadUseNormalMap(1.0f);
+		else	
+			geomentry_shader.LoadUseNormalMap(0.0f);
+
+		geomentry_shader.LoadMeshMaterial(mesh.material);
+
 		for (const glm::mat4& mat : entity->GetTransformMatrixes())
 		{
 			geomentry_shader.LoadTransformMatrix(mat);

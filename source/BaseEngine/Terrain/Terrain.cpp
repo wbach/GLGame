@@ -71,7 +71,7 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 				vertices.push_back(height);
 				vertices.push_back(static_cast<float>(i)/(static_cast<float>(m_VertexCount) - 1) * m_Size);
 
-				glm::vec3 normal = CalculateNormalMap(i,j,imagen);
+				glm::vec3 normal = CalculateNormalMap(j,i,imagen);
 
 				normals.push_back(normal.x);
 				normals.push_back(normal.y);
@@ -133,7 +133,7 @@ glm::vec3 CTerrain::CalculateNormalMap(int x, int z, FIBITMAP* image)
 	float heightR = GetHeightMap(rx, z, image);
 	float heightD = GetHeightMap(x, dz, image);
 	float heightU = GetHeightMap(x, uz, image);
-	glm::vec3 normal(heightL -heightR, 6.0f, heightD-heightU  ) ;
+	glm::vec3 normal(heightL -heightR, 2.0f , heightD - heightU  ) ;
 	glm::normalize(normal);
 	return normal ;
 }

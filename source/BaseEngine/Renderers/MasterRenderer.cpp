@@ -3,6 +3,9 @@
 void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
 {
 	m_WindowSize = window_size;
+
+	m_DebugRenderTextures = false;
+
 	if (CreateBuffers() == -1)
 	{
 		std::cout << "[Error] Error in creating master renderer buffers." << std::endl;
@@ -24,7 +27,7 @@ void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
 
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
-	m_DebugRenderTextures = false;
+	
 }
 
 void CMasterRenderer::CleanUp()
@@ -99,6 +102,7 @@ void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
 	m_LightPassShader.LoadViewMatrix(scene->GetViewMatrix());
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
 	m_LightPassShader.LoadTransformMatrix(transformation_matrix);
+	m_LightPassShader.LoadCameraPosition(scene->GetCameraPosition());
 	int lights = scene->GetLights().size();
 	m_LightPassShader.LoadLightNumber(lights);
 	int i = 0;
@@ -131,8 +135,8 @@ void CMasterRenderer::DebugRenderTextures()
 	SetReadBuffer(BufferTexture::Type::NORMAL);
 	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, HalfHeight, m_WindowSize.x, m_WindowSize.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
-	//SetReadBuffer(BufferTexture::Type::TEXCOORD);
-	//glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, 0, m_WindowSize.x, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	SetReadBuffer(BufferTexture::Type::SPECULAR);
+	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, 0, m_WindowSize.x, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
 int CMasterRenderer::CreateBuffers()
 {

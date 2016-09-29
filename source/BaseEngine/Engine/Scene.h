@@ -42,6 +42,8 @@ public:
 
 	CLoader& GetLoader() { return m_Loader; }
 	const SGUI& GetGui() { return m_Gui; }
+	
+	const glm::vec3 GetCameraPosition() const { return m_Camera->GetPosition(); }
 
 	~CScene();
 protected:

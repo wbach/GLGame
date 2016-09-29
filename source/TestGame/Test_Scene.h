@@ -76,6 +76,15 @@ public:
 			AddEntity(smallHause);
 
 
+		shared_ptr<CEntity> barrel;
+		barrel = make_shared<CEntity>(CreatePositionVector(86, 128), glm::vec3(0), glm::vec3(1));
+		barrel->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Barrel/barrel.obj");
+		tnr = TerrainNumber(barrel->GetPositionXZ());
+		if (tnr > 0)
+			m_Terrains[tnr].AddTerrainEntity(barrel);
+		else
+			AddEntity(barrel);
+
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
 		songo->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Songo/songo2.obj");
 

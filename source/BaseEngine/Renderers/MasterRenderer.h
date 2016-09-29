@@ -13,7 +13,7 @@ namespace BufferTexture
 		POSITION = 0,
 		DIFFUSE,
 		NORMAL,
-	//	TEXCOORD,
+		SPECULAR,
 		COUNT
 	};
 }

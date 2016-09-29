@@ -15,12 +15,13 @@ void CLightPassShader::GetAllUniformLocations()
 	location_TransformationMatrix = GetUniformLocation("TransformationMatrix");
 	location_ProjectionMatrix = GetUniformLocation("ProjectionMatrix");
 	location_ViewMatrix = GetUniformLocation("ViewMatrix");
+	location_CameraPosition = GetUniformLocation("CameraPosition");
 
 	// Textures
 	location_PositionMap = GetUniformLocation("PositionMap");
 	location_ColorMap = GetUniformLocation("ColorMap");
 	location_NormalMap = GetUniformLocation("NormalMap");
-
+	location_SpecularMap = GetUniformLocation("SpecularMap");
 	// Lights 
 	location_NumberOfLights = GetUniformLocation("NumberOfLights");
 	for (int i = 0; i < MAX_LIGHTS; i++)
@@ -78,6 +79,11 @@ void CLightPassShader::LoadLight(const CLight& light, const int& i) const
 	LoadValue(location_LightCutOff[i], light.GetAttenuation());
 }
 
+void CLightPassShader::LoadCameraPosition(const glm::vec3& camera_position) const
+{
+	LoadValue(location_CameraPosition, camera_position);
+}
+
 void CLightPassShader::LoadScreenSize(glm::vec2 screen_size)
 {
 	LoadValue(location_ScreenSize, screen_size);
@@ -88,4 +94,5 @@ void CLightPassShader::ConnectTextureUnits() const
 	LoadValue(location_PositionMap, 0);
 	LoadValue(location_ColorMap, 1);
 	LoadValue(location_NormalMap, 2);
+	LoadValue(location_SpecularMap, 3);
 }
