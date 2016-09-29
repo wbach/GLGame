@@ -1,6 +1,7 @@
 #pragma once
 #include "../Shaders/EntityGeometryPassShader.h"
 #include "../Shaders/TerrainGeometryPassShader.h"
+#include "../Shaders/LightPassShader.h"
 #include "./EnitityRenderer.h"
 #include "TerrainRenderer.h"
 #include "../Engine/Scene.h"
@@ -12,7 +13,7 @@ namespace BufferTexture
 		POSITION = 0,
 		DIFFUSE,
 		NORMAL,
-		TEXCOORD,
+	//	TEXCOORD,
 		COUNT
 	};
 }
@@ -20,21 +21,32 @@ class CMasterRenderer
 {
 public:
 	void GeometryPass(shared_ptr<CScene>& scene);
-	void LightPass();
+	void LightPass(shared_ptr<CScene>& scene);
 	void Init(glm::vec2 window_size, glm::mat4& projection_matrix);
 	void CleanUp();
 	void DebugRenderTextures();
 private:
 	int CreateBuffers();
 	void SetReadBuffer(BufferTexture::Type TextureType);
+	
 	CTerrainRenderer m_TerrainRenderer;
-	CEntityRenderer m_EntityRenderer;
+	CEntityRenderer  m_EntityRenderer;
 
-	CEntityGeometryPassShader m_EntityGeometryPassShader;
-	CTerrainGeometryPassShader m_TerrainGeometryPassShader;
+	CEntityGeometryPassShader	m_EntityGeometryPassShader;
+	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
+	CLightPassShader			m_LightPassShader;
 
-	glm::vec2 m_WindowSize;
-	GLuint m_Fbo;
-	GLuint m_DepthTexture;
-	GLuint m_Textures[BufferTexture::Type::COUNT];
+	glm::vec2	m_WindowSize;
+	GLuint		m_Fbo;
+	GLuint		m_FinalTexture;
+	GLuint		m_DepthTexture;
+	GLuint		m_Textures[BufferTexture::Type::COUNT];
+
+	int	   m_QuadIndicesSize;
+	GLuint m_QuadVao;
+	GLuint m_QuadIndices;
+	GLuint m_QuadVertex;
+	GLuint m_QuadTexCoord;
+
+	bool m_DebugRenderTextures;
 };

@@ -133,7 +133,41 @@ namespace Utils{
 	{
 		glDisable(GL_CULL_FACE);
 	}
+	static void CreateQuad(GLuint &vao, GLuint& vbo_indices, GLuint& vbo_vertex, GLuint& vbo_text_coord, int &indices_size)
+	{
+		std::vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0 };
+		std::vector<float> text_coords = {
+			0, 0,
+			0, 1,
+			1, 1,
+			1, 0 };
+		std::vector<unsigned int> indices = { 0, 1, 3, 3, 1, 2 };
+		indices_size = indices.size();
+		vao = CreateVao();
+		vbo_indices = BindIndicesBuffer(indices);
+		vbo_vertex = StoreDataInAttributesList(0, 3, vertex);
+		vbo_text_coord = StoreDataInAttributesList(1, 2, text_coords);
+		UnbindVao();
+	}
+	static void SimpleRenderVao(const GLuint &vao, int indices, int attributes = 1)
+	{
+		glBindVertexArray(vao);
+		for (int x = 0; x < attributes; x++)
+			glEnableVertexAttribArray(x);
 
+		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
+
+		for (int x = attributes; x > 0; x--)
+			glEnableVertexAttribArray(x);
+		glBindVertexArray(0);
+	}
+	static void DeleteQuad(GLuint &vao, GLuint& vbo_indices, GLuint& vbo_vertex, GLuint& vbo_text_coord)
+	{
+		glDeleteBuffers(1, &vbo_indices);
+		glDeleteBuffers(1, &vbo_vertex);
+		glDeleteBuffers(1, &vbo_text_coord);
+		glDeleteVertexArrays(1, &vao);
+	}
 	template <typename T> std::string ToStr(const T& t)
 	{
 		std::ostringstream os;

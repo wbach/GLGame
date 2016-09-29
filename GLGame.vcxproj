@@ -169,6 +169,7 @@
     <ClCompile Include="source\BaseEngine\Lights\Light.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Loader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\EntityGeometryPassShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Shaders\LightPassShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\LoadingShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.cpp" />
     <ClCompile Include="source\main.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="source\BaseEngine\Lights\Light.h" />
     <ClInclude Include="source\BaseEngine\Loader\Loader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\EntityGeometryPassShader.h" />
+    <ClInclude Include="source\BaseEngine\Shaders\LightPassShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\LoadingShader.h" />
     <ClInclude Include="source\BaseEngine\Loader\Material.h" />
     <ClInclude Include="source\BaseEngine\Loader\Model.h" />

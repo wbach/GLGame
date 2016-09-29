@@ -26,7 +26,6 @@ public:
 
 	void ProcessMesh(CModel &model,string filepath, aiMesh *mesh, const aiScene *scene);
 	void RecursiveProcess(CModel &model,string filepath, aiNode *node, const aiScene *scene);
-
 	void CleanUp();
 };
 

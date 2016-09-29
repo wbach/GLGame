@@ -1,5 +1,3 @@
-#ifndef TEST_SCENE_H
-#define TEST_SCENE_H
 #pragma once
 #include <string>
 #include <vector>
@@ -11,7 +9,9 @@
 
 class CTestSCene : public CScene
 {
-    CLight dirLight;
+    CLight m_DirLight;
+	CLight m_PointLight;
+
     shared_ptr<CPlayer> songo;	
 	shared_ptr<CEntity> m9;
 public:
@@ -90,8 +90,15 @@ public:
 		//setFirstCamera();
 	//	camera->attachToObject();
 
-		dirLight = CLight(glm::vec3(5000),glm::vec3(1.0));
-		m_Lights.push_back(dirLight);
+		m_DirLight = CLight(glm::vec3(0.5));
+		m_Lights.push_back(m_DirLight);
+
+		glm::vec3 point_ligt_position = CreatePositionVector(86, 47);
+		point_ligt_position.y += 10.f;
+		m_PointLight = CLight(point_ligt_position, glm::vec3(0.5f, .5f, 0.f), glm::vec3(0, 0.1, 0));
+		m_Lights.push_back(m_PointLight);
+
+
 		return 0;
 	}
 	void setFirstCamera(){
@@ -173,6 +180,6 @@ public:
 	}
 	const glm::mat4& GetViewMatrix() override { return m_Camera->GetViewMatrix(); }
 };
-#endif // !SCENE_H
+
 
 

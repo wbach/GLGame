@@ -125,18 +125,22 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 
 glm::vec3 CTerrain::CalculateNormalMap(int x, int z, FIBITMAP* image)
 {
-	float heightL = GetHeightMap(x-1, z, image);
-	float heightR = GetHeightMap(x+1, z, image);
-	float heightD = GetHeightMap(x, z-1, image);
-	float heightU = GetHeightMap(x, z+1, image);
-	glm::vec3 normal(heightL -heightR, 8.0f,heightD-heightU  ) ;
+	int lx = x - 1; if (lx < 0) lx = 0;
+	int rx = x + 1; if (rx > m_ImageHeight) rx = m_ImageHeight;
+	int dz = z - 1; if (dz < 0) dz = 0;
+	int uz = z + 1; if (uz > m_ImageHeight) uz = m_ImageWidth;
+	float heightL = GetHeightMap(lx, z, image);
+	float heightR = GetHeightMap(rx, z, image);
+	float heightD = GetHeightMap(x, dz, image);
+	float heightU = GetHeightMap(x, uz, image);
+	glm::vec3 normal(heightL -heightR, 6.0f, heightD-heightU  ) ;
 	glm::normalize(normal);
 	return normal ;
 }
 
 float CTerrain::GetHeightMap(int x, int z, FIBITMAP* image){
 
-	if (x < 0 || x>= m_ImageHeight || z < 0 || z >= m_ImageWidth) {
+	if (x < 0 || x >= m_ImageHeight || z < 0 || z >= m_ImageWidth) {
 		return 0;
 	}
 	RGBQUAD color;

@@ -36,7 +36,8 @@ void TerrainShader::GetAllUniformLocations()
 	location_plane = GetUniformLocation("plane");
 	location_isShadows = GetUniformLocation("isShadows");
 	location_viewDistance = GetUniformLocation("viewDistance");
-	for(int i =0 ; i < m_NumberOfLights; i++){
+	for(int i =0 ; i < m_NumberOfLights; i++)
+	{
 		char tmpVariableName[50] ; ; memset(tmpVariableName,0,50) ;
 		sprintf(tmpVariableName,"lightColour[%i]",i);
         location_lightColour.push_back(GetUniformLocation(tmpVariableName));

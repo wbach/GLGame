@@ -82,7 +82,8 @@ void CGame::GameLoop()
 			//m_EntityRenderer.Render(m_CurrScene);
 
 			m_MasterRenderer.GeometryPass(m_CurrScene);
-			m_MasterRenderer.DebugRenderTextures();
+			m_MasterRenderer.LightPass(m_CurrScene);
+			//m_MasterRenderer.DebugRenderTextures();
 
 			m_GuiRenderer.Render(m_CurrScene->GetGui());
 		}
