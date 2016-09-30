@@ -118,8 +118,7 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 		glm::vec3 diffuse(1.0),specular(0.0);
 		float shineDamper =0,reflectivity = 0 ;
         SMaterial material;
-        m_Model.AddMesh("Terrain",vertices,textureCoords,normals, tangens,indices,material);
-		m_Model.m_Meshes[0].m_VertexCount = indices.size();
+        m_Model.AddMesh("Terrain", vertices, textureCoords, normals, tangens, indices, material);
 		cout << "Terrain created. Vertexses : "<< indices .size() <<" \n" ;
 }
 

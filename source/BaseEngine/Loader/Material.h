@@ -1,5 +1,3 @@
-#ifndef MATERIAL_H
-#define MATERIAL_H
 #pragma once
 #include <string>
 #include "glm/glm.hpp"
@@ -23,11 +21,13 @@ struct STextInfo
 	GLuint id;
 	string filename;
 	unsigned int type;
-	STextInfo() {
+	STextInfo()
+	{
 		id = 0;
 		type = 0;
 	}
-	void CleanUp() {
+	void CleanUp() 
+	{
 		glDeleteTextures(1, &id);
 	}
 };
@@ -44,7 +44,8 @@ struct SMaterial
 	int numberOfRows;
 	int textureIndex;
 
-	SMaterial() {
+	SMaterial()
+	{
 		textureIndex = 0;
 		numberOfRows = 1;
 		useFakeLighting = false;
@@ -52,14 +53,14 @@ struct SMaterial
 		ambient = specular = glm::vec3(0);
 		diffuse = glm::vec3(0.8);
 	}
-	float getTextureXOffset() {
+	float getTextureXOffset() 
+	{
 		int column = textureIndex%numberOfRows;
 		return (float)column / (float)numberOfRows;
 	}
-	float getTextureYOffset() {
+	float getTextureYOffset()
+	{
 		int row = textureIndex / numberOfRows;
 		return (float)row / (float)numberOfRows;
 	}
 };
-
-#endif // !MATERIAL_H

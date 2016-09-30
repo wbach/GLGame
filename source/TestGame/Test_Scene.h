@@ -68,7 +68,7 @@ public:
 
 		shared_ptr<CEntity> smallHause;
 		smallHause = make_shared<CEntity>(CreatePositionVector(138,128,2.5), glm::vec3(0), glm::vec3(4));
-		smallHause->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
+		smallHause->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
 		int tnr = TerrainNumber(smallHause->GetPositionXZ());
 		if (tnr > 0)
 			m_Terrains[tnr].AddTerrainEntity(smallHause);
@@ -78,15 +78,26 @@ public:
 
 		shared_ptr<CEntity> barrel;
 		barrel = make_shared<CEntity>(CreatePositionVector(86, 128), glm::vec3(0), glm::vec3(1));
-		barrel->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Barrel/barrel.obj");
+		barrel->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Barrel/barrel.obj");
 		tnr = TerrainNumber(barrel->GetPositionXZ());
 		if (tnr > 0)
 			m_Terrains[tnr].AddTerrainEntity(barrel);
 		else
 			AddEntity(barrel);
 
+
+		shared_ptr<CEntity> fbx_test;
+		fbx_test = make_shared<CEntity>(CreatePositionVector(86, 70), glm::vec3(0), glm::vec3(0.05));
+		fbx_test->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx");
+		tnr = TerrainNumber(fbx_test->GetPositionXZ());
+		if (tnr > 0)
+			m_Terrains[tnr].AddTerrainEntity(fbx_test);
+		else
+			AddEntity(fbx_test);
+
+
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
-		songo->m_ModelId = m_Loader.AssimpLoad("Data/Meshes/Songo/songo2.obj");
+		songo->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Songo/songo2.obj");
 
 		
 	/*	m9 = make_shared<CEntity>(createPositionVector(86, 47,5), glm::vec3(-90,0,0), glm::vec3(0.25));

@@ -8,7 +8,7 @@ void CTerrainRenderer::Render(shared_ptr<CScene>scene, const CTerrainGeometryPas
 	{
 		PrepareTerrain(terrain);
 		LoadModelMatrix(terrain, geomentry_shader);
-		glDrawElements(GL_TRIANGLES, terrain.m_Model.m_Meshes[0].m_VertexCount, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, terrain.m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_INT, 0);
 		UnBindTextureModel();
 	}
 }
@@ -21,7 +21,7 @@ void CTerrainRenderer::RenderElements(CTerrain &terrain)
 void CTerrainRenderer::PrepareTerrain(const CTerrain &terrain)
 {
 	
-	glBindVertexArray(terrain.m_Model.m_Meshes[0].m_Vao);
+	glBindVertexArray(terrain.m_Model.GetMeshes()[0].GetVao());
 	glEnableVertexAttribArray(0);
 	glEnableVertexAttribArray(1);
 	glEnableVertexAttribArray(2);

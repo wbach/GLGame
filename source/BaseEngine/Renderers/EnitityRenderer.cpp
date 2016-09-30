@@ -11,11 +11,11 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeom
 		{
 			for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 			{
-				CModel &subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
-				RenderEntity(subEntity, subModel, geomentry_shader);
+				shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
+				RenderEntity(subEntity, *subModel, geomentry_shader);
 			}
-			CModel &model = scene->GetLoader().m_Models[entity->m_ModelId];
-			RenderEntity(entity, model, geomentry_shader);
+			shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->m_ModelId];
+			RenderEntity(entity, *model, geomentry_shader);
 		}
 	}
 
@@ -23,18 +23,18 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeom
 	{
 		for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 		{
-			CModel &subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
-			RenderEntity(subEntity, subModel, geomentry_shader);
+			shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
+			RenderEntity(subEntity, *subModel, geomentry_shader);
 		}
-		CModel &model = scene->GetLoader().m_Models[entity->m_ModelId];
-		RenderEntity(entity, model, geomentry_shader);
+		shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->m_ModelId];
+		RenderEntity(entity, *model, geomentry_shader);
 	}
 }
 void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader) const
 {
-	for (CMesh& mesh : model.m_Meshes) 
+	for (const CMesh& mesh : model.GetMeshes()) 
 	{
-		glBindVertexArray(mesh.m_Vao);
+		glBindVertexArray(mesh.GetVao());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
 		glEnableVertexAttribArray(2);
@@ -42,7 +42,7 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& mo
 
 		int is_texture = 0, is_normal_map = 0, is_specular_map = 0, is_blend_map = 0;
 		int i = 0;
-		for (STextInfo& td : mesh.material.textures)
+		for (const STextInfo& td : mesh.GetMaterial().textures)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, td.id);
@@ -60,16 +60,16 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& mo
 		else	
 			geomentry_shader.LoadUseNormalMap(0.0f);
 
-		geomentry_shader.LoadMeshMaterial(mesh.material);
+		geomentry_shader.LoadMeshMaterial(mesh.GetMaterial());
 
 		for (const glm::mat4& mat : entity->GetTransformMatrixes())
 		{
 			geomentry_shader.LoadTransformMatrix(mat);
 
-			if (mesh.material.isTransparency)
+			if (mesh.GetMaterial().isTransparency)
 				Utils::DisableCulling();
 		
-			glDrawElements(GL_TRIANGLES, mesh.m_VertexCount, GL_UNSIGNED_INT, 0);		
+			glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);		
 		}
 
 		glDisableVertexAttribArray(3);

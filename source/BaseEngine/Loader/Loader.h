@@ -3,29 +3,28 @@
 #include <fstream>
 #include <string>
 #include <vector>
-#include "Model.h"
-#include "../Utils/Utils.h"
-#include <assimp/Importer.hpp>
-#include <assimp/scene.h>
-#include <assimp/postprocess.h>
+#include <memory>
 #include <stdlib.h>
-#include <FreeImage.h>
+#include "../Utils/Utils.h"
+#include "TextureLoader.h"
+#include "Model.h"
+#include "AssimpModel.h"
+#include "FbxModel.h"
+
 using namespace std;
+
 class CLoader
 {
 public:
-	vector<CModel> m_Models;
-	vector<STextInfo> m_Textures;
+	CLoader();
+	vector<shared_ptr<CModel>>	m_Models;
+	vector<STextInfo>			m_Textures;
 
-	int AssimpLoad(string filename);
-
-	GLuint LoadFullTexture(string filename, bool keep_data, GLubyte *&data, int &width, int &height, bool vertical_flip, float quality = 1);
-	GLuint LoadTexture(string filename,bool verticalFlip = false);
-	void UpdateTexture(GLuint id, string filename);
-	GLuint LoadCubeMap(vector<string> filenames);
-
-	void ProcessMesh(CModel &model,string filepath, aiMesh *mesh, const aiScene *scene);
-	void RecursiveProcess(CModel &model,string filepath, aiNode *node, const aiScene *scene);
+	int LoadMesh(string file_name);
+	GLuint LoadTexture(string file_name, bool vertical_flip = false);
 	void CleanUp();
+
+private:
+	CTextureLoader	m_TextureLoader;
 };
 

@@ -155,4 +155,7 @@ void main()
 	final_color = pow(final_color, vec3(1.f / gamma));
 	FragColor = vec4(final_color, 1.f);
 
+	const float contrast = .5f;
+	FragColor.rgb = (FragColor.rgb - .5f) * (1.f + contrast) + .5f;
+
 }

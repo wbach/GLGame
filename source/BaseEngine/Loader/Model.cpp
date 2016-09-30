@@ -4,9 +4,9 @@
 int CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, SMaterial &material) {
 	
 	CMesh mesh;
-	mesh.m_VertexCount = 0;
+	
 	this->m_Name = name;
-	mesh.material = material;
+	mesh.m_Material = material;
 	vector<glm::vec3> norm, vertexes;
 	for (unsigned int x = 0; x < positions.size(); x += 3) 
 	{
@@ -45,35 +45,57 @@ int CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_co
 		face.normal = glm::normalize(face.normal);
 
 		mesh.m_Faces.push_back(face);
-	}
+	}	
+	
+	mesh.m_VertexCount = indices.size();
 
 	mesh.CalculateBoudnigBox(positions);
 
 	mesh.m_Vao = Utils::CreateVao();
-	GLuint vboId = Utils::BindIndicesBuffer(indices); mesh.m_Vbos.push_back(vboId);
+	GLuint vboId = Utils::BindIndicesBuffer(indices); mesh.m_Vbos[VertexBufferObjects::INDICES] = vboId;
 	if (positions.size() > 0)
 	{
 		GLuint vboId = Utils::StoreDataInAttributesList(0, 3, positions);
-		mesh.m_Vbos.push_back(vboId);
+		mesh.m_Vbos[VertexBufferObjects::POSITION] = vboId;
 	}
 	if (text_coords.size() > 0)
 	{
 		GLuint vboId = Utils::StoreDataInAttributesList(1, 2, text_coords);
-		mesh.m_Vbos.push_back(vboId);
+		mesh.m_Vbos[VertexBufferObjects::TEXT_COORD] = vboId;
 	}
 	if (normals.size() > 0)
 	{
 		GLuint vboId = Utils::StoreDataInAttributesList(2, 3, normals);
-		mesh.m_Vbos.push_back(vboId);
+		mesh.m_Vbos[VertexBufferObjects::NORMAL] = vboId;
 	}
 	if (tangents.size() > 0) 
 	{
 		GLuint vboId = Utils::StoreDataInAttributesList(3, 3, tangents);
-		mesh.m_Vbos.push_back(vboId);
+		mesh.m_Vbos[VertexBufferObjects::TANGENT] = vboId;
 	}
 	Utils::UnbindVao();
 	m_Meshes.push_back(mesh);
 	return 0;
+}
+const string & CModel::GetName() const
+{
+	return m_Name;
+}
+const vector<CMesh>& CModel::GetMeshes() const
+{
+	return m_Meshes;
+}
+void CModel::CleanUp()
+{
+	for (CMesh& mesh : m_Meshes)
+	{
+		mesh.CleanUp();
+	}
+}
+CMesh::CMesh() {}
+CMesh::CMesh(SMaterial material)
+: m_Material(material)
+{
 }
 void CMesh::CalculateBoudnigBox(vector<float>& positions)
 {
@@ -97,8 +119,40 @@ void CMesh::CalculateBoudnigBox(vector<float>& positions)
 
 void CMesh::CleanUp()
 {
-	for (unsigned int x = 0; x < m_Vbos.size(); x++) {
+	for (unsigned int x = 0; x < VertexBufferObjects::COUNT; x++)
+	{
 		glDeleteBuffers(1, &m_Vbos[x]);
 	}
 	glDeleteVertexArrays(1, &m_Vao);
+}
+
+void CMesh::UpdateVertexPosition(const vector<glm::vec3>& vertices) const
+{
+	glBindBuffer(GL_ARRAY_BUFFER, m_Vbos[VertexBufferObjects::POSITION]);
+	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_DYNAMIC_DRAW);
+}
+
+const GLuint& CMesh::GetVao() const
+{
+	return m_Vao;
+}
+
+const GLuint & CMesh::GetVbo(VertexBufferObjects::Type type) const
+{
+	return m_Vbos[type];
+}
+
+const vector<SFace>& CMesh::GetFaces() const
+{
+	return m_Faces;
+}
+
+const SMaterial & CMesh::GetMaterial() const
+{
+	return m_Material;
+}
+
+const GLuint& CMesh::GetVertexCount() const
+{
+	return m_VertexCount;
 }

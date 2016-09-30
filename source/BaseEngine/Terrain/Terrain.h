@@ -1,7 +1,7 @@
 #pragma once
 #include "../Entities/Entity.h"
 #include "../Loader/Material.h"
-#include "../Loader/Model.h"
+#include "../Loader/EmptyLoader.h"
 #include "../Loader/Loader.h"
 #include "../Engine/Transform.h"
 #include "../Utils/Utils.h"
@@ -53,7 +53,7 @@ public:
 	GLuint m_RTexture[2];
 	GLuint m_GTexture[2];
 	GLuint m_BTexture[2];
-	CModel m_Model;
+	CEmptyLoader m_Model;
 	CTerrain();
 	CTerrain(CLoader &loader,string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
 		GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture);
