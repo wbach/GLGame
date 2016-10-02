@@ -20,9 +20,9 @@ public:
 	vector<shared_ptr<CModel>>	m_Models;
 	vector<STextInfo>			m_Textures;
 
-	int LoadMesh(string file_name);
-	GLuint LoadTexture(string file_name, bool vertical_flip = false);
-	void CleanUp();
+	int		LoadMesh(string file_name);
+	GLuint	LoadTexture(string file_name, bool vertical_flip = false);
+	void	CleanUp();
 
 private:
 	CTextureLoader	m_TextureLoader;

@@ -1,7 +1,7 @@
 #include "Model.h"
 
 
-int CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, SMaterial &material) {
+CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, SMaterial &material) {
 	
 	CMesh mesh;
 	
@@ -75,7 +75,7 @@ int CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_co
 	}
 	Utils::UnbindVao();
 	m_Meshes.push_back(mesh);
-	return 0;
+	return &m_Meshes[m_Meshes.size()-1];
 }
 const string & CModel::GetName() const
 {
@@ -126,7 +126,7 @@ void CMesh::CleanUp()
 	glDeleteVertexArrays(1, &m_Vao);
 }
 
-void CMesh::UpdateVertexPosition(const vector<glm::vec3>& vertices) const
+void CMesh::UpdateVertexPosition(const vector<float>& vertices) const
 {
 	glBindBuffer(GL_ARRAY_BUFFER, m_Vbos[VertexBufferObjects::POSITION]);
 	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_DYNAMIC_DRAW);

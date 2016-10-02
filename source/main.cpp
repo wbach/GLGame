@@ -7,6 +7,7 @@ CGame myGame;
 int main(int argc, char *argv[]) {
 
 	//Test git cooment
+	//char Title[512]; ZeroMemory(Title, 512); GetConsoleTitle(Title, 512);	HWND console = FindWindow(NULL, Title); ShowWindow(console, NULL);
     myGame.Initialize();
     shared_ptr<CScene> mainMenu = make_shared<CTestMainMenu>(myGame);
 	shared_ptr<CScene> testScene = make_shared<CTestSCene>(myGame);

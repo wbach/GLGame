@@ -9,6 +9,7 @@
 
 class CTestSCene : public CScene
 {
+	int m_test_fbx_model_id;
     CLight m_DirLight;
 	CLight m_PointLight;
 
@@ -21,20 +22,20 @@ public:
 	{
 		m_Name = "Test Scene";
 	}
-	int Initialize() override{
-		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"),"test", glm::vec2(-0.9,-0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
+	int Initialize() override {
+		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
 		cout << " Loading..." << endl;
 
-        string terrainTexturePath = "Data/Terrain/TerrainTextures/";//TdkWN.png
+		string terrainTexturePath = "Data/Terrain/TerrainTextures/";//TdkWN.png
 
-		m_Terrains.push_back( CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
 			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-			) );
+		));
 
 		//terrains.push_back( CTerrain(loader, terrainTexturePath + "heightmap.png", -1, -1, loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 		//	loader.LoadTexture(terrainTexturePath + "grass.bmp"), loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
@@ -56,7 +57,7 @@ public:
 		//	loader.LoadTexture(terrainTexturePath + "sand.jpg"), loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 		//	loader.LoadTexture(terrainTexturePath + "177.JPG"), loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		//));
-		
+
 	/*	shared_ptr<CEntity> barrel;
 		barrel = make_shared<CEntity>(createPositionVector(56, 47));
 		barrel->model_id = loader.AssimpLoad("Data/Meshes/Barrel/barrel.obj");
@@ -67,7 +68,7 @@ public:
 
 
 		shared_ptr<CEntity> smallHause;
-		smallHause = make_shared<CEntity>(CreatePositionVector(138,128,2.5), glm::vec3(0), glm::vec3(4));
+		smallHause = make_shared<CEntity>(CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
 		smallHause->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
 		int tnr = TerrainNumber(smallHause->GetPositionXZ());
 		if (tnr > 0)
@@ -88,13 +89,18 @@ public:
 
 		shared_ptr<CEntity> fbx_test;
 		fbx_test = make_shared<CEntity>(CreatePositionVector(86, 70), glm::vec3(0), glm::vec3(0.05));
-		fbx_test->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx");
+		m_test_fbx_model_id = fbx_test->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx");
 		tnr = TerrainNumber(fbx_test->GetPositionXZ());
 		if (tnr > 0)
+		{
 			m_Terrains[tnr].AddTerrainEntity(fbx_test);
+		}
 		else
+		{		
 			AddEntity(fbx_test);
-
+			
+		}
+		
 
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
 		songo->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Songo/songo2.obj");
@@ -155,6 +161,8 @@ public:
 
 		if (m_Gui.guiButtons[0].CheckStatus(window_size) == GuiButtonState::ACTIVE)
 			return 2;
+
+		m_Loader.m_Models[m_test_fbx_model_id]->Update(m_Game.GetDisplayManager().GetDeltaTime());
 
 //		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));
 //		m9->setRotation(songo->getRotation()+ glm::vec3(camera->getPitch(),0,0));

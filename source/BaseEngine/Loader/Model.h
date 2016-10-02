@@ -42,7 +42,7 @@ public:
 	CMesh();
 	CMesh(SMaterial material);
 	void CalculateBoudnigBox(vector<float>& positions);	
-	void UpdateVertexPosition(const vector<glm::vec3>& vertices) const;
+	void UpdateVertexPosition(const vector<float>& vertices) const;
 
 	const GLuint& GetVao() const;
 	const GLuint& GetVbo(VertexBufferObjects::Type type) const;	
@@ -69,10 +69,11 @@ class CModel
 {	
 public:
 	virtual void InitModel(string file_name) = 0;
-	int AddMesh(string name, vector<float>& positions, vector<float>& text_coords, vector<float>& normals, vector<float>& tangents,
+	virtual void Update(float dt) {};
+	CMesh* AddMesh(string name, vector<float>& positions, vector<float>& text_coords, vector<float>& normals, vector<float>& tangents,
 		vector<unsigned int>& indices, SMaterial& material);
-	const string& GetName() const;
-	const vector<CMesh>& GetMeshes() const;
+	const	string& GetName() const;
+	const	vector<CMesh>& GetMeshes() const;
 	virtual void CleanUp();
 protected:
 	string			 m_Name;
