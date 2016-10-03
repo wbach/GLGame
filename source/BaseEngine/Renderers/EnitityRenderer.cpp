@@ -11,10 +11,10 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeom
 		{
 			for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 			{
-				shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
+				shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
 				RenderEntity(subEntity, *subModel, geomentry_shader);
 			}
-			shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->m_ModelId];
+			shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
 			RenderEntity(entity, *model, geomentry_shader);
 		}
 	}
@@ -23,10 +23,10 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeom
 	{
 		for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 		{
-			shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->m_ModelId];
+			shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
 			RenderEntity(subEntity, *subModel, geomentry_shader);
 		}
-		shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->m_ModelId];
+		shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
 		RenderEntity(entity, *model, geomentry_shader);
 	}
 }

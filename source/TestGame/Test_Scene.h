@@ -9,7 +9,6 @@
 
 class CTestSCene : public CScene
 {
-	int m_test_fbx_model_id;
     CLight m_DirLight;
 	CLight m_PointLight;
 
@@ -22,7 +21,32 @@ public:
 	{
 		m_Name = "Test Scene";
 	}
-	int Initialize() override {
+	int Initialize() override
+	{
+		vector<string> DAY_TEXTURES_FILES;
+		vector<string> NIGHT_TEXTURES_FILES;
+
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/right.bmp");
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/left.bmp");
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/top.bmp");
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/bottom.bmp");
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/back.bmp");
+		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/front.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/right.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/left.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/top.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/bottom.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/back.bmp");
+		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/front.bmp");
+
+		GLuint day_texture = m_Loader.LoadCubeMap(DAY_TEXTURES_FILES);
+		GLuint night_texture = m_Loader.LoadCubeMap(DAY_TEXTURES_FILES);
+
+		m_Game.GetMasterRenderer().SetSkyBoxTextures(day_texture, night_texture);
+		int skybox_cube = m_Loader.LoadMesh("Data/Meshes/SkyBox/cube.obj");
+		m_Game.GetMasterRenderer().SetSkyBoxMeshId(m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVao(), m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVertexCount());
+
+
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
@@ -69,7 +93,7 @@ public:
 
 		shared_ptr<CEntity> smallHause;
 		smallHause = make_shared<CEntity>(CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
-		smallHause->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj");
+		smallHause->AddModel(m_Loader.LoadMesh("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj"));
 		int tnr = TerrainNumber(smallHause->GetPositionXZ());
 		if (tnr > 0)
 			m_Terrains[tnr].AddTerrainEntity(smallHause);
@@ -79,7 +103,7 @@ public:
 
 		shared_ptr<CEntity> barrel;
 		barrel = make_shared<CEntity>(CreatePositionVector(86, 128), glm::vec3(0), glm::vec3(1));
-		barrel->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Barrel/barrel.obj");
+		barrel->AddModel(m_Loader.LoadMesh("Data/Meshes/Barrel/barrel.obj"));
 		tnr = TerrainNumber(barrel->GetPositionXZ());
 		if (tnr > 0)
 			m_Terrains[tnr].AddTerrainEntity(barrel);
@@ -87,9 +111,9 @@ public:
 			AddEntity(barrel);
 
 
-		shared_ptr<CEntity> fbx_test;
+		/*shared_ptr<CEntity> fbx_test;
 		fbx_test = make_shared<CEntity>(CreatePositionVector(86, 70), glm::vec3(0), glm::vec3(0.05));
-		m_test_fbx_model_id = fbx_test->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx");
+		fbx_test->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));
 		tnr = TerrainNumber(fbx_test->GetPositionXZ());
 		if (tnr > 0)
 		{
@@ -99,12 +123,12 @@ public:
 		{		
 			AddEntity(fbx_test);
 			
-		}
+		}*/
 		
 
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(2));
-		songo->m_ModelId = m_Loader.LoadMesh("Data/Meshes/Songo/songo2.obj");
-
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(0.05));
+		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true));
+		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));
 		
 	/*	m9 = make_shared<CEntity>(createPositionVector(86, 47,5), glm::vec3(-90,0,0), glm::vec3(0.25));
 		m9->model_id = loader.AssimpLoad("Data/Meshes/M4A1/M4A1.obj");
@@ -162,7 +186,8 @@ public:
 		if (m_Gui.guiButtons[0].CheckStatus(window_size) == GuiButtonState::ACTIVE)
 			return 2;
 
-		m_Loader.m_Models[m_test_fbx_model_id]->Update(m_Game.GetDisplayManager().GetDeltaTime());
+		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
+		//m_Loader.m_Models[m_test_fbx_model_id]->Update(m_Game.GetDisplayManager().GetDeltaTime());
 
 //		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));
 //		m9->setRotation(songo->getRotation()+ glm::vec3(camera->getPitch(),0,0));

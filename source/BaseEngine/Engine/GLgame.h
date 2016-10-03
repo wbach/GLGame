@@ -9,9 +9,12 @@
 #include "../GUI/GUIRenderer.h"
 #include "../Input/InputManager.h"
 #include "../Renderers/MasterRenderer.h"
+
+
 using namespace std;
 
-class CGame {
+class CGame 
+{
 public:
 	CGame();
 
@@ -21,6 +24,8 @@ public:
 
 	CInputManager& GetInputManager() { return m_InputManager; }
 	CDisplayManager& GetDisplayManager() { return m_DisplayManager; }
+	CMasterRenderer& GetMasterRenderer() { return m_MasterRenderer; }
+
 	void CreateProjectionMatrix();
 
     int SetCurrentScene(int i);
@@ -36,14 +41,14 @@ public:
 	int ReadConfiguration(string file_name);
 private:
 	CDisplayManager m_DisplayManager;
-	CInputManager m_InputManager;
+	CInputManager	m_InputManager;
 
 	LoadingShader m_LoadingShader;
 
 	vector<shared_ptr<CScene>> m_Scenes;
 	shared_ptr<CScene> m_CurrScene;
 
-	CGUIRenderer m_GuiRenderer;
+	CGUIRenderer	m_GuiRenderer;
 	CMasterRenderer m_MasterRenderer;
 
 	glm::vec3 m_BackgroundColour;
@@ -52,8 +57,8 @@ private:
 	float m_ViewDistance;
 	float m_GrassViewDistance;
 
-	bool m_IsShadows;
-	float m_ShadowMapSize;
+	bool	m_IsShadows;
+	float	m_ShadowMapSize;
 
 	float m_WaterQuality;
 
@@ -61,16 +66,16 @@ private:
 	bool m_IsLoading;
 	bool m_IsFullScreen;	
 
-	glm::vec2 m_WindowSize;
-	string m_WindowName;
-	float m_RefreshRate;
+	glm::vec2	m_WindowSize;
+	string		m_WindowName;
+	float		m_RefreshRate;
 
 	const float m_NearPlane = 0.1f;
 	const float m_FarPlane = 10000;
 	const float m_Fov = 50;
 
-	bool m_IsSound;
-	float m_SoundVolume;
+	bool	m_IsSound;
+	float	m_SoundVolume;
 };
 
 

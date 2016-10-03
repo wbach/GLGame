@@ -20,11 +20,14 @@ public:
 	vector<shared_ptr<CModel>>	m_Models;
 	vector<STextInfo>			m_Textures;
 
-	int		LoadMesh(string file_name);
+	void	UpdateModels(float delta_time);
+	int		LoadMesh(string file_name, bool time_update = false);
 	GLuint	LoadTexture(string file_name, bool vertical_flip = false);
+	GLuint	LoadCubeMap(const vector<string>& filenames);
 	void	CleanUp();
 
 private:
 	CTextureLoader	m_TextureLoader;
+	vector<int>	m_IndexesUpdatingModels;
 };
 

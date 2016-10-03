@@ -168,6 +168,7 @@ namespace Utils{
 		glDeleteBuffers(1, &vbo_text_coord);
 		glDeleteVertexArrays(1, &vao);
 	}
+
 	template <typename T> std::string ToStr(const T& t)
 	{
 		std::ostringstream os;

@@ -6,16 +6,19 @@
 #include <vector>
 #include <memory>
 using namespace std;
-class CEntity {	
-public:	
-	string m_Name;
-	int m_ModelId;
-	
+class CEntity
+{	
+public:		
 	CEntity();
 	CEntity(glm::vec3 pos);
 	CEntity(glm::vec3 pos, glm::vec3 rot);
 	CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);	
 	
+	void AddModel(unsigned int model_id);
+	const int& GetModelId(unsigned int i = 0) const;
+
+	void Update();
+
 	void AddSubbEntity(shared_ptr<CEntity> e);
 	void IncrasePosition(float dx, float dy, float dz, unsigned int index = 0);
 	void IncreaseRotation(float dx, float dy, float dz, unsigned int index = 0);
@@ -39,8 +42,12 @@ public:
 	glm::vec3& GetReferencedScale(unsigned int i = 0);
 	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
 
-private:
-	vector<glm::mat4> m_TransformMatrixes;
-	vector<STransform> m_Transforms;
+protected:
+	vector<glm::mat4>			m_TransformMatrixes;
+	vector<STransform>			m_Transforms;
 	vector<shared_ptr<CEntity>> m_ChildrenEntities;
+
+	string m_Name;
+	int m_CurrentModelId = 0;
+	std::vector<int> m_ModelId;
 };

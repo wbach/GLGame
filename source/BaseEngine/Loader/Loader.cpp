@@ -16,7 +16,14 @@ void CLoader::CleanUp()
 	m_Textures.clear();
 	m_Models.clear();
 }
-int CLoader::LoadMesh(string file_name)
+void CLoader::UpdateModels(float delta_time)
+{
+	for (int index : m_IndexesUpdatingModels)
+	{
+		m_Models[index]->Update(delta_time);
+	}
+}
+int CLoader::LoadMesh(string file_name, bool time_update)
 {
 	std::ifstream try_file(file_name);
 	if (!try_file.is_open()) {
@@ -32,26 +39,26 @@ int CLoader::LoadMesh(string file_name)
 	for (unsigned int x = 0; x < m_Models.size(); x++)
 		if (file_name.compare(m_Models[x]->GetName()) == 0)
 			return x;
-
+	shared_ptr<CModel> model;
 	if (!extenstion.compare("fbx") || !extenstion.compare("FBX")|| !extenstion.compare("Fbx"))
-	{
-		shared_ptr<CModel> model = make_shared<CFbxModel>(m_TextureLoader);
-		model->InitModel(file_name);
-		m_Models.push_back(model);
-		return m_Models.size() - 1;
-	}
+		model = make_shared<CFbxModel>(m_TextureLoader);
 	else
-	{
-		shared_ptr<CModel> model = make_shared<CAssimModel>(m_TextureLoader);
-		model->InitModel(file_name);
-		m_Models.push_back(model);
-		return m_Models.size() - 1;
-	}
+		model = make_shared<CAssimModel>(m_TextureLoader);
 
-	return -1;
+	model->InitModel(file_name);
+	m_Models.push_back(model);
+	if(time_update)
+		m_IndexesUpdatingModels.push_back(m_Models.size() - 1);
+
+	return m_Models.size() - 1;
 }
 
 GLuint CLoader::LoadTexture(string file_name, bool vertical_flip)
 {
 	return m_TextureLoader.LoadTexture(file_name, vertical_flip);
+}
+
+GLuint CLoader::LoadCubeMap(const vector<string>& filenames)
+{
+	return m_TextureLoader.LoadCubeMap(filenames);
 }

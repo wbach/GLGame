@@ -19,6 +19,7 @@ public:
 	void AddTerrain(CTerrain terrain) { m_Terrains.push_back(terrain); }
 	void AddEntity(shared_ptr<CEntity> entity) { m_Entities.push_back(entity); }
 
+
 	const vector<shared_ptr<CEntity>>& GetEntities() const;
 	const vector<CTerrain>& GetTerrains() const;
 	const vector<CLight>& GetLights() const;

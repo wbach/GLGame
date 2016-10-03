@@ -3,7 +3,8 @@
 #include "../Shaders/TerrainGeometryPassShader.h"
 #include "../Shaders/LightPassShader.h"
 #include "./EnitityRenderer.h"
-#include "TerrainRenderer.h"
+#include "./SkyBoxRenderer.h"
+#include "./TerrainRenderer.h"
 #include "../Engine/Scene.h"
 #include "../Engine/OpenGLRenderer.h"
 namespace BufferTexture
@@ -22,15 +23,23 @@ class CMasterRenderer
 public:
 	void GeometryPass(shared_ptr<CScene>& scene);
 	void LightPass(shared_ptr<CScene>& scene);
+
 	void Init(glm::vec2 window_size, glm::mat4& projection_matrix);
 	void CleanUp();
+
 	void DebugRenderTextures();
+
+	void SetSkyBoxTextures(GLuint day, GLuint night);
+	void SetSkyBoxMeshId(GLuint quad_id, int vertex_count);
+
+	CSkyBoxRenderer& GetSkyBoxRenderer();
 private:
 	int CreateBuffers();
 	void SetReadBuffer(BufferTexture::Type TextureType);
 	
 	CTerrainRenderer m_TerrainRenderer;
 	CEntityRenderer  m_EntityRenderer;
+	CSkyBoxRenderer  m_SkyBoxRenderer;
 
 	CEntityGeometryPassShader	m_EntityGeometryPassShader;
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;

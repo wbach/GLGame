@@ -9,7 +9,8 @@ void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
 	if (CreateBuffers() == -1)
 	{
 		std::cout << "[Error] Error in creating master renderer buffers." << std::endl;
-	}
+	}	
+
 	m_EntityGeometryPassShader.Init();
 	m_EntityGeometryPassShader.Start();
 	m_EntityGeometryPassShader.LoadProjectionMatrix(projection_matrix);
@@ -27,7 +28,7 @@ void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
 
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
-	
+	m_SkyBoxRenderer.Init(projection_matrix);
 }
 
 void CMasterRenderer::CleanUp()
@@ -63,6 +64,8 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 	glEnable(GL_DEPTH_TEST);
 
 	glDisable(GL_BLEND);
+
+	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
 
 	m_TerrainGeometryPassShader.Start();
 	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());
@@ -137,6 +140,18 @@ void CMasterRenderer::DebugRenderTextures()
 
 	SetReadBuffer(BufferTexture::Type::SPECULAR);
 	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, 0, m_WindowSize.x, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+}
+void CMasterRenderer::SetSkyBoxTextures(GLuint day, GLuint night)
+{
+	m_SkyBoxRenderer.SetTextures(day, night);
+}
+void CMasterRenderer::SetSkyBoxMeshId(GLuint mesh_id, int vertex_count)
+{
+	m_SkyBoxRenderer.SetMeshId(mesh_id, vertex_count);
+}
+CSkyBoxRenderer& CMasterRenderer::GetSkyBoxRenderer()
+{
+	return m_SkyBoxRenderer;
 }
 int CMasterRenderer::CreateBuffers()
 {

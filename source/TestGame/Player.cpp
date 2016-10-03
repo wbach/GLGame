@@ -46,10 +46,10 @@ void CPlayer::move(float deltaTime, float terrainHeight)
 
 	switch (action) {
 	case CharacterActions::IDLE:
-	//	setCurrentFBXmesh(0);
+		m_CurrentModelId = 0;
 		break;
 	case CharacterActions::RUN:
-	//	setCurrentFBXmesh(1);
+		m_CurrentModelId = 1;
 		break;
 	case CharacterActions::ATTACK:
 	//	setCurrentFBXmesh(2);

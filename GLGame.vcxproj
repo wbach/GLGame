@@ -172,9 +172,11 @@
     <ClCompile Include="source\BaseEngine\Input\InputSDL.cpp" />
     <ClCompile Include="source\BaseEngine\Lights\Light.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Loader.cpp" />
+    <ClCompile Include="source\BaseEngine\Renderers\SkyBoxRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\EntityGeometryPassShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\LightPassShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\LoadingShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Shaders\SkyBoxShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Model.cpp" />
@@ -219,11 +221,13 @@
     <ClInclude Include="source\BaseEngine\Input\InputSDL.h" />
     <ClInclude Include="source\BaseEngine\Lights\Light.h" />
     <ClInclude Include="source\BaseEngine\Loader\Loader.h" />
+    <ClInclude Include="source\BaseEngine\Renderers\SkyBoxRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shaders\EntityGeometryPassShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\LightPassShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\LoadingShader.h" />
     <ClInclude Include="source\BaseEngine\Loader\Material.h" />
     <ClInclude Include="source\BaseEngine\Loader\Model.h" />
+    <ClInclude Include="source\BaseEngine\Shaders\SkyBoxShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.h" />
     <ClInclude Include="source\TestGame\Player.h" />
     <ClInclude Include="source\BaseEngine\Engine\Scene.h" />

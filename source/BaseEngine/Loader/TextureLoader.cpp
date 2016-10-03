@@ -98,4 +98,30 @@ GLuint CTextureLoader::LoadTexture(string filename, bool verticalFlip)
 	return LoadFullTexture(filename, false, data, w, h, verticalFlip);
 }
 
+GLuint CTextureLoader::LoadCubeMap(const vector<string>& filenames)
+{
+	GLuint tex;
+	glGenTextures(1, &tex);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
+	int i = 0;
+	for (string file : filenames)
+	{
+		GLubyte* data = NULL;
+		int width, height;
+		LoadFullTexture(file, true, data, width, height, false);
+		glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, (GLvoid*)data);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		if (data != NULL)
+		{
+			delete[] data;
+		}
+		i++;
+	}
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
+	return tex;
+}
+
 

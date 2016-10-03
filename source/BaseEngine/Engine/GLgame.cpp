@@ -20,15 +20,17 @@ CGame::CGame()
 void CGame::Initialize()
 {	
 	m_DisplayManager.Initialize(m_WindowName, API::GLFW3, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
-	CreateProjectionMatrix();
-	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
+	CreateProjectionMatrix();
+
+	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 	m_MasterRenderer.Init(m_WindowSize, m_ProjectionMatrix);
 
 	m_DisplayManager.SetInput(m_InputManager.m_Input);
-
 	m_DisplayManager.SetFullScreen(m_IsFullScreen);
 	m_DisplayManager.SetRefreshRate(m_RefreshRate);
+
+	
 }
 void CGame::Uninitialize()
 {
@@ -56,7 +58,7 @@ void CGame::GameLoop()
 	while (api_message != ApiMessages::QUIT)
 	{		
 		api_message = m_DisplayManager.PeekMessage();
-
+		
 
 		if (m_InputManager.GetKey(KeyCodes::ESCAPE))
 			api_message = ApiMessages::QUIT;

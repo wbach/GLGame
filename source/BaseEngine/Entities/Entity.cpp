@@ -100,6 +100,29 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	AddTransform(STransform(pos, rot, scale));
 }
 
+void CEntity::AddModel(unsigned int model_id)
+{
+	m_ModelId.push_back(model_id);
+}
+
+const int& CEntity::GetModelId(unsigned int i) const
+{
+	if (i < m_ModelId.size())
+	{
+		if (i == 0)
+			return m_ModelId[m_CurrentModelId];
+		return m_ModelId[i];
+	}
+	else
+		return -1;
+		
+}
+
+void CEntity::Update()
+{
+
+}
+
 void CEntity::AddTransform(STransform transform)
 {
 	m_Transforms.push_back(transform);
