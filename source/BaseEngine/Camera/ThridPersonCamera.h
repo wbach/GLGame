@@ -13,7 +13,6 @@ public:
 	void Move() override;
 	void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) override;
 	void CalculateZoom(float zoom_lvl) override;
-
 private:
 	void LockCamera();
 	void SetCaptureMouse(bool capture);	

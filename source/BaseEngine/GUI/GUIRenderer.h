@@ -28,9 +28,9 @@ private:
 	glm::mat4 m_TransformationMatrix;
 
 	shared_ptr<CGUITexture> m_Cursor;
-	glm::vec2 m_WindowSize;
+	glm::vec2				m_WindowSize;
 
 	freetype::font_data m_TextFont;
-	FontShader m_Fontshader;
-	string m_FontName;
+	FontShader			m_Fontshader;
+	string				m_FontName;
 };

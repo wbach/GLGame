@@ -45,12 +45,13 @@ public:
 	const SGUI& GetGui() { return m_Gui; }
 	
 	const glm::vec3 GetCameraPosition() const { return m_Camera->GetPosition(); }
-
+	shared_ptr<CCamera>& GetCamera() { return m_Camera; }
+	const glm::vec3 GetDirectionalLightPosition();
 	~CScene();
 protected:
 	CLoader m_Loader;
-	string m_Name;
-	CGame& m_Game;
+	string	m_Name;
+	CGame&	m_Game;
 	SGUI m_Gui;
 	vector<shared_ptr<CEntity>> m_Entities;
 	vector<CTerrain> m_Terrains;

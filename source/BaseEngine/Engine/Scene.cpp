@@ -54,7 +54,7 @@ const float CScene::GetHeightOfTerrain(glm::vec2 xzPos)
 const int CScene::TerrainNumber(float x, float z) 
 {
 	int nr = 0;
-	for (CTerrain ter : m_Terrains) {
+	for (const CTerrain& ter : m_Terrains) {
 		if (x > ter.m_Transform.position.x && x <  ter.m_Transform.position.x + ter.GetSize())
 			if (z > ter.m_Transform.position.z && z <  ter.m_Transform.position.z + ter.GetSize())			
 				return nr;			
@@ -66,6 +66,15 @@ const int CScene::TerrainNumber(float x, float z)
 const int CScene::TerrainNumber(glm::vec2 xz_pos)
 {
 	return TerrainNumber(xz_pos.x, xz_pos.y);
+}
+
+const glm::vec3 CScene::GetDirectionalLightPosition()
+{
+	for (const CLight& light : m_Lights)
+		if (light.GetType() == LightType::DIRECTIONAL_LIGHT)
+			return light.GetPosition();
+	cout << "[Error] Directional light not found." << endl;
+	return glm::vec3();
 }
 
 CScene::~CScene()

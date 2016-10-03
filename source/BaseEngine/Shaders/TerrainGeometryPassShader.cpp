@@ -4,7 +4,7 @@
 
 void CTerrainGeometryPassShader::Init()
 {
-	InitShaderProgram("Data/Shaders/TerrainGeometryPassShader.vert", "Data/Shaders/TerrainGeometryPassShader.frag");
+	InitShaderProgram("Data/Shaders/Terrain/TerrainGeometryPassShader.vert", "Data/Shaders/Terrain/TerrainGeometryPassShader.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();
@@ -43,7 +43,8 @@ void CTerrainGeometryPassShader::GetAllUniformLocations()
 	location_bTextureNormal = GetUniformLocation("bTextureNormal");
 	location_gTextureNormal = GetUniformLocation("gTextureNormal");
 
-	location_shadowMap = GetUniformLocation("ShadowMap");
+	location_shadowMap		  = GetUniformLocation("ShadowMap");
+	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
 }
 
 void CTerrainGeometryPassShader::BindAttributes()
@@ -66,4 +67,9 @@ void CTerrainGeometryPassShader::LoadProjectionMatrix(const glm::mat4& matrix) c
 void CTerrainGeometryPassShader::LoadViewMatrix(const glm::mat4& matrix) const
 {
 	LoadValue(location_viewMatrix, matrix);
+}
+
+void CTerrainGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4 & matrix) const
+{
+	LoadValue(location_ToShadowMapSpace, matrix);
 }

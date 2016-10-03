@@ -93,9 +93,6 @@
     <ClCompile Include="source\BaseEngine\Terrain\Terrain.cpp">
       <Filter>Source Files\Terrain</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\Terrain\TerrainShader.cpp">
-      <Filter>Source Files\Terrain</Filter>
-    </ClCompile>
     <ClCompile Include="source\BaseEngine\GUI\GUIShader.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
@@ -112,9 +109,6 @@
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp">
-      <Filter>Source Files\Entity</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseEngine\Entities\EntityShader.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Input\InputSDL.cpp">
@@ -189,6 +183,18 @@
     <ClCompile Include="source\BaseEngine\Shaders\SkyBoxShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowBox.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -223,9 +229,6 @@
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Loader\Model.h">
       <Filter>Header Files\Loader</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Terrain\TerrainShader.h">
-      <Filter>Header Files\Terrain</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Terrain\Terrain.h">
       <Filter>Header Files\Terrain</Filter>
@@ -262,12 +265,6 @@
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Camera\ThridPersonCamera.h">
       <Filter>Header Files\Camera</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Entities\Entity.h">
-      <Filter>Header Files\Entity</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Entities\EntityShader.h">
-      <Filter>Header Files\Entity</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Input\InputManager.h">
       <Filter>Header Files</Filter>
@@ -342,6 +339,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Shaders\SkyBoxShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowBox.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

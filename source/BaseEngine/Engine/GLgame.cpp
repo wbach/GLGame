@@ -24,12 +24,12 @@ void CGame::Initialize()
 	CreateProjectionMatrix();
 
 	m_GuiRenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
-	m_MasterRenderer.Init(m_WindowSize, m_ProjectionMatrix);
 
 	m_DisplayManager.SetInput(m_InputManager.m_Input);
 	m_DisplayManager.SetFullScreen(m_IsFullScreen);
 	m_DisplayManager.SetRefreshRate(m_RefreshRate);
 
+	//renderStartSeries();
 	
 }
 void CGame::Uninitialize()
@@ -42,36 +42,34 @@ void CGame::Uninitialize()
 	m_MasterRenderer.CleanUp();
 }
 void CGame::GameLoop()
-{
-	Uint32 start;
-	
-	int api_message = ApiMessages::NONE;
-	//renderStartSeries();
-    LoadScene();
+{	
+	LoadScene();
+	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);
+
+	int api_message = ApiMessages::NONE;	
 
     string loading_text = "FPS : ";
 	vector<CGUIText> texts;
 	texts.push_back(CGUIText(loading_text, glm::vec2(-0.9475, 0.8975), 1.5, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1.5, glm::vec3(0, 0, 1)));
+	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1.5, glm::vec3(0, 0, 1)));	
 	
+	vector<CGUITexture> debug_textures;
+	//debug_textures.push_back(CGUITexture(m_MasterRenderer.GetShadowMap(), glm::vec2(0.5), glm::vec2(0.25,0.25) ));
 	
+
 	while (api_message != ApiMessages::QUIT)
 	{		
-		api_message = m_DisplayManager.PeekMessage();
-		
+		api_message = m_DisplayManager.PeekMessage();		
 
 		if (m_InputManager.GetKey(KeyCodes::ESCAPE))
 			api_message = ApiMessages::QUIT;
 
-		start = SDL_GetTicks();
 		glEnable(GL_DEPTH_TEST);
 		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 		glClearColor(m_BackgroundColour.x, m_BackgroundColour.y, m_BackgroundColour.z, 1);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 		glEnable(GL_CULL_FACE);
-		glCullFace(GL_BACK);
-
-	
+		glCullFace(GL_BACK);	
 	
 		if (m_CurrScene != nullptr)
 		{
@@ -80,14 +78,15 @@ void CGame::GameLoop()
 			case 1: api_message = ApiMessages::QUIT; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
-			//m_TerrainRenderer.Render(m_CurrScene,glm::mat4(0));
-			//m_EntityRenderer.Render(m_CurrScene);
+			
 
+			m_MasterRenderer.ShadowPass(m_CurrScene);
 			m_MasterRenderer.GeometryPass(m_CurrScene);
 			m_MasterRenderer.LightPass(m_CurrScene);
 			//m_MasterRenderer.DebugRenderTextures();
 
 			m_GuiRenderer.Render(m_CurrScene->GetGui());
+			m_GuiRenderer.RenderTextures(debug_textures);
 		}
 		texts[0].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps() ) );
 		texts[1].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps()));
@@ -98,6 +97,8 @@ void CGame::GameLoop()
 void CGame::LoadScene()
 {
 	if (m_CurrScene == nullptr) return;
+
+	std::cout << "Loading scene..." << std::endl;
 
 	m_IsLoading = true;
 //	thread loading_thread(&CGame::InitializeScene,this) ;

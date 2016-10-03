@@ -72,7 +72,7 @@ private:
 
 	const float m_NearPlane = 0.1f;
 	const float m_FarPlane = 10000;
-	const float m_Fov = 50;
+	const float m_Fov = 70;
 
 	bool	m_IsSound;
 	float	m_SoundVolume;

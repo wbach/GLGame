@@ -2,13 +2,16 @@
 #include "Camera.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include "../Input/InputManager.h"
+#include "../Display/DisplayManager.h"
+
 static glm::vec3 zero(0);
 
 class CFirstPersonCamera : public CCamera
 {	
 public:
-	CFirstPersonCamera();
-	CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity);
+	CFirstPersonCamera(CInputManager *input_manager, CDisplayManager *display_manager);
+	CFirstPersonCamera(CInputManager *input_manager, CDisplayManager *display_manager, glm::vec3& position_entity, glm::vec3& rotation_entity);
 
 	void Move() override;
 	void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) override;	
@@ -26,5 +29,8 @@ private:
 	glm::vec3& m_LookRotation;
 
 	bool m_IsFreeCamera = true;
+
+	CInputManager*   m_InputManager;
+	CDisplayManager* m_DisplayManager;
 };
 

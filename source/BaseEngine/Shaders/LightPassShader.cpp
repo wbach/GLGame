@@ -2,7 +2,7 @@
 
 void CLightPassShader::Init()
 {
-	InitShaderProgram("Data/Shaders/LightPassShader.vert", "Data/Shaders/LightPassShader.frag");
+	InitShaderProgram("Data/Shaders/Light/LightPassShader.vert", "Data/Shaders/Light/LightPassShader.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();

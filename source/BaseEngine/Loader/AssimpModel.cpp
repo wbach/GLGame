@@ -9,7 +9,7 @@ void CAssimModel::InitModel(string file_name)
 {
 	string path = file_name.substr(0, file_name.find_last_of('/'));
 
-	m_LoaderType == LoaderType::ASSIMP; 
+	m_LoaderType = LoaderType::ASSIMP; 
 
 	Assimp::Importer importer;
 	unsigned int flags = aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals;

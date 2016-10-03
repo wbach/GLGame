@@ -113,6 +113,11 @@ int CInputSDL::KeyToSDL(int key)
 	if (key == KeyCodes::ENTER) return SDL_SCANCODE_RETURN;
 	if (key == KeyCodes::SPACE) return SDL_SCANCODE_SPACE;
 	if (key == KeyCodes::ESCAPE) return SDL_SCANCODE_ESCAPE;
+
+	if (key == KeyCodes::LARROW) return SDL_SCANCODE_LEFT;
+	if (key == KeyCodes::RARROW) return SDL_SCANCODE_RIGHT;
+	if (key == KeyCodes::UARROW) return SDL_SCANCODE_UP;
+	if (key == KeyCodes::DARROW) return SDL_SCANCODE_DOWN;
 	return -1;
 }
 

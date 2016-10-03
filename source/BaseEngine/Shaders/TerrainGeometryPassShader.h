@@ -11,6 +11,7 @@ public:
 	void LoadTransformMatrix(const glm::mat4&) const;
 	void LoadProjectionMatrix(const glm::mat4&) const;
 	void LoadViewMatrix(const glm::mat4&) const;
+	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
 private:
 	void ConnectTextureUnits() const;
 	
@@ -27,6 +28,7 @@ private:
 	int location_gTextureNormal;
 
 	int location_shadowMap;
+	int location_ToShadowMapSpace;
 
 	// Matrixes location
 	int location_transformationMatrix;

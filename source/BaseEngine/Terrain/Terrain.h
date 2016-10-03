@@ -62,7 +62,7 @@ public:
 	{ 
 		m_TerrainEntities.push_back(e);
 	}
-
+	
 	void CleanUp();
 	void LoadFloora(string flooraMap) ;
 	void GenerateTerrainMap(CLoader &loader,string heightMap);

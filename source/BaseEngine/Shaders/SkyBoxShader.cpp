@@ -2,7 +2,7 @@
 
 void CSkyBoxShader::Init()
 {
-	InitShaderProgram("Data/Shaders/SkyboxVertexShader.vert", "Data/Shaders/SkyboxFragmentShader.frag");
+	InitShaderProgram("Data/Shaders/SkyBox/SkyboxVertexShader.vert", "Data/Shaders/SkyBox/SkyboxFragmentShader.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();

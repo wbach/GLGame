@@ -1,5 +1,6 @@
 #include "ShaderProgram.h"
-void CShaderProgram::InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file) {
+void CShaderProgram::InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file)
+{
 	m_VertexShaderID = LoadShader(vertex_shader_file, GL_VERTEX_SHADER);
 	m_FragmentShaderID = LoadShader(fragment_shader_file, GL_FRAGMENT_SHADER);
 	m_ProgramID = glCreateProgram();

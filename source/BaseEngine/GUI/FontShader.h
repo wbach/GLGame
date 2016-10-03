@@ -9,12 +9,11 @@ class FontShader : public CShaderProgram
 {
 public:
 	void Init(){
-		InitShaderProgram("Data/Shaders/fontVertex.vert" ,"Data/Shaders/fontFragment.frag" ) ;
+		InitShaderProgram("Data/Shaders/Font/fontVertex.vert" ,"Data/Shaders/Font/fontFragment.frag" ) ;
 		Start() ;
 		GetAllUniformLocations();
 		glm::mat4 scaleMat = Utils::CreateTransformationMatrix(glm::vec2(0),glm::vec2(0.0005,0.001));
 		loadTransformation(scaleMat);
-	//	loadTranslation(glm::vec2(0.0,-0.95));
 		Stop();
 	}
 	void GetAllUniformLocations() override
@@ -24,12 +23,10 @@ public:
 	}
 	void BindAttributes() override 
 	{
-	//	bindAttribute(0, "position");
-	//	bindAttribute(1, "textureCoords");
+
 	}
 	void loadColour(const glm::vec3& colour) const
 	{
-	//	loadValue(location_colour, colour);
 	}
 	void loadTranslation(const glm::vec2& pos) const
 	{

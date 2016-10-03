@@ -1,6 +1,6 @@
 #include "MasterRenderer.h"
 
-void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
+void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix)
 {
 	m_WindowSize = window_size;
 
@@ -29,6 +29,7 @@ void CMasterRenderer::Init(glm::vec2 window_size, glm::mat4& projection_matrix)
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
 	m_SkyBoxRenderer.Init(projection_matrix);
+	m_ShadowMapRenderer.Init(camera, window_size, 70, 0.1);
 }
 
 void CMasterRenderer::CleanUp()
@@ -45,12 +46,19 @@ void CMasterRenderer::CleanUp()
 	m_EntityGeometryPassShader.CleanUp();
 	m_TerrainGeometryPassShader.CleanUp();
 	m_LightPassShader.CleanUp();
+	m_ShadowMapRenderer.CleanUp();
 	Utils::DeleteQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord);
 }
 
 void CMasterRenderer::SetReadBuffer(BufferTexture::Type TextureType)
 {
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + TextureType);
+}
+
+void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene)
+{
+	glDepthMask(GL_TRUE);
+	m_ShadowMapRenderer.Render(scene);
 }
 
 void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
@@ -67,19 +75,27 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 
 	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
 
+	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 	m_TerrainGeometryPassShader.Start();
 	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());
+	m_TerrainGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
 	m_TerrainRenderer.Render(scene, m_TerrainGeometryPassShader);
 	m_TerrainGeometryPassShader.Stop();
 
+	glActiveTexture(GL_TEXTURE2);
+	glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 	m_EntityGeometryPassShader.Start();
 	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());
+	m_EntityGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
 
 	glDepthMask(GL_FALSE);
 
 	glDisable(GL_DEPTH_TEST);
+
+	glEnable(GL_BLEND);
 }
 
 void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
@@ -148,6 +164,10 @@ void CMasterRenderer::SetSkyBoxTextures(GLuint day, GLuint night)
 void CMasterRenderer::SetSkyBoxMeshId(GLuint mesh_id, int vertex_count)
 {
 	m_SkyBoxRenderer.SetMeshId(mesh_id, vertex_count);
+}
+const GLuint & CMasterRenderer::GetShadowMap() const
+{
+	return m_ShadowMapRenderer.GetShadowMap();
 }
 CSkyBoxRenderer& CMasterRenderer::GetSkyBoxRenderer()
 {

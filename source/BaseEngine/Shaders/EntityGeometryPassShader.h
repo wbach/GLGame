@@ -15,6 +15,8 @@ public:
 
 	void LoadUseNormalMap(const float& use) const;
 	void LoadMeshMaterial(const SMaterial& material) const;
+
+	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
 private:
 	int location_TransformationMatrix;
 	int location_ProjectionMatrix;
@@ -24,7 +26,10 @@ private:
 	int location_ModelTexture;
 	int location_UseNormalMap;
 	int location_NormalMap;
+
+	//Shadows Variables
 	int location_ShadowMap;
+	int location_ToShadowMapSpace;
 
 	//Material Locations
 	int location_MaterialAmbient;

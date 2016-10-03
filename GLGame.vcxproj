@@ -158,7 +158,6 @@
     <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\EnitityRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp" />
-    <ClCompile Include="source\BaseEngine\Entities\EntityShader.cpp" />
     <ClCompile Include="source\BaseEngine\Camera\FirstPersonCamera.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\FreeType.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\GLgame.cpp" />
@@ -178,6 +177,10 @@
     <ClCompile Include="source\BaseEngine\Shaders\LoadingShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\SkyBoxShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowBox.cpp" />
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp" />
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp" />
+    <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Model.cpp" />
     <ClCompile Include="source\TestGame\Player.cpp" />
@@ -185,7 +188,6 @@
     <ClCompile Include="source\BaseEngine\Shaders\ShaderProgram.cpp" />
     <ClCompile Include="source\BaseEngine\Terrain\Terrain.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\TerrainRenderer.cpp" />
-    <ClCompile Include="source\BaseEngine\Terrain\TerrainShader.cpp" />
     <ClCompile Include="source\BaseEngine\Camera\ThridPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -197,14 +199,13 @@
     <ClInclude Include="source\BaseEngine\Engine\OpenGLRenderer.h" />
     <ClInclude Include="source\BaseEngine\Engine\Renderer.h" />
     <ClInclude Include="source\BaseEngine\Display\SDLOpenGL.h" />
+    <ClInclude Include="source\BaseEngine\Entities\Entity.h" />
     <ClInclude Include="source\BaseEngine\Loader\AssimpModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />
     <ClInclude Include="source\BaseEngine\Loader\FbxModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\TextureLoader.h" />
     <ClInclude Include="source\BaseEngine\Renderers\MasterRenderer.h" />
     <ClInclude Include="source\BaseEngine\Renderers\EnitityRenderer.h" />
-    <ClInclude Include="source\BaseEngine\Entities\Entity.h" />
-    <ClInclude Include="source\BaseEngine\Entities\EntityShader.h" />
     <ClInclude Include="source\BaseEngine\Camera\FirstPersonCamera.h" />
     <ClInclude Include="source\BaseEngine\GUI\FontShader.h" />
     <ClInclude Include="source\BaseEngine\GUI\FreeType.h" />
@@ -229,12 +230,15 @@
     <ClInclude Include="source\BaseEngine\Loader\Model.h" />
     <ClInclude Include="source\BaseEngine\Shaders\SkyBoxShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\TerrainGeometryPassShader.h" />
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowBox.h" />
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h" />
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h" />
+    <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h" />
     <ClInclude Include="source\TestGame\Player.h" />
     <ClInclude Include="source\BaseEngine\Engine\Scene.h" />
     <ClInclude Include="source\BaseEngine\Shaders\ShaderProgram.h" />
     <ClInclude Include="source\BaseEngine\Terrain\Terrain.h" />
     <ClInclude Include="source\BaseEngine\Renderers\TerrainRenderer.h" />
-    <ClInclude Include="source\BaseEngine\Terrain\TerrainShader.h" />
     <ClInclude Include="source\TestGame\Test_MainMenu.h" />
     <ClInclude Include="source\TestGame\Test_Scene.h" />
     <ClInclude Include="source\BaseEngine\Camera\ThridPersonCamera.h" />

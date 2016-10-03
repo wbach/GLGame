@@ -61,26 +61,26 @@ public:
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
 
-		//terrains.push_back( CTerrain(loader, terrainTexturePath + "heightmap.png", -1, -1, loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-		//	loader.LoadTexture(terrainTexturePath + "grass.bmp"), loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "156.JPG"), loader.LoadTexture(terrainTexturePath + "156.JPG"),
-		//	loader.LoadTexture(terrainTexturePath + "sand.jpg"), loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "177.JPG"), loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		//));
+		m_Terrains.push_back( CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
+			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
+		));
 
-		//terrains.push_back(CTerrain(loader, terrainTexturePath + "heightmap.png", 0, -1, loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-		//	loader.LoadTexture(terrainTexturePath + "grass.bmp"), loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "156.JPG"), loader.LoadTexture(terrainTexturePath + "156.JPG"),
-		//	loader.LoadTexture(terrainTexturePath + "sand.jpg"), loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "177.JPG"), loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		//));
+		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", 0, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
+			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
+		));
 
-		//terrains.push_back(CTerrain(loader, terrainTexturePath + "heightmap.png", -1, 0, loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-		//	loader.LoadTexture(terrainTexturePath + "grass.bmp"), loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "156.JPG"), loader.LoadTexture(terrainTexturePath + "156.JPG"),
-		//	loader.LoadTexture(terrainTexturePath + "sand.jpg"), loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-		//	loader.LoadTexture(terrainTexturePath + "177.JPG"), loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		//));
+		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
+			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
+			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
+		));
 
 	/*	shared_ptr<CEntity> barrel;
 		barrel = make_shared<CEntity>(createPositionVector(56, 47));
@@ -123,8 +123,7 @@ public:
 		{		
 			AddEntity(fbx_test);
 			
-		}*/
-		
+		}*/		
 
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(0.05));
 		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true));
@@ -136,8 +135,8 @@ public:
 		AddEntity(songo);
 	
 
-		setThridCamera();
-		//setFirstCamera();
+		//setThridCamera();
+		setFirstCamera();
 	//	camera->attachToObject();
 
 		m_DirLight = CLight(glm::vec3(0.5));
@@ -154,7 +153,7 @@ public:
 	void setFirstCamera(){
 		//songo->getReferencedPosition(), songo->getReferencedRotation()
         m_Camera.reset();
-		m_Camera = make_shared<CFirstPersonCamera>();
+		m_Camera = make_shared<CFirstPersonCamera>(&m_Game.GetInputManager(), &m_Game.GetDisplayManager());
 		m_Camera->SetPosition(CreatePositionVector(songo->GetPositionXZ(),10));
 		m_Camera->SetPitch(5.6f);
 		m_Camera->SetYaw(94.0f);
@@ -163,8 +162,8 @@ public:
 		m_Camera.reset();
 		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(),songo->GetReferencedPosition(), songo->GetReferencedRotation());
 	}
-	int Update() override{
-
+	int Update() override
+	{
 		if ( m_Game.GetDisplayManager().CheckActiveWindow() && !m_Game.GetInputManager().GetKey(KeyCodes::LCTRL) )
 		{
 			m_Camera->CalculateInput();
@@ -175,7 +174,7 @@ public:
 			m_Game.GetDisplayManager().ShowCoursor(true);
 		}
 		m_Camera->Move();
-
+		
 
 		float dt = m_Game.GetDisplayManager().GetDeltaTime();
 		songo->calculateMove(dt);
@@ -187,37 +186,12 @@ public:
 			return 2;
 
 		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
-		//m_Loader.m_Models[m_test_fbx_model_id]->Update(m_Game.GetDisplayManager().GetDeltaTime());
 
-//		m9->setPosition(songo->getPosition() + glm::vec3(0, 7.5, 0));
-//		m9->setRotation(songo->getRotation()+ glm::vec3(camera->getPitch(),0,0));
-
-	/*	switch (event.type)
-		{
-		case SDL_KEYDOWN:
-			switch (event.key.keysym.sym)
-			{
-			case SDLK_F1: cout << "Camera position : " << Utils::ToString(m_Camera->GetPosition()); break;
-			case SDLK_F2: cout << "Camera angles : " << m_Camera->GetPitch() << " " << m_Camera->GetYaw() << " " << m_Camera->GetRoll() << endl; break;
-            case SDLK_F3: thridCamera = !thridCamera; thridCamera ? setThridCamera() : setFirstCamera(); break;
-			}
-			break;
-		case SDL_MOUSEWHEEL:
-			if (event.wheel.y == 1)
-			{
-				m_Camera->CalculateZoom(-1);
-			}
-			else if (event.wheel.y == -1)
-			{
-				m_Camera->CalculateZoom(1);
-			}break;
-		
-		break;
-		}
-		event = SDL_Event(); */
+		LockCameraUnderTerrain();
 		return 0;
 	}
-	int CleanUp() override{
+	int CleanUp() override
+	{
 		m_Loader.CleanUp();
 		for (unsigned int x = 0; x < m_Terrains.size(); x++) {
 			m_Terrains[x].CleanUp();
@@ -230,6 +204,18 @@ public:
 		m_Lights.clear();
 		m_Camera.reset();
 		return 0;
+	}
+	void LockCameraUnderTerrain()
+	{
+		glm::vec2 camera_position = glm::vec2(m_Camera->GetPosition().x, m_Camera->GetPosition().z);
+		int tnr = TerrainNumber(camera_position);
+		if (tnr >= 0)
+		{
+			float height = m_Terrains[tnr].GetHeightofTerrain(camera_position.x, camera_position.y);
+			if (m_Camera->GetPosition().y > height) return;
+			m_Camera->SetPosition(glm::vec3(camera_position.x, height + .1f, camera_position.y));
+			m_Camera->UpdateViewMatrix();
+		}
 	}
 	const glm::mat4& GetViewMatrix() override { return m_Camera->GetViewMatrix(); }
 };

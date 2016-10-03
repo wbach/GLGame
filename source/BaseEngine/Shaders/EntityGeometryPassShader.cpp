@@ -2,7 +2,7 @@
 
 void CEntityGeometryPassShader::Init()
 {
-	InitShaderProgram("Data/Shaders/EntityGeometryPassShader.vert", "Data/Shaders/EntityGeometryPassShader.frag");
+	InitShaderProgram("Data/Shaders/Entity/EntityGeometryPassShader.vert", "Data/Shaders/Entity/EntityGeometryPassShader.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();
@@ -18,7 +18,10 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 	//Textures
 	location_ModelTexture	= GetUniformLocation("gColorMap");
 	location_NormalMap		= GetUniformLocation("NormalMap");
-	location_ShadowMap		= GetUniformLocation("ShadowMap");
+
+	//Shadows
+	location_ShadowMap		  = GetUniformLocation("ShadowMap");
+	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
 
 	//Mesh Material
 	location_MaterialAmbient  = GetUniformLocation("ModelMaterial.m_Ambient");
@@ -62,4 +65,8 @@ void CEntityGeometryPassShader::LoadMeshMaterial(const SMaterial& material) cons
 	LoadValue(location_MaterialAmbient, material.ambient);
 	LoadValue(location_MaterialDiffuse, material.diffuse);
 	LoadValue(location_MaterialSpecular, material.specular);
+}
+void CEntityGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4 & matrix) const
+{
+	LoadValue(location_ToShadowMapSpace, matrix);
 }

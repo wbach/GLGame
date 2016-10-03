@@ -102,6 +102,11 @@ int CInputGLFW::KeyToGlfw(int key)
 	if (key == KeyCodes::ENTER) return GLFW_KEY_ENTER;
 	if (key == KeyCodes::SPACE) return GLFW_KEY_SPACE;
 	if (key == KeyCodes::ESCAPE) return GLFW_KEY_ESCAPE;
+
+	if (key == KeyCodes::LARROW) return GLFW_KEY_LEFT;
+	if (key == KeyCodes::RARROW) return GLFW_KEY_RIGHT;
+	if (key == KeyCodes::UARROW) return GLFW_KEY_UP;
+	if (key == KeyCodes::DARROW) return GLFW_KEY_DOWN;
 	return 0;
 }
 

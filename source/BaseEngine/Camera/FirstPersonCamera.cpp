@@ -1,22 +1,26 @@
 #include "FirstPersonCamera.h"
 
-CFirstPersonCamera::CFirstPersonCamera()
+CFirstPersonCamera::CFirstPersonCamera(CInputManager *input_manager, CDisplayManager *display_manager)
 : m_LookPosition(zero)
 , m_LookRotation(zero)
 , m_Mousevel(0.2f)
-, m_Movevel(1.0f)
+, m_Movevel(25.0f)
 , m_IsFreeCamera(true)
+, m_InputManager(input_manager)
+, m_DisplayManager(display_manager)
 {
 	m_Pitch = 9;
 	m_Yaw	= 100;
 }
 
-CFirstPersonCamera::CFirstPersonCamera(glm::vec3& position_entity, glm::vec3& rotation_entity)
+CFirstPersonCamera::CFirstPersonCamera(CInputManager *input_manager, CDisplayManager *display_manager, glm::vec3& position_entity, glm::vec3& rotation_entity)
 : m_LookPosition(position_entity)
 , m_LookRotation(rotation_entity)
 , m_Mousevel(0.2f)
-, m_Movevel(1.0f)
+, m_Movevel(25.0f)
 , m_IsFreeCamera(false)
+, m_InputManager(input_manager)
+, m_DisplayManager(display_manager)
 {
 	m_Pitch = 9.0f;
 	m_Yaw	= 100.0f;
@@ -52,10 +56,10 @@ void CFirstPersonCamera::Move()
 
 	//if (SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS)
 	//{
-	//	glm::vec2 dmove  = CalcualteMouseMove(win);
-	//	m_Yaw			-= dmove.x;
-	//	m_Pitch			-= dmove.y;
-	//	LockCamera();
+		glm::vec2 dmove  = CalcualteMouseMove();
+		m_Yaw			-= dmove.x;
+		m_Pitch			-= dmove.y;
+		LockCamera();
 	//}
 	//else
 	//{
@@ -64,25 +68,26 @@ void CFirstPersonCamera::Move()
 
 	//const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	//if (state[SDL_SCANCODE_UP])
-	//{
-	//	if(m_Pitch != 90 && m_Pitch != -90)
-	//		MoveCamera(m_Movevel, 0.0);
-	//	MoveCameraUp(m_Movevel, 0.0);
-	//}else if (state[SDL_SCANCODE_DOWN])
-	//{
-	//	if (m_Pitch != 90 && m_Pitch != -90)
-	//		MoveCamera(m_Movevel, 180.0);
-	//	MoveCameraUp(m_Movevel, 180.0);
-	//}
-	//if (state[SDL_SCANCODE_LEFT])
-	//{
-	//	MoveCamera(-m_Movevel, 90.0);
-	//}
-	//else if (state[SDL_SCANCODE_RIGHT])
-	//{
-	//	MoveCamera(-m_Movevel, 270);
-	//}
+	float move_velocity = m_Movevel * m_DisplayManager->GetDeltaTime();
+	if (m_InputManager->GetKey(KeyCodes::UARROW) )
+	{
+		if(m_Pitch != 90 && m_Pitch != -90)
+			MoveCamera(move_velocity, 0.0);
+		MoveCameraUp(move_velocity, 0.0);
+	}else if (m_InputManager->GetKey(KeyCodes::DARROW))
+	{
+		if (m_Pitch != 90 && m_Pitch != -90)
+			MoveCamera(move_velocity, 180.0);
+		MoveCameraUp(move_velocity, 180.0);
+	}
+	if (m_InputManager->GetKey(KeyCodes::LARROW))
+	{
+		MoveCamera(-move_velocity, 90.0);
+	}
+	else if (m_InputManager->GetKey(KeyCodes::RARROW))
+	{
+		MoveCamera(-move_velocity, 270);
+	}
 	this->UpdateViewMatrix();
 }
 void CFirstPersonCamera::AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) {
@@ -92,19 +97,8 @@ void CFirstPersonCamera::AttachToObject(glm::vec3& position_entity, glm::vec3& r
 }
 glm::vec2 CFirstPersonCamera::CalcualteMouseMove()
 {
-	//int mid_x = 320;
-	//int mid_y = 240;
-	//SDL_ShowCursor(SDL_DISABLE);
-
-	//int tmp_x,tmp_y;
-	//SDL_GetMouseState(&tmp_x, &tmp_y);
-
-	//glm::vec2 d_move ;
-	//d_move.x = m_Mousevel*(mid_x - tmp_x);
-	//d_move.y = m_Mousevel*(mid_y - tmp_y);
-
-	//SDL_WarpMouseInWindow(win, mid_x, mid_y);
-	return glm::vec2() ;
+	glm::vec2 d_move = m_InputManager->CalcualteMouseMove() * m_Mousevel;
+	return d_move;
 }
 
 void CFirstPersonCamera::MoveCamera(float dist, float dir)
