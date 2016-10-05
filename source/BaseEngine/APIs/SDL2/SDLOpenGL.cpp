@@ -1,9 +1,9 @@
 #include "SDLOpenGL.h"
 
-void CSdlOpenGlApi::CreateWindow(std::string window_name, int width, int height)
+void CSdlOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
-	unsigned int flags = SDL_WINDOW_OPENGL;// | SDL_WINDOW_BORDERLESS;
+	unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
 	if (!(m_Window = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags)))
 	{
 	//	cout << "failed to create window\n";
@@ -76,7 +76,7 @@ void CSdlOpenGlApi::LockFps(float fps)
 	if (static_cast<Uint32>(1000.0f / fps ) > SDL_GetTicks() - m_StartTime)  SDL_Delay(static_cast<Uint32>(1000.0f / fps ) - (SDL_GetTicks() - m_StartTime));
 }
 
-int CSdlOpenGlApi::PeekMessage()
+int CSdlOpenGlApi::PeekMessages()
 {	
 	BeginFrame();
 	while (SDL_PollEvent(&m_Event))

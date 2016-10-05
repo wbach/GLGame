@@ -16,9 +16,10 @@ class CScene
 {
 public:
 	CScene(CGame& game);
-	void AddTerrain(CTerrain terrain) { m_Terrains.push_back(terrain); }
-	void AddEntity(shared_ptr<CEntity> entity) { m_Entities.push_back(entity); }
-
+	void AddTerrain(CTerrain& terrain);
+	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
+	void AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity);
+	shared_ptr<CEntity> CreateEntityFromFile(string file_name, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
 
 	const vector<shared_ptr<CEntity>>& GetEntities() const;
 	const vector<CTerrain>& GetTerrains() const;

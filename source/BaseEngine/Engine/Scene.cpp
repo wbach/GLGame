@@ -5,6 +5,50 @@ CScene::CScene(CGame& game)
 {
 }
 
+void CScene::AddTerrain(CTerrain & terrain) 
+{ 
+	if (terrain.GetName().size() <=0 || terrain.GetName().compare("No name terrain") == 0)
+		terrain.SetName(string("Terrain_") + to_string(m_Terrains.size() ));
+	m_Terrains.push_back(terrain); 
+}
+
+void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
+{ 
+	if (direct)
+	{
+		m_Entities.push_back(entity);
+		return;
+	}
+	int tnr = TerrainNumber(entity->GetPositionXZ());
+
+	if (tnr >= 0)
+		m_Terrains[tnr].AddTerrainEntity(entity);
+	else
+		m_Entities.push_back(entity);
+
+}
+
+void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity)
+{
+	parent->AddSubbEntity(entity);
+}
+
+shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+{
+	shared_ptr<CEntity> new_entity;
+	new_entity = make_shared<CEntity>(CreatePositionVector(pos.x, pos.y, pos.z), rot, scale);
+	new_entity->AddModel(m_Loader.LoadMesh(file_name));
+
+	std::string name = file_name.substr(file_name.find_last_of('\\') + 1);
+	if (name.compare(file_name) == 0)
+		name = file_name.substr(file_name.find_last_of('/') + 1);
+	if (name.compare(file_name) == 0)
+		name = "No name";
+	new_entity->SetName(name);
+
+	return new_entity;
+}
+
 const vector<shared_ptr<CEntity>>& CScene::GetEntities() const
 {
 	return m_Entities;

@@ -17,9 +17,10 @@ CGame::CGame()
 	ReadConfiguration("./Data/Conf.ini");
 }
 
-void CGame::Initialize()
+void CGame::Initialize(std::shared_ptr<CApi> api)
 {	
-	m_DisplayManager.Initialize(m_WindowName, API::GLFW3, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	m_DisplayManager.SetApi(api);
+	m_DisplayManager.Initialize(m_WindowName, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
 	CreateProjectionMatrix();
 
@@ -30,7 +31,8 @@ void CGame::Initialize()
 	m_DisplayManager.SetRefreshRate(m_RefreshRate);
 
 	//renderStartSeries();
-	
+	LoadScene();
+	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);	
 }
 void CGame::Uninitialize()
 {
@@ -41,11 +43,12 @@ void CGame::Uninitialize()
 	m_DisplayManager.Uninitialize();
 	m_MasterRenderer.CleanUp();
 }
+void CGame::SetWindowSize(glm::vec2 size)
+{
+	m_WindowSize = size;
+}
 void CGame::GameLoop()
 {	
-	LoadScene();
-	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);
-
 	int api_message = ApiMessages::NONE;	
 
     string loading_text = "FPS : ";
@@ -109,7 +112,7 @@ void CGame::LoadScene()
 
 	//loading_thread.join();
 }
-float CGame::Fade(Uint32 delta_time)
+float CGame::Fade(float delta_time)
 {
 	bool change = false;
 	float alpha = 0.0;
@@ -132,7 +135,7 @@ float CGame::Fade(Uint32 delta_time)
 
 	return alpha;
 }
-float CGame::FadeIn(Uint32 delta_time, Uint32 start_time, Uint32 durration)
+float CGame::FadeIn(float delta_time, float start_time, float durration)
 {
 	float alpha = 0.0;
 	alpha = (static_cast<float>(delta_time) - static_cast<float>(start_time)) / static_cast<float>(durration);
@@ -140,7 +143,7 @@ float CGame::FadeIn(Uint32 delta_time, Uint32 start_time, Uint32 durration)
 		alpha = 1.0;
 	return alpha;
 }
-float CGame::FadeOut(Uint32 delta_time, Uint32 start_time, Uint32 durration)
+float CGame::FadeOut(float delta_time, float start_time, float durration)
 {
 	float alpha = 0.0;
 	alpha = ((static_cast<float>(start_time + durration) - static_cast<float>(delta_time)) / static_cast<float>(durration));
@@ -222,199 +225,203 @@ int CGame::ReadConfiguration(string file_name)
 	//fclose(f);
 	return 0;
 }
+shared_ptr<CScene>& CGame::GetCurrentScene()
+{
+	return m_CurrScene;
+}
 void CGame::RenderStartSeries()
 {
-	vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0 };
-	vector<float> text_coords = {
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0 };
-	vector<unsigned int>indices = { 0, 1, 3, 3, 1, 2 };
+	//vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0 };
+	//vector<float> text_coords = {
+	//	0, 0,
+	//	0, 1,
+	//	1, 1,
+	//	1, 0 };
+	//vector<unsigned int>indices = { 0, 1, 3, 3, 1, 2 };
 
-	GLuint vao		   = Utils::CreateVao();
-	GLuint i_vbo	   = Utils::BindIndicesBuffer(indices);
-	GLuint vbo_id	   = Utils::StoreDataInAttributesList(0, 3, vertex);
-	GLuint vbo_text_id = Utils::StoreDataInAttributesList(1, 2, text_coords);
-	Utils::UnbindVao();
-	m_LoadingShader.Init();
+	//GLuint vao		   = Utils::CreateVao();
+	//GLuint i_vbo	   = Utils::BindIndicesBuffer(indices);
+	//GLuint vbo_id	   = Utils::StoreDataInAttributesList(0, 3, vertex);
+	//GLuint vbo_text_id = Utils::StoreDataInAttributesList(1, 2, text_coords);
+	//Utils::UnbindVao();
+	//m_LoadingShader.Init();
 
-	GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/start1.png",true);
-	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
+	//GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/start1.png",true);
+	//glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
 
-	Uint32 start,start2 = SDL_GetTicks();
+	//Uint32 start,start2 = SDL_GetTicks();
 
-	Uint32 delta_time;
-	while (1) 
-	{
-		delta_time = SDL_GetTicks() - start2;
-		if (delta_time > 6000) break;
-		start = SDL_GetTicks();
+	//Uint32 delta_time;
+	//while (1) 
+	//{
+	//	delta_time = SDL_GetTicks() - start2;
+	//	if (delta_time > 6000) break;
+	//	start = SDL_GetTicks();
 
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-		glClearColor(0, 0, 0, 1);
+	//	glEnable(GL_DEPTH_TEST);
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	//	glClearColor(0, 0, 0, 1);
 
-		m_LoadingShader.Start();
+	//	m_LoadingShader.Start();
 
-		if (delta_time > 500 && delta_time < 2500) {
-			m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 500, 2000));
-		}
-		if (delta_time > 4000) {
-			m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 4000, 2000));
-		}
+	//	if (delta_time > 500 && delta_time < 2500) {
+	//		m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 500, 2000));
+	//	}
+	//	if (delta_time > 4000) {
+	//		m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 4000, 2000));
+	//	}
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		m_LoadingShader.LoadTransformMatrix(transformation_matrix);
-		glBindVertexArray(vao);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
-		m_LoadingShader.Stop();
-		m_DisplayManager.Update();
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, texture);
+	//	m_LoadingShader.LoadTransformMatrix(transformation_matrix);
+	//	glBindVertexArray(vao);
+	//	glEnableVertexAttribArray(0);
+	//	glEnableVertexAttribArray(1);
+	//	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	//	glDisableVertexAttribArray(1);
+	//	glDisableVertexAttribArray(0);
+	//	glBindVertexArray(0);
+	//	m_LoadingShader.Stop();
+	//	m_DisplayManager.Update();
 
-		if ( static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
-	}
-	m_LoadingShader.Stop();
-	m_LoadingShader.CleanUp();
-	glDeleteTextures(1, &texture);
-	glDeleteBuffers(1, &i_vbo);
-	glDeleteBuffers(1, &vbo_id);
-	glDeleteBuffers(1, &vbo_text_id);
-	glDeleteVertexArrays(1, &vao);
+	//	if ( static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
+	//}
+	//m_LoadingShader.Stop();
+	//m_LoadingShader.CleanUp();
+	//glDeleteTextures(1, &texture);
+	//glDeleteBuffers(1, &i_vbo);
+	//glDeleteBuffers(1, &vbo_id);
+	//glDeleteBuffers(1, &vbo_text_id);
+	//glDeleteVertexArrays(1, &vao);
 }
 void CGame::InitializeScene()
 {
 //	SDL_GLContext gl_loading_context = SDL_GL_CreateContext(m_DisplayManager.GetWindow());
-	CGUIRenderer grenderer;
-	grenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	//CGUIRenderer grenderer;
+	//grenderer.Init(static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 
-	SDL_Event event;
-	float green = 1.0f;
-	float value = 0.01f;
+	//SDL_Event event;
+	//float green = 1.0f;
+	//float value = 0.01f;
 
-	vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0};
-	vector<float> text_coords = {
-		0, 0,
-		0, 1,
-		1, 1,
-		1, 0};
-	vector<unsigned int> indices = {0, 1, 3, 3, 1, 2};
+	//vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0};
+	//vector<float> text_coords = {
+	//	0, 0,
+	//	0, 1,
+	//	1, 1,
+	//	1, 0};
+	//vector<unsigned int> indices = {0, 1, 3, 3, 1, 2};
 
-	GLuint vao			= Utils::CreateVao();
-	GLuint i_vbo		= Utils::BindIndicesBuffer(indices);
-	GLuint vbo_id		= Utils::StoreDataInAttributesList(0, 3, vertex);
-	GLuint vbo_text_id  = Utils::StoreDataInAttributesList(1, 2, text_coords);
-	Utils::UnbindVao();
-	m_LoadingShader.Init();
+	//GLuint vao			= Utils::CreateVao();
+	//GLuint i_vbo		= Utils::BindIndicesBuffer(indices);
+	//GLuint vbo_id		= Utils::StoreDataInAttributesList(0, 3, vertex);
+	//GLuint vbo_text_id  = Utils::StoreDataInAttributesList(1, 2, text_coords);
+	//Utils::UnbindVao();
+	//m_LoadingShader.Init();
 
-	GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/circle2.png");
-	m_CurrScene->GetLoader().m_Textures.clear();
-	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(0.25));
+	//GLuint texture = m_CurrScene->GetLoader().LoadTexture("Data/GUI/circle2.png");
+	//m_CurrScene->GetLoader().m_Textures.clear();
+	//glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(0.25));
 
-	string loading_text = "Loading";
-	vector<CGUIText> texts;
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.15,-0.25), 2, glm::vec3(1, 1, 1)));
+	//string loading_text = "Loading";
+	//vector<CGUIText> texts;
+	//texts.push_back(CGUIText(loading_text, glm::vec2(-0.15,-0.25), 2, glm::vec3(1, 1, 1)));
 
-	Uint32 xx = 0;
+	//Uint32 xx = 0;
 
-	Uint32 start, start2 = SDL_GetTicks();
+	//Uint32 start, start2 = SDL_GetTicks();
 
-	Uint32 delta_time;
+	//Uint32 delta_time;
 
-	int numPtr = 0;
+	//int numPtr = 0;
 
-	bool ending_fade = false;
-	while (1)
-	{
-		start = SDL_GetTicks();
-		delta_time = SDL_GetTicks() - start2;
+	//bool ending_fade = false;
+	//while (1)
+	//{
+	//	start = SDL_GetTicks();
+	//	delta_time = SDL_GetTicks() - start2;
 
-		glEnable(GL_DEPTH_TEST);
-		glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	//	glClearColor(backgroundColour.x, green, backgroundColour.z, 1);
-		glClearColor(0, 0, 0, 1);
+	//	glEnable(GL_DEPTH_TEST);
+	//	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	////	glClearColor(backgroundColour.x, green, backgroundColour.z, 1);
+	//	glClearColor(0, 0, 0, 1);
 
-		m_LoadingShader.Start();
+	//	m_LoadingShader.Start();
 
-		if (delta_time > 0 && delta_time < 2000)
-		{
-			m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 0, 1500));
-		}
+	//	if (delta_time > 0 && delta_time < 2000)
+	//	{
+	//		m_LoadingShader.LoadAlphaValue(FadeIn(delta_time, 0, 1500));
+	//	}
 
-		if (!m_IsLoading)
-		{
-			m_IsLoading = true;
-			ending_fade = true;
-			start2 = SDL_GetTicks();
-			delta_time = SDL_GetTicks() - start2;
-		}
-		if (ending_fade)
-		{
-			if (delta_time > 2000) break;
-			m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 0, 2000));
-		}
+	//	if (!m_IsLoading)
+	//	{
+	//		m_IsLoading = true;
+	//		ending_fade = true;
+	//		start2 = SDL_GetTicks();
+	//		delta_time = SDL_GetTicks() - start2;
+	//	}
+	//	if (ending_fade)
+	//	{
+	//		if (delta_time > 2000) break;
+	//		m_LoadingShader.LoadAlphaValue(FadeOut(delta_time, 0, 2000));
+	//	}
 
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		transformation_matrix *= glm::rotate(-1.0f, 0.0f, 0.0f, 1.0f);
-		m_LoadingShader.LoadTransformMatrix(transformation_matrix);
-		glBindVertexArray(vao);
-		glEnableVertexAttribArray(0);
-		glEnableVertexAttribArray(1);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		glDisableVertexAttribArray(1);
-		glDisableVertexAttribArray(0);
-		glBindVertexArray(0);
+	//	glActiveTexture(GL_TEXTURE0);
+	//	glBindTexture(GL_TEXTURE_2D, texture);
+	//	transformation_matrix *= glm::rotate(-1.0f, 0.0f, 0.0f, 1.0f);
+	//	m_LoadingShader.LoadTransformMatrix(transformation_matrix);
+	//	glBindVertexArray(vao);
+	//	glEnableVertexAttribArray(0);
+	//	glEnableVertexAttribArray(1);
+	//	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	//	glDisableVertexAttribArray(1);
+	//	glDisableVertexAttribArray(0);
+	//	glBindVertexArray(0);
 
-		while (SDL_PollEvent(&event))
-		{
-			switch (event.type)
-			{
-			case SDL_QUIT: m_IsLoading = false; break;
-			case SDL_KEYDOWN:
-				switch (event.key.keysym.sym)
-				{
-				case SDLK_F9: m_DisplayManager.SetFullScreen(true); break;
-				case SDLK_ESCAPE: m_IsLoading = false; break;
-				}
-				break;
-			}
-		}
-		/*green += value;
-		if (green > 1.0 || green < 0) value = -value;*/
-		//grenderer.render(currScene->getGUI().guiTextures);
-		grenderer.RenderText(texts);
-		m_DisplayManager.Update();
+	//	while (SDL_PollEvent(&event))
+	//	{
+	//		switch (event.type)
+	//		{
+	//		case SDL_QUIT: m_IsLoading = false; break;
+	//		case SDL_KEYDOWN:
+	//			switch (event.key.keysym.sym)
+	//			{
+	//			case SDLK_F9: m_DisplayManager.SetFullScreen(true); break;
+	//			case SDLK_ESCAPE: m_IsLoading = false; break;
+	//			}
+	//			break;
+	//		}
+	//	}
+	//	/*green += value;
+	//	if (green > 1.0 || green < 0) value = -value;*/
+	//	//grenderer.render(currScene->getGUI().guiTextures);
+	//	grenderer.RenderText(texts);
+	//	m_DisplayManager.Update();
 
-		if ( start - xx > 500) 
-		{
-			xx = start;
-			numPtr++;
-			loading_text += ".";
-			if (numPtr > 3) {
-				loading_text = "Loading";
-				numPtr = 0;
-			}
-			texts[0].updateText(loading_text);
-		}
+	//	if ( start - xx > 500) 
+	//	{
+	//		xx = start;
+	//		numPtr++;
+	//		loading_text += ".";
+	//		if (numPtr > 3) {
+	//			loading_text = "Loading";
+	//			numPtr = 0;
+	//		}
+	//		texts[0].updateText(loading_text);
+	//	}
 
 
-		if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
-	}
-	m_LoadingShader.Stop();
-	m_LoadingShader.CleanUp();
-	glDeleteTextures(1, &texture);
-	glDeleteBuffers(1, &i_vbo);
-	glDeleteBuffers(1, &vbo_id);
-	glDeleteBuffers(1, &vbo_text_id);
-	glDeleteVertexArrays(1, &vao);
+	//	if (static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) > SDL_GetTicks() - start)  SDL_Delay(static_cast<Uint32>(1000.0f / m_DisplayManager.GetFPSCap()) - (SDL_GetTicks() - start));
+	//}
+	//m_LoadingShader.Stop();
+	//m_LoadingShader.CleanUp();
+	//glDeleteTextures(1, &texture);
+	//glDeleteBuffers(1, &i_vbo);
+	//glDeleteBuffers(1, &vbo_id);
+	//glDeleteBuffers(1, &vbo_text_id);
+	//glDeleteVertexArrays(1, &vao);
 
-	grenderer.CleanUP();
+	//grenderer.CleanUP();
 //	SDL_GL_DeleteContext(gl_loading_context);
 }
 

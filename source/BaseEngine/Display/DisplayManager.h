@@ -1,21 +1,10 @@
 #pragma once
 #include "../Engine/OpenGLRenderer.h"
-#include "SDLOpenGL.h"
-#include "GLFW3_OpenGL.h"
 #include <iostream>
 #include <thread>
 #include "glm/glm.hpp"
 #include "../Input/Input.h"
 using namespace std;
-namespace API
-{
-	enum 
-	{
-		SDL2 = 0,
-		GLFW3,
-		GLUT
-	};
-}
 namespace Renderer
 {
 	enum
@@ -27,7 +16,7 @@ namespace Renderer
 class CDisplayManager 
 {
 public:
-	int Initialize(string window_name, int api, int renderer, int w, int h);
+	int Initialize(string window_name, int renderer, int w, int h);
 	int PeekMessage();
 	void Update();
 	void Uninitialize();
@@ -46,6 +35,7 @@ public:
 	void ShowCoursor(bool show);
 	bool CheckActiveWindow();
 
+	void SetApi(std::shared_ptr<CApi> api);
 	void SetInput(std::shared_ptr<CInput>&);
 
 	bool& GetSync() { return m_Sync; }
@@ -55,7 +45,7 @@ private:
 
 	double m_LastFrameTime;
 	double m_Delta;
-	Uint32 m_CurrentTime, m_PreviousTime;
+	float m_CurrentTime, m_PreviousTime;
 	float m_FrameCount, m_Fps;
 
 	int m_FPS_CAP;

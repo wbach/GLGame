@@ -54,12 +54,13 @@ void CFirstPersonCamera::Move()
 	//	return;
 	//}
 
-	//if (SDL_GetWindowFlags(win) & SDL_WINDOW_INPUT_FOCUS)
-	//{
-		glm::vec2 dmove  = CalcualteMouseMove();
-		m_Yaw			-= dmove.x;
-		m_Pitch			-= dmove.y;
+	if (m_InputManager->GetMouseKey(KeyCodes::LMOUSE))
+	{
+		glm::vec2 dmove = CalcualteMouseMove();
+		m_Yaw -= dmove.x;
+		m_Pitch -= dmove.y;
 		LockCamera();
+	}
 	//}
 	//else
 	//{

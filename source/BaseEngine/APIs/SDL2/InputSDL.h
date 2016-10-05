@@ -1,5 +1,5 @@
 #pragma once
-#include "Input.h"
+#include "../../Input/Input.h"
 #include <SDL2/SDL.h>
 
 class CInputSDL : public CInput

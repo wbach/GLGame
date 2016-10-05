@@ -41,6 +41,8 @@ public:
 	glm::vec3& GetReferencedRotation(unsigned int i = 0);
 	glm::vec3& GetReferencedScale(unsigned int i = 0);
 	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
+	void SetName(std::string name) { m_Name = name; }
+	const string& GetName() const{ return m_Name; }
 
 protected:
 	vector<glm::mat4>			m_TransformMatrixes;

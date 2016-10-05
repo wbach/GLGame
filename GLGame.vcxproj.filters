@@ -111,9 +111,6 @@
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp">
       <Filter>Source Files\Entity</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\Input\InputSDL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="source\BaseEngine\Input\InputManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -130,15 +127,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseEngine\Display\GLFW3_OpenGL.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="source\BaseEngine\Input\InputGLFW.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp">
@@ -193,6 +181,21 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\APIs\GLFW3\InputGLFW.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\APIs\SDL2\InputSDL.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Editor\SceneEditor.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -269,25 +272,10 @@
     <ClInclude Include="source\BaseEngine\Input\InputManager.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\BaseEngine\Input\InputSDL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="source\BaseEngine\Input\Input.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Display\Api.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Display\SDLOpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Display\GLFW3_OpenGL.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\Input\InputGLFW.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Engine\OpenGLRenderer.h">
@@ -356,9 +344,35 @@
     <ClInclude Include="source\BaseEngine\Entities\Entity.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\BaseEngine\APIs\Api.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\APIs\GLFW3\InputGLFW.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\APIs\SDL2\InputSDL.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Editor\SceneEditor.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="source\GLgame.vcxproj" />
     <None Include="source\GLgame.vcxproj.filters" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GLGame.rc">
+      <Filter>Resource Files</Filter>
+    </ResourceCompile>
   </ItemGroup>
 </Project>

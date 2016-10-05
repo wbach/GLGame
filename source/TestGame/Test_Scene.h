@@ -54,85 +54,50 @@ public:
 
 		string terrainTexturePath = "Data/Terrain/TerrainTextures/";//TdkWN.png
 
-		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
 			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
 
-		m_Terrains.push_back( CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+		AddTerrain( CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
 			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
 
-		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", 0, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", 0, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
 			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
 
-		m_Terrains.push_back(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
+		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
 			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
 			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
-
-	/*	shared_ptr<CEntity> barrel;
-		barrel = make_shared<CEntity>(createPositionVector(56, 47));
-		barrel->model_id = loader.AssimpLoad("Data/Meshes/Barrel/barrel.obj");
-		for (int x = -50; x < 50; x++) {
-			barrel->addTransform(Transform(createPositionVector(56, 47 + 10 * x)));
-		}
-		terrains[0].addTerrainEntity(barrel);*/
-
-
-		shared_ptr<CEntity> smallHause;
-		smallHause = make_shared<CEntity>(CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
-		smallHause->AddModel(m_Loader.LoadMesh("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj"));
-		int tnr = TerrainNumber(smallHause->GetPositionXZ());
-		if (tnr > 0)
-			m_Terrains[tnr].AddTerrainEntity(smallHause);
-		else
-			AddEntity(smallHause);
-
-
-		shared_ptr<CEntity> barrel;
-		barrel = make_shared<CEntity>(CreatePositionVector(86, 128), glm::vec3(0), glm::vec3(1));
-		barrel->AddModel(m_Loader.LoadMesh("Data/Meshes/Barrel/barrel.obj"));
-		tnr = TerrainNumber(barrel->GetPositionXZ());
-		if (tnr > 0)
-			m_Terrains[tnr].AddTerrainEntity(barrel);
-		else
-			AddEntity(barrel);
-
-
-		/*shared_ptr<CEntity> fbx_test;
-		fbx_test = make_shared<CEntity>(CreatePositionVector(86, 70), glm::vec3(0), glm::vec3(0.05));
-		fbx_test->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));
-		tnr = TerrainNumber(fbx_test->GetPositionXZ());
-		if (tnr > 0)
-		{
-			m_Terrains[tnr].AddTerrainEntity(fbx_test);
-		}
-		else
-		{		
-			AddEntity(fbx_test);
-			
-		}*/		
+		
+		shared_ptr<CEntity>  entity = CreateEntityFromFile("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj", glm::vec3(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
+		//AddSubEntity(entity)
+		AddEntity(entity);
+		shared_ptr<CEntity>  barrel = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(86, 128, 0));
+		AddSubEntity(entity, barrel);
+		shared_ptr<CEntity>  barrel2 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(100, 128, 0));
+		AddSubEntity(barrel, barrel2);
+		shared_ptr<CEntity>  barrel3 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(120, 128, 0));
+		AddSubEntity(barrel2, barrel3);
 
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(0.05));
+		songo->SetName("Player");
 		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true));
-		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));
-		
-	/*	m9 = make_shared<CEntity>(createPositionVector(86, 47,5), glm::vec3(-90,0,0), glm::vec3(0.25));
-		m9->model_id = loader.AssimpLoad("Data/Meshes/M4A1/M4A1.obj");
-		songo->addSubbEntity(m9);*/
-		AddEntity(songo);
+		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));		
+
+		AddEntity(songo, true);
 	
 
 		//setThridCamera();
@@ -146,8 +111,7 @@ public:
 		point_ligt_position.y += 10.f;
 		m_PointLight = CLight(point_ligt_position, glm::vec3(0.5f, .5f, 0.f), glm::vec3(0, 0.1, 0));
 		m_Lights.push_back(m_PointLight);
-
-
+		
 		return 0;
 	}
 	void setFirstCamera(){
@@ -167,11 +131,11 @@ public:
 		if ( m_Game.GetDisplayManager().CheckActiveWindow() && !m_Game.GetInputManager().GetKey(KeyCodes::LCTRL) )
 		{
 			m_Camera->CalculateInput();
-			m_Game.GetDisplayManager().ShowCoursor(false);
+			//m_Game.GetDisplayManager().ShowCoursor(false);
 		}
 		else
 		{
-			m_Game.GetDisplayManager().ShowCoursor(true);
+			//m_Game.GetDisplayManager().ShowCoursor(true);
 		}
 		m_Camera->Move();
 		

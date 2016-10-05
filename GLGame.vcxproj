@@ -123,7 +123,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tools\Windows\fbx_sdk\lib\vs2015\x86\release;.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -140,7 +140,7 @@
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Console</SubSystem>
-      <AdditionalDependencies>libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3;glfw3dll;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>comctl32.lib;libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3;glfw3dll;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tools\Windows\fbx_sdk\lib\vs2015\x86\release;.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
@@ -148,14 +148,14 @@
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
-    <ClCompile Include="source\BaseEngine\Display\GLFW3_OpenGL.cpp" />
+    <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\AssimpModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\EmptyLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\FbxModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\TextureLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\MasterRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp" />
-    <ClCompile Include="source\BaseEngine\Display\SDLOpenGL.cpp" />
+    <ClCompile Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\EnitityRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp" />
     <ClCompile Include="source\BaseEngine\Camera\FirstPersonCamera.cpp" />
@@ -166,9 +166,9 @@
     <ClCompile Include="source\BaseEngine\GUI\GUIShader.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUIText.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUITexture.cpp" />
-    <ClCompile Include="source\BaseEngine\Input\InputGLFW.cpp" />
+    <ClCompile Include="source\BaseEngine\APIs\GLFW3\InputGLFW.cpp" />
     <ClCompile Include="source\BaseEngine\Input\InputManager.cpp" />
-    <ClCompile Include="source\BaseEngine\Input\InputSDL.cpp" />
+    <ClCompile Include="source\BaseEngine\APIs\SDL2\InputSDL.cpp" />
     <ClCompile Include="source\BaseEngine\Lights\Light.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Loader.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\SkyBoxRenderer.cpp" />
@@ -181,6 +181,7 @@
     <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp" />
+    <ClCompile Include="source\Editor\SceneEditor.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Model.cpp" />
     <ClCompile Include="source\TestGame\Player.cpp" />
@@ -191,14 +192,15 @@
     <ClCompile Include="source\BaseEngine\Camera\ThridPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="resource.h" />
     <ClInclude Include="source\BaseEngine\Camera\Camera.h" />
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
-    <ClInclude Include="source\BaseEngine\Display\Api.h" />
+    <ClInclude Include="source\BaseEngine\APIs\Api.h" />
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h" />
-    <ClInclude Include="source\BaseEngine\Display\GLFW3_OpenGL.h" />
+    <ClInclude Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.h" />
     <ClInclude Include="source\BaseEngine\Engine\OpenGLRenderer.h" />
     <ClInclude Include="source\BaseEngine\Engine\Renderer.h" />
-    <ClInclude Include="source\BaseEngine\Display\SDLOpenGL.h" />
+    <ClInclude Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.h" />
     <ClInclude Include="source\BaseEngine\Entities\Entity.h" />
     <ClInclude Include="source\BaseEngine\Loader\AssimpModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />
@@ -217,9 +219,9 @@
     <ClInclude Include="source\BaseEngine\GUI\GUIText.h" />
     <ClInclude Include="source\BaseEngine\GUI\GUITexture.h" />
     <ClInclude Include="source\BaseEngine\Input\Input.h" />
-    <ClInclude Include="source\BaseEngine\Input\InputGLFW.h" />
+    <ClInclude Include="source\BaseEngine\APIs\GLFW3\InputGLFW.h" />
     <ClInclude Include="source\BaseEngine\Input\InputManager.h" />
-    <ClInclude Include="source\BaseEngine\Input\InputSDL.h" />
+    <ClInclude Include="source\BaseEngine\APIs\SDL2\InputSDL.h" />
     <ClInclude Include="source\BaseEngine\Lights\Light.h" />
     <ClInclude Include="source\BaseEngine\Loader\Loader.h" />
     <ClInclude Include="source\BaseEngine\Renderers\SkyBoxRenderer.h" />
@@ -234,6 +236,7 @@
     <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h" />
+    <ClInclude Include="source\Editor\SceneEditor.h" />
     <ClInclude Include="source\TestGame\Player.h" />
     <ClInclude Include="source\BaseEngine\Engine\Scene.h" />
     <ClInclude Include="source\BaseEngine\Shaders\ShaderProgram.h" />
@@ -248,6 +251,9 @@
   <ItemGroup>
     <None Include="source\GLgame.vcxproj" />
     <None Include="source\GLgame.vcxproj.filters" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="GLGame.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

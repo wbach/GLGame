@@ -1,5 +1,5 @@
 #pragma once
-#include "Input.h"
+#include "../../Input/Input.h"
 #include <GLFW/glfw3.h>
 
 class CInputGLFW : public CInput

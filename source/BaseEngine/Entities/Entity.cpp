@@ -81,22 +81,24 @@ const glm::mat4& CEntity::GetTransformMatrix(unsigned int i)
 }
 
 CEntity::CEntity()
+	: CEntity(glm::vec3(0))
 {
-	AddTransform(STransform());
 }
 
 CEntity::CEntity(glm::vec3 pos)
+	: CEntity(pos, glm::vec3(0))
 {
-	AddTransform(STransform(pos));
+
 }
 
 CEntity::CEntity(glm::vec3 pos, glm::vec3 rot)
+	: CEntity(pos, rot, glm::vec3(1))
 {
-	AddTransform(STransform(pos, rot));
 }
 
 CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 {
+	m_Name = "No name entity";
 	AddTransform(STransform(pos, rot, scale));
 }
 

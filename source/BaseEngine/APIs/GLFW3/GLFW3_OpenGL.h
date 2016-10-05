@@ -1,15 +1,16 @@
 #pragma once
 #define GLFW_DLL
-#include "Api.h"
+#include "../Api.h"
 #include <GLFW/glfw3.h>
-#include "../Input/Input.h"
+#include "InputGLFW.h"
+
 
 class CGlfwOpenGlApi : public CApi
 {
 public:
-	virtual void CreateWindow(std:: string window_name, int width, int height) override;
+	virtual void CreateOpenGLWindow(std:: string window_name, int width, int height) override;
 	virtual void CleanUp() override;
-	virtual int PeekMessage() override;
+	virtual int PeekMessages() override;
 	virtual void UpdateWindow() override;
 	virtual void SetFullScreen(bool full_screen) override;
 	virtual bool CheckActiveWindow() override;

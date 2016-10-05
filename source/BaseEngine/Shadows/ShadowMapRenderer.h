@@ -10,6 +10,7 @@ public:
 	CShadowMapRenderer();
 	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, int fov, int near_plane);
 	void Render(shared_ptr<CScene>& scene);
+	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity) const;
 	void SetShadowMapSize(float size);
 	void CleanUp();
 	const GLuint& GetShadowMap() const;

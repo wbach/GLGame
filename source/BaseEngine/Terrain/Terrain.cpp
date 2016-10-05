@@ -217,11 +217,13 @@ CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint 
 	m_GTexture[1] = g_normal_texture;
 	m_BTexture[1] = b_normal_texture;
 	GenerateTerrainMap(loader, height_map);
+
+	m_Name = "No name terrain";
 }
 
 CTerrain::CTerrain()
 {
-
+	m_Name = "No name terrain";
 }
 
 void CTerrain::CleanUp()

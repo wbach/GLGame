@@ -1,8 +1,6 @@
 #include "GLFW3_OpenGL.h"
-#include "../Input/Input.h"
-#include "../Input/InputGLFW.h"
 #include <thread>
-void CGlfwOpenGlApi::CreateWindow(std::string window_name, int width, int height)
+void CGlfwOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height)
 {
 	if (glfwInit() != 1)
 		exit(1);
@@ -16,6 +14,7 @@ void CGlfwOpenGlApi::CreateWindow(std::string window_name, int width, int height
 	GLFWmonitor* monitor = NULL;
 
 	m_Window = glfwCreateWindow(width, height, window_name.c_str(), monitor, NULL);
+
 
 	if (!m_Window)
 		exit(1);
@@ -115,7 +114,7 @@ void CGlfwOpenGlApi::SetCursorPosition(int x, int y)
 	glfwSetCursorPos(m_Window, x, y);
 }
 
-int CGlfwOpenGlApi::PeekMessage()
+int CGlfwOpenGlApi::PeekMessages()
 {
 	BeginFrame();
 	return glfwWindowShouldClose(m_Window);

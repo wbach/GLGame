@@ -76,9 +76,13 @@ public:
 	SElement* FindElement(int value ,bool &finded);
 	void SaveCorrectedFloraMap();
 
+	void SetName(std::string name) { m_Name = name; }
+	const string& GetName() const { return m_Name; }
 private:
 	float m_Size = 2000.0f;
 	float m_MaxHeight = 50.0f;	
+
+	string m_Name;
 
 	vector<SElement> m_ElementsMap;
 

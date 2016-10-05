@@ -1,7 +1,19 @@
 #include "EnitityRenderer.h"
 
 
-void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeometryPassShader& geomentry_shader) const
+void CEntityRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, const CEntityGeometryPassShader& geomentry_shader) const
+{
+	
+	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
+	RenderEntity(entity, *model, geomentry_shader);
+
+	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
+	{
+		RenderEntityRecursive(scene, subEntity, geomentry_shader);
+	}
+}
+
+void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeometryPassShader& geomentry_shader) const
 {
 	if (scene->GetEntities().size() <= 0) return;
 
@@ -9,25 +21,13 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const  CEntityGeom
 	{		
 		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
 		{
-			for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
-			{
-				shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
-				RenderEntity(subEntity, *subModel, geomentry_shader);
-			}
-			shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-			RenderEntity(entity, *model, geomentry_shader);
+			RenderEntityRecursive(scene, entity, geomentry_shader);			
 		}
 	}
 
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{
-		for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
-		{
-			shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
-			RenderEntity(subEntity, *subModel, geomentry_shader);
-		}
-		shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-		RenderEntity(entity, *model, geomentry_shader);
+		RenderEntityRecursive(scene, entity, geomentry_shader);
 	}
 }
 void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader) const

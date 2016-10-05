@@ -8,7 +8,7 @@ CTextureLoader::CTextureLoader(std::vector<STextInfo>& textures_vector)
 
 GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&texture, int &width, int &height, bool vertical_flip, float quality)
 {
-	cout << "Loading texture : " << file_name << endl;
+	//cout << "Loading texture : " << file_name << endl;
 
 	string file = file_name.substr(file_name.find_last_of('/') + 1);
 

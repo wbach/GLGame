@@ -1,13 +1,14 @@
 #pragma once
-#include "Api.h"
+#include "../Api.h"
 #include <SDL2/SDL.h>
-#include "../Input/InputSDL.h"
+#include "InputSDL.h"
+
 class CSdlOpenGlApi : public CApi
 {
 public:
-	virtual void CreateWindow(std::string window_name, int width, int height) override;
+	virtual void CreateOpenGLWindow(std::string window_name, int width, int height) override;
 	virtual void CleanUp() override;
-	virtual int PeekMessage() override;
+	virtual int PeekMessages() override;
 	virtual void UpdateWindow() override;
 	virtual void SetFullScreen(bool full_screen) override;
 	virtual bool CheckActiveWindow() override;

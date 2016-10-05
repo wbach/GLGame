@@ -14,7 +14,17 @@ void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size
 	m_LightViewMatrix = glm::mat4(1.f);
 	m_ShadowBox.SetLightViewMatrix(m_LightViewMatrix);
 }
+void CShadowMapRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity) const
+{
 
+	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
+	RenderEntity(entity, *model);
+
+	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
+	{
+		RenderEntityRecursive(scene, subEntity);
+	}
+}
 void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 {
 	//if (scene->GetEntities().size() <= 0) return;
@@ -35,25 +45,13 @@ void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 	{
 		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
 		{
-			for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
-			{
-				shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
-				RenderEntity(subEntity, *subModel);
-			}
-			shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-			RenderEntity(entity, *model);
+			RenderEntityRecursive(scene, entity);
 		}
 	}
 
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{
-		for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
-		{
-			shared_ptr<CModel>& subModel = scene->GetLoader().m_Models[subEntity->GetModelId()];
-			RenderEntity(subEntity, *subModel);
-		}
-		shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-		RenderEntity(entity, *model);
+		RenderEntityRecursive(scene, entity);
 	}
 	m_ShadowShader.Stop();
 	Finish();

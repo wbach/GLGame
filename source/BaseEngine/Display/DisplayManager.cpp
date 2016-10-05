@@ -1,8 +1,14 @@
 #include "DisplayManager.h"
-
-int CDisplayManager::Initialize(string window_name, int api, int renderer, int w, int h)
+#include <conio.h>
+int CDisplayManager::Initialize(string window_name, int renderer, int w, int h)
 {
-	switch (api) 
+	if (m_Api == nullptr)
+	{
+		cout << "[Error] API not set!. Press any key." << endl;
+		_getch();
+		exit(-1);
+	}
+	/*switch (api) 
 	{
 	case API::SDL2:
 		m_Api = std::make_shared<CSdlOpenGlApi>();
@@ -10,10 +16,10 @@ int CDisplayManager::Initialize(string window_name, int api, int renderer, int w
 	case API::GLFW3:
 		m_Api = std::make_shared<CGlfwOpenGlApi>();
 		break;
-	}
+	}*/
 
 	if (m_Api == nullptr) return -1;
-	m_Api->CreateWindow(window_name, w, h);
+	m_Api->CreateOpenGLWindow(window_name, w, h);
 	
 
 	switch (renderer)
@@ -37,7 +43,7 @@ int CDisplayManager::Initialize(string window_name, int api, int renderer, int w
 int CDisplayManager::PeekMessage()
 {
 	if (m_Api != nullptr)
-		return	m_Api->PeekMessage();
+		return	m_Api->PeekMessages();
 	return -1;
 }
 
@@ -72,13 +78,13 @@ void CDisplayManager::CalculateFPS()
 {
 	m_FrameCount++;
 
-	m_CurrentTime = SDL_GetTicks();
+	m_CurrentTime = m_Api->GetTime();
 
 	int time_interval = m_CurrentTime - m_PreviousTime;
 
-	if(time_interval > 1000)
+	if(time_interval > 1)
 	{
-		m_Fps = m_FrameCount / (time_interval / 1000.0f);
+		m_Fps = m_FrameCount / (time_interval);
 		m_PreviousTime = m_CurrentTime;
 		m_FrameCount = 0;
 	}
@@ -113,6 +119,11 @@ bool CDisplayManager::CheckActiveWindow()
 	if (m_Api != nullptr)
 		return m_Api->CheckActiveWindow();
 	return false;
+}
+
+void CDisplayManager::SetApi(std::shared_ptr<CApi> api)
+{
+	m_Api = api;
 }
 
 void CDisplayManager::SetInput(std::shared_ptr<CInput>& input)

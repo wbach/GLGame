@@ -18,9 +18,11 @@ class CGame
 public:
 	CGame();
 
-	void Initialize();
+	void Initialize(std::shared_ptr<CApi> api);
 	void GameLoop();
 	void Uninitialize();
+
+	void SetWindowSize(glm::vec2 size);
 
 	CInputManager& GetInputManager() { return m_InputManager; }
 	CDisplayManager& GetDisplayManager() { return m_DisplayManager; }
@@ -34,11 +36,15 @@ public:
 	void AddScene(shared_ptr<CScene> scene);
 
 	void RenderStartSeries();
-	float Fade(Uint32 delta_time);
-	float FadeIn(Uint32 delta_time, Uint32 start_time, Uint32 durration);
-	float FadeOut(Uint32 delta_time, Uint32 start_time, Uint32 durration);
+	float Fade(float delta_time);
+	float FadeIn(float delta_time, float start_time, float durration);
+	float FadeOut(float delta_time, float start_time, float durration);
 
 	int ReadConfiguration(string file_name);
+
+	//For editor
+	shared_ptr<CScene>& GetCurrentScene();
+
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;
