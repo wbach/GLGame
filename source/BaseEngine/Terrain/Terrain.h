@@ -77,7 +77,7 @@ public:
 	void SaveCorrectedFloraMap();
 
 	void SetName(std::string name) { m_Name = name; }
-	const string& GetName() const { return m_Name; }
+	const string GetName() const;
 private:
 	float m_Size = 2000.0f;
 	float m_MaxHeight = 50.0f;	
@@ -95,4 +95,7 @@ private:
 
 	string m_FlooraMap;
 	float m_FloraSize;
+
+	int m_Id;
+	static int s_ID;
 };

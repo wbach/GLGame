@@ -1,5 +1,33 @@
 #include "Terrain.h"
+int CTerrain::s_ID = 0;
 
+CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
+	GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture)
+	: m_BlendMap(blend_map)
+{
+	m_Transform.position.x = x * m_Size;
+	m_Transform.position.y = .0f;
+	m_Transform.position.z = z * m_Size;
+
+	m_BackgroundTexture[0] = background_texture;
+	m_RTexture[0] = r_texture;
+	m_GTexture[0] = g_texture;
+	m_BTexture[0] = b_texture;
+	m_BackgroundTexture[1] = background_normal_texture;
+	m_RTexture[1] = r_normal_texture;
+	m_GTexture[1] = g_normal_texture;
+	m_BTexture[1] = b_normal_texture;
+	GenerateTerrainMap(loader, height_map);
+
+	m_Name = "No name terrain";
+	m_Id = s_ID++;
+}
+
+CTerrain::CTerrain()
+{
+	m_Name = "No name terrain";
+	m_Id = s_ID++;
+}
 
 glm::vec3 CalculateTangents(const SFace& f) 
 {
@@ -200,32 +228,6 @@ const float& CTerrain::GetSize() const
 	return m_Size;
 }
 
-CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
-	GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture)
-: m_BlendMap(blend_map)
-{
-	m_Transform.position.x = x * m_Size ;
-	m_Transform.position.y = .0f;
-	m_Transform.position.z = z * m_Size;
-
-	m_BackgroundTexture[0] = background_texture;
-	m_RTexture[0] = r_texture;
-	m_GTexture[0] = g_texture;
-	m_BTexture[0] = b_texture;
-	m_BackgroundTexture[1] = background_normal_texture;
-	m_RTexture[1] = r_normal_texture;
-	m_GTexture[1] = g_normal_texture;
-	m_BTexture[1] = b_normal_texture;
-	GenerateTerrainMap(loader, height_map);
-
-	m_Name = "No name terrain";
-}
-
-CTerrain::CTerrain()
-{
-	m_Name = "No name terrain";
-}
-
 void CTerrain::CleanUp()
 {
 	for(int i = 0; i < m_VertexCount; ++i) {
@@ -340,4 +342,10 @@ void CTerrain::SaveCorrectedFloraMap()
 		}
 	}
 	FreeImage_Save(FIF_BMP, bitmap, m_FlooraMap.c_str(), 0);
+}
+
+const string CTerrain::GetName() const 
+{ 
+	string name = m_Name + "__id_t" + std::to_string(m_Id);
+	return name;
 }

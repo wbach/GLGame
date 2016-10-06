@@ -14,10 +14,13 @@ class CTestSCene : public CScene
 
     shared_ptr<CPlayer> songo;	
 	shared_ptr<CEntity> m9;
+
+	int m_CameraType = 0;
 public:
     bool thridCamera = true;
-	CTestSCene(CGame& game)
+	CTestSCene(CGame& game, int camera_type)
 		: CScene(game)
+		, m_CameraType(camera_type)
 	{
 		m_Name = "Test Scene";
 	}
@@ -82,14 +85,14 @@ public:
 			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
 		));
 		
-		shared_ptr<CEntity>  entity = CreateEntityFromFile("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj", glm::vec3(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
+		shared_ptr<CEntity>  entity = CreateEntityFromFile("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj", CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
 		//AddSubEntity(entity)
 		AddEntity(entity);
-		shared_ptr<CEntity>  barrel = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(86, 128, 0));
+		shared_ptr<CEntity>  barrel = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(86, 128, 0));
 		AddSubEntity(entity, barrel);
-		shared_ptr<CEntity>  barrel2 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(100, 128, 0));
+		shared_ptr<CEntity>  barrel2 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(100, 128, 0));
 		AddSubEntity(barrel, barrel2);
-		shared_ptr<CEntity>  barrel3 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", glm::vec3(120, 128, 0));
+		shared_ptr<CEntity>  barrel3 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(120, 128, 0));
 		AddSubEntity(barrel2, barrel3);
 
 		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(0.05));
@@ -100,8 +103,11 @@ public:
 		AddEntity(songo, true);
 	
 
-		//setThridCamera();
-		setFirstCamera();
+		if (m_CameraType == 0)
+			setThridCamera();
+		else
+			setFirstCamera();
+
 	//	camera->attachToObject();
 
 		m_DirLight = CLight(glm::vec3(0.5));
@@ -152,6 +158,7 @@ public:
 		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
 
 		LockCameraUnderTerrain();
+
 		return 0;
 	}
 	int CleanUp() override

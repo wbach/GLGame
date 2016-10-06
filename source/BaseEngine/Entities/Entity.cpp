@@ -1,5 +1,30 @@
 #include "Entity.h"
 
+int CEntity::s_ID = 0;
+
+CEntity::CEntity()
+	: CEntity(glm::vec3(0))
+{
+}
+
+CEntity::CEntity(glm::vec3 pos)
+	: CEntity(pos, glm::vec3(0))
+{
+
+}
+
+CEntity::CEntity(glm::vec3 pos, glm::vec3 rot)
+	: CEntity(pos, rot, glm::vec3(1))
+{
+}
+
+CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+{	
+	m_Id = s_ID++;
+	m_Name = "No name entity";
+	AddTransform(STransform(pos, rot, scale));
+}
+
 void CEntity::SetPosition(glm::vec3 position, unsigned int i)
 {
 	if (i < 0 || i > m_Transforms.size()) return;
@@ -7,11 +32,47 @@ void CEntity::SetPosition(glm::vec3 position, unsigned int i)
 	CalculateEntityTransformMatrix(i);
 }
 
+void CEntity::SetRotationX(float x, unsigned int index)
+{
+	m_Transforms[index].rotation.x = x;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetRotationY(float y, unsigned int index)
+{
+	m_Transforms[index].rotation.y = y;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetRotationZ(float z, unsigned int index)
+{
+	m_Transforms[index].rotation.z = z;
+	CalculateEntityTransformMatrix(index);
+}
+
 void CEntity::SetRotation(glm::vec3 rotation, unsigned int i)
 {
 	if (i < 0 || i > m_Transforms.size()) return;
 	m_Transforms[i].rotation = rotation;
 	CalculateEntityTransformMatrix(i);
+}
+
+void CEntity::SetScaleX(float x, unsigned int index)
+{
+	m_Transforms[index].scale.x = x;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetScaleY(float y, unsigned int index)
+{
+	m_Transforms[index].scale.y = y;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetScaleZ(float z, unsigned int index)
+{
+	m_Transforms[index].scale.z = z;
+	CalculateEntityTransformMatrix(index);
 }
 
 void CEntity::SetScale(glm::vec3 scale, unsigned int i)
@@ -68,6 +129,16 @@ glm::vec3& CEntity::GetReferencedScale(unsigned int i)
 	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
 	return m_Transforms[i].scale;
 }
+const string CEntity::GetName() const
+{ 
+	
+	string name = m_Name + "__id_e" + std::to_string(m_Id);
+	return name;
+}
+const int& CEntity::GetId()
+{
+	return m_Id;
+}
 const STransform& CEntity::GetTransform(unsigned int i)
 {
 	if (i < 0 || i > m_TransformMatrixes.size()) return STransform();
@@ -78,28 +149,6 @@ const glm::mat4& CEntity::GetTransformMatrix(unsigned int i)
 {
 	if (i < 0 || i > m_TransformMatrixes.size()) return glm::mat4(1);
 	return m_TransformMatrixes[i];
-}
-
-CEntity::CEntity()
-	: CEntity(glm::vec3(0))
-{
-}
-
-CEntity::CEntity(glm::vec3 pos)
-	: CEntity(pos, glm::vec3(0))
-{
-
-}
-
-CEntity::CEntity(glm::vec3 pos, glm::vec3 rot)
-	: CEntity(pos, rot, glm::vec3(1))
-{
-}
-
-CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
-{
-	m_Name = "No name entity";
-	AddTransform(STransform(pos, rot, scale));
 }
 
 void CEntity::AddModel(unsigned int model_id)
@@ -129,6 +178,24 @@ void CEntity::AddTransform(STransform transform)
 {
 	m_Transforms.push_back(transform);
 	m_TransformMatrixes.push_back(Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale));
+}
+
+void CEntity::SetPositionX(float x, unsigned int index)
+{
+	m_Transforms[index].position.x = x;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetPositionY(float y, unsigned int index)
+{
+	m_Transforms[index].position.y = y;
+	CalculateEntityTransformMatrix(index);
+}
+
+void CEntity::SetPositionZ(float z, unsigned int index)
+{
+	m_Transforms[index].position.z = z;
+	CalculateEntityTransformMatrix(index);
 }
 
 void CEntity::IncrasePosition(float dx, float dy, float dz, unsigned int index)

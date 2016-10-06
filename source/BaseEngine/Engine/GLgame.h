@@ -17,6 +17,7 @@ class CGame
 {
 public:
 	CGame();
+	bool m_FroceQuit = false;
 
 	void Initialize(std::shared_ptr<CApi> api);
 	void GameLoop();
@@ -42,9 +43,12 @@ public:
 
 	int ReadConfiguration(string file_name);
 
+	void(*OnGameLoopRun)();
+
 	//For editor
 	shared_ptr<CScene>& GetCurrentScene();
 
+	void LoadSceneFromFile(std::string file_name);
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;
@@ -68,6 +72,7 @@ private:
 
 	float m_WaterQuality;
 
+	
 
 	bool m_IsLoading;
 	bool m_IsFullScreen;	

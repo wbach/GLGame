@@ -1,4 +1,3 @@
-//#include <memory>
 #define EDITOR
 
 #ifdef EDITOR
@@ -11,11 +10,11 @@
 #include "TestGame/Test_Scene.h"
 //#include "TestGame/Test_MainMenu.h"
 
-
-#ifdef EDITOR
 CGame myGame;
+#ifdef EDITOR
 CSceneEditor editor(myGame);
 #endif
+
 int main(int argc, char *argv[])
 {
 	
@@ -25,14 +24,16 @@ int main(int argc, char *argv[])
 	//  shared_ptr<CScene> mainMenu = make_shared<CTestMainMenu>(myGame);
 
 	//myGame.addScene(mainMenu);
+	int test_scene_camera_type = 0;
 	std::shared_ptr<CApi> api;
 #ifdef EDITOR
-	myGame.SetWindowSize(glm::vec2(640, 480));
+	myGame.SetWindowSize(glm::vec2(820, 480));
 	api = std::make_shared<CSdlOpenGlApi>();
+	test_scene_camera_type = 1;
 #else
 	api = std::make_shared<CGlfwOpenGlApi>();
 #endif
-	shared_ptr<CScene> testScene = std::make_shared<CTestSCene>(myGame);
+	shared_ptr<CScene> testScene = std::make_shared<CTestSCene>(myGame, test_scene_camera_type);
 	myGame.AddScene(testScene);
 	if (myGame.SetCurrentScene(0) < 0)
 	{
@@ -41,8 +42,9 @@ int main(int argc, char *argv[])
 	myGame.Initialize(api);  
 
 #ifdef EDITOR	
-	editor.CreateMainWindow(1366, 768);
+	editor.Init(1366, 768);
 	editor.PeekMesages();
+	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
 #endif
 
     myGame.GameLoop();

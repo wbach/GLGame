@@ -149,6 +149,7 @@
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp" />
+    <ClCompile Include="source\BaseEngine\Engine\GameObject.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\AssimpModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\EmptyLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\FbxModel.cpp" />
@@ -181,7 +182,11 @@
     <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp" />
+    <ClCompile Include="source\Editor\FileExplorer.cpp" />
+    <ClCompile Include="source\Editor\Inspector.cpp" />
+    <ClCompile Include="source\Editor\ObjectsTree.cpp" />
     <ClCompile Include="source\Editor\SceneEditor.cpp" />
+    <ClCompile Include="source\Editor\WindowProcedure.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Model.cpp" />
     <ClCompile Include="source\TestGame\Player.cpp" />
@@ -192,12 +197,12 @@
     <ClCompile Include="source\BaseEngine\Camera\ThridPersonCamera.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="resource.h" />
     <ClInclude Include="source\BaseEngine\Camera\Camera.h" />
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
     <ClInclude Include="source\BaseEngine\APIs\Api.h" />
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h" />
     <ClInclude Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.h" />
+    <ClInclude Include="source\BaseEngine\Engine\GameObject.h" />
     <ClInclude Include="source\BaseEngine\Engine\OpenGLRenderer.h" />
     <ClInclude Include="source\BaseEngine\Engine\Renderer.h" />
     <ClInclude Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.h" />
@@ -251,9 +256,6 @@
   <ItemGroup>
     <None Include="source\GLgame.vcxproj" />
     <None Include="source\GLgame.vcxproj.filters" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="GLGame.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

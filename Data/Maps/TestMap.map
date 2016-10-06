@@ -1,0 +1,7 @@
+<MapName>Test map</MapName>
+<Camera>
+<Type>CFirstPersonCamera</Type>
+<Position>25.0 20.0 30.0</Position>
+<Pitch>5.6</Pitch>
+<Yaw>94.0</Yaw>
+</Camera>

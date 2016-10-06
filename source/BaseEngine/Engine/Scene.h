@@ -20,6 +20,8 @@ public:
 	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
 	void AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity);
 	shared_ptr<CEntity> CreateEntityFromFile(string file_name, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
+	shared_ptr<CEntity> FindEntity(int id);
+	shared_ptr<CEntity> FindSubEntity(shared_ptr<CEntity>& entity, int id);
 
 	const vector<shared_ptr<CEntity>>& GetEntities() const;
 	const vector<CTerrain>& GetTerrains() const;
@@ -48,6 +50,9 @@ public:
 	const glm::vec3 GetCameraPosition() const { return m_Camera->GetPosition(); }
 	shared_ptr<CCamera>& GetCamera() { return m_Camera; }
 	const glm::vec3 GetDirectionalLightPosition();
+
+	
+
 	~CScene();
 protected:
 	CLoader m_Loader;

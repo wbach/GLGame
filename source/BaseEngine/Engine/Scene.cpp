@@ -36,7 +36,7 @@ void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity
 shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 {
 	shared_ptr<CEntity> new_entity;
-	new_entity = make_shared<CEntity>(CreatePositionVector(pos.x, pos.y, pos.z), rot, scale);
+	new_entity = make_shared<CEntity>(pos, rot, scale);
 	new_entity->AddModel(m_Loader.LoadMesh(file_name));
 
 	std::string name = file_name.substr(file_name.find_last_of('\\') + 1);
@@ -47,6 +47,54 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos
 	new_entity->SetName(name);
 
 	return new_entity;
+}
+
+shared_ptr<CEntity> CScene::FindEntity(int id)
+{
+	shared_ptr<CEntity> founded_entity = nullptr;
+
+	for (CTerrain& terrain : m_Terrains)
+	{
+		for (shared_ptr<CEntity>& entity : terrain.m_TerrainEntities) 
+		{
+			if (entity->GetId() == id)
+			{
+				return entity;
+			}
+			founded_entity = FindSubEntity(entity,id);
+			if (founded_entity != nullptr)
+				return founded_entity;
+		}		
+	}
+
+	for (shared_ptr<CEntity>& entity : m_Entities)
+	{
+		if (entity->GetId() == id)
+		{
+			return entity;
+		}
+		founded_entity = FindSubEntity(entity, id);
+		if (founded_entity != nullptr)
+			return founded_entity;		
+	}
+
+	return founded_entity;
+}
+
+shared_ptr<CEntity> CScene::FindSubEntity(shared_ptr<CEntity>& entity, int id)
+{
+	shared_ptr<CEntity> founded_entity = nullptr;
+	for (shared_ptr<CEntity>& entity : entity->GetChildrenEntities())
+	{
+		if (entity->GetId() == id)
+		{
+			return entity;
+		}
+		founded_entity = FindSubEntity(entity, id);
+		if (founded_entity != nullptr)
+			return founded_entity;
+	}
+	return nullptr;
 }
 
 const vector<shared_ptr<CEntity>>& CScene::GetEntities() const

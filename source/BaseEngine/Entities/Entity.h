@@ -25,8 +25,19 @@ public:
 	void CalculateEntityTransformMatrix(unsigned int x = 0);
 	void AddTransform(STransform transform);
 	
+	void SetPositionX(float x, unsigned int index = 0);
+	void SetPositionY(float y, unsigned int index = 0);
+	void SetPositionZ(float z, unsigned int index = 0);
 	void SetPosition(glm::vec3 position, unsigned int i = 0);
+
+	void SetRotationX(float x, unsigned int index = 0);
+	void SetRotationY(float y, unsigned int index = 0);
+	void SetRotationZ(float z, unsigned int index = 0);
 	void SetRotation(glm::vec3 rotation, unsigned int i = 0);
+
+	void SetScaleX(float x, unsigned int index = 0);
+	void SetScaleY(float y, unsigned int index = 0);
+	void SetScaleZ(float z, unsigned int index = 0);
 	void SetScale(glm::vec3 scale, unsigned int i = 0);
 	void SetTransform(STransform transform, unsigned int i = 0);
 
@@ -34,16 +45,20 @@ public:
 	const glm::vec3& GetPosition(unsigned int i = 0);
 	const glm::vec3& GetRotation(unsigned int i = 0);
 	const glm::vec3& GetScale(unsigned int i = 0);
+
 	const STransform& GetTransform(unsigned int i = 0);
 	const glm::mat4& GetTransformMatrix(unsigned int i = 0);
 	vector<glm::mat4>& GetTransformMatrixes() { return m_TransformMatrixes; }
+
 	glm::vec3& GetReferencedPosition(unsigned int i = 0);
 	glm::vec3& GetReferencedRotation(unsigned int i = 0);
 	glm::vec3& GetReferencedScale(unsigned int i = 0);
-	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
-	void SetName(std::string name) { m_Name = name; }
-	const string& GetName() const{ return m_Name; }
 
+	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
+	
+	void SetName(std::string name) { m_Name = name; }
+	const string GetName() const;
+	const int& GetId();
 protected:
 	vector<glm::mat4>			m_TransformMatrixes;
 	vector<STransform>			m_Transforms;
@@ -52,4 +67,7 @@ protected:
 	string m_Name;
 	int m_CurrentModelId = 0;
 	std::vector<int> m_ModelId;
+
+	int m_Id;
+	static int s_ID;
 };
