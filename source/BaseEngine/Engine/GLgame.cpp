@@ -33,6 +33,8 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 	//renderStartSeries();
 	LoadScene();
 	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);	
+
+	
 }
 void CGame::Uninitialize()
 {
@@ -234,38 +236,8 @@ shared_ptr<CScene>& CGame::GetCurrentScene()
 {
 	return m_CurrScene;
 }
-void CGame::LoadSceneFromFile(std::string file_name)
-{
-	ifstream file;
-	file.open(file_name);
-	if (!file.is_open())
-	{
-		std::cout << "[Error] Cant open map: " << file_name <<  "." << std::endl;
-		return;
-	}
-	string line;
-	while (std::getline(file, line))
-	{
-		/*for (int x = 0; x < )
 
-		string var = line.substr(0, line.find_last_of("="));
-		string value = line.substr(line.find_last_of("=") + 1);
 
-		if (var.compare("Name") == 0)				m_WindowName = value;
-		if (var.compare("Resolution") == 0)			m_WindowSize = Get::Vector2d(value);
-		if (var.compare("FullScreen") == 0)			m_IsFullScreen = Get::Boolean(value);
-		if (var.compare("RefreshRate") == 0)		m_RefreshRate = Get::Float(value);
-		if (var.compare("Sound") == 0)				m_IsSound = Get::Boolean(value);
-		if (var.compare("SoundVolume") == 0)		m_SoundVolume = Get::Float(value);
-		if (var.compare("WaterQuality") == 0)		m_WaterQuality = Get::Float(value);
-		if (var.compare("Shadows") == 0)			m_IsShadows = Get::Boolean(value);
-		if (var.compare("ShadowMapSize") == 0)		m_ShadowMapSize = Get::Float(value);
-		if (var.compare("ViewDistance") == 0)		m_ViewDistance = Get::Float(value);
-		if (var.compare("GrassViewDistance") == 0)	m_GrassViewDistance = Get::Float(value);*/
-	}
-
-	file.close();
-}
 void CGame::RenderStartSeries()
 {
 	//vector<float> vertex = { -0.5, 0.5, 0, -0.5, -0.5, 0, 0.5, -0.5, 0, 0.5, 0.5, 0 };

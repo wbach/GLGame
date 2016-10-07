@@ -53,10 +53,13 @@ public:
 	GLuint m_RTexture[2];
 	GLuint m_GTexture[2];
 	GLuint m_BTexture[2];
+
+	std::string m_HeightMapPath, m_BlendMapPath, m_BackgorungTexturePath[2], m_RTexturePath[2], m_BTexturePath[2], m_GTexturePath[2];
+
 	CEmptyLoader m_Model;
 	CTerrain();
-	CTerrain(CLoader &loader,string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
-		GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture);
+	CTerrain(string name, CLoader &loader, string height_map, float x, float z, string blend_map, string background_texture, string background_normal_texture,
+		string r_texture, string r_normal_texture, string g_texture, string g_normal_texture, string b_texture, string b_normal_texture);
 
 	void AddTerrainEntity(shared_ptr<CEntity> e)
 	{ 
@@ -78,9 +81,13 @@ public:
 
 	void SetName(std::string name) { m_Name = name; }
 	const string GetName() const;
+	const string GetNameWithId() const;
+	const glm::vec3 GetPosition() const { return m_Position; }
 private:
 	float m_Size = 2000.0f;
 	float m_MaxHeight = 50.0f;	
+
+	glm::vec3 m_Position;
 
 	string m_Name;
 

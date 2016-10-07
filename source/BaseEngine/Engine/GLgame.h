@@ -46,9 +46,7 @@ public:
 	void(*OnGameLoopRun)();
 
 	//For editor
-	shared_ptr<CScene>& GetCurrentScene();
-
-	void LoadSceneFromFile(std::string file_name);
+	shared_ptr<CScene>& GetCurrentScene();	
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;

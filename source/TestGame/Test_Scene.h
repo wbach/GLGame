@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
+#include "../BaseEngine/Loader/XML/XMLSceneParser.h"
 #include "../BaseEngine/Engine/Scene.h"
 #include "../BaseEngine/Camera/ThridPersonCamera.h"
 #include "../BaseEngine/Camera/FirstPersonCamera.h"
@@ -16,6 +17,8 @@ class CTestSCene : public CScene
 	shared_ptr<CEntity> m9;
 
 	int m_CameraType = 0;
+
+	CXmlSceneParser m_SceneParser;
 public:
     bool thridCamera = true;
 	CTestSCene(CGame& game, int camera_type)
@@ -26,6 +29,20 @@ public:
 	}
 	int Initialize() override
 	{
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47), glm::vec3(0), glm::vec3(0.05));
+		songo->SetName("Player");
+		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true), "Data/Meshes/Garen/garen_idle.fbx");
+		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true), "Data/Meshes/Garen/garen_idle.fbx");
+		AddEntity(songo, true);
+
+
+		if (m_CameraType == 0)
+			setThridCamera();
+		else
+			setFirstCamera();
+		m_SceneParser.LoadScene("Data/Maps/TestMap.map", this);
+		
+
 		vector<string> DAY_TEXTURES_FILES;
 		vector<string> NIGHT_TEXTURES_FILES;
 
@@ -53,41 +70,9 @@ public:
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
-		cout << " Loading..." << endl;
-
-		string terrainTexturePath = "Data/Terrain/TerrainTextures/";//TdkWN.png
-
-		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "TdkWN.png", 0, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
-			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		));
-
-		AddTerrain( CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
-			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		));
-
-		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", 0, -1, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
-			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		));
-
-		AddTerrain(CTerrain(m_Loader, terrainTexturePath + "heightmap.png", -1, 0, m_Loader.LoadTexture(terrainTexturePath + "blendMap.png"),
-			m_Loader.LoadTexture(terrainTexturePath + "grass.bmp"), m_Loader.LoadTexture(terrainTexturePath + "grassNormal.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "156.JPG"), m_Loader.LoadTexture(terrainTexturePath + "156.JPG"),
-			m_Loader.LoadTexture(terrainTexturePath + "sand.jpg"), m_Loader.LoadTexture(terrainTexturePath + "white-sands-sand_NORM.jpg"),
-			m_Loader.LoadTexture(terrainTexturePath + "177.JPG"), m_Loader.LoadTexture(terrainTexturePath + "177_norm.JPG")
-		));
-		
 		shared_ptr<CEntity>  entity = CreateEntityFromFile("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj", CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
 		//AddSubEntity(entity)
-		AddEntity(entity);
+		AddEntity(entity, true);
 		shared_ptr<CEntity>  barrel = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(86, 128, 0));
 		AddSubEntity(entity, barrel);
 		shared_ptr<CEntity>  barrel2 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(100, 128, 0));
@@ -95,19 +80,10 @@ public:
 		shared_ptr<CEntity>  barrel3 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(120, 128, 0));
 		AddSubEntity(barrel2, barrel3);
 
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(86, 47),glm::vec3(0),glm::vec3(0.05));
-		songo->SetName("Player");
-		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true));
-		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true));		
+		
+		
 
-		AddEntity(songo, true);
-	
-
-		if (m_CameraType == 0)
-			setThridCamera();
-		else
-			setFirstCamera();
-
+		
 	//	camera->attachToObject();
 
 		m_DirLight = CLight(glm::vec3(0.5));
@@ -116,8 +92,9 @@ public:
 		glm::vec3 point_ligt_position = CreatePositionVector(86, 47);
 		point_ligt_position.y += 10.f;
 		m_PointLight = CLight(point_ligt_position, glm::vec3(0.5f, .5f, 0.f), glm::vec3(0, 0.1, 0));
-		m_Lights.push_back(m_PointLight);
-		
+		m_Lights.push_back(m_PointLight);		
+
+		m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
 		return 0;
 	}
 	void setFirstCamera(){

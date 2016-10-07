@@ -129,11 +129,14 @@ glm::vec3& CEntity::GetReferencedScale(unsigned int i)
 	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
 	return m_Transforms[i].scale;
 }
-const string CEntity::GetName() const
-{ 
-	
+const string CEntity::GetNameWithID() const
+{
 	string name = m_Name + "__id_e" + std::to_string(m_Id);
 	return name;
+}
+const string CEntity::GetName() const
+{ 
+	return m_Name;
 }
 const int& CEntity::GetId()
 {
@@ -151,9 +154,10 @@ const glm::mat4& CEntity::GetTransformMatrix(unsigned int i)
 	return m_TransformMatrixes[i];
 }
 
-void CEntity::AddModel(unsigned int model_id)
+void CEntity::AddModel(unsigned int model_id, std::string path)
 {
 	m_ModelId.push_back(model_id);
+	m_FullPathFile = path;
 }
 
 const int& CEntity::GetModelId(unsigned int i) const

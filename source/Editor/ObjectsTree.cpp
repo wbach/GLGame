@@ -22,8 +22,7 @@ void CSceneEditor::FillObjectsTree()
 	bool first = true;
 	for (const CTerrain& terrain : m_Game.GetCurrentScene()->GetTerrains())
 	{
-		cout << terrain.GetName() << " size: " << terrain.m_TerrainEntities.size() << endl;
-		tvi.pszText = (LPSTR)terrain.GetName().c_str();
+		tvi.pszText = (LPSTR)terrain.GetNameWithId().c_str();
 		tvins.item = tvi;
 		tvins.hParent = TVI_ROOT;
 		if (first)
@@ -45,7 +44,7 @@ void CSceneEditor::FillObjectsTree()
 
 	for (const std::shared_ptr<CEntity>& enity : m_Game.GetCurrentScene()->GetEntities())
 	{
-		tvi.pszText = (LPSTR)enity->GetName().c_str();
+		tvi.pszText = (LPSTR)enity->GetNameWithID().c_str();
 		tvins.item = tvi;
 		tvins.hParent = TVI_ROOT;
 		if (first)
@@ -58,6 +57,11 @@ void CSceneEditor::FillObjectsTree()
 			tvins.hInsertAfter = TVI_LAST;
 		}
 		HTREEITEM hItem2 = TreeView_InsertItem(m_Hwnd[Hwnds::OBJECT_TREEE], &tvins);
+
+		for (const std::shared_ptr<CEntity>& child : enity->GetChildrenEntities())
+		{
+			RecursiveSetEntity(child, hItem2);
+		}
 	}
 }
 
@@ -70,7 +74,7 @@ void CSceneEditor::RecursiveSetEntity(const std::shared_ptr<CEntity>& enity, HTR
 	TVINSERTSTRUCT tvins;
 	tvins.item = tvi;
 
-	tvi.pszText = (LPSTR)enity->GetName().c_str();
+	tvi.pszText = (LPSTR)enity->GetNameWithID().c_str();
 	tvins.item = tvi;
 	tvins.hInsertAfter = TVI_FIRST;
 	tvins.hParent = root;

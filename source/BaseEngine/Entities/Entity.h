@@ -14,7 +14,7 @@ public:
 	CEntity(glm::vec3 pos, glm::vec3 rot);
 	CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);	
 	
-	void AddModel(unsigned int model_id);
+	void AddModel(unsigned int model_id, std::string full_path = "");
 	const int& GetModelId(unsigned int i = 0) const;
 
 	void Update();
@@ -55,8 +55,12 @@ public:
 	glm::vec3& GetReferencedScale(unsigned int i = 0);
 
 	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
-	
+
+	void SetFullPath(std::string path) { m_FullPathFile = path; }
+	string GetFullPath() const { return m_FullPathFile; };
+
 	void SetName(std::string name) { m_Name = name; }
+	const string GetNameWithID() const;
 	const string GetName() const;
 	const int& GetId();
 protected:
@@ -64,6 +68,7 @@ protected:
 	vector<STransform>			m_Transforms;
 	vector<shared_ptr<CEntity>> m_ChildrenEntities;
 
+	string m_FullPathFile;
 	string m_Name;
 	int m_CurrentModelId = 0;
 	std::vector<int> m_ModelId;

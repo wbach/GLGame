@@ -1,7 +1,77 @@
-<MapName>Test map</MapName>
-<Camera>
-<Type>CFirstPersonCamera</Type>
-<Position>25.0 20.0 30.0</Position>
-<Pitch>5.6</Pitch>
-<Yaw>94.0</Yaw>
-</Camera>
+<?xml version="1.0" encoding="UTF-8"?>
+<Map>
+  <Camera>
+	<Position>
+		<x>100</x>
+		<y>100</y>
+		<z>100</z>
+	</Position>
+	<Pitch>45.6</Pitch>
+	<Yaw>94.0</Yaw>
+  </Camera>
+  <Terrain>
+	  <Name>Test_Terrain</Name>
+	  <Position>
+		<x>0</x>
+		<z>0</z>
+	  </Position>
+	  <HeightMap>Data/Terrain/TerrainTextures/TdkWN.png</HeightMap>
+	  <BlendMap>Data/Terrain/TerrainTextures/blendMap.png</BlendMap>
+	  <BackgroundTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
+	  </BackgroundTexture>  
+	  <RedTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/156.JPG</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/156.JPG</NormalTexture>
+	  </RedTexture> 
+	  <GreenTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
+	  </GreenTexture> 
+	  <BlueTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/177.JPG</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/177_norm.JPG</NormalTexture>
+	  </BlueTexture>   
+  </Terrain>   
+	<Entity>	  
+		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
+		<Name>Small_House</Name>
+		<Position>
+			<x>10</x>
+			<y>55</y>
+			<z>10</z>
+		</Position>
+		<Rotation>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</Rotation>
+		<Scale>
+			<x>4</x>
+			<y>4</y>
+			<z>4</z>
+		</Scale>	
+		<Global>0</Global>
+		<Entity>		  
+			<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
+			<Name>Small_House_2</Name>
+			<Position>
+				<x>50</x>
+				<y>55</y>
+				<z>10</z>
+			</Position>
+			<Rotation>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</Rotation>
+			<Scale>
+				<x>4</x>
+				<y>4</y>
+				<z>4</z>
+			</Scale>	
+			<Global>0</Global>		
+		</Entity>
+	</Entity>
+</Map>

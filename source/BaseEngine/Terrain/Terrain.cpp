@@ -1,25 +1,42 @@
 #include "Terrain.h"
 int CTerrain::s_ID = 0;
 
-CTerrain::CTerrain(CLoader &loader, string height_map, float x, float z, GLuint blend_map, GLuint background_texture, GLuint background_normal_texture,
-	GLuint r_texture, GLuint r_normal_texture, GLuint g_texture, GLuint g_normal_texture, GLuint b_texture, GLuint b_normal_texture)
-	: m_BlendMap(blend_map)
+CTerrain::CTerrain(string name, CLoader &loader, string height_map, float x, float z, string blend_map, string background_texture, string background_normal_texture,
+	string r_texture, string r_normal_texture, string g_texture, string g_normal_texture, string b_texture, string b_normal_texture)
+	: m_HeightMapPath(height_map)
+	, m_BlendMapPath(blend_map)
 {
+	m_BackgorungTexturePath[0] = background_texture;
+	m_BackgorungTexturePath[1] = background_normal_texture;
+
+	m_RTexturePath[0] = r_texture;
+	m_RTexturePath[1] = r_normal_texture;
+
+	m_GTexturePath[0] = g_texture;
+	m_GTexturePath[1] = g_normal_texture;
+
+	m_BTexturePath[0] = b_texture;
+	m_BTexturePath[1] = b_normal_texture;
+
+	m_Position = glm::vec3(x, 0, z);
+
 	m_Transform.position.x = x * m_Size;
 	m_Transform.position.y = .0f;
 	m_Transform.position.z = z * m_Size;
 
-	m_BackgroundTexture[0] = background_texture;
-	m_RTexture[0] = r_texture;
-	m_GTexture[0] = g_texture;
-	m_BTexture[0] = b_texture;
-	m_BackgroundTexture[1] = background_normal_texture;
-	m_RTexture[1] = r_normal_texture;
-	m_GTexture[1] = g_normal_texture;
-	m_BTexture[1] = b_normal_texture;
+	m_BlendMap = loader.LoadTexture(blend_map);
+
+	m_BackgroundTexture[0] = loader.LoadTexture(background_texture);
+	m_RTexture[0] = loader.LoadTexture(r_texture);
+	m_GTexture[0] = loader.LoadTexture(g_texture);
+	m_BTexture[0] = loader.LoadTexture(b_texture);
+	m_BackgroundTexture[1] = loader.LoadTexture(background_normal_texture);
+	m_RTexture[1] = loader.LoadTexture(r_normal_texture);
+	m_GTexture[1] = loader.LoadTexture(g_normal_texture);
+	m_BTexture[1] = loader.LoadTexture(b_normal_texture);
 	GenerateTerrainMap(loader, height_map);
 
-	m_Name = "No name terrain";
+	m_Name = name;
 	m_Id = s_ID++;
 }
 
@@ -346,6 +363,11 @@ void CTerrain::SaveCorrectedFloraMap()
 
 const string CTerrain::GetName() const 
 { 
+	return m_Name;
+}
+
+const string CTerrain::GetNameWithId() const
+{
 	string name = m_Name + "__id_t" + std::to_string(m_Id);
 	return name;
 }

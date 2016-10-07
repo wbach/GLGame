@@ -1,0 +1,302 @@
+#include "XMLSceneParser.h"
+
+
+bool CXmlSceneParser::ParaseBolean(rapidxml::xml_node<>* node)
+{
+	if (std::stof(std::string(node->value())) != 0)
+		return true;
+	return false;
+}
+
+glm::vec3 CXmlSceneParser::ParseVector3d(rapidxml::xml_node<>* node)
+{
+	glm::vec3 vector;
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{
+		if (!std::string("x").compare(subnode->name()))
+			vector.x = std::stof(subnode->value());
+		else if (!std::string("y").compare(subnode->name()))
+			vector.y = std::stof(subnode->value());
+		else if (!std::string("z").compare(subnode->name()))
+			vector.z = std::stof(subnode->value());
+	}
+	return vector;
+}
+
+void CXmlSceneParser::ParseCamera(rapidxml::xml_node<>* node)
+{
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{
+		if (!std::string("Position").compare(subnode->name()))
+			m_Scene->GetCamera()->SetPosition(ParseVector3d(subnode));
+
+		if (!std::string("Pitch").compare(subnode->name()))
+			m_Scene->GetCamera()->SetPitch(std::stof(std::string(subnode->value())));
+
+		if (!std::string("Yaw").compare(subnode->name()))
+			m_Scene->GetCamera()->SetYaw(std::stof(std::string(subnode->value())));
+	}
+}
+
+void CXmlSceneParser::ParseTerrain(rapidxml::xml_node<>* node)
+{
+	std::string name, height_map, blend_map, backgorung_texture[2], r_texture[2], b_texture[2], g_texture[2];
+	glm::vec3 position;
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{
+		if (!std::string("Name").compare(subnode->name()))
+			name = subnode->value();
+
+		if (!std::string("Position").compare(subnode->name()))
+			position = ParseVector3d(subnode);
+
+		if (!std::string("HeightMap").compare(subnode->name()))
+			height_map = subnode->value();
+
+		if (!std::string("BlendMap").compare(subnode->name()))
+			blend_map = subnode->value();
+
+		if (!std::string("BackgroundTexture").compare(subnode->name()))
+			ParseTexture(subnode, backgorung_texture[0], backgorung_texture[1]);
+
+		if (!std::string("RedTexture").compare(subnode->name()))
+			ParseTexture(subnode, r_texture[0], r_texture[1]);
+
+		if (!std::string("GreenTexture").compare(subnode->name()))
+			ParseTexture(subnode, g_texture[0], g_texture[1]);
+
+		if (!std::string("BlueTexture").compare(subnode->name()))
+			ParseTexture(subnode, b_texture[0], b_texture[1]);
+	}
+
+	m_Scene->AddTerrain(CTerrain(name, m_Scene->m_Loader, height_map, position.x, position.z, blend_map,
+		backgorung_texture[0], backgorung_texture[1],
+		r_texture[0], r_texture[1],
+		g_texture[0], g_texture[1],
+		b_texture[0], b_texture[1]
+	));
+}
+
+void CXmlSceneParser::ParseTexture(rapidxml::xml_node<>* node, std::string& diff_texture, std::string& normal_texture)
+{
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{
+		if (!std::string("DiffTexture").compare(subnode->name()))
+			diff_texture = subnode->value();
+
+		if (!std::string("NormalTexture").compare(subnode->name()))
+			normal_texture = subnode->value();
+	}
+}
+
+void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntity> parent)
+{
+	shared_ptr<CEntity> entity = nullptr; 
+	bool is_global = false;
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{		
+		if (!std::string("File").compare(subnode->name()) && entity == nullptr)
+			entity = m_Scene->CreateEntityFromFile(subnode->value());
+
+		if (!std::string("Name").compare(subnode->name()) && entity != nullptr)
+			entity->SetName(subnode->value());
+
+		if (!std::string("Position").compare(subnode->name()) && entity != nullptr)
+			entity->SetPosition(ParseVector3d(subnode));
+
+		if (!std::string("Rotation").compare(subnode->name()) && entity != nullptr)
+			entity->SetRotation(ParseVector3d(subnode));
+
+		if (!std::string("Scale").compare(subnode->name()) && entity != nullptr)
+			entity->SetScale(ParseVector3d(subnode));
+
+		if (!std::string("Global").compare(subnode->name()) && entity != nullptr)
+			is_global = ParaseBolean(subnode);
+
+		if (!std::string("Entity").compare(subnode->name()) && entity != nullptr)
+			ParaseEntity(subnode, entity);
+	}
+	if (entity != nullptr)
+	{
+		if (parent == nullptr)
+			m_Scene->AddEntity(entity, is_global);
+		else
+			m_Scene->AddSubEntity(parent, entity);
+	}
+		
+}
+
+void CXmlSceneParser::LoadScene(std::string file_name, CScene* scene)
+{
+	m_Scene = scene;
+
+	std::ifstream file;
+	file.open(file_name);
+	if (!file.is_open())
+	{
+		std::cout << "[Error] Cant open map: " << file_name << "." << std::endl;
+		return;
+	}
+	std::string line;
+	std::string all_file;
+
+	while (std::getline(file, line))
+	{
+		all_file += line;
+	}
+	file.close();
+
+	rapidxml::xml_document <> dokument;
+	try
+	{
+		dokument.parse<0>(const_cast<char*>(all_file.c_str()));
+	}
+	catch (rapidxml::parse_error p)
+	{
+		p.what();
+	}
+
+	rapidxml::xml_node <>* map = dokument.first_node();
+	for (rapidxml::xml_node <>* node = map->first_node(); node; node = node->next_sibling())
+	{
+		if (!std::string("Camera").compare(node->name()))
+			ParseCamera(node);
+		if (!std::string("Entity").compare(node->name()))
+			ParaseEntity(node);
+		if (!std::string("Terrain").compare(node->name()))
+			ParseTerrain(node);
+	}
+	dokument.clear();
+}
+
+void CXmlSceneParser::SaveToFile(std::string file_name, CScene * scene)
+{
+	rapidxml::xml_document <> dokument;
+
+	rapidxml::xml_node <>* map = dokument.allocate_node(rapidxml::node_declaration);
+	map->append_attribute(dokument.allocate_attribute("version", "1.0"));
+	map->append_attribute(dokument.allocate_attribute("encoding", "UTF-8"));
+	dokument.append_node(map);
+
+	rapidxml::xml_node<>* root = dokument.allocate_node(rapidxml::node_element, "Map");
+	dokument.append_node(root);
+
+	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
+	{		
+		AddEntityNode(dokument, root, entity, 0);
+	}
+
+	for (const CTerrain& terrain: scene->GetTerrains())
+	{
+		AddTerrainNode(dokument, root, terrain);
+		for (const shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
+		{
+			AddEntityNode(dokument, root, entity, 1);
+		}
+	}
+
+	std::ofstream file;
+	file.open(file_name);
+	if (!file.is_open())
+	{
+		std::cout << "[Error] Cant open map: " << file_name << "." << std::endl;
+		return;
+	}
+
+	file << dokument;
+
+	file.close();
+
+	dokument.clear();
+}
+void CXmlSceneParser::AddVectorToNode(rapidxml::xml_document <>& document, rapidxml::xml_node<>* node, const glm::vec3 vector)
+{
+	rapidxml::xml_node<>* x = document.allocate_node(rapidxml::node_element, "x", document.allocate_string(std::to_string(vector.x).c_str()));
+	rapidxml::xml_node<>* y = document.allocate_node(rapidxml::node_element, "y", document.allocate_string((std::to_string(vector.y).c_str())));
+	rapidxml::xml_node<>* z = document.allocate_node(rapidxml::node_element, "z", document.allocate_string((std::to_string(vector.z).c_str())));
+	node->append_node(x);
+	node->append_node(y);
+	node->append_node(z);
+}
+
+void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml::xml_node<>* node, const std::shared_ptr<CEntity>& entity, int global)
+{
+	rapidxml::xml_node<>* entity_node = document.allocate_node(rapidxml::node_element, "Entity");
+
+	rapidxml::xml_node<>* file = document.allocate_node(rapidxml::node_element, "File", document.allocate_string(entity->GetFullPath().c_str()));
+
+
+	rapidxml::xml_node<>* name = document.allocate_node(rapidxml::node_element, "Name", document.allocate_string(entity->GetName().c_str()));
+
+	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");
+	AddVectorToNode(document, position, entity->GetPosition());
+
+	rapidxml::xml_node<>* rotation = document.allocate_node(rapidxml::node_element, "Rotation");
+	AddVectorToNode(document, rotation, entity->GetRotation());
+
+	rapidxml::xml_node<>* scale = document.allocate_node(rapidxml::node_element, "Scale");
+	AddVectorToNode(document, scale, entity->GetScale());
+
+	rapidxml::xml_node<>* _global = document.allocate_node(rapidxml::node_element, "Global", document.allocate_string(std::to_string(global).c_str()));
+	entity_node->append_node(file);
+	entity_node->append_node(name);
+	entity_node->append_node(position);
+	entity_node->append_node(rotation);
+	entity_node->append_node(scale);
+	entity_node->append_node(_global);
+
+	for (const shared_ptr<CEntity>& child : entity->GetChildrenEntities())
+	{
+		AddEntityNode(document, entity_node, child, global);
+	}
+
+	node->append_node(entity_node);
+}
+
+void CXmlSceneParser::AddTerrainNode(rapidxml::xml_document<>& document, rapidxml::xml_node<>* node, const CTerrain& terrain)
+{
+	rapidxml::xml_node<>* terrain_node = document.allocate_node(rapidxml::node_element, "Terrain");
+
+	rapidxml::xml_node<>* name_node = document.allocate_node(rapidxml::node_element, "Name", document.allocate_string(terrain.GetName().c_str()));
+	terrain_node->append_node(name_node);
+	
+	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");
+	AddVectorToNode(document, position, terrain.GetPosition());
+	terrain_node->append_node(position);
+
+	rapidxml::xml_node<>* height_map = document.allocate_node(rapidxml::node_element, "HeightMap", document.allocate_string(terrain.m_HeightMapPath.c_str()));
+	terrain_node->append_node(height_map);
+
+	rapidxml::xml_node<>* blend_map = document.allocate_node(rapidxml::node_element, "BlendMap", document.allocate_string(terrain.m_BlendMapPath.c_str()));
+	terrain_node->append_node(blend_map);
+
+	rapidxml::xml_node<>* background = document.allocate_node(rapidxml::node_element, "BackgroundTexture");
+	rapidxml::xml_node<>* background_diff = document.allocate_node(rapidxml::node_element, "DiffTexture", document.allocate_string(terrain.m_BackgorungTexturePath[0].c_str()));
+	rapidxml::xml_node<>* background_normal = document.allocate_node(rapidxml::node_element, "NormalTexture", document.allocate_string(terrain.m_BackgorungTexturePath[1].c_str()));
+	background->append_node(background_diff);
+	background->append_node(background_normal);
+	terrain_node->append_node(background);
+
+	rapidxml::xml_node<>* r_texure = document.allocate_node(rapidxml::node_element, "RedTexture");
+	rapidxml::xml_node<>* r_texure_diff = document.allocate_node(rapidxml::node_element, "DiffTexture", document.allocate_string(terrain.m_RTexturePath[0].c_str()));
+	rapidxml::xml_node<>* r_texure_normal = document.allocate_node(rapidxml::node_element, "NormalTexture", document.allocate_string(terrain.m_RTexturePath[1].c_str()));
+	r_texure->append_node(r_texure_diff);
+	r_texure->append_node(r_texure_normal);
+	terrain_node->append_node(r_texure);
+
+	rapidxml::xml_node<>* g_texture = document.allocate_node(rapidxml::node_element, "GreenTexture");
+	rapidxml::xml_node<>* g_texture_diff = document.allocate_node(rapidxml::node_element, "DiffTexture", document.allocate_string(terrain.m_GTexturePath[0].c_str()));
+	rapidxml::xml_node<>* g_texture_normal = document.allocate_node(rapidxml::node_element, "NormalTexture", document.allocate_string(terrain.m_GTexturePath[1].c_str()));
+	g_texture->append_node(g_texture_diff);
+	g_texture->append_node(g_texture_normal);
+	terrain_node->append_node(g_texture);
+
+	rapidxml::xml_node<>* b_texure = document.allocate_node(rapidxml::node_element, "BlueTexture");
+	rapidxml::xml_node<>* b_texure_diff = document.allocate_node(rapidxml::node_element, "DiffTexture", document.allocate_string(terrain.m_BTexturePath[0].c_str()));
+	rapidxml::xml_node<>* b_texure_normal = document.allocate_node(rapidxml::node_element, "NormalTexture", document.allocate_string(terrain.m_BTexturePath[1].c_str()));
+	b_texure->append_node(b_texure_diff);
+	b_texure->append_node(b_texure_normal);
+	terrain_node->append_node(b_texure);	
+
+	node->append_node(terrain_node);
+}

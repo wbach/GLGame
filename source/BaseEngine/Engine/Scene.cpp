@@ -35,8 +35,10 @@ void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity
 
 shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 {
+	
 	shared_ptr<CEntity> new_entity;
-	new_entity = make_shared<CEntity>(pos, rot, scale);
+	new_entity = make_shared<CEntity>(pos, rot, scale);	
+
 	new_entity->AddModel(m_Loader.LoadMesh(file_name));
 
 	std::string name = file_name.substr(file_name.find_last_of('\\') + 1);
@@ -45,7 +47,7 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos
 	if (name.compare(file_name) == 0)
 		name = "No name";
 	new_entity->SetName(name);
-
+	new_entity->SetFullPath(file_name);
 	return new_entity;
 }
 

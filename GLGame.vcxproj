@@ -117,7 +117,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.tools\Windows\rapidxml-1.13;.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -134,7 +134,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>.tools\Windows\rapidxml-1.13;.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
@@ -154,6 +154,7 @@
     <ClCompile Include="source\BaseEngine\Loader\EmptyLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\FbxModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\TextureLoader.cpp" />
+    <ClCompile Include="source\BaseEngine\Loader\XML\XMLSceneParser.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\MasterRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.cpp" />
@@ -211,6 +212,7 @@
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />
     <ClInclude Include="source\BaseEngine\Loader\FbxModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\TextureLoader.h" />
+    <ClInclude Include="source\BaseEngine\Loader\XML\XMLSceneParser.h" />
     <ClInclude Include="source\BaseEngine\Renderers\MasterRenderer.h" />
     <ClInclude Include="source\BaseEngine\Renderers\EnitityRenderer.h" />
     <ClInclude Include="source\BaseEngine\Camera\FirstPersonCamera.h" />
