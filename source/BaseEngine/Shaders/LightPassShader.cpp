@@ -76,7 +76,7 @@ void CLightPassShader::LoadLight(const CLight& light, const int& i) const
 	LoadValue(location_LightPosition[i], light.GetPosition());
 	LoadValue(location_LightColour[i], light.GetColour());
 	LoadValue(location_LightAttenuation[i], light.GetAttenuation());
-	LoadValue(location_LightCutOff[i], light.GetAttenuation());
+	LoadValue(location_LightCutOff[i], light.GetCutoff());
 }
 
 void CLightPassShader::LoadCameraPosition(const glm::vec3& camera_position) const

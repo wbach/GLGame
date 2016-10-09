@@ -22,6 +22,7 @@ public:
 	const glm::vec3& GetColour() const;
 	const glm::vec3& GetAttenuation() const;
 	const float& GetCutoff() const;
+	void SetType(int type) { m_Type = type; }
 private:
 	int m_Type;
 	glm::vec3 m_Position;

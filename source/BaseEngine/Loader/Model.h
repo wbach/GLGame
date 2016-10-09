@@ -50,6 +50,11 @@ public:
 	const vector<SFace>& GetFaces() const;
 	const SMaterial& GetMaterial() const;
 
+	glm::vec3 GetBoundingSize() 
+	{
+		return m_BoundingSize;
+	}
+
 	void CleanUp();
 private:
 	glm::vec3	m_BoundingBoxMin, 
@@ -74,6 +79,7 @@ public:
 		vector<unsigned int>& indices, SMaterial& material);
 	const	string& GetName() const;
 	const	vector<CMesh>& GetMeshes() const;
+	float GetBoundingMaxSize();
 	virtual void CleanUp();
 protected:
 	string			 m_Name;

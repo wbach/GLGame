@@ -142,6 +142,26 @@ const int& CEntity::GetId()
 {
 	return m_Id;
 }
+void CEntity::SetParentTransformMatrix(glm::mat4 * matrix)
+{
+	m_ParentTransformMatrix = matrix;
+}
+void CEntity::RecursiveResetEnities(shared_ptr<CEntity>& entity)
+{
+	for (shared_ptr<CEntity>& subentity : entity->GetChildrenEntities())
+	{
+		RecursiveResetEnities(subentity);
+		subentity.reset();
+	}
+}
+void CEntity::CleanUp()
+{
+	for (shared_ptr<CEntity>& entity : m_ChildrenEntities)
+	{
+		RecursiveResetEnities(entity);
+		entity.reset();
+	}
+}
 const STransform& CEntity::GetTransform(unsigned int i)
 {
 	if (i < 0 || i > m_TransformMatrixes.size()) return STransform();
@@ -151,6 +171,8 @@ const STransform& CEntity::GetTransform(unsigned int i)
 const glm::mat4& CEntity::GetTransformMatrix(unsigned int i)
 {
 	if (i < 0 || i > m_TransformMatrixes.size()) return glm::mat4(1);
+	if (m_ParentTransformMatrix != nullptr)
+		return *m_ParentTransformMatrix * m_TransformMatrixes[i];
 	return m_TransformMatrixes[i];
 }
 
@@ -219,11 +241,13 @@ void CEntity::IncreaseRotation(float dx, float dy, float dz, unsigned int index)
 }
 void CEntity::AddSubbEntity(shared_ptr<CEntity> e)
 {
+	e->SetParentTransformMatrix(&m_TransformMatrixes[0]);
 	m_ChildrenEntities.push_back(e);
 }
 void CEntity::CalculateEntityTransformMatrix(unsigned int x)
 {
-	if (x < 0 || x > m_Transforms.size()) {
+	if (x < 0 || x > m_Transforms.size()) 
+	{
 		int i = 0;
 		for (STransform transform : m_Transforms)
 			m_TransformMatrixes[i++] = Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale);

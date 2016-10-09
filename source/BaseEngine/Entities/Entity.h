@@ -63,7 +63,20 @@ public:
 	const string GetNameWithID() const;
 	const string GetName() const;
 	const int& GetId();
-protected:
+
+	void SetParentTransformMatrix(glm::mat4* matrix);
+
+	float GetMaxBoundingSize() { return m_BoundingSize; }
+
+	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
+	void CleanUp();
+
+	float m_BoundingSize;
+	//m_IsSpecial - enity created in code not from file
+	bool m_IsSpecial = false;
+protected:	
+
+	glm::mat4*					m_ParentTransformMatrix = nullptr;
 	vector<glm::mat4>			m_TransformMatrixes;
 	vector<STransform>			m_Transforms;
 	vector<shared_ptr<CEntity>> m_ChildrenEntities;
@@ -73,6 +86,6 @@ protected:
 	int m_CurrentModelId = 0;
 	std::vector<int> m_ModelId;
 
-	int m_Id;
+	int		   m_Id;
 	static int s_ID;
 };

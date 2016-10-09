@@ -13,7 +13,7 @@ void CSkyBoxRenderer::Render(const glm::mat4& view_matrix, const float&  delta_t
 	m_SkyBoxShader.Start();
 	m_SkyBoxShader.LoadViewMatrix(view_matrix, delta_time);
 	m_SkyBoxShader.LoadFogColour(.8f, .8f, .8f);
-	m_SkyBoxShader.LoadBlendFactor(1.f);
+	m_SkyBoxShader.LoadBlendFactor(0.f);
 
 	glBindVertexArray(m_QubeID);
 	glEnableVertexAttribArray(0);
@@ -34,6 +34,10 @@ void CSkyBoxRenderer::SetMeshId(GLuint box_id, int veretex_count)
 {
 	m_QubeID = box_id;
 	m_QubeVertexCount = veretex_count;
+}
+void CSkyBoxRenderer::CleanUp()
+{
+	m_SkyBoxShader.CleanUp();
 }
 float CSkyBoxRenderer::BindTextures(const float& delta_time) const
 {

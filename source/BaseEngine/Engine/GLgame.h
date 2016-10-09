@@ -9,7 +9,7 @@
 #include "../GUI/GUIRenderer.h"
 #include "../Input/InputManager.h"
 #include "../Renderers/MasterRenderer.h"
-
+#include "../Loader/XML/XMLSceneParser.h"
 
 using namespace std;
 
@@ -30,6 +30,7 @@ public:
 	CMasterRenderer& GetMasterRenderer() { return m_MasterRenderer; }
 
 	void CreateProjectionMatrix();
+	const glm::mat4& GetProjectionMatrix() { return m_ProjectionMatrix; }
 
     int SetCurrentScene(int i);
     void LoadScene();
@@ -47,6 +48,8 @@ public:
 
 	//For editor
 	shared_ptr<CScene>& GetCurrentScene();	
+
+	CXmlSceneParser m_SceneParser;
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;
@@ -69,8 +72,6 @@ private:
 	float	m_ShadowMapSize;
 
 	float m_WaterQuality;
-
-	
 
 	bool m_IsLoading;
 	bool m_IsFullScreen;	

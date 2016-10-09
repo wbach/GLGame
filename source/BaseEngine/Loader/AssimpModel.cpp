@@ -7,8 +7,8 @@ CAssimModel::CAssimModel(CTextureLoader & texture_lodaer)
 
 void CAssimModel::InitModel(string file_name)
 {
-	string path = file_name.substr(0, file_name.find_last_of('/'));
-
+	std::replace(file_name.begin(), file_name.end(), '\\', '/');
+	string path = file_name.substr(0, file_name.find_last_of('/'));	
 	m_LoaderType = LoaderType::ASSIMP; 
 
 	Assimp::Importer importer;
@@ -36,6 +36,7 @@ void CAssimModel::CleanUp()
 	{
 		mesh.CleanUp();
 	}
+	m_Meshes.clear();
 }
 void CAssimModel::ProcessMesh(string file_path, aiMesh* mesh, const aiScene* scene)
 {

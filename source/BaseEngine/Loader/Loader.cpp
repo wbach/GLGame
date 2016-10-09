@@ -15,6 +15,7 @@ void CLoader::CleanUp()
 
 	m_Textures.clear();
 	m_Models.clear();
+	m_IndexesUpdatingModels.clear();
 }
 void CLoader::UpdateModels(float delta_time)
 {
@@ -58,7 +59,32 @@ GLuint CLoader::LoadTexture(string file_name, bool vertical_flip)
 	return m_TextureLoader.LoadTexture(file_name, vertical_flip);
 }
 
+GLuint CLoader::LoadFullTexture(string file_name, GLubyte *& data, int & width, int & height, float quality)
+{
+	return m_TextureLoader.LoadFullTexture(file_name, true, data, width, height, quality);
+}
+
 GLuint CLoader::LoadCubeMap(const vector<string>& filenames)
 {
 	return m_TextureLoader.LoadCubeMap(filenames);
+}
+
+void CLoader::ReloadTexture(string file_name, GLuint& texture_id)
+{
+	m_TextureLoader.ReloadTexture(file_name, &texture_id);
+}
+
+void CLoader::ReloadTexture(GLubyte* data, GLuint& texture_id, int width, int height)
+{
+	m_TextureLoader.ReloadTexture(data, texture_id, width, height);
+}
+
+void CLoader::UpdateSubTexture(GLuint & texture_id, GLubyte * subdata, int start_x, int start_y, int width, int height)
+{
+	m_TextureLoader.UpdateSubTexture(texture_id, subdata, start_x, start_y, width, height);
+}
+
+void CLoader::SaveTextureToFile(string file_name, GLubyte * data, int width, int height)
+{
+	m_TextureLoader.SaveTextureToFile(file_name, data, width, height);
 }

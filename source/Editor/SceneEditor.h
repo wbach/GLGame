@@ -10,12 +10,19 @@
 #include <vector>
 #include <cctype>
 #include "../BaseEngine/Engine/GLgame.h"
+#include <thread>
+#define TEXTCOLOR RGB(0, 0, 0)
+#define BKCOLOR RGB(250, 250, 250)
+#pragma comment(linker,"\"/manifestdependency:type='win32' name = 'Microsoft.Windows.Common-Controls' version = '6.0.0.0' processorArchitecture = '*' publicKeyToken = '6595b64144ccf1df' language = '*'\"")
+
+static HWND s_ProgresBarLoading;
+static HWND s_DialogLoading;
 
 namespace ControlsIds
 {
 	enum Ids 
 	{
-		//File list
+				//File list
 		FILE_LIST = 1001,
 		DRIVE_COMBO,
 		//Inspector
@@ -29,11 +36,24 @@ namespace ControlsIds
 		INSPECTOR_EDIT_SCALE_Y,
 		INSPECTOR_EDIT_SCALE_Z,
 		INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT,
+		INSPECTOR_DELETE_CURRENT_SELECTED,
+		INSPECTOR_TEXT_CURRENT_SELECTED,
+		INSPECTOR_GO_CAMERA_TO_OBJECT,
+		INSPECTOR_TEXTURE_BACKGROUNG,
+		INSPECTOR_TEXTURE_RED,
+		INSPECTOR_TEXTURE_GREEN,
+		INSPECTOR_TEXTURE_BLUE,
+		INSPECTOR_PAINT_SIZE,
+		INSPECTOR_PAINT_STRENGTH,
+		INSPECTOR_PAINT_SIZE_TEXT,
+		INSPECTOR_PAINT_STRENGTH_TEXT,
 		//Tree
 		OBJECT_TREEE,
 		//Menu
 		MENU_NEW_SCENE,
 		MENU_OPEN_SCENE,
+		MENU_SAVE_SCENE,
+		MENU_SAVEAS_SCENE,
 		MENU_ABOUT,
 		MENU_QUIT,
 		//Count
@@ -71,6 +91,17 @@ namespace Hwnds
 		INSPECTOR_EDIT_SCALE_Y,
 		INSPECTOR_EDIT_SCALE_Z,
 		INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT,
+		INSPECTOR_DELETE_CURRENT_SELECTED,
+		INSPECTOR_TEXT_CURRENT_SELECTED,
+		INSPECTOR_GO_CAMERA_TO_OBJECT,
+		INSPECTOR_TEXTURE_BACKGROUNG,
+		INSPECTOR_TEXTURE_RED,
+		INSPECTOR_TEXTURE_GREEN,
+		INSPECTOR_TEXTURE_BLUE,
+		INSPECTOR_PAINT_SIZE,
+		INSPECTOR_PAINT_STRENGTH,
+		INSPECTOR_PAINT_SIZE_TEXT,
+		INSPECTOR_PAINT_STRENGTH_TEXT,
 		//File list
 		FILE_LIST,
 		DRIVE_COMBO,
@@ -80,6 +111,9 @@ namespace Hwnds
 		//Menu
 		MENU,
 		MENU_BAR,
+		//
+		LOADING_DIALOG,
+		LOADING_PROGRESS_BAR,
 		//COunt
 		COUNT
 	};
@@ -101,7 +135,7 @@ struct SFile
 	std::string date;
 	long int size;
 };
-//LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+
 class CSceneEditor
 {
 public:
@@ -111,9 +145,17 @@ public:
 	static LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);	
 private:	
 	//
+	void CreateDialogProgressBar();
+	void DeleteDialogProgressBar();
+	void RegisterLoadingClass(HWND hwnd);
+	static LRESULT CALLBACK LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	std::string GetTextFromControl(HWND hwnd);
+
+
 	// Inspector function
 	void CreateInspector(int w, int h);
+	void CreateTerrainTextureView(int &w, int &h, int size_x, int size_y);
+	void CreateTransformView(int &w, int &h, int size_x, int size_y);
 	void UpdateValueControl(HWND hwnd, float x);
 	void InspectorProcedure(WPARAM wParam, LPARAM lParam);
 	void UpdateInspector();
@@ -125,7 +167,7 @@ private:
 	void CreateObjectsTree();
 	void FillObjectsTree();
 	void RecursiveSetEntity(const std::shared_ptr<CEntity>& enity, HTREEITEM root);
-	void TreeProcedure(WPARAM wParam, LPARAM lParam);
+	void TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam);
 
 	// File Expllorer functions
 	void CheckAvaibleDrives();
@@ -141,11 +183,20 @@ private:
 	void CreateWndClass();
 	void CreateMainWindow();
 	void AddMenus();
+	void CheckActiveWindows();
 	LRESULT CALLBACK RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	
+	//*
+	void DisplayBitmap(HWND hwnd, HBITMAP bitmap, HDC hdc, int x, int y);
+	static HBITMAP Create8bppBitmap(HDC hdc, int width, int height, LPVOID pBits = NULL);
+	static HBITMAP CreateBitmapFromPixels(HDC hDC, UINT uWidth, UINT uHeight, UINT uBitsPerPixel, LPVOID pBits);
+
 	// Inspector variables
 	bool m_AttachToTerrainHeight = false;
-	shared_ptr<CEntity> m_CurrentEntity;
+	shared_ptr<CEntity> m_CurrentEntity = nullptr;
+	CTerrain* m_CurrentTerrain = nullptr;
+
+	int m_BrushSize = 50;
+	float m_PaintStrength = 1.f;
 
 	// File Expllorer variables
 	std::string				 m_CurrentPath;
@@ -163,7 +214,6 @@ private:
 	HMENU		m_Menus[MenuHandles::COUNT];
 	// Fonts
 	HFONT hNormalFont;
-
 	// Game
 	CGame& m_Game;
 };

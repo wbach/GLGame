@@ -18,6 +18,9 @@ void CSceneEditor::Init(int width, int height)
 	m_Width = width;
 	m_Height = height;
 
+	//INITCOMMONCONTROLSEX icc;
+	//icc.dwSize = sizeof(INITCOMMONCONTROLSEX);
+	//icc.dwICC = ICC_BAR_CLASSES; // toolbary, statusbary, tooltipy i oczywiœcie progressbary
 	InitCommonControls();
 
 	// Create Editro window
@@ -44,10 +47,24 @@ void CSceneEditor::Init(int width, int height)
 
 	// Setfont to all elements
 	for (int x = 0; x < Hwnds::COUNT; x++)
-		SendMessage(m_Hwnd[x], WM_SETFONT, (WPARAM)hNormalFont, 0);	
+	{
+		SendMessage(m_Hwnd[x], WM_SETFONT, (WPARAM)hNormalFont, 0);		
+	}
 
 	ShowWindow(m_Hwnd[Hwnds::MAIN_WINDOW], SW_SHOWDEFAULT); // Poka¿ okienko...
 	UpdateWindow(m_Hwnd[Hwnds::MAIN_WINDOW]);
+
+	
+
+	//GLubyte* image;
+	//int w, h;
+	//m_Game.GetCurrentScene()->GetLoader().LoadFullTexture("Data/Terrain/TerrainTextures/blendMap.png", image, w, h, 16 );
+
+	//HDC hdc = GetDC(m_Hwnd[Hwnds::MAIN_WINDOW]);
+	//HWND a = GetDesktopWindow();
+	//HBITMAP b = CreateBitmapFromPixels(hdc, w, h, 32, image);
+	//DisplayBitmap(m_Hwnd[Hwnds::MAIN_WINDOW], b, hdc, 0, 0);
+	//DeleteObject(b);
 }
 void CSceneEditor::AddMenus() 
 {
@@ -57,6 +74,8 @@ void CSceneEditor::AddMenus()
 
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_NEW_SCENE, L"&New");
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_OPEN_SCENE, L"&Open");
+	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVE_SCENE, L"&Save");
+	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVEAS_SCENE, L"&Save as");
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_SEPARATOR, 0, NULL);
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_QUIT, L"&Quit");
 
@@ -82,10 +101,14 @@ void CSceneEditor::AddMenus()
 	//}
 
 }
+void CSceneEditor::CheckActiveWindows()
+{
+
+}
 void CSceneEditor::CreateMainWindow()
 {
 	// create window
-	m_Hwnd[Hwnds::MAIN_WINDOW] = CreateWindowEx(WS_EX_CLIENTEDGE, m_ClassName, "Editor", WS_OVERLAPPEDWINDOW,
+	m_Hwnd[Hwnds::MAIN_WINDOW] = CreateWindowEx(WS_EX_WINDOWEDGE, m_ClassName, "Editor", WS_SYSMENU,
 		CW_USEDEFAULT, CW_USEDEFAULT, m_Width, m_Height, NULL, NULL, m_Instance, NULL);
 
 	if (m_Hwnd[Hwnds::MAIN_WINDOW] == NULL)
@@ -94,6 +117,9 @@ void CSceneEditor::CreateMainWindow()
 		return;
 	}
 	AddMenus();
+	RegisterLoadingClass(m_Hwnd[Hwnds::MAIN_WINDOW]);
+//	CreateDialogProgressBar();
+
 }
 
 void CSceneEditor::AttachOpenGLWindow()
@@ -107,14 +133,14 @@ void CSceneEditor::CreateWndClass()
 {
 	// Create wnd class
 	m_Wc.cbSize = sizeof(WNDCLASSEX);
-	m_Wc.style = 0;
+	m_Wc.style = CS_GLOBALCLASS | CS_BYTEALIGNCLIENT;
 	m_Wc.lpfnWndProc = WndProc;
 	m_Wc.cbClsExtra = 0;
 	m_Wc.cbWndExtra = 0;
 	m_Wc.hInstance = m_Instance;
 	m_Wc.hIcon = LoadIcon(NULL, IDI_APPLICATION);
 	m_Wc.hCursor = LoadCursor(NULL, IDC_ARROW);
-	m_Wc.hbrBackground =(HBRUSH)(COLOR_WINDOW + 1);// CreateSolidBrush(RGB(30, 30, 30));//
+	m_Wc.hbrBackground = CreateSolidBrush(BKCOLOR); //(HBRUSH)(COLOR_WINDOW + 1);// //
 	m_Wc.lpszMenuName = NULL;
 	m_Wc.lpszClassName = m_ClassName;
 	m_Wc.hIconSm = LoadIcon(NULL, IDI_APPLICATION);
@@ -126,6 +152,56 @@ void CSceneEditor::CreateWndClass()
 			MB_ICONEXCLAMATION | MB_OK);
 		return;
 	}
+}
+void CSceneEditor::CreateDialogProgressBar()
+{
+	RECT rect;
+	GetClientRect(GetDesktopWindow(), &rect);
+	rect.left = (rect.right / 2) - (400 / 2);
+	rect.top = (rect.bottom / 2) - (100 / 2);
+	
+	 s_DialogLoading = m_Hwnd[Hwnds::LOADING_DIALOG] = CreateWindowExW(WS_EX_TOPMOST, L"LoadingDialogClass", L"Loading Scene",
+		WS_VISIBLE  | WS_POPUP, rect.left, rect.top, 400, 30,
+		NULL, NULL, m_Instance, NULL);
+
+	 s_ProgresBarLoading = m_Hwnd[Hwnds::LOADING_PROGRESS_BAR] = CreateWindowEx(0, PROGRESS_CLASS, NULL, WS_CHILD | WS_VISIBLE | PBS_SMOOTH ,
+		0, 0, 400, 30, m_Hwnd[Hwnds::LOADING_DIALOG], (HMENU)200, m_Instance, NULL);
+
+	//SendMessage(m_Hwnd[Hwnds::LOADING_PROGRESS_BAR], PBM_SETMARQUEE, TRUE, 0);
+
+}
+void CSceneEditor::DeleteDialogProgressBar()
+{
+	CloseWindow(m_Hwnd[Hwnds::LOADING_DIALOG]);
+}
+void CSceneEditor::RegisterLoadingClass(HWND hwnd)
+{
+	WNDCLASSEXW wc = { 0 };
+	wc.cbSize = sizeof(WNDCLASSEXW);
+	wc.lpfnWndProc = (WNDPROC)LoadingDialogProc;
+	wc.hInstance = m_Instance;
+	wc.hbrBackground = GetSysColorBrush(COLOR_3DFACE);
+	wc.lpszClassName = L"LoadingDialogClass";
+	RegisterClassExW(&wc);
+}
+LRESULT CSceneEditor::LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	switch (msg) {
+
+	case WM_CREATE:
+		break;
+
+	case WM_COMMAND:
+		DestroyWindow(hwnd);
+		break;
+
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		break;
+
+	}
+
+	return (DefWindowProcW(hwnd, msg, wParam, lParam));
 }
 std::string CSceneEditor::GetTextFromControl(HWND hwnd)
 {
@@ -152,4 +228,92 @@ void CSceneEditor::PeekMesages()
 	{
 		UpdateInspector();
 	}
+}
+//*
+
+void CSceneEditor::DisplayBitmap(HWND hwnd, HBITMAP bitmap, HDC hdc, int x, int y)
+{
+
+	BITMAP bm;
+
+	GetObject(bitmap, sizeof(bm), &bm);
+
+	HDC hdcMem = CreateCompatibleDC(hdc);
+
+	HBITMAP hbmOld = (HBITMAP)SelectObject(hdcMem, bitmap);
+
+	BitBlt(hdc, x, y, bm.bmWidth, bm.bmHeight, hdcMem, 0, 0, SRCCOPY);
+
+	DeleteObject(hdcMem);
+}
+
+HBITMAP CSceneEditor::Create8bppBitmap(HDC hdc, int width, int height, LPVOID pBits)
+{
+	BITMAPINFO *bmi = (BITMAPINFO *)malloc(sizeof(BITMAPINFOHEADER) + sizeof(RGBQUAD) * 256);
+	BITMAPINFOHEADER &bih(bmi->bmiHeader);
+	bih.biSize = sizeof(BITMAPINFOHEADER);
+	bih.biWidth = width;
+	bih.biHeight = -height;
+	bih.biPlanes = 1;
+	bih.biBitCount = 8;
+	bih.biCompression = BI_RGB;
+	bih.biSizeImage = 0;
+	bih.biXPelsPerMeter = 14173;
+	bih.biYPelsPerMeter = 14173;
+	bih.biClrUsed = 0;
+	bih.biClrImportant = 0;
+	for (int I = 0; I <= 255; I++)
+	{
+		bmi->bmiColors[I].rgbBlue = bmi->bmiColors[I].rgbGreen = bmi->bmiColors[I].rgbRed = (BYTE)I;
+		bmi->bmiColors[I].rgbReserved = 0;
+	}
+
+	void *Pixels = NULL;
+	HBITMAP hbmp = CreateDIBSection(hdc, bmi, DIB_RGB_COLORS, &Pixels, NULL, 0);
+
+	if (pBits != NULL)
+	{
+		//fill the bitmap
+		BYTE* pbBits = (BYTE*)pBits;
+		BYTE *Pix = (BYTE *)Pixels;
+		memcpy(Pix, pbBits, width * height);
+	}
+
+	free(bmi);
+
+	return hbmp;
+}
+
+HBITMAP CSceneEditor::CreateBitmapFromPixels(HDC hDC, UINT uWidth, UINT uHeight, UINT uBitsPerPixel, LPVOID pBits)
+{
+	if (uBitsPerPixel < 8) // NOT IMPLEMENTED YET
+		return NULL;
+
+	if (uBitsPerPixel == 8)
+		return Create8bppBitmap(hDC, uWidth, uHeight, pBits);
+
+	HBITMAP hBitmap = 0;
+	if (!uWidth || !uHeight || !uBitsPerPixel)
+		return hBitmap;
+	LONG lBmpSize = uWidth * uHeight * (uBitsPerPixel / 8);
+	BITMAPINFO bmpInfo = { 0 };
+	bmpInfo.bmiHeader.biBitCount = uBitsPerPixel;
+	bmpInfo.bmiHeader.biHeight = uHeight;
+	bmpInfo.bmiHeader.biWidth = uWidth;
+	bmpInfo.bmiHeader.biPlanes = 1;
+	bmpInfo.bmiHeader.biSize = sizeof(BITMAPINFOHEADER);
+	// Pointer to access the pixels of bitmap
+	UINT * pPixels = 0;
+	hBitmap = CreateDIBSection(hDC, (BITMAPINFO *)&
+		bmpInfo, DIB_RGB_COLORS, (void **)&
+		pPixels, NULL, 0);
+
+	if (!hBitmap)
+		return hBitmap; // return if invalid bitmaps
+
+						//SetBitmapBits( hBitmap, lBmpSize, pBits);
+						// Directly Write
+	memcpy(pPixels, pBits, lBmpSize);
+
+	return hBitmap;
 }

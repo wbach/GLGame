@@ -51,6 +51,11 @@ void CTerrainRenderer::BindTextures(const CTerrain &terrain)
 	glBindTexture(GL_TEXTURE_2D, terrain.m_GTexture[1]);
 	glActiveTexture(GL_TEXTURE8);
 	glBindTexture(GL_TEXTURE_2D, terrain.m_BTexture[1]);
+
+	glActiveTexture(GL_TEXTURE9);
+	glBindTexture(GL_TEXTURE_2D, terrain.m_RockTexture[0]);
+	glActiveTexture(GL_TEXTURE10);
+	glBindTexture(GL_TEXTURE_2D, terrain.m_RockTexture[1]);
 }
 
 void CTerrainRenderer::UnBindTextureModel()

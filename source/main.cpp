@@ -8,17 +8,16 @@
 #include "BaseEngine/APIs/GLFW3/GLFW3_OpenGL.h"
 #include "BaseEngine/APIs/SDL2/SDLOpenGL.h"
 #include "TestGame/Test_Scene.h"
-//#include "TestGame/Test_MainMenu.h"
-
+#include <map>
 CGame myGame;
 #ifdef EDITOR
 CSceneEditor editor(myGame);
 #endif
+template<typename T> CScene* createInstance() { return new T; }
+typedef std::map<std::string, CScene*(*)()> scenes_type;
 
 int main(int argc, char *argv[])
-{
-	
-
+{	
 	//Test git cooment
 	//char Title[512]; ZeroMemory(Title, 512); GetConsoleTitle(Title, 512);	HWND console = FindWindow(NULL, Title); ShowWindow(console, NULL);
 	//  shared_ptr<CScene> mainMenu = make_shared<CTestMainMenu>(myGame);
@@ -33,6 +32,7 @@ int main(int argc, char *argv[])
 #else
 	api = std::make_shared<CGlfwOpenGlApi>();
 #endif
+	
 	shared_ptr<CScene> testScene = std::make_shared<CTestSCene>(myGame, test_scene_camera_type);
 	myGame.AddScene(testScene);
 	if (myGame.SetCurrentScene(0) < 0)
@@ -40,11 +40,13 @@ int main(int argc, char *argv[])
 		cout << "Scene not found." << endl;
 	}
 	myGame.Initialize(api);  
-
+	
 #ifdef EDITOR	
 	editor.Init(1366, 768);
 	editor.PeekMesages();
 	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
+#else
+	myGame.m_SceneParser.LoadScene(testScene->m_SceneFile, testScene);
 #endif
 
     myGame.GameLoop();

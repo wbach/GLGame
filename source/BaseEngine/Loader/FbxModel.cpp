@@ -148,11 +148,11 @@ void CFbxModel::LoadCacheRecursive(FbxScene* scene, FbxAnimLayer* anim_layer)
 			const FbxString file_name = file_texture->GetFileName();
 			FBXSDK_printf("%s\n", file_name.Buffer());
 
-			if (file_name.Right(3).Upper() == "TGA")
-			{
-				FBXSDK_printf("TGA textures are not supported now: %s\n", file_name.Buffer());
-				continue;
-			}
+			//if (file_name.Right(3).Upper() == "TGA")
+			//{
+			//	FBXSDK_printf("TGA textures are not supported now: %s\n", file_name.Buffer());
+			//	continue;
+			//}
 
 			GLuint texture_id = 0;
 			std::string texture_file(file_name.Buffer());
@@ -1167,16 +1167,22 @@ void CFbxModel::CleanUp()
 {
 	FbxArrayDelete(m_AnimStackNameArray);
 
-	// Unload the cache and free the memory
-	if (m_Scene)
-	{
-		UnloadCacheRecursive(m_Scene);
-	}
+	//// Unload the cache and free the memory
+	//if (m_Scene)
+	//{
+	//	UnloadCacheRecursive(m_Scene);
+	//}
 
 	// Delete the FBX SDK manager. All the objects that have been allocated 
 	// using the FBX SDK manager and that haven't been explicitly destroyed 
 	// are automatically destroyed at the same time.
 	DestroySdkObjects(m_SdkManager, true);
+
+	for (CMesh& mesh : m_Meshes)
+	{
+		mesh.CleanUp();
+	}
+	m_Meshes.clear();
 }
 void CFbxModel::UnloadCacheRecursive(FbxNode * pNode)
 {

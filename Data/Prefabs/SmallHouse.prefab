@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Prefab>
+	<Entity>	  
+		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
+		<Name>Small_House</Name>
+		<Position>
+			<x>200</x>
+			<y>55</y>
+			<z>200</z>
+		</Position>
+		<Rotation>
+			<x>0</x>
+			<y>0</y>
+			<z>0</z>
+		</Rotation>
+		<Scale>
+			<x>4</x>
+			<y>4</y>
+			<z>4</z>
+		</Scale>	
+		<Global>0</Global>
+		<Entity>		  
+			<File>Data/Meshes/bed1/bed1.obj</File>
+			<Name>Bed</Name>
+			<Position>
+				<x>250</x>
+				<y>60</y>
+				<z>200</z>
+			</Position>
+			<Rotation>
+				<x>0</x>
+				<y>0</y>
+				<z>0</z>
+			</Rotation>
+			<Scale>
+				<x>4</x>
+				<y>4</y>
+				<z>4</z>
+			</Scale>	
+			<Global>0</Global>		
+		</Entity>
+	</Entity>
+</Prefab>

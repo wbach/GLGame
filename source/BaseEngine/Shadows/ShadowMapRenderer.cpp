@@ -27,13 +27,22 @@ void CShadowMapRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, 
 }
 void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 {
+	
+	glm::vec3 light_direction;
+	try
+	{
+		light_direction = scene->GetDirectionalLightPosition() * -1.f;
+	}
+	catch (int e)
+	{
+		return;
+	}
 	//if (scene->GetEntities().size() <= 0) return;
 	m_ShadowFbo.BindFBO();
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_DEPTH_BUFFER_BIT);
 
-	m_ShadowBox.Update();	
-	glm::vec3 light_direction = scene->GetDirectionalLightPosition() * -1.f;
+	m_ShadowBox.Update();
 
 	Prepare(light_direction, m_ShadowBox);
 

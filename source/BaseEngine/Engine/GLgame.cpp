@@ -44,8 +44,9 @@ void CGame::Uninitialize()
 	OnGameLoopRun = nullptr;
 
 	m_GuiRenderer.CleanUP();
-	m_DisplayManager.Uninitialize();
 	m_MasterRenderer.CleanUp();
+
+	m_DisplayManager.Uninitialize();	
 }
 void CGame::SetWindowSize(glm::vec2 size)
 {

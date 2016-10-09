@@ -1,32 +1,107 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Map>
-	<Entity>
-		<File>Data/Meshes/Garen/garen_idle.fbx</File>
-		<Name>Player</Name>
+	<Camera>
+		<Position>
+			<x>1041.787842</x>
+			<y>82.637665</y>
+			<z>1204.883667</z>
+		</Position>
+		<Pitch>16.199999</Pitch>
+		<Yaw>175.001709</Yaw>
+	</Camera>
+	<SkyBox>
+		<DayTextures>
+			<RightTexture>Data/Skybox/Calm/right.jpg</RightTexture>
+			<LeftTexture>Data/Skybox/Calm/left.jpg</LeftTexture>
+			<TopTexture>Data/Skybox/Calm/top.jpg</TopTexture>
+			<BottomTexture>Data/Skybox/Calm/bottom.jpg</BottomTexture>
+			<BackTexture>Data/Skybox/Calm/front.jpg</BackTexture>
+			<FrontTexture>Data/Skybox/Calm/back.jpg</FrontTexture>
+		</DayTextures>
+		<NightTextures>
+			<RightTexture>Data/Skybox/Calm/right.jpg</RightTexture>
+			<LeftTexture>Data/Skybox/Calm/left.jpg</LeftTexture>
+			<TopTexture>Data/Skybox/Calm/top.jpg</TopTexture>
+			<BottomTexture>Data/Skybox/Calm/bottom.jpg</BottomTexture>
+			<BackTexture>Data/Skybox/Calm/front.jpg</BackTexture>
+			<FrontTexture>Data/Skybox/Calm/back.jpg</FrontTexture>
+		</NightTextures>
+	</SkyBox>
+	<Light>
+		<Type>0</Type>
+		<Position>
+			<x>100000.000000</x>
+			<y>150000.000000</y>
+			<z>100000.000000</z>
+		</Position>
+		<Color>
+			<x>0.500000</x>
+			<y>0.500000</y>
+			<z>0.500000</z>
+		</Color>
+		<Attenuation>
+			<x>1.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Attenuation>
+		<CutOff>0.000000</CutOff>
+	</Light>
+	<Light>
+		<Type>1</Type>
 		<Position>
 			<x>86.000000</x>
-			<y>-1.000000</y>
+			<y>60.000000</y>
 			<z>47.000000</z>
 		</Position>
-		<Rotation>
+		<Color>
+			<x>0.500000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Color>
+		<Attenuation>
+			<x>0.000000</x>
+			<y>0.100000</y>
+			<z>0.000000</z>
+		</Attenuation>
+		<CutOff>0.000000</CutOff>
+	</Light>
+	<Terrain>
+		<Name>Test_Terrain</Name>
+		<Position>
 			<x>0.000000</x>
 			<y>0.000000</y>
 			<z>0.000000</z>
-		</Rotation>
-		<Scale>
-			<x>0.050000</x>
-			<y>0.050000</y>
-			<z>0.050000</z>
-		</Scale>
-		<Global>0</Global>
-	</Entity>
+		</Position>
+		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256.png</HeightMap>
+		<BlendMap>Data/Terrain/TerrainTextures/blendMap.png</BlendMap>
+		<BackgroundTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
+		</BackgroundTexture>
+		<RockTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/165.JPG</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/165.JPG</NormalTexture>
+		</RockTexture>
+		<RedTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/grassFlowers.png</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/grassFlowers.png</NormalTexture>
+		</RedTexture>
+		<GreenTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
+		</GreenTexture>
+		<BlueTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.bmp</NormalTexture>
+		</BlueTexture>
+	</Terrain>
 	<Entity>
 		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
-		<Name>smallHouse1.obj</Name>
+		<Name>Small_House</Name>
 		<Position>
-			<x>138.000000</x>
-			<y>52.527664</y>
-			<z>128.000000</z>
+			<x>200.000000</x>
+			<y>55.000000</y>
+			<z>200.000000</z>
 		</Position>
 		<Rotation>
 			<x>0.000000</x>
@@ -40,12 +115,12 @@
 		</Scale>
 		<Global>0</Global>
 		<Entity>
-			<File>Data/Meshes/Barrel/barrel.obj</File>
-			<Name>barrel.obj</Name>
+			<File>Data/Meshes/bed1/bed1.obj</File>
+			<Name>Bed</Name>
 			<Position>
-				<x>86.000000</x>
-				<y>50.010300</y>
-				<z>128.000000</z>
+				<x>250.000000</x>
+				<y>60.000000</y>
+				<z>200.000000</z>
 			</Position>
 			<Rotation>
 				<x>0.000000</x>
@@ -53,79 +128,33 @@
 				<z>0.000000</z>
 			</Rotation>
 			<Scale>
-				<x>1.000000</x>
-				<y>1.000000</y>
-				<z>1.000000</z>
+				<x>4.000000</x>
+				<y>4.000000</y>
+				<z>4.000000</z>
 			</Scale>
 			<Global>0</Global>
-			<Entity>
-				<File>Data/Meshes/Barrel/barrel.obj</File>
-				<Name>barrel.obj</Name>
-				<Position>
-					<x>100.000000</x>
-					<y>50.010300</y>
-					<z>128.000000</z>
-				</Position>
-				<Rotation>
-					<x>0.000000</x>
-					<y>0.000000</y>
-					<z>0.000000</z>
-				</Rotation>
-				<Scale>
-					<x>1.000000</x>
-					<y>1.000000</y>
-					<z>1.000000</z>
-				</Scale>
-				<Global>0</Global>
-				<Entity>
-					<File>Data/Meshes/Barrel/barrel.obj</File>
-					<Name>barrel.obj</Name>
-					<Position>
-						<x>120.000000</x>
-						<y>50.010300</y>
-						<z>128.000000</z>
-					</Position>
-					<Rotation>
-						<x>0.000000</x>
-						<y>0.000000</y>
-						<z>0.000000</z>
-					</Rotation>
-					<Scale>
-						<x>1.000000</x>
-						<y>1.000000</y>
-						<z>1.000000</z>
-					</Scale>
-					<Global>0</Global>
-				</Entity>
-			</Entity>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\bench\bench.obj</File>
+			<Name>bench.obj</Name>
+			<Position>
+				<x>217.000000</x>
+				<y>54.743999</y>
+				<z>197.490997</z>
+			</Position>
+			<Rotation>
+				<x>0.000000</x>
+				<y>90.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>4.000000</x>
+				<y>4.000000</y>
+				<z>4.000000</z>
+			</Scale>
+			<Global>0</Global>
 		</Entity>
 	</Entity>
-	<Terrain>
-		<Name>Test_Terrain</Name>
-		<Position>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Position>
-		<HeightMap>Data/Terrain/TerrainTextures/TdkWN.png</HeightMap>
-		<BlendMap>Data/Terrain/TerrainTextures/blendMap.png</BlendMap>
-		<BackgroundTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
-		</BackgroundTexture>
-		<RedTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/156.JPG</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/156.JPG</NormalTexture>
-		</RedTexture>
-		<GreenTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
-		</GreenTexture>
-		<BlueTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/177.JPG</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/177_norm.JPG</NormalTexture>
-		</BlueTexture>
-	</Terrain>
 	<Entity>
 		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 		<Name>Small_House</Name>
@@ -144,7 +173,7 @@
 			<y>4.000000</y>
 			<z>4.000000</z>
 		</Scale>
-		<Global>1</Global>
+		<Global>0</Global>
 		<Entity>
 			<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 			<Name>Small_House_2</Name>
@@ -163,7 +192,47 @@
 				<y>4.000000</y>
 				<z>4.000000</z>
 			</Scale>
-			<Global>1</Global>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Gothic_smallHouse1\smallHouse1.obj</File>
+			<Name>smallHouse1.obj</Name>
+			<Position>
+				<x>703.853027</x>
+				<y>52.448002</y>
+				<z>822.299988</z>
+			</Position>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>4.000000</x>
+				<y>4.000000</y>
+				<z>4.000000</z>
+			</Scale>
+			<Global>0</Global>
+			<Entity>
+				<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
+				<Name>alchemTable.obj</Name>
+				<Position>
+					<x>698.226013</x>
+					<y>52.876999</y>
+					<z>838.687988</z>
+				</Position>
+				<Rotation>
+					<x>0.000000</x>
+					<y>180.000000</y>
+					<z>0.000000</z>
+				</Rotation>
+				<Scale>
+					<x>4.000000</x>
+					<y>4.000000</y>
+					<z>4.000000</z>
+				</Scale>
+				<Global>0</Global>
+			</Entity>
 		</Entity>
 	</Entity>
 </Map>

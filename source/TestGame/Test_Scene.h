@@ -1,7 +1,6 @@
 #pragma once
 #include <string>
 #include <vector>
-#include "../BaseEngine/Loader/XML/XMLSceneParser.h"
 #include "../BaseEngine/Engine/Scene.h"
 #include "../BaseEngine/Camera/ThridPersonCamera.h"
 #include "../BaseEngine/Camera/FirstPersonCamera.h"
@@ -14,11 +13,9 @@ class CTestSCene : public CScene
 	CLight m_PointLight;
 
     shared_ptr<CPlayer> songo;	
-	shared_ptr<CEntity> m9;
-
 	int m_CameraType = 0;
 
-	CXmlSceneParser m_SceneParser;
+	
 public:
     bool thridCamera = true;
 	CTestSCene(CGame& game, int camera_type)
@@ -26,6 +23,7 @@ public:
 		, m_CameraType(camera_type)
 	{
 		m_Name = "Test Scene";
+		m_SceneFile = "Data/Maps/SavedTestMap.map";
 	}
 	int Initialize() override
 	{
@@ -33,6 +31,8 @@ public:
 		songo->SetName("Player");
 		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true), "Data/Meshes/Garen/garen_idle.fbx");
 		songo->AddModel(m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true), "Data/Meshes/Garen/garen_idle.fbx");
+		//m_IsSpecial - enity created in code not from file
+		songo->m_IsSpecial = true;
 		AddEntity(songo, true);
 
 
@@ -40,61 +40,16 @@ public:
 			setThridCamera();
 		else
 			setFirstCamera();
-		m_SceneParser.LoadScene("Data/Maps/TestMap.map", this);
+
+			
+
 		
-
-		vector<string> DAY_TEXTURES_FILES;
-		vector<string> NIGHT_TEXTURES_FILES;
-
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/right.bmp");
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/left.bmp");
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/top.bmp");
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/bottom.bmp");
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/back.bmp");
-		DAY_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/front.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/right.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/left.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/top.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/bottom.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/back.bmp");
-		NIGHT_TEXTURES_FILES.push_back("Data/Skybox/TropicalSunnyDay/front.bmp");
-
-		GLuint day_texture = m_Loader.LoadCubeMap(DAY_TEXTURES_FILES);
-		GLuint night_texture = m_Loader.LoadCubeMap(DAY_TEXTURES_FILES);
-
-		m_Game.GetMasterRenderer().SetSkyBoxTextures(day_texture, night_texture);
-		int skybox_cube = m_Loader.LoadMesh("Data/Meshes/SkyBox/cube.obj");
-		m_Game.GetMasterRenderer().SetSkyBoxMeshId(m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVao(), m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVertexCount());
-
 
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
-		shared_ptr<CEntity>  entity = CreateEntityFromFile("Data/Meshes/Gothic_smallHouse1/smallHouse1.obj", CreatePositionVector(138, 128, 2.5), glm::vec3(0), glm::vec3(4));
-		//AddSubEntity(entity)
-		AddEntity(entity, true);
-		shared_ptr<CEntity>  barrel = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(86, 128, 0));
-		AddSubEntity(entity, barrel);
-		shared_ptr<CEntity>  barrel2 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(100, 128, 0));
-		AddSubEntity(barrel, barrel2);
-		shared_ptr<CEntity>  barrel3 = CreateEntityFromFile("Data/Meshes/Barrel/barrel.obj", CreatePositionVector(120, 128, 0));
-		AddSubEntity(barrel2, barrel3);
-
-		
-		
-
-		
-	//	camera->attachToObject();
-
-		m_DirLight = CLight(glm::vec3(0.5));
-		m_Lights.push_back(m_DirLight);
-
-		glm::vec3 point_ligt_position = CreatePositionVector(86, 47);
-		point_ligt_position.y += 10.f;
-		m_PointLight = CLight(point_ligt_position, glm::vec3(0.5f, .5f, 0.f), glm::vec3(0, 0.1, 0));
-		m_Lights.push_back(m_PointLight);		
-
-		m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
+		m_MousePicker = CMousePicker(m_Camera, m_Game.GetDisplayManager().GetWindowSize(), m_Game.GetProjectionMatrix());
+		//m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
 		return 0;
 	}
 	void setFirstCamera(){
@@ -109,8 +64,10 @@ public:
 		m_Camera.reset();
 		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(),songo->GetReferencedPosition(), songo->GetReferencedRotation());
 	}
+	
 	int Update() override
 	{
+
 		if ( m_Game.GetDisplayManager().CheckActiveWindow() && !m_Game.GetInputManager().GetKey(KeyCodes::LCTRL) )
 		{
 			m_Camera->CalculateInput();
@@ -121,7 +78,16 @@ public:
 			//m_Game.GetDisplayManager().ShowCoursor(true);
 		}
 		m_Camera->Move();
-		
+		if (m_Game.GetInputManager().GetKey(KeyCodes::Q))
+		{
+			for (CTerrain& terrain : m_Terrains)
+			{
+				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain);
+				//Utils::PrintVector("Mouse terrain pos: ", point);
+				//terrain.PaintBlendMap(point);
+				terrain.PaintHeightMap(point);
+			}
+		}
 
 		float dt = m_Game.GetDisplayManager().GetDeltaTime();
 		songo->calculateMove(dt);
@@ -130,7 +96,11 @@ public:
 		glm::vec2 window_size = m_Game.GetDisplayManager().GetWindowSize();		
 
 		if (m_Gui.guiButtons[0].CheckStatus(window_size) == GuiButtonState::ACTIVE)
-			return 2;
+		{
+		//	m_Loader.ReloadTexture("Data/Terrain/TerrainTextures/blendMap.png", m_Terrains[0].m_BackgroundTexture[0]);
+			
+		}
+			
 
 		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
 
@@ -141,16 +111,21 @@ public:
 	int CleanUp() override
 	{
 		m_Loader.CleanUp();
-		for (unsigned int x = 0; x < m_Terrains.size(); x++) {
+		for (unsigned int x = 0; x < m_Terrains.size(); x++) 
+		{
 			m_Terrains[x].CleanUp();
 		}
 		m_Terrains.clear();
+		for (shared_ptr<CEntity>& entity : m_Entities)
+			entity->CleanUp();
 		m_Entities.clear();
+
 		m_Gui.guiButtons.clear();
 		m_Gui.guiTexts.clear();
 		m_Gui.guiTextures.clear();
 		m_Lights.clear();
 		m_Camera.reset();
+		songo.reset();
 		return 0;
 	}
 	void LockCameraUnderTerrain()

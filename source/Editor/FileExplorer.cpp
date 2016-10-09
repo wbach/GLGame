@@ -5,10 +5,10 @@ void CSceneEditor::CreateFileList()
 	RECT rcl;
 	GetClientRect(m_Hwnd[Hwnds::MAIN_WINDOW], &rcl);
 
-	m_Hwnd[Hwnds::DRIVE_COMBO] = CreateWindowEx(WS_EX_CLIENTEDGE, "COMBOBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
+	m_Hwnd[Hwnds::DRIVE_COMBO] = CreateWindowEx(0, "COMBOBOX", NULL, WS_CHILD | WS_VISIBLE |
 		CBS_DROPDOWNLIST, 0, 455, 50, 200, m_Hwnd[Hwnds::MAIN_WINDOW], (HMENU)ControlsIds::DRIVE_COMBO, m_Instance, NULL);
 
-	m_Hwnd[Hwnds::CURRENT_PATH] = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER, 50, 455, m_Width / 2 - 370, 20,
+	m_Hwnd[Hwnds::CURRENT_PATH] = CreateWindowEx(0, "STATIC", NULL, WS_CHILD | WS_VISIBLE , 50, 458, m_Width / 2 - 375, 20,
 		m_Hwnd[Hwnds::MAIN_WINDOW], NULL, m_Instance, NULL);
 	SetWindowText(m_Hwnd[Hwnds::CURRENT_PATH], m_CurrentPath.c_str());
 
@@ -17,6 +17,40 @@ void CSceneEditor::CreateFileList()
 		m_Hwnd[Hwnds::MAIN_WINDOW], (HMENU)ControlsIds::FILE_LIST, m_Instance, NULL);
 
 	ListView_SetExtendedListViewStyle(m_Hwnd[Hwnds::FILE_LIST], LVS_EX_FULLROWSELECT);
+
+	
+	ListView_SetTextBkColor(m_Hwnd[Hwnds::FILE_LIST], BKCOLOR);
+	ListView_SetTextColor(m_Hwnd[Hwnds::FILE_LIST], TEXTCOLOR);
+	ListView_SetOutlineColor(m_Hwnd[Hwnds::FILE_LIST], BKCOLOR);
+	ListView_SetBkColor(m_Hwnd[Hwnds::FILE_LIST], BKCOLOR);
+
+	HIMAGELIST himl;
+	HBITMAP hbmp;
+
+	himl = ImageList_Create(32, 32, ILC_COLOR32, 10, 0);
+
+	hbmp = (HBITMAP)LoadImage(m_Instance, "Data/Editor/file.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+	DeleteObject(hbmp);
+
+	hbmp = (HBITMAP)LoadImage(m_Instance, "Data/Editor/folder.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+	DeleteObject(hbmp);
+
+	hbmp = (HBITMAP)LoadImage(m_Instance, "Data/Editor/fbx.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+	DeleteObject(hbmp);
+
+	hbmp = (HBITMAP)(HBITMAP)LoadImage(m_Instance, "Data/Editor/obj-icon.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+	DeleteObject(hbmp);
+
+	hbmp = (HBITMAP)(HBITMAP)LoadImage(m_Instance, "Data/Editor/omg.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE | LR_LOADMAP3DCOLORS);
+	ImageList_Add(himl, hbmp, (HBITMAP)NULL);
+	DeleteObject(hbmp);
+	ListView_SetImageList(m_Hwnd[Hwnds::FILE_LIST], himl, LVSIL_SMALL);
+
+	//ListView_SetGroupInfo(
 
 	LVCOLUMN lvc;
 	lvc.mask = LVCF_WIDTH | LVCF_TEXT | LVCF_SUBITEM;
@@ -50,21 +84,41 @@ void CSceneEditor::FillFileList()
 void CSceneEditor::AddFile(int i, const SFile& file)
 {
 	LVITEM lvi;
-	lvi.mask = LVIF_TEXT;
+	lvi.mask = LVIF_TEXT | LVIF_IMAGE;
 
 	lvi.pszText = (LPSTR)(file.name.c_str());
 	lvi.iItem = i;
 	lvi.iSubItem = 0;
-	ListView_InsertItem(m_Hwnd[Hwnds::FILE_LIST], &lvi);
+
 	std::string size = " ";
 
 	if (file.fileType == FilesTypes::DIRECTORY)
+	{
 		size = "Directory";
+		lvi.iImage = 1;
+	}
 	else if (file.fileType == FilesTypes::DEFAULT)
+	{
 		size = std::to_string(file.size) + " MB";
-
-	ListView_SetItemText(m_Hwnd[Hwnds::FILE_LIST], i, 1, (LPSTR)(size.c_str()));
-	ListView_SetItemText(m_Hwnd[Hwnds::FILE_LIST], i, 2, (LPSTR)file.date.c_str());
+		std::string ext = file.name.substr(file.name.find_last_of('.') + 1);
+		cout << ext << endl;
+		if (ext.size() <= 0)
+		{
+			lvi.mask = LVIF_TEXT;
+		}
+		else if (ext.compare("obj") == 0)
+			lvi.iImage = 3;
+		else if (ext.compare("fbx") == 0)
+			lvi.iImage = 2;
+		else if (ext.compare("jpg") == 0 || ext.compare("tga") == 0 || ext.compare("png") == 0 || ext.compare("bmp") == 0)
+			lvi.iImage = 4;
+		else
+			lvi.iImage = 0;
+	}
+	//lvi.iImage = 1;
+	ListView_InsertItem(m_Hwnd[Hwnds::FILE_LIST], &lvi);
+	ListView_SetItemText(m_Hwnd[Hwnds::FILE_LIST], i, 1, (LPSTR) (size.c_str()));
+	//ListView_SetItemText(m_Hwnd[Hwnds::FILE_LIST], i, 2, (LPSTR) file.date.c_str());
 
 }
 void CSceneEditor::FindFilesInDirectory(std::string path)
@@ -226,6 +280,14 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 				if (!file_extension.compare("obj") || !file_extension.compare("fbx") || !file_extension.compare("3ds"))
 				{					
 					SpawnEntity(file_all_path);
+				}
+				else if (!file_extension.compare("map"))
+				{
+					m_Game.m_SceneParser.LoadScene(file_all_path, m_Game.GetCurrentScene(), [](int p) {
+						cout << p << endl;
+						SendMessage(s_ProgresBarLoading, PBM_SETPOS, (WPARAM)p, 0);
+					});
+					FillObjectsTree();
 				}
 				else
 				{

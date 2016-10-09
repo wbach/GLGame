@@ -9,8 +9,8 @@ void CShadowFrameBuffer::Init(glm::vec2 size, glm::vec2 window_size)
 
 void CShadowFrameBuffer::CleanUp()
 {
-	glDeleteFramebuffers(1, &m_Fbo);
 	glDeleteTextures(1, &m_ShadowMap);
+	glDeleteFramebuffers(1, &m_Fbo);	
 }
 
 void CShadowFrameBuffer::BindFBO()

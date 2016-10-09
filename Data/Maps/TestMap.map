@@ -9,6 +9,62 @@
 	<Pitch>45.6</Pitch>
 	<Yaw>94.0</Yaw>
   </Camera>
+  <SkyBox>
+	<DayTextures>
+		<RightTexture>Data/Skybox/TropicalSunnyDay/right.bmp</RightTexture>
+		<LeftTexture>Data/Skybox/TropicalSunnyDay/left.bmp</LeftTexture>
+		<TopTexture>Data/Skybox/TropicalSunnyDay/top.bmp</TopTexture>
+		<BottomTexture>Data/Skybox/TropicalSunnyDay/bottom.bmp</BottomTexture>
+		<BackTexture>Data/Skybox/TropicalSunnyDay/back.bmp</BackTexture>
+		<FrontTexture>Data/Skybox/TropicalSunnyDay/front.bmp</FrontTexture>
+	</DayTextures>
+	<NightTextures>
+		<RightTexture>Data/Skybox/TropicalSunnyDay/right.bmp</RightTexture>
+		<LeftTexture>Data/Skybox/TropicalSunnyDay/left.bmp</LeftTexture>
+		<TopTexture>Data/Skybox/TropicalSunnyDay/top.bmp</TopTexture>
+		<BottomTexture>Data/Skybox/TropicalSunnyDay/bottom.bmp</BottomTexture>
+		<BackTexture>Data/Skybox/TropicalSunnyDay/back.bmp</BackTexture>
+		<FrontTexture>Data/Skybox/TropicalSunnyDay/front.bmp</FrontTexture>
+	</NightTextures>	
+  </SkyBox>
+  <Light>
+		<Type>0</Type>
+		<Position>
+			<x>100000</x>
+			<y>150000</y>
+			<z>100000</z>
+		</Position>
+		<Color>
+			<x>0.5</x>
+			<y>0.5</y>
+			<z>0.5</z>
+		</Color>
+		<Attenuation>
+			<x>1</x>
+			<y>0</y>
+			<z>0</z>
+		</Attenuation>
+		<CutOff>0</CutOff>
+  </Light>
+  <Light>
+		<Type>1</Type>
+		<Position>
+			<x>86</x>
+			<y>60</y>
+			<z>47</z>
+		</Position>
+		<Color>
+			<x>0.5</x>
+			<y>0.0</y>
+			<z>0.0</z>
+		</Color>
+		<Attenuation>
+			<x>0</x>
+			<y>0.1</y>
+			<z>0</z>
+		</Attenuation>
+		<CutOff>0</CutOff>
+  </Light>
   <Terrain>
 	  <Name>Test_Terrain</Name>
 	  <Position>
@@ -34,6 +90,9 @@
 			<NormalTexture>Data/Terrain/TerrainTextures/177_norm.JPG</NormalTexture>
 	  </BlueTexture>   
   </Terrain>   
+  <Prefab>
+  <File>Data/Prefabs/SmallHouse.prefab</File>
+  </Prefab>  
 	<Entity>	  
 		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 		<Name>Small_House</Name>

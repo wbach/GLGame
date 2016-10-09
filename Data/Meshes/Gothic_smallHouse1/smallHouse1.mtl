@@ -5,7 +5,7 @@ newmtl None
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 2.0 2.0 2.0
-Ks 0.8 0.8 0.8
+Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
 map_Kd G3_Architecture_Wood_09_Diffuse_01.tga
@@ -15,7 +15,7 @@ newmtl None_G3_Architecture_Bricks_01_Diffuse_04.tga
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 2.0 2.0 2.0
-Ks 0.8 0.8 0.8
+Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
 map_Kd G3_Architecture_Bricks_01_Diffuse_04.tga
@@ -25,7 +25,7 @@ newmtl None_G3_Architecture_Roofshingle_01_Diffuse_01.tga.001
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 2.0 2.0 2.0
-Ks 0.8 0.8 0.8
+Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
 map_Kd G3_Architecture_Roofshingle_01_Diffuse_01.tga
@@ -35,7 +35,7 @@ newmtl None_G3_Architecture_Wood_06_Diffuse_01.tga
 Ns 0
 Ka 0.000000 0.000000 0.000000
 Kd 2.0 2.0 2.0
-Ks 0.8 0.8 0.8
+Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
 map_Kd G3_Architecture_Wood_06_Diffuse_01.tga

@@ -73,12 +73,12 @@
     <IntDir>.\Intermediate\Windows\Debug</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>.\bin\Windows\$(Configuration)</OutDir>
-    <IntDir>.\Intermediate\Windows\$(Configuration)</IntDir>
+    <OutDir>.\bin\Windows\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\Windows\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
-    <OutDir>.\bin\Windows\$(Configuration)</OutDir>
-    <IntDir>.\Intermediate\Windows\$(Configuration)</IntDir>
+    <OutDir>.\bin\Windows\$(Configuration)\</OutDir>
+    <IntDir>.\Intermediate\Windows\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <OutDir>.\bin\Windows\Debug</OutDir>
@@ -147,6 +147,7 @@
   <ItemGroup>
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
+    <ClCompile Include="source\BaseEngine\Controllers\MousePicker.cpp" />
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\GameObject.cpp" />
@@ -201,6 +202,7 @@
     <ClInclude Include="source\BaseEngine\Camera\Camera.h" />
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
     <ClInclude Include="source\BaseEngine\APIs\Api.h" />
+    <ClInclude Include="source\BaseEngine\Controllers\MousePicker.h" />
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h" />
     <ClInclude Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.h" />
     <ClInclude Include="source\BaseEngine\Engine\GameObject.h" />

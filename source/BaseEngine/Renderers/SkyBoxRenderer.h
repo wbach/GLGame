@@ -11,6 +11,7 @@ public:
 	void Render(const glm::mat4& view_matrix, const float& delta_time);
 	void SetTextures(GLuint day, GLuint night);
 	void SetMeshId(GLuint box_id, int veretex_count);
+	void CleanUp();
 private:
 	float BindTextures(const float& delta_time) const;
 	

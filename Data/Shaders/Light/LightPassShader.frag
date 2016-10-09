@@ -143,7 +143,7 @@ void main()
 	normal			= normalize(normal);		
 
 	SMaterial material;
-	material.m_Ambient = color * 0.1f;
+	material.m_Ambient = color * 0.2f;
 	material.m_Diffuse = color;
 	material.m_Specular = specular;
 	material.m_ShineDamper = 20.f;

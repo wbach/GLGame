@@ -216,6 +216,9 @@
     <ClCompile Include="source\BaseEngine\Loader\XML\XMLSceneParser.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Controllers\MousePicker.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -384,6 +387,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Loader\XML\XMLSceneParser.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Controllers\MousePicker.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -34,20 +34,23 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 
 void CMasterRenderer::CleanUp()
 {
+	Utils::DeleteQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord);
+
+	if (m_Textures[0] != 0)
+		glDeleteTextures(BufferTexture::Type::COUNT, m_Textures);
+	
+	if (m_DepthTexture != 0)
+		glDeleteTextures(1, &m_DepthTexture);
+	
 	if (m_Fbo != 0) 
 		glDeleteFramebuffers(1, &m_Fbo);	
-
-	if (m_Textures[0] != 0) 
-		glDeleteTextures(BufferTexture::Type::COUNT, m_Textures);	
-
-	if (m_DepthTexture != 0) 
-		glDeleteTextures(1, &m_DepthTexture);	
 
 	m_EntityGeometryPassShader.CleanUp();
 	m_TerrainGeometryPassShader.CleanUp();
 	m_LightPassShader.CleanUp();
 	m_ShadowMapRenderer.CleanUp();
-	Utils::DeleteQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord);
+	m_SkyBoxRenderer.CleanUp();
+	
 }
 
 void CMasterRenderer::SetReadBuffer(BufferTexture::Type TextureType)
@@ -75,7 +78,7 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 
 	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
 
-	glActiveTexture(GL_TEXTURE9);
+	glActiveTexture(GL_TEXTURE11);
 	glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 	m_TerrainGeometryPassShader.Start();
 	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());

@@ -30,6 +30,9 @@ private:
 	int location_shadowMap;
 	int location_ToShadowMapSpace;
 
+	int location_RockTexture;
+	int location_RockTextureNormal;
+
 	// Matrixes location
 	int location_transformationMatrix;
 	int location_projectionMatrix;

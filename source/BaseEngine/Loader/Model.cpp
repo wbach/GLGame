@@ -85,12 +85,28 @@ const vector<CMesh>& CModel::GetMeshes() const
 {
 	return m_Meshes;
 }
+float CModel::GetBoundingMaxSize()
+{
+	float max = FLT_MIN;
+	for (CMesh& mesh : m_Meshes)
+	{
+		if (max < mesh.GetBoundingSize().x)
+			max = mesh.GetBoundingSize().x;
+		if (max < mesh.GetBoundingSize().y)
+			max = mesh.GetBoundingSize().y;
+		if (max < mesh.GetBoundingSize().z)
+			max = mesh.GetBoundingSize().z;
+	}
+
+	return max;
+}
 void CModel::CleanUp()
 {
 	for (CMesh& mesh : m_Meshes)
 	{
 		mesh.CleanUp();
 	}
+	m_Meshes.clear();
 }
 CMesh::CMesh() {}
 CMesh::CMesh(SMaterial material)
@@ -118,11 +134,8 @@ void CMesh::CalculateBoudnigBox(vector<float>& positions)
 }
 
 void CMesh::CleanUp()
-{
-	for (unsigned int x = 0; x < VertexBufferObjects::COUNT; x++)
-	{
-		glDeleteBuffers(1, &m_Vbos[x]);
-	}
+{	
+	glDeleteBuffers(VertexBufferObjects::COUNT, m_Vbos);	
 	glDeleteVertexArrays(1, &m_Vao);
 }
 

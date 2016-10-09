@@ -21,7 +21,9 @@ void CTerrainGeometryPassShader::ConnectTextureUnits() const
 	LoadValue(location_rTextureNormal, 6);
 	LoadValue(location_gTextureNormal, 7);
 	LoadValue(location_bTextureNormal, 8);
-	LoadValue(location_shadowMap, 9);
+	LoadValue(location_RockTexture, 9);
+	LoadValue(location_RockTextureNormal, 10);
+	LoadValue(location_shadowMap, 11);	
 }
 void CTerrainGeometryPassShader::GetAllUniformLocations()
 {
@@ -42,6 +44,9 @@ void CTerrainGeometryPassShader::GetAllUniformLocations()
 	location_rTextureNormal = GetUniformLocation("rTextureNormal");
 	location_bTextureNormal = GetUniformLocation("bTextureNormal");
 	location_gTextureNormal = GetUniformLocation("gTextureNormal");
+
+	location_RockTexture = GetUniformLocation("RockTexture");
+	location_RockTextureNormal = GetUniformLocation("RockTextureNormal");
 
 	location_shadowMap		  = GetUniformLocation("ShadowMap");
 	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
