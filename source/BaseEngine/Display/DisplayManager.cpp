@@ -63,7 +63,7 @@ void CDisplayManager::Update()
 }
 const float CDisplayManager::GetCurrentTime()
 {
-	if (m_Api != nullptr)
+	if (m_Api != nullptr && m_Time)
 		return m_Api->GetTime();
 	return 0;
 }

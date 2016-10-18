@@ -13,6 +13,8 @@ public:
 	void LoadProjectionMatrix(const glm::mat4&) const;
 	void LoadViewMatrix(const glm::mat4&) const;
 
+	void LoadUseInstancedRendering(const float& use) const;
+
 	void LoadUseNormalMap(const float& use) const;
 	void LoadMeshMaterial(const SMaterial& material) const;
 
@@ -35,4 +37,6 @@ private:
 	int location_MaterialAmbient;
 	int location_MaterialDiffuse;
 	int location_MaterialSpecular;
+
+	int location_IsInstancedRender;
 };

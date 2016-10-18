@@ -1,7 +1,8 @@
 #include "AssimpModel.h"
 
 CAssimModel::CAssimModel(CTextureLoader & texture_lodaer)
-: m_TextureLodaer(texture_lodaer)
+: CModel()
+, m_TextureLodaer(texture_lodaer)
 {
 }
 

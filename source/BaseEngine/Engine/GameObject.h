@@ -18,7 +18,7 @@ public:
 	const GameObjects::Type& GetType();
 	const unsigned int& GetId();
 
-	virtual std::vector<std::shared_ptr<CGameObject>>& GetChildren() {}
+	//virtual std::vector<std::shared_ptr<CGameObject>>& GetChildren() {return std::vector<std::shared_ptr<CGameObject>>}
 
 private:
 	GameObjects::Type m_Type;

@@ -24,7 +24,7 @@ void CLoader::UpdateModels(float delta_time)
 		m_Models[index]->Update(delta_time);
 	}
 }
-int CLoader::LoadMesh(string file_name, bool time_update)
+int CLoader::LoadMesh(string file_name,bool time_update)
 {
 	std::ifstream try_file(file_name);
 	if (!try_file.is_open()) {

@@ -33,8 +33,6 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 	//renderStartSeries();
 	LoadScene();
 	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);	
-
-	
 }
 void CGame::Uninitialize()
 {
@@ -54,23 +52,24 @@ void CGame::SetWindowSize(glm::vec2 size)
 }
 void CGame::GameLoop()
 {	
-	int api_message = ApiMessages::NONE;	
+	m_ApiMessage = ApiMessages::NONE;
 
     string loading_text = "FPS : ";
 	vector<CGUIText> texts;
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.9475, 0.8975), 1.5, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1.5, glm::vec3(0, 0, 1)));	
-	
+	texts.push_back(CGUIText(loading_text, glm::vec2(-0.9475, 0.8975), 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1, glm::vec3(1, 1, 1)));	
+	texts.push_back(CGUIText("Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", glm::vec2(-0.90, 0.7), 1, glm::vec3(1, 1, 1)));
 	vector<CGUITexture> debug_textures;
 	//debug_textures.push_back(CGUITexture(m_MasterRenderer.GetShadowMap(), glm::vec2(0.5), glm::vec2(0.25,0.25) ));
 	
+	std::thread physics_thread(&CGame::PhysicsLoop, this);
 
-	while (api_message != ApiMessages::QUIT && !m_FroceQuit)
-	{		
-		api_message = m_DisplayManager.PeekMessage();		
+	while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
+	{	
+		m_ApiMessage = m_DisplayManager.PeekMessage();
 
 		if (m_InputManager.GetKey(KeyCodes::ESCAPE))
-			api_message = ApiMessages::QUIT;
+			m_ApiMessage = ApiMessages::QUIT;
 
 		if (OnGameLoopRun != nullptr)
 			OnGameLoopRun();
@@ -84,12 +83,13 @@ void CGame::GameLoop()
 	
 		if (m_CurrScene != nullptr)
 		{
+			m_CurrScene->ApplyPhysicsToObjects(m_DisplayManager.GetDeltaTime());
 			switch (m_CurrScene->Update())
 			{
-			case 1: api_message = ApiMessages::QUIT; break;
+			case 1: m_ApiMessage = ApiMessages::QUIT; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
-			
+			GetCurrentScene()->m_PhysicsScene.Update(m_DisplayManager.GetDeltaTime());
 
 			m_MasterRenderer.ShadowPass(m_CurrScene);
 			m_MasterRenderer.GeometryPass(m_CurrScene);
@@ -104,6 +104,50 @@ void CGame::GameLoop()
 		m_GuiRenderer.RenderText(texts);
 		m_DisplayManager.Update();
 	}
+	physics_thread.detach();
+}
+void CGame::PhysicsLoop()
+{
+	int m_FrameCount = 0;
+	float m_Fps = 0;
+	float m_CurrentTime = 0, m_PreviousTime = 0;
+	while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
+	{
+
+		if (m_CurrScene == nullptr) continue;
+
+		auto start = std::chrono::high_resolution_clock::now();
+		//GetCurrentScene()->g_pages_mutex.lock();
+		//GetCurrentScene()->m_PhysicsScene.Update(m_DisplayManager.GetDeltaTime());
+		//GetCurrentScene()->g_pages_mutex.unlock();
+
+		m_FrameCount++;
+
+		m_CurrentTime = m_DisplayManager.GetCurrentTime();
+
+		int time_interval = m_CurrentTime - m_PreviousTime;
+
+		if (time_interval > 1)
+		{
+			m_Fps = m_FrameCount / (time_interval);
+			m_PreviousTime = m_CurrentTime;
+			m_FrameCount = 0;
+		}
+	//	std::cout << "Dt: " << m_DisplayManager.GetDeltaTime() << std::endl;
+
+		//double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
+		//std::cout << "Physics fps: " <<m_Fps << std::endl;
+		auto end = std::chrono::high_resolution_clock::now();
+
+		if (std::chrono::milliseconds(16) >  std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
+			std::this_thread::sleep_for(std::chrono::milliseconds(16) - std::chrono::duration_cast<std::chrono::milliseconds>(end - start));
+		
+		//std::this_thread::sleep_for(2s);
+
+
+
+	}
+
 }
 void CGame::LoadScene()
 {

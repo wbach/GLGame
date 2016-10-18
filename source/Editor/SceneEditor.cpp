@@ -55,7 +55,13 @@ void CSceneEditor::Init(int width, int height)
 	UpdateWindow(m_Hwnd[Hwnds::MAIN_WINDOW]);
 
 	
+	/*while (GetMessage(&m_Messages, NULL, 0, 0))
+	{
+		TranslateMessage(&m_Messages);
+		DispatchMessage(&m_Messages);
+	}*/
 
+//	return Komunikat.wParam;
 	//GLubyte* image;
 	//int w, h;
 	//m_Game.GetCurrentScene()->GetLoader().LoadFullTexture("Data/Terrain/TerrainTextures/blendMap.png", image, w, h, 16 );
@@ -65,6 +71,7 @@ void CSceneEditor::Init(int width, int height)
 	//HBITMAP b = CreateBitmapFromPixels(hdc, w, h, 32, image);
 	//DisplayBitmap(m_Hwnd[Hwnds::MAIN_WINDOW], b, hdc, 0, 0);
 	//DeleteObject(b);
+	//PeekMesages();
 }
 void CSceneEditor::AddMenus() 
 {
@@ -200,23 +207,23 @@ LRESULT CSceneEditor::LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
 		break;
 
 	}
-
-	return (DefWindowProcW(hwnd, msg, wParam, lParam));
+ 
+	return(DefWindowProcW(hwnd, msg, wParam, lParam));
 }
-std::string CSceneEditor::GetTextFromControl(HWND hwnd)
+std::string CSceneEditor::GetTextFromControl(HWND hwnd) const
 {
 	DWORD dlugosc = GetWindowTextLength(hwnd);
 	LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, dlugosc + 1);
 	GetWindowText(hwnd, Bufor, dlugosc + 1);
 	return std::string(Bufor);
 }
-string FloatToString3(float x)
+string FloatToString3(const float& x)
 {
 	char text[20];
 	sprintf_s(text, "%.3f", x);
 	return string(text);
 }
-void CSceneEditor::UpdateValueControl(HWND hwnd, float x)
+void CSceneEditor::UpdateValueControl(HWND hwnd, const float& x) const
 {
 	HWND focus = GetFocus();
 	if (FloatToString3(x).compare(GetTextFromControl(hwnd)) != 0 && focus != hwnd)

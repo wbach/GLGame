@@ -13,17 +13,19 @@ void CGUIRenderer::Init(int window_width, int window_height)
 
 	m_Shader.Init();
 	m_Fontshader.Init();
-	m_TextFont.init("Data/GUI/CRYSISB.ttf", 50);
+	//m_TextFont.init("Data/GUI/consola.ttf", 100);
+	
 	//textFont.init("CRYSISB.ttf", 50);//"bgothm.ttf"
 	m_Cursor = nullptr;
 	m_WindowSize.x = static_cast<float>(window_width);
 	m_WindowSize.y = static_cast<float>(window_height);
+	m_TextFont.Init("Data/GUI/consola.ttf", m_WindowSize);
 }
 
 void CGUIRenderer::SetFont(const string & filename)
 {
-	m_TextFont.clean();
-	m_TextFont.init(filename.c_str(), 50);
+	m_TextFont.CleanUp();
+	m_TextFont.Init(filename.c_str(), m_WindowSize);
 }
 
 void CGUIRenderer::LoadCursor(shared_ptr<CGUITexture> cur)
@@ -137,5 +139,5 @@ void CGUIRenderer::CleanUP() {
 	glDeleteBuffers(1, &m_VertexVbo);
 	glDeleteBuffers(1, &m_IndVbo);
 	glDeleteVertexArrays(1, &m_QuadVao);
-	m_TextFont.clean();
+	m_TextFont.CleanUp();
 }

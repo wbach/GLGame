@@ -14,6 +14,8 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 	location_ProjectionMatrix		= GetUniformLocation("ProjectionMatrix");
 	location_ViewMatrix				= GetUniformLocation("ViewMatrix");
 
+	location_IsInstancedRender = GetUniformLocation("IsInstancedRender");
+
 	location_UseNormalMap	= GetUniformLocation("IsUseNormalMap");
 	//Textures
 	location_ModelTexture	= GetUniformLocation("gColorMap");
@@ -40,6 +42,7 @@ void CEntityGeometryPassShader::BindAttributes()
 	BindAttribute(1, "TexCoord");
 	BindAttribute(2, "Normal");
 	BindAttribute(3, "Tangent");
+	BindAttribute(4, "TransformationMatrixes");
 }
 void CEntityGeometryPassShader::LoadTransformMatrix(const glm::mat4& matrix) const
 {
@@ -54,6 +57,10 @@ void CEntityGeometryPassShader::LoadProjectionMatrix(const glm::mat4& matrix) co
 void CEntityGeometryPassShader::LoadViewMatrix(const glm::mat4& matrix) const
 {
 	LoadValue(location_ViewMatrix, matrix);
+}
+void CEntityGeometryPassShader::LoadUseInstancedRendering(const float & use) const
+{
+	LoadValue(location_IsInstancedRender, use);
 }
 void CEntityGeometryPassShader::LoadUseNormalMap(const float& use) const
 {

@@ -91,7 +91,7 @@ void CSceneEditor::CreateTransformView(int &w, int &h, int edit_size_x, int edit
 
 void CSceneEditor::UpdateInspector()
 {
-	glm::vec3 position = m_CurrentEntity->GetPosition();
+	glm::vec3 position = m_CurrentEntity->GetLocalPosition();
 	UpdateValueControl(m_Hwnd[Hwnds::INSPECTOR_EDIT_POSITION_X], position.x);
 	UpdateValueControl(m_Hwnd[Hwnds::INSPECTOR_EDIT_POSITION_Y], position.y);
 	UpdateValueControl(m_Hwnd[Hwnds::INSPECTOR_EDIT_POSITION_Z], position.z);
@@ -191,6 +191,8 @@ void CSceneEditor::GetValueFromControl(HWND hwnd, float & value)
 	else if (string_value.size() == 1 && string_value[0] == '.') return;
 
 	if (string_value.find_first_not_of("1234567890.-") != string::npos) return;
+	if (string_value.size() == 1)
+		if (string_value[0] == '-' || string_value[0] == '.') return;
 	value = stof(string_value);
 }
 
@@ -207,6 +209,8 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 	if (wParam == ControlsIds::INSPECTOR_PAINT_STRENGTH && EN_CHANGE == lParam)
 	{
 		GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], m_PaintStrength);
+		if (m_CurrentTerrain != nullptr)
+			m_CurrentTerrain->m_PaintColor = glm::vec3(m_PaintStrength);
 	}
 	if (wParam == ControlsIds::INSPECTOR_PAINT_SIZE && EN_CHANGE == lParam)
 	{
@@ -236,9 +240,12 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 	case ControlsIds::INSPECTOR_GO_CAMERA_TO_OBJECT:
 		{
 			if (m_CurrentEntity == nullptr) break;
-			glm::vec3 new_camera_pos = m_CurrentEntity->GetPosition();
-			new_camera_pos.z += 20;
-			new_camera_pos.y += 20;
+			glm::vec3 new_camera_pos = m_CurrentEntity->GetWorldPosition();
+			float length = Utils::GetMaxFromVector(m_CurrentEntity->GetNormalizedSize());
+			if (length <= 0) length = 5;
+			
+			new_camera_pos.z += 1.5f* length;
+			new_camera_pos.y += 1.5f * length;
 			m_Game.GetCurrentScene()->GetCamera()->SetPosition(new_camera_pos);
 			m_Game.GetCurrentScene()->GetCamera()->SetPitch(45);
 			m_Game.GetCurrentScene()->GetCamera()->SetYaw(0);

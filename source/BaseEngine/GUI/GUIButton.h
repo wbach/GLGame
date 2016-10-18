@@ -1,6 +1,6 @@
 #pragma once
 #include "GUITexture.h"
-#include "FreeType.h"
+#include "Font.h"
 #include "FontShader.h"
 #include "../Input/InputManager.h"
 namespace GuiButtonState 
@@ -29,7 +29,7 @@ public:
 	void UpdateText(string text);
 	int CheckStatus(const glm::vec2& window_size);
 
-	void DrawText(FontShader *shader, freetype::font_data *font);
+	void DrawText(const FontShader *shader, const CFont& font) const;
 private:
 	string m_Text;
 	float m_FontSize;

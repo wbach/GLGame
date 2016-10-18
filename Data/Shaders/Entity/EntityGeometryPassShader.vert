@@ -4,7 +4,7 @@ layout (location = 0) in vec3 Position;
 layout (location = 1) in vec2 TexCoord;                                             
 layout (location = 2) in vec3 Normal;                                               
 layout (location = 3) in vec3 Tangent;
-
+layout (location = 4) in mat4 TransformationMatrixes;
 
 uniform mat4 TransformationMatrix ;
 uniform mat4 ProjectionMatrix ;
@@ -12,7 +12,8 @@ uniform mat4 ViewMatrix ;
 uniform mat4 ToShadowMapSpace;
                          
 uniform float IsUseNormalMap;
-uniform float IsUseFakeLighting ;
+uniform float IsUseFakeLighting;
+uniform float IsInstancedRender ;
                
 out vec2 TexCoord0;                                                                 
 out vec3 Normal0;                                                                   
@@ -25,7 +26,8 @@ out vec4 ShadowCoords;
 
 void main()
 {     
-	vec4 model_view_position  = ViewMatrix * TransformationMatrix * vec4(Position, 1.0);
+	mat4 transform_matrix = IsInstancedRender > 0.5f ? TransformationMatrixes : TransformationMatrix;
+	vec4 model_view_position  = ViewMatrix * transform_matrix * vec4(Position, 1.0);
     gl_Position    = ProjectionMatrix * model_view_position;
     TexCoord0      = TexCoord;                  
     Normal0        = (TransformationMatrix * vec4(Normal, 0.0)).xyz;   

@@ -1,0 +1,65 @@
+# Blender MTL File: 'G3_Myrtana_Castle_Mainhouse_02.blend'
+# Material Count: 7
+
+newmtl None
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Nature_Wall_Stone_12_Diffuse_06.tga
+
+newmtl None_G3_Architecture_Bricks_03_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_Bricks_03_Diffuse_01.tga
+
+newmtl None_G3_Architecture_Bricks_04_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_Bricks_04_Diffuse_01.tga
+
+newmtl None_G3_Architecture_GroundStone_02_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_GroundStone_02_Diffuse_01.tga
+
+newmtl None_G3_Architecture_Rooftile_01_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_Rooftile_01_Diffuse_01.tga
+
+newmtl None_G3_Architecture_Wood_07_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_Wood_07_Diffuse_01.tga
+
+newmtl None_G3_Architecture_Wood_09_Diffuse_01.tga
+Ns 0
+Ka 0.000000 0.000000 0.000000
+Kd 1.0 1.0 1.0
+Ks 0.000000 0.000000 0.000000
+d 1
+illum 2
+map_Kd G3_Architecture_Wood_09_Diffuse_01.tga

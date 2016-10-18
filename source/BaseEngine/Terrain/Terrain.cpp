@@ -162,6 +162,7 @@ void CTerrain::CreateTerrain()
 
 	SMaterial material;
 	m_Model.AddMesh("Terrain", m_Vertices, m_TextureCoords, m_Normals, m_Tangens, m_Indices, material);
+	m_Model.CreateMeshesVaos();
 	cout << "Terrain created. Vertexses : " << m_Indices.size() << " \n";
 }
 void CTerrain::CreateTerrainVertexes(int x_start, int y_start, int width, int height)
@@ -219,6 +220,11 @@ float CTerrain::GetHeightMap(int x, int z, FIBITMAP* image){
 	height /= MAX_PIXEL_COLOUR/2.0f ;
 	height *= m_MaxHeight ;
 	return height;
+}
+
+const float CTerrain::GetHeightofTerrain(glm::vec2 posXZ) const
+{
+	return GetHeightofTerrain(posXZ.x, posXZ.y);
 }
 
 const float CTerrain::GetHeightofTerrain(float worldX, float worldZ) const
@@ -351,8 +357,8 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 	{
 		for (int x = -m_BrushSize; x < m_BrushSize; x++)
 		{
-			//if ((4 * (blend_x + x + (blend_y + y) * width)) < 0 || (4 * (blend_x + x + (blend_y + y) * width) + 3) >= 4 * width * height)
-				//continue;
+			if ((4 * (blend_x + x + (blend_y + y) * width)) < 0 || (4 * (blend_x + x + (blend_y + y) * width) + 3) >= 4 * width * height)
+				continue;
 
 			if (((x) * (x)+(y) * (y)) <= m_BrushSize * m_BrushSize)
 			{
@@ -360,14 +366,20 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 				FreeImage_GetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
 				color.rgbBlue += m_HeightPaint.z;
 				if (color.rgbBlue > 250) color.rgbBlue = 250;
+				if (color.rgbBlue < 1) color.rgbBlue = 0;
 				color.rgbGreen += m_HeightPaint.y;
 				if (color.rgbGreen > 250) color.rgbGreen = 250;
+				if (color.rgbGreen < 1) color.rgbGreen = 0;
 				color.rgbRed += m_HeightPaint.x;
 				if (color.rgbRed > 250) color.rgbRed = 250;
+				if (color.rgbRed < 1) color.rgbRed = 0;
 				FreeImage_SetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
 			}			
 		}
 	}
+
+	m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth / 1.1, m_ImageHeight / 1.1, FILTER_BILINEAR);
+	m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth, m_ImageHeight , FILTER_BILINEAR);
 
 	m_Vertices.clear();
 	m_Normals.clear();
@@ -383,6 +395,13 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 
 	//FreeImage_Save(m_HeightMapFormat, m_HeightMapFreeImage, "h.bmp", 0);
 	//cout << "Paint height" << endl;
+}
+
+void CTerrain::SaveHeightMap() const
+{
+	FreeImage_FlipHorizontal(m_HeightMapFreeImage);
+	FreeImage_Save(m_HeightMapFormat, m_HeightMapFreeImage, m_HeightMapPath.c_str(), 0);	
+	FreeImage_FlipHorizontal(m_HeightMapFreeImage);
 }
 
 

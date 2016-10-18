@@ -10,8 +10,8 @@ namespace CharacterActions
 	};
 }
 
-class CPlayer : public CEntity{
-	
+class CPlayer : public CEntity
+{	
 public:
 	CPlayer();
 	CPlayer(CInputManager* input_manager, glm::vec3 pos);
@@ -19,21 +19,19 @@ public:
 	CPlayer(CInputManager* input_manager, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);
 	void calculateMove(float deltaTime);
 	void move(float deltaTime, float terrainHeight);
-	void setIsInAir(bool is) { isInAir = is; }
 	void setUpwardsSpeed(float v) { upwardsSpeed = v; }
-	void jump();
-	void checkInputs();
+	void jump(float deltaTime);
+	void checkInputs(float deltaTime);
 	void attack();
 	int getAction() { return action; }
 private:
-	float RUN_SPEED = 20;
+	float RUN_SPEED = Utils::KmToMs(15);
 	float TURN_SPEED = 160;
 	float GRAVITY = -50;
 	float JUMP_POWER = 25;
 	float currentSpeed = 0;
 	float currentTurnSpeed = 0;
-	float upwardsSpeed = 0;
-	bool isInAir = false;
+	float upwardsSpeed = 0;	
 	int action = CharacterActions::IDLE;
 	bool attacking = false;
 	CInputManager* m_InputManager;

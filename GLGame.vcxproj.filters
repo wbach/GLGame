@@ -96,9 +96,6 @@
     <ClCompile Include="source\BaseEngine\GUI\GUIShader.cpp">
       <Filter>Source Files\GUI</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\GUI\FreeType.cpp">
-      <Filter>Source Files\Font</Filter>
-    </ClCompile>
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp">
       <Filter>Source Files\Camera</Filter>
     </ClCompile>
@@ -219,6 +216,21 @@
     <ClCompile Include="source\BaseEngine\Controllers\MousePicker.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Collision\Colider.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Physics\PhysicsScene.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Physics\Rigidbody.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\GUI\Font.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Shaders\FXAAShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -274,9 +286,6 @@
     </ClInclude>
     <ClInclude Include="source\BaseEngine\GUI\GUITexture.h">
       <Filter>Header Files\GUI</Filter>
-    </ClInclude>
-    <ClInclude Include="source\BaseEngine\GUI\FreeType.h">
-      <Filter>Header Files\Font</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\GUI\FontShader.h">
       <Filter>Header Files\Font</Filter>
@@ -390,6 +399,21 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Controllers\MousePicker.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Collision\Colider.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Physics\Rigidbody.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Physics\PhysicsScene.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\GUI\Font.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Shaders\FXAAShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

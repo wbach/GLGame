@@ -227,7 +227,7 @@ void CSceneEditor::SpawnEntity(std::string file_name)
 		spawn_position = m_Game.GetCurrentScene()->CreatePositionVector(spawn_position.x, spawn_position.z, 0);
 	}
 
-	shared_ptr<CEntity> new_entity = m_Game.GetCurrentScene()->CreateEntityFromFile(file_name, spawn_position);
+	shared_ptr<CEntity> new_entity = m_Game.GetCurrentScene()->CreateEntityFromFile(file_name, false, spawn_position);
 	if (m_CurrentEntity != nullptr) 
 	{
 		m_CurrentEntity->AddSubbEntity(new_entity);

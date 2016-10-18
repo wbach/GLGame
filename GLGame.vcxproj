@@ -146,23 +146,26 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp" />
+    <ClCompile Include="source\BaseEngine\Collision\Colider.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\MousePicker.cpp" />
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\GameObject.cpp" />
+    <ClCompile Include="source\BaseEngine\GUI\Font.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\AssimpModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\EmptyLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\FbxModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\TextureLoader.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\XML\XMLSceneParser.cpp" />
+    <ClCompile Include="source\BaseEngine\Physics\PhysicsScene.cpp" />
+    <ClCompile Include="source\BaseEngine\Physics\Rigidbody.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\MasterRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\EnitityRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Entities\Entity.cpp" />
     <ClCompile Include="source\BaseEngine\Camera\FirstPersonCamera.cpp" />
-    <ClCompile Include="source\BaseEngine\GUI\FreeType.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\GLgame.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUIButton.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\GUIRenderer.cpp" />
@@ -176,6 +179,7 @@
     <ClCompile Include="source\BaseEngine\Loader\Loader.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\SkyBoxRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\EntityGeometryPassShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Shaders\FXAAShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\LightPassShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\LoadingShader.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\SkyBoxShader.cpp" />
@@ -200,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Camera\Camera.h" />
+    <ClInclude Include="source\BaseEngine\Collision\Colider.h" />
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
     <ClInclude Include="source\BaseEngine\APIs\Api.h" />
     <ClInclude Include="source\BaseEngine\Controllers\MousePicker.h" />
@@ -210,16 +215,18 @@
     <ClInclude Include="source\BaseEngine\Engine\Renderer.h" />
     <ClInclude Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.h" />
     <ClInclude Include="source\BaseEngine\Entities\Entity.h" />
+    <ClInclude Include="source\BaseEngine\GUI\Font.h" />
     <ClInclude Include="source\BaseEngine\Loader\AssimpModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />
     <ClInclude Include="source\BaseEngine\Loader\FbxModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\TextureLoader.h" />
     <ClInclude Include="source\BaseEngine\Loader\XML\XMLSceneParser.h" />
+    <ClInclude Include="source\BaseEngine\Physics\PhysicsScene.h" />
+    <ClInclude Include="source\BaseEngine\Physics\Rigidbody.h" />
     <ClInclude Include="source\BaseEngine\Renderers\MasterRenderer.h" />
     <ClInclude Include="source\BaseEngine\Renderers\EnitityRenderer.h" />
     <ClInclude Include="source\BaseEngine\Camera\FirstPersonCamera.h" />
     <ClInclude Include="source\BaseEngine\GUI\FontShader.h" />
-    <ClInclude Include="source\BaseEngine\GUI\FreeType.h" />
     <ClInclude Include="source\BaseEngine\Engine\GLgame.h" />
     <ClInclude Include="source\BaseEngine\GUI\GUI.h" />
     <ClInclude Include="source\BaseEngine\GUI\GUIButton.h" />
@@ -235,6 +242,7 @@
     <ClInclude Include="source\BaseEngine\Loader\Loader.h" />
     <ClInclude Include="source\BaseEngine\Renderers\SkyBoxRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shaders\EntityGeometryPassShader.h" />
+    <ClInclude Include="source\BaseEngine\Shaders\FXAAShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\LightPassShader.h" />
     <ClInclude Include="source\BaseEngine\Shaders\LoadingShader.h" />
     <ClInclude Include="source\BaseEngine\Loader\Material.h" />

@@ -69,9 +69,15 @@ vec3 CalcBumpedNormal(vec3 surface_normal, vec3 pass_tangent, sampler2D normal_m
 }  
 									
 void main()									
-{											
+{		
+	vec4 texture_color = texture(gColorMap, TexCoord0);
+	if(texture_color.a < 0.5)
+    {   
+        discard ;
+    }
+									
 	WorldPosOut      = WorldPos0;					
-	DiffuseOut       = texture(gColorMap, TexCoord0).xyz * ModelMaterial.m_Diffuse * CalculateShadowFactor();	
+	DiffuseOut       = texture_color.xyz * ModelMaterial.m_Diffuse * CalculateShadowFactor();	
 	NormalOut        = UseNormalMap > .5f ?  CalcBumpedNormal(Normal0, PassTangent, NormalMap, TexCoord0) : normalize(Normal0);					
 	MaterialSpecular = ModelMaterial.m_Specular;
 }

@@ -12,29 +12,23 @@ CPlayer::CPlayer(CInputManager* input_manager, glm::vec3 pos, glm::vec3 rot, glm
 
 void CPlayer::calculateMove(float deltaTime)
 {
-	checkInputs();
+	
+	//Utils::PrintVector("v : ", m_RigidBody.m_AngularVelocity);
+	m_RigidBody.m_Restitution = 0;
+	checkInputs(deltaTime);
 	IncreaseRotation(0, this->currentTurnSpeed * deltaTime, 0);
-	float distance = this->currentSpeed  * deltaTime;
+	float distance = this->currentSpeed;
 	float dx = static_cast<float>(distance * sin(Utils::ToRadians(this->GetRotation().y)));
 	float dz = static_cast<float>(distance * cos(Utils::ToRadians(this->GetRotation().y)));
-	IncrasePosition(dx, 0, dz);
+
+	m_RigidBody.m_AngularVelocity.x = dx;
+	m_RigidBody.m_AngularVelocity.z = dz;
+	//Utils::PrintVector("v : ", m_RigidBody.m_AngularVelocity);
+	//IncrasePosition(dx, 0, dz);
 }
 
 void CPlayer::move(float deltaTime, float terrainHeight)
 {
-	upwardsSpeed += GRAVITY * deltaTime;
-	IncrasePosition(0, upwardsSpeed * 0.01f, 0);
-
-	float yvalue = 0;
-	yvalue = terrainHeight;		
-	
-	if (GetPosition().y < yvalue)
-	{
-		upwardsSpeed = 0;
-		GetReferencedPosition().y = yvalue;
-		isInAir = false;
-	}
-
 	if (currentSpeed <= 0 && !attacking)
 		action = CharacterActions::IDLE;
 	else if (currentSpeed >0 && !attacking)
@@ -42,9 +36,8 @@ void CPlayer::move(float deltaTime, float terrainHeight)
 	else if (attacking)
 		action = CharacterActions::ATTACK;
 
-
-
-	switch (action) {
+	switch (action)
+	{
 	case CharacterActions::IDLE:
 		m_CurrentModelId = 0;
 		break;
@@ -57,15 +50,16 @@ void CPlayer::move(float deltaTime, float terrainHeight)
 	}
 }
 
-void CPlayer::jump()
+void CPlayer::jump(float deltaTime)
 {
-	if (!isInAir) {
-		this->upwardsSpeed = JUMP_POWER;
-		isInAir = true;
+	if (!m_IsInAir)
+	{
+		m_RigidBody.m_AngularVelocity.y = JUMP_POWER * deltaTime;
+		m_IsInAir = true;
 	}
 }
 
-void CPlayer::checkInputs()
+void CPlayer::checkInputs(float deltaTime)
 {
 	if (m_InputManager == nullptr) return;
 
@@ -73,19 +67,19 @@ void CPlayer::checkInputs()
 	if (m_InputManager->GetKey(KeyCodes::P))
 	{
 		system("cls");
-		printf("Current player position: %.2f, %.2f, %.2f", GetPosition().x, GetPosition().y, GetPosition().z);
+		printf("Current player position: %.2f, %.2f, %.2f", GetWorldPosition().x, GetWorldPosition().y, GetWorldPosition().z);
 	}
 	if (m_InputManager->GetKey(KeyCodes::W))
 	{
-		this->currentSpeed = RUN_SPEED;
+		currentSpeed = RUN_SPEED;
 	}
 	else if (m_InputManager->GetKey(KeyCodes::S))
 	{
-		this->currentSpeed = -RUN_SPEED;
+		currentSpeed = -RUN_SPEED;
 	}
 	else
 	{
-		this->currentSpeed = 0;
+		currentSpeed = 0;
 	}
 	if (m_InputManager->GetKey(KeyCodes::D))
 	{
@@ -109,7 +103,7 @@ void CPlayer::checkInputs()
 
 	if (m_InputManager->GetKey(KeyCodes::SPACE))
 	{
-		jump();
+		jump(deltaTime);
 	}
 }
 

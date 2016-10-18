@@ -1,4 +1,5 @@
 #pragma once
+#include "../Physics/PhysicsScene.h"
 #include "../Controllers/MousePicker.h"
 #include "../Entities/Entity.h"
 #include "../Loader/Loader.h"
@@ -9,6 +10,7 @@
 #include <memory>
 #include <string>
 #include <vector>
+#include <mutex>
 using namespace std;
 
 class CGame;
@@ -25,11 +27,13 @@ public:
 	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
 	void AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity);
 	
-	void SaveTerrainsBlendMap();
-	
+	void SaveTerrains();
+	void ApplyPhysicsToObjects(float dt);
+	void ClearObjectsVelocity();
+
 	void DeleteEntity(shared_ptr<CEntity> entity);
 	bool DeleteSubEntity(shared_ptr<CEntity>& entity, int id);
-	shared_ptr<CEntity> CreateEntityFromFile(string file_name, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
+	shared_ptr<CEntity> CreateEntityFromFile(string file_name, bool instanced = false, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
 	
 	shared_ptr<CEntity> FindEntity(int id);
 	shared_ptr<CEntity> FindSubEntity(shared_ptr<CEntity>& entity, int id);
@@ -43,6 +47,7 @@ public:
 	const string& GetName();
 
 	virtual int		Initialize() = 0;
+	virtual void	PostInitialize() {};
 	virtual int		Update() = 0;
 	virtual int		CleanUp() = 0;
 
@@ -76,6 +81,8 @@ public:
 	bool m_IsDebug = false;
 	std::string m_SceneFile;
 
+	CPhysicsScene m_PhysicsScene;
+	std::mutex g_pages_mutex;
 	void Reset();
 	~CScene();
 protected:
@@ -84,6 +91,8 @@ protected:
 	string	m_Name;
 	CGame&	m_Game;
 	SGUI m_Gui;
+
+	vector<shared_ptr<CEntity>> m_PhysicsEntities;
 	vector<shared_ptr<CEntity>> m_Entities;
 	vector<CTerrain> m_Terrains;
 	vector<CLight> m_Lights;

@@ -149,14 +149,14 @@ private:
 	void DeleteDialogProgressBar();
 	void RegisterLoadingClass(HWND hwnd);
 	static LRESULT CALLBACK LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
-	std::string GetTextFromControl(HWND hwnd);
+	std::string GetTextFromControl(HWND hwnd) const;
 
 
 	// Inspector function
 	void CreateInspector(int w, int h);
 	void CreateTerrainTextureView(int &w, int &h, int size_x, int size_y);
 	void CreateTransformView(int &w, int &h, int size_x, int size_y);
-	void UpdateValueControl(HWND hwnd, float x);
+	void UpdateValueControl(HWND hwnd, const float& x) const;
 	void InspectorProcedure(WPARAM wParam, LPARAM lParam);
 	void UpdateInspector();
 	void UpdateEntity(ControlsIds::Ids type);

@@ -71,6 +71,8 @@ public:
 
 	glm::vec3 CalculateNormalMap(int x, int z, FIBITMAP*  image);
 	float GetHeightMap(int x, int z, FIBITMAP*  image);
+
+	const float GetHeightofTerrain(glm::vec2 posXZ) const;
 	const float GetHeightofTerrain(float worldX, float worldZ) const;
 	
 	void FiltrElementOffTerrain();
@@ -113,8 +115,8 @@ public:
 	//Terrain height paint
 	FIBITMAP* m_HeightMapFreeImage;
 	FREE_IMAGE_FORMAT m_HeightMapFormat;
-	glm::vec3 m_HeightPaint = glm::vec3(-1);
-
+	glm::vec3 m_HeightPaint = glm::vec3(1);
+	void SaveHeightMap()const;
 
 	CLoader&	 m_Loader;
 	CEmptyLoader m_Model;
@@ -126,7 +128,7 @@ private:
 	std::vector<float> m_TextureCoords;
 
 
-	float m_Size = 2000.0f;
+	float m_Size = 1000.0f;
 	float m_MaxHeight = 50.0f;	
 
 	glm::vec3 m_Position;

@@ -172,11 +172,16 @@ void CXmlSceneParser::ParseTexture(rapidxml::xml_node<>* node, std::string& diff
 void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntity> parent)
 {
 	shared_ptr<CEntity> entity = nullptr; 
+	glm::vec3 normalized_size(0);
 	bool is_global = false;
 	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
-	{		
+	{			
+
 		if (!std::string("File").compare(subnode->name()) && entity == nullptr)
 			entity = m_Scene->CreateEntityFromFile(subnode->value());
+
+		if (!std::string("NormalizedSize").compare(subnode->name()))
+			normalized_size = ParseVector3d(subnode);
 
 		if (!std::string("Name").compare(subnode->name()) && entity != nullptr)
 			entity->SetName(subnode->value());
@@ -196,14 +201,19 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 		if (!std::string("Entity").compare(subnode->name()) && entity != nullptr)
 			ParaseEntity(subnode, entity);
 	}
+
 	if (entity != nullptr)
 	{
+		glm::mat4 normalized_matrix = m_Scene->GetLoader().m_Models[entity->GetModelId()]->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
+		entity->SetNormalizedMatrix(normalized_matrix);
+		entity->SetNormalizedSize(normalized_size);
+		m_Scene->GetLoader().m_Models[entity->GetModelId()]->CreateTransformsVbo(entity->GetTransformMatrixes());
 		if (parent == nullptr)
 			m_Scene->AddEntity(entity, is_global);
 		else
 			m_Scene->AddSubEntity(parent, entity);
 	}
-		
+	
 }
 
 void CXmlSceneParser::LoadScene(std::string file_name, std::shared_ptr<CScene> scene, void(*func)(int p))
@@ -419,7 +429,7 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	rapidxml::xml_node<>* name = document.allocate_node(rapidxml::node_element, "Name", document.allocate_string(entity->GetName().c_str()));
 
 	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");
-	AddVectorToNode(document, position, entity->GetPosition());
+	AddVectorToNode(document, position, entity->GetLocalPosition());
 
 	rapidxml::xml_node<>* rotation = document.allocate_node(rapidxml::node_element, "Rotation");
 	AddVectorToNode(document, rotation, entity->GetRotation());
@@ -427,12 +437,16 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	rapidxml::xml_node<>* scale = document.allocate_node(rapidxml::node_element, "Scale");
 	AddVectorToNode(document, scale, entity->GetScale());
 
+	rapidxml::xml_node<>* normalized = document.allocate_node(rapidxml::node_element, "NormalizedSize");
+	AddVectorToNode(document, normalized, entity->GetNormalizedSize());
+
 	rapidxml::xml_node<>* _global = document.allocate_node(rapidxml::node_element, "Global", document.allocate_string(std::to_string(global).c_str()));
 	entity_node->append_node(file);
 	entity_node->append_node(name);
 	entity_node->append_node(position);
 	entity_node->append_node(rotation);
 	entity_node->append_node(scale);
+	entity_node->append_node(normalized);
 	entity_node->append_node(_global);
 
 	for (const shared_ptr<CEntity>& child : entity->GetChildrenEntities())

@@ -1,7 +1,8 @@
 #include "FbxModel.h"
 
 CFbxModel::CFbxModel(CTextureLoader & texture_lodaer)
-: m_TextureLodaer(texture_lodaer)
+: CModel()
+, m_TextureLodaer(texture_lodaer)
 , m_SdkManager(nullptr)
 , m_Scene(nullptr)
 , m_Importer(nullptr)

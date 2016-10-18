@@ -68,11 +68,18 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 				//GetCurrentDirectory(MAX_PATH, dar);
 				CreateDialogProgressBar();
 				//CreateDialogProgressBar();
+				m_Game.GetDisplayManager().DisableTime();
 				m_Game.GetCurrentScene()->Reset();
-				m_Game.m_SceneParser.LoadScene(sNazwaPliku, m_Game.GetCurrentScene(), [](int p) {
-					cout << p << endl;  
-					SendMessage(s_ProgresBarLoading, PBM_SETPOS, (WPARAM)p, 0); 				
-				});
+				m_Game.m_SceneParser.LoadScene(sNazwaPliku, m_Game.GetCurrentScene());
+				m_Game.GetCurrentScene()->PostInitialize();
+				m_Game.GetDisplayManager().EnableTime();
+
+				m_Game.GetCurrentScene()->ClearObjectsVelocity();
+
+				//m_Game.m_SceneParser.LoadScene(sNazwaPliku, m_Game.GetCurrentScene(), [](int p) {
+				//	//cout << p << endl;  
+				//	//SendMessage(s_ProgresBarLoading, PBM_SETPOS, (WPARAM)p, 0); 				
+				//});
 				FillObjectsTree();
 				m_CurrentPath = string(sNazwaPliku);
 				m_CurrentPath = m_CurrentPath.substr(0, m_CurrentPath.find_last_of("\\") +1);
@@ -106,7 +113,7 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 				SetCurrentDirectory(current_directory);
 				CreateDialogProgressBar();
 				m_Game.m_SceneParser.SaveToFile(sNazwaPliku, m_Game.GetCurrentScene());
-				m_Game.GetCurrentScene()->SaveTerrainsBlendMap();
+				m_Game.GetCurrentScene()->SaveTerrains();
 				DeleteDialogProgressBar();
 			}
 		}

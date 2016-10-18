@@ -11,8 +11,13 @@ public:
 	void LoadTransformMatrix(const glm::mat4& matrix) const;
 	void LoadProjectionMatrix(const glm::mat4& matrix) const;
 	void LoadViewMatrix(const glm::mat4& matrix) const;
+
+	void LoadUseInstancedRendering(const float& use) const;
+
 private:
 	int location_TransformationMatrix;
 	int location_ProjectionMatrix;
 	int location_ViewMatrix;
+
+	int location_IsInstancedRender;
 };

@@ -63,11 +63,57 @@ void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity
 	parent->AddSubbEntity(entity);
 }
 
-void CScene::SaveTerrainsBlendMap()
+void CScene::SaveTerrains()
 {
 	for (const CTerrain& terrain : m_Terrains)
 	{
 		m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
+		terrain.SaveHeightMap();
+	}
+}
+
+void CScene::ApplyPhysicsToObjects(float dt)
+{
+	int x = 0;
+	for (shared_ptr<CEntity>& entity : m_PhysicsEntities)
+	{
+		//m_Game.m_PhysicsScene.m_Rigibodys[entity->m_PhysicsBodyIndex].ApplyGravity(dt, -9.8);
+		entity->IncrasePosition(entity->m_RigidBody.m_AngularVelocity *dt );
+		//float linear_decrease = 20.f;
+		//if (entity->m_RigidBody.m_AngularVelocity.x > 0) 
+		//	entity->m_RigidBody.m_AngularVelocity.x -= linear_decrease *dt;
+		//else
+		//	entity->m_RigidBody.m_AngularVelocity.x += linear_decrease *dt;
+
+		//if (entity->m_RigidBody.m_AngularVelocity.z > 0)
+		//	entity->m_RigidBody.m_AngularVelocity.z -= linear_decrease *dt;
+		//else
+		//	entity->m_RigidBody.m_AngularVelocity.z += linear_decrease *dt;
+
+		//Utils::PrintVector(entity->GetName() + "V: ", m_Game.m_PhysicsScene.m_Rigibodys[entity->m_PhysicsBodyIndex].m_AngularVelocity);
+		float h = 0;
+		x++;
+		h = GetHeightOfTerrain(entity->GetPositionXZ());
+
+		if (entity->GetWorldPosition().y < h)
+		{
+			entity->SetPositionY(h);
+			entity->m_RigidBody.ReflectVelocity(glm::vec3(0, 1, 0));
+			entity->SetIsInAir(false);
+		}
+		entity->m_RigidBody.SetPosition(entity->GetWorldPosition());
+	}
+	//cout << "X: " << x << endl;
+}
+
+void CScene::ClearObjectsVelocity()
+{
+	for (shared_ptr<CEntity> entity :m_PhysicsEntities)
+	{
+		float h = GetHeightOfTerrain(entity->GetPositionXZ());
+		entity->SetPositionY(h);
+		entity->m_RigidBody.m_AngularVelocity = glm::vec3(0, 0, 0);
+		entity->m_RigidBody.SetPosition(entity->GetWorldPosition() + glm::vec3(0,50,0));
 	}
 }
 
@@ -125,7 +171,7 @@ bool CScene::DeleteSubEntity(shared_ptr<CEntity>& entity, int id)
 	}
 	return false;
 }
-shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, bool instanced, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 {
 	
 	shared_ptr<CEntity> new_entity;
@@ -137,6 +183,8 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, glm::vec3 pos
 
 	new_entity->m_BoundingSize = m_Loader.m_Models[model_id]->GetBoundingMaxSize();
 	new_entity->AddModel(model_id);
+	if(instanced)
+		m_Loader.m_Models[model_id]->CreateTransformsVbo(new_entity->GetTransformMatrixes());
 
 	std::string name = file_name.substr(file_name.find_last_of('\\') + 1);
 	if (name.compare(file_name) == 0)
@@ -276,7 +324,7 @@ const glm::vec3 CScene::GetDirectionalLightPosition()
 	for (const CLight& light : m_Lights)
 		if (light.GetType() == LightType::DIRECTIONAL_LIGHT)
 			return light.GetPosition();
-	cout << "[Error] Directional light not found." << endl;
+	//cout << "[Error] Directional light not found." << endl;
 	throw - 1;
 	return glm::vec3();
 }

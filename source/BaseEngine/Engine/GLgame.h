@@ -21,6 +21,7 @@ public:
 
 	void Initialize(std::shared_ptr<CApi> api);
 	void GameLoop();
+	void PhysicsLoop();
 	void Uninitialize();
 
 	void SetWindowSize(glm::vec2 size);
@@ -34,6 +35,7 @@ public:
 
     int SetCurrentScene(int i);
     void LoadScene();
+	void LoadSceneFromFile();
 	void InitializeScene() ;
 	void AddScene(shared_ptr<CScene> scene);
 
@@ -50,6 +52,12 @@ public:
 	shared_ptr<CScene>& GetCurrentScene();	
 
 	CXmlSceneParser m_SceneParser;
+	
+
+	//Loading in this thread
+	bool m_IsLoadedFromFile = false;
+	std::string m_SceneFileToLoad;
+	
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;
@@ -81,11 +89,13 @@ private:
 	float		m_RefreshRate;
 
 	const float m_NearPlane = 0.1f;
-	const float m_FarPlane = 10000;
+	const float m_FarPlane = 2000;
 	const float m_Fov = 70;
 
 	bool	m_IsSound;
 	float	m_SoundVolume;
+
+	int m_ApiMessage;
 };
 
 

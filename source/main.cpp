@@ -39,17 +39,17 @@ int main(int argc, char *argv[])
 	{
 		cout << "Scene not found." << endl;
 	}
-	myGame.Initialize(api);  
-	
+	myGame.Initialize(api);  	
 #ifdef EDITOR	
+	//std::thread  a(&CSceneEditor::Init, editor, 1366, 768);
 	editor.Init(1366, 768);
 	editor.PeekMesages();
 	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
 #else
 	myGame.m_SceneParser.LoadScene(testScene->m_SceneFile, testScene);
 #endif
-
     myGame.GameLoop();
+	//a.detach();
     myGame.Uninitialize();
 	return 0;
 }

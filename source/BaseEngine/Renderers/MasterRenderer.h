@@ -60,5 +60,7 @@ private:
 	GLuint m_QuadVertex;
 	GLuint m_QuadTexCoord;
 
+	int m_ResoultionMultipler = 1;
+
 	bool m_DebugRenderTextures;
 };

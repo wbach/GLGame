@@ -27,7 +27,6 @@ void CShadowMapRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, 
 }
 void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 {
-	
 	glm::vec3 light_direction;
 	try
 	{
@@ -95,21 +94,30 @@ void CShadowMapRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel 
 		glBindVertexArray(mesh.GetVao());
 		glEnableVertexAttribArray(0);
 		glEnableVertexAttribArray(1);
+		if (model.UseInstacedRendering())
+			glEnableVertexAttribArray(4);
 		int i = 0;
 		for (const STextInfo& td : mesh.GetMaterial().textures)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, td.id);			
 		}
-		for (const glm::mat4& mat : entity->GetTransformMatrixes())
+		if (model.UseInstacedRendering())
 		{
-			m_ShadowShader.LoadTransformMatrix(mat);
-
-			//if (mesh.GetMaterial().isTransparency)
-			//	Utils::DisableCulling();
-
-			glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);
+			m_ShadowShader.LoadUseInstancedRendering(1.f);
+			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0, entity->GetTransformMatrixes().size());
 		}
+		else
+		{
+			for (const glm::mat4& mat : entity->GetTransformMatrixes())
+			{
+				m_ShadowShader.LoadUseInstancedRendering(0.f);
+				m_ShadowShader.LoadTransformMatrix(entity->GetRelativeTransformMatrix() * mat);
+				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);
+			}
+		}
+		if (model.UseInstacedRendering())
+			glDisableVertexAttribArray(4);
 		glDisableVertexAttribArray(1);
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);

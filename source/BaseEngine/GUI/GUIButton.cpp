@@ -45,7 +45,7 @@ int CGUIButton::CheckStatus(const glm::vec2& window_size)
 	return m_State;
 }
 
-void CGUIButton::DrawText(FontShader* shader, freetype::font_data* font)
+void CGUIButton::DrawText(const FontShader* shader, const CFont& font) const
 {
 	shader->Start();
 	glActiveTexture(GL_TEXTURE0);
@@ -55,7 +55,7 @@ void CGUIButton::DrawText(FontShader* shader, freetype::font_data* font)
 	glColor4fv(ActiveColor);
 	shader->loadTranslation(m_Position);
 	glScalef(m_FontSize, m_FontSize, m_FontSize);
-	freetype::print(*font, m_Position.x, m_Position.y, m_Text.c_str());
+	font.Print(m_Position.x, m_Position.y, m_Text.c_str());
 	glPopMatrix();
 	shader->Stop();
 }

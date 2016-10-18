@@ -9,7 +9,7 @@ CThirdPersonCamera::CThirdPersonCamera(CInputManager* input_manager, glm::vec3& 
 , m_IsShowCursor(false)
 , m_InputManager(input_manager)
 {
-	m_DistanceFromPlayer = 20.0f;
+	m_DistanceFromPlayer = 4.0f;
 }
 
 void CThirdPersonCamera::SetCaptureMouse(bool capture)
@@ -57,7 +57,7 @@ void CThirdPersonCamera::CalculateCameraPosition(float horizontal_distance, floa
 	float x_offset = (float) (horizontal_distance * sin(Utils::ToRadians(theata))) ;
 	float z_offset = (float) (horizontal_distance * cos(Utils::ToRadians(theata))) ;
 	m_Position.x  = m_LookAtPosition.x - x_offset;
-	m_Position.y  = m_LookAtPosition.y + vertical_distance + 10;
+	m_Position.y  = m_LookAtPosition.y + vertical_distance + 1.8f;
 	m_Position.z  = m_LookAtPosition.z - z_offset;
 	m_Position	 += m_Offset;
 }

@@ -191,6 +191,8 @@ void CSceneEditor::TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam)
 				{
 					m_CurrentTerrain = m_Game.GetCurrentScene()->FindTerrainById(stoi(id));
 					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_TEXT_CURRENT_SELECTED], m_CurrentTerrain->GetNameWithId().c_str());
+					GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], m_PaintStrength);
+					m_CurrentTerrain->m_HeightPaint = glm::vec3(m_PaintStrength);
 				}
 				break;
 			case 'e':

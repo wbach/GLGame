@@ -58,7 +58,7 @@ vec4 CalculateTerrainColor()
 	vec4 blend_map_colour = texture(BlendMap, TexCoord0) ;
 		
 	float back_texture_amount = 1 - (blend_map_colour.r + blend_map_colour.g + blend_map_colour.b) ;
-	vec2 tiled_coords = TexCoord0 * 40.0f ;
+	vec2 tiled_coords = TexCoord0 * 100.0f ;
 
 	float normal_y = abs(normalize(Normal0).y);
 

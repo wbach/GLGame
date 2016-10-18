@@ -3,6 +3,7 @@
 #include "glm/glm.hpp"
 #include "../Engine/Transform.h"
 #include "../Utils/Utils.h"
+#include "../Physics/Rigidbody.h"
 #include <vector>
 #include <memory>
 using namespace std;
@@ -21,8 +22,16 @@ public:
 
 	void AddSubbEntity(shared_ptr<CEntity> e);
 	void IncrasePosition(float dx, float dy, float dz, unsigned int index = 0);
+	void IncrasePosition(glm::vec3 v, unsigned int index = 0);
 	void IncreaseRotation(float dx, float dy, float dz, unsigned int index = 0);
 	void CalculateEntityTransformMatrix(unsigned int x = 0);
+	
+	void RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity> e, const glm::mat4& parent_matrix);
+	void SetRelativeMatrix(const glm::mat4& parent_matrix);
+	void CalculateFinalTransformMatrix(unsigned int x = 0);
+	const glm::mat4& GetFinalTransformMatrix();
+	const glm::mat4& GetNormalizedMatrix();
+
 	void AddTransform(STransform transform);
 	
 	void SetPositionX(float x, unsigned int index = 0);
@@ -42,31 +51,39 @@ public:
 	void SetTransform(STransform transform, unsigned int i = 0);
 
 	glm::vec2 GetPositionXZ(unsigned int i = 0);
-	const glm::vec3& GetPosition(unsigned int i = 0);
+	const glm::vec3& GetLocalPosition(unsigned int i = 0) const;
+	const glm::vec3 GetWorldPosition(unsigned int i = 0) const;
 	const glm::vec3& GetRotation(unsigned int i = 0);
 	const glm::vec3& GetScale(unsigned int i = 0);
 
 	const STransform& GetTransform(unsigned int i = 0);
 	const glm::mat4& GetTransformMatrix(unsigned int i = 0);
+	const glm::mat4& GetRelativeTransformMatrix(unsigned int i = 0);
+
 	vector<glm::mat4>& GetTransformMatrixes() { return m_TransformMatrixes; }
 
 	glm::vec3& GetReferencedPosition(unsigned int i = 0);
 	glm::vec3& GetReferencedRotation(unsigned int i = 0);
 	glm::vec3& GetReferencedScale(unsigned int i = 0);
 
-	vector<shared_ptr<CEntity>>& GetChildrenEntities() { return m_ChildrenEntities; }
+	vector<shared_ptr<CEntity>>& GetChildrenEntities();
 
 	void SetFullPath(std::string path) { m_FullPathFile = path; }
 	string GetFullPath() const { return m_FullPathFile; };
-
+	
+	void SetNormalizedMatrix(const glm::mat4& m);
 	void SetName(std::string name) { m_Name = name; }
+	
 	const string GetNameWithID() const;
 	const string GetName() const;
 	const int& GetId();
 
-	void SetParentTransformMatrix(glm::mat4* matrix);
+	void SetNormalizedSize(const glm::vec3& v);
+	const glm::vec3& GetNormalizedSize();
 
 	float GetMaxBoundingSize() { return m_BoundingSize; }
+
+	void SetIsInAir(bool is) { m_IsInAir = is; }
 
 	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
 	void CleanUp();
@@ -74,9 +91,16 @@ public:
 	float m_BoundingSize;
 	//m_IsSpecial - enity created in code not from file
 	bool m_IsSpecial = false;
+	CRigidbody					m_RigidBody;
 protected:	
+	bool m_IsInAir = false;
+	bool m_TransformsInVao = false;
 
-	glm::mat4*					m_ParentTransformMatrix = nullptr;
+	glm::vec3					m_NormalizedSize;
+	glm::mat4					m_NormalizedMatrix;
+	glm::mat4					m_RelativeTransformMatrix;
+	glm::mat4					m_FinalTransformMatrix;
+
 	vector<glm::mat4>			m_TransformMatrixes;
 	vector<STransform>			m_Transforms;
 	vector<shared_ptr<CEntity>> m_ChildrenEntities;

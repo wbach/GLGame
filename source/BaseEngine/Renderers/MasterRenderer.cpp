@@ -4,6 +4,7 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 {
 	m_WindowSize = window_size;
 
+	m_ResoultionMultipler = 1;
 	m_DebugRenderTextures = false;
 
 	if (CreateBuffers() == -1)
@@ -30,6 +31,8 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 
 	m_SkyBoxRenderer.Init(projection_matrix);
 	m_ShadowMapRenderer.Init(camera, window_size, 70, 0.1);
+
+
 }
 
 void CMasterRenderer::CleanUp()
@@ -67,7 +70,7 @@ void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene)
 void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);
-
+	glViewport(0, 0, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler * m_WindowSize.y);
 	glDepthMask(GL_TRUE);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -99,6 +102,8 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 	glDisable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);
+
+	glViewport(0, 0, m_WindowSize.x, m_WindowSize.y);
 }
 
 void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
@@ -122,7 +127,7 @@ void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
 	m_LightPassShader.Start();
 	m_LightPassShader.LoadScreenSize(m_WindowSize);
 	m_LightPassShader.LoadViewMatrix(scene->GetViewMatrix());
-	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(2.0));
+	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(1.0));
 	m_LightPassShader.LoadTransformMatrix(transformation_matrix);
 	m_LightPassShader.LoadCameraPosition(scene->GetCameraPosition());
 	int lights = scene->GetLights().size();
@@ -189,7 +194,7 @@ int CMasterRenderer::CreateBuffers()
 	for (unsigned int i = 0; i < BufferTexture::Type::COUNT; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Textures[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_WindowSize.x, m_WindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler*m_WindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
 		if (!m_DebugRenderTextures)
 		{
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -200,7 +205,7 @@ int CMasterRenderer::CreateBuffers()
 
 	// depth
 	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_WindowSize.x, m_WindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler*m_WindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
 
 	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };

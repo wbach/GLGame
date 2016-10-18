@@ -30,7 +30,8 @@ private:
 	shared_ptr<CGUITexture> m_Cursor;
 	glm::vec2				m_WindowSize;
 
-	freetype::font_data m_TextFont;
+	//freetype::font_data m_TextFont;
+	CFont				m_TextFont;
 	FontShader			m_Fontshader;
 	string				m_FontName;
 };

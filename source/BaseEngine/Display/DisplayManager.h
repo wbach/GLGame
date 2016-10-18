@@ -38,10 +38,15 @@ public:
 	void SetApi(std::shared_ptr<CApi> api);
 	void SetInput(std::shared_ptr<CInput>&);
 
+	void EnableTime() { m_Time = true; }
+	void DisableTime() { m_Time = false; }
+
 	bool& GetSync() { return m_Sync; }
 private:	
 	std::shared_ptr<CApi> m_Api;
 	std::shared_ptr<CRenderer> m_Renderer;
+
+	bool m_Time = true;
 
 	double m_LastFrameTime;
 	double m_Delta;
