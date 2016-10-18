@@ -25,6 +25,7 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	m_Id = s_ID++;
 	m_Name = "No name entity";
 	AddTransform(STransform(pos, rot, scale));
+	m_AttachYoffset = 0.f;
 }
 
 void CEntity::SetPosition(glm::vec3 position, unsigned int i)

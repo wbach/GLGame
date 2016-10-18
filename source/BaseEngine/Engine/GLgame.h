@@ -35,7 +35,6 @@ public:
 
     int SetCurrentScene(int i);
     void LoadScene();
-	void LoadSceneFromFile();
 	void InitializeScene() ;
 	void AddScene(shared_ptr<CScene> scene);
 

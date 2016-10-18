@@ -329,6 +329,32 @@ const glm::vec3 CScene::GetDirectionalLightPosition()
 	return glm::vec3();
 }
 
+glm::vec3 CScene::GetMousePickerTarget()
+{
+	for (CTerrain& terrain : m_Terrains)
+	{  
+		bool is_col;
+		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
+		if (is_col) return point;
+	}
+	return glm::vec3();
+}
+
+void CScene::SetEntityToMousePointByKey(std::shared_ptr<CEntity> entity)
+{
+	if (!m_Game.GetInputManager().GetKey(KeyCodes::M)) return;
+	for (CTerrain& terrain : m_Terrains)
+	{
+		bool is_col;
+		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
+		if (is_col)
+		{
+			entity->SetPosition(CreatePositionVector(point.x, point.z, entity->GetAttachYOffset()));
+			return;
+		}
+	}
+}
+
 void CScene::Reset()
 {
 	CleanUp();

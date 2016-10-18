@@ -2,12 +2,12 @@
 <Map>
 	<Camera>
 		<Position>
-			<x>135.159729</x>
-			<y>59.930420</y>
-			<z>123.858170</z>
+			<x>478.807587</x>
+			<y>188.898407</y>
+			<z>408.578064</z>
 		</Position>
-		<Pitch>5.599998</Pitch>
-		<Yaw>321.400116</Yaw>
+		<Pitch>40.600094</Pitch>
+		<Yaw>144.397858</Yaw>
 	</Camera>
 	<SkyBox>
 		<DayTextures>
@@ -46,25 +46,6 @@
 		</Attenuation>
 		<CutOff>0.000000</CutOff>
 	</Light>
-	<Light>
-		<Type>1</Type>
-		<Position>
-			<x>86.000000</x>
-			<y>60.000000</y>
-			<z>47.000000</z>
-		</Position>
-		<Color>
-			<x>0.500000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Color>
-		<Attenuation>
-			<x>0.000000</x>
-			<y>0.100000</y>
-			<z>0.000000</z>
-		</Attenuation>
-		<CutOff>0.000000</CutOff>
-	</Light>
 	<Terrain>
 		<Name>Test_Terrain</Name>
 		<Position>
@@ -96,31 +77,6 @@
 		</BlueTexture>
 	</Terrain>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
-		<Name>alchemTable.obj</Name>
-		<Position>
-			<x>100.000000</x>
-			<y>55.000000</y>
-			<z>100.000000</z>
-		</Position>
-		<Rotation>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Rotation>
-		<Scale>
-			<x>1.000000</x>
-			<y>1.000000</y>
-			<z>1.000000</z>
-		</Scale>
-		<NormalizedSize>
-			<x>0.000000</x>
-			<y>1.000000</y>
-			<z>0.000000</z>
-		</NormalizedSize>
-		<Global>0</Global>
-	</Entity>
-	<Entity>
 		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 		<Name>Small_House</Name>
 		<Position>
@@ -128,6 +84,7 @@
 			<y>54.500000</y>
 			<z>100.000000</z>
 		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
 			<y>180.000000</y>
@@ -152,6 +109,7 @@
 				<y>0.000000</y>
 				<z>4.000000</z>
 			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
 			<Rotation>
 				<x>0.000000</x>
 				<y>0.000000</y>
@@ -177,6 +135,7 @@
 				<y>-0.500000</y>
 				<z>0.000000</z>
 			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
 			<Rotation>
 				<x>0.000000</x>
 				<y>90.000000</y>
@@ -202,6 +161,7 @@
 				<y>0.000000</y>
 				<z>4.000000</z>
 			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
 			<Rotation>
 				<x>0.000000</x>
 				<y>0.000000</y>
@@ -219,15 +179,120 @@
 			</NormalizedSize>
 			<Global>0</Global>
 		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>-6.000000</x>
+				<y>0.000000</y>
+				<z>-6.000000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>45.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.300000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Table1\table1.obj</File>
+			<Name>table1.obj</Name>
+			<Position>
+				<x>2.500000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>2.500000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>-2.500000</x>
+				<y>0.000000</y>
+				<z>-3.500000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>30.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>-3.000000</x>
+				<y>0.000000</y>
+				<z>-2.000000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.200000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
 	</Entity>
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\Gothic_smallHouse1\smallHouse1.obj</File>
 		<Name>smallHouse1.obj</Name>
 		<Position>
-			<x>703.853027</x>
-			<y>52.448002</y>
-			<z>822.299988</z>
+			<x>120.000000</x>
+			<y>55.851002</y>
+			<z>135.000000</z>
 		</Position>
+		<AttachYOffset>0.500000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
 			<y>0.000000</y>
@@ -252,6 +317,7 @@
 				<y>52.876999</y>
 				<z>838.687988</z>
 			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
 			<Rotation>
 				<x>0.000000</x>
 				<y>180.000000</y>
@@ -274,13 +340,14 @@
 		<File>F:\Projects\Git\GLGame\Data\Meshes\housestorage1\houseStorage.obj</File>
 		<Name>houseStorage.obj</Name>
 		<Position>
-			<x>279.891998</x>
-			<y>65.456001</y>
-			<z>326.177002</z>
+			<x>117.000000</x>
+			<y>56.951000</y>
+			<z>100.000000</z>
 		</Position>
+		<AttachYOffset>2.000000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
-			<y>0.000000</y>
+			<y>180.000000</y>
 			<z>0.000000</z>
 		</Rotation>
 		<Scale>
@@ -294,18 +361,149 @@
 			<z>0.000000</z>
 		</NormalizedSize>
 		<Global>0</Global>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>2.500000</x>
+				<y>0.000000</y>
+				<z>5.500000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>25.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.500000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>-2.500000</x>
+				<y>0.000000</y>
+				<z>5.500000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>-55.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.500000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>0.500000</x>
+				<y>0.000000</y>
+				<z>5.500000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>45.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.500000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>1.500000</x>
+				<y>1.500000</y>
+				<z>5.500000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>15.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.500000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<Name>crate.obj</Name>
+			<Position>
+				<x>-1.100000</x>
+				<y>1.500000</y>
+				<z>5.600000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>60.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>1.500000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
 	</Entity>
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\G3_Myrtana_Castle_Mainhouse\G3_Myrtana_Castle_Mainhouse.obj</File>
 		<Name>G3_Myrtana_Castle_Mainhouse.obj</Name>
 		<Position>
-			<x>300.000000</x>
-			<y>59.543999</y>
-			<z>200.751999</z>
+			<x>100.000000</x>
+			<y>55.973000</y>
+			<z>140.000000</z>
 		</Position>
+		<AttachYOffset>0.723000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
-			<y>0.000000</y>
+			<y>180.000000</y>
 			<z>0.000000</z>
 		</Rotation>
 		<Scale>
@@ -327,6 +525,7 @@
 				<y>0.000000</y>
 				<z>0.000000</z>
 			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
 			<Rotation>
 				<x>0.000000</x>
 				<y>0.000000</y>
@@ -350,9 +549,10 @@
 		<Name>smallHouse3.obj</Name>
 		<Position>
 			<x>230.664001</x>
-			<y>60.570000</y>
+			<y>50.509998</y>
 			<z>300.049011</z>
 		</Position>
+		<AttachYOffset>0.500000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
 			<y>90.000000</y>
@@ -371,13 +571,14 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Visual Studio 2012\GLgameWB1\Release\Data\Terrain\Trees\Tree\tree.obj</File>
-		<Name>tree.obj</Name>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree1\obj__tree1.obj</File>
+		<Name>obj__tree1.obj</Name>
 		<Position>
-			<x>128.197006</x>
-			<y>55.000000</y>
-			<z>116.051003</z>
+			<x>79.152000</x>
+			<y>54.308998</y>
+			<z>116.387001</z>
 		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
 		<Rotation>
 			<x>0.000000</x>
 			<y>0.000000</y>
@@ -390,10 +591,482 @@
 		</Scale>
 		<NormalizedSize>
 			<x>0.000000</x>
-			<y>0.000000</y>
+			<y>10.000000</y>
 			<z>0.000000</z>
 		</NormalizedSize>
 		<Global>0</Global>
 	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree3\obj__tree3.obj</File>
+		<Name>obj__tree3.obj</Name>
+		<Position>
+			<x>109.587997</x>
+			<y>55.452999</y>
+			<z>131.283005</z>
+		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>10.000000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree6\obj__tree6.obj</File>
+		<Name>obj__tree6.obj</Name>
+		<Position>
+			<x>108.088951</x>
+			<y>54.735638</y>
+			<z>102.282089</z>
+		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>10.000000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<Name>barrel.obj</Name>
+		<Position>
+			<x>97.278000</x>
+			<y>53.558998</y>
+			<z>107.641998</z>
+		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>1.500000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<Name>barrel.obj</Name>
+		<Position>
+			<x>96.171021</x>
+			<y>53.475220</y>
+			<z>108.200981</z>
+		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>1.500000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<Name>barrel.obj</Name>
+		<Position>
+			<x>96.180000</x>
+			<y>53.438999</y>
+			<z>107.000000</z>
+		</Position>
+		<AttachYOffset>0.000000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>1.500000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+	</Entity>
+	<Entity>
+		<File>F:\Projects\Git\GLGame\Data\Meshes\GothicWallGate\G3_Myrtana_Castle_Wall_Entrance_01.obj</File>
+		<Name>G3_Myrtana_Castle_Wall_Entrance_01.obj</Name>
+		<Position>
+			<x>133.001999</x>
+			<y>55.344002</y>
+			<z>119.705002</z>
+		</Position>
+		<AttachYOffset>0.010000</AttachYOffset>
+		<Rotation>
+			<x>0.000000</x>
+			<y>-90.000000</y>
+			<z>0.000000</z>
+		</Rotation>
+		<Scale>
+			<x>1.000000</x>
+			<y>1.000000</y>
+			<z>1.000000</z>
+		</Scale>
+		<NormalizedSize>
+			<x>0.000000</x>
+			<y>10.000000</y>
+			<z>0.000000</z>
+		</NormalizedSize>
+		<Global>0</Global>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>8.150000</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>16.230000</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>24.309999</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>32.309998</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-8.060000</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-32.060001</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-24.059999</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-16.059999</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-40.059998</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-48.059998</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+		<Entity>
+			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<Position>
+				<x>-56.059998</x>
+				<y>0.900000</y>
+				<z>-0.410000</z>
+			</Position>
+			<AttachYOffset>0.000000</AttachYOffset>
+			<Rotation>
+				<x>0.000000</x>
+				<y>0.000000</y>
+				<z>0.000000</z>
+			</Rotation>
+			<Scale>
+				<x>1.000000</x>
+				<y>1.000000</y>
+				<z>1.000000</z>
+			</Scale>
+			<NormalizedSize>
+				<x>0.000000</x>
+				<y>10.000000</y>
+				<z>0.000000</z>
+			</NormalizedSize>
+			<Global>0</Global>
+		</Entity>
+	</Entity>
+	<Terrain>
+		<Name>Test_Terrain2</Name>
+		<Position>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>-1.000000</z>
+		</Position>
+		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256H.png</HeightMap>
+		<BlendMap>Data/Terrain/TerrainTextures/blendMapH.png</BlendMap>
+		<BackgroundTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
+		</BackgroundTexture>
+		<RockTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/165.JPG</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/165.JPG</NormalTexture>
+		</RockTexture>
+		<RedTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/grassFlowers.png</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/grassFlowers.png</NormalTexture>
+		</RedTexture>
+		<GreenTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
+		</GreenTexture>
+		<BlueTexture>
+			<DiffTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
+			<NormalTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.bmp</NormalTexture>
+		</BlueTexture>
+	</Terrain>
 </Map>
 

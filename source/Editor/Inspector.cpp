@@ -7,6 +7,11 @@ void CSceneEditor::CreateInspector(int w, int h)
 	int edit_size_x = 50, edit_size_y = 20;
 	
 	CreateTransformView(w, h, edit_size_x, edit_size_y);
+	
+	h += 2 * edit_size_y;
+	
+	m_Hwnd[Hwnds::INSPECTOR_TEXT_ATTACHED_OFFSET_TEXT] = CreateWindowEx(0, "STATIC", "Attached Y offset", WS_CHILD | WS_VISIBLE, w, h, 150, edit_size_y, m_Hwnd[Hwnds::MAIN_WINDOW], NULL, m_Instance, NULL);
+	m_Hwnd[Hwnds::INSPECTOR_TEXT_ATTACHED_OFFSET] = CreateWindowEx(WS_EX_CLIENTEDGE, "EDIT", "0", WS_CHILD | WS_VISIBLE, w, h + edit_size_y, edit_size_x, edit_size_y, m_Hwnd[Hwnds::MAIN_WINDOW], (HMENU)ControlsIds::INSPECTOR_TEXT_ATTACHED_OFFSET, m_Instance, NULL);
 
 	h += 2 * edit_size_y;
 
@@ -206,19 +211,22 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 			UpdateEntity((ControlsIds::Ids)(ControlsIds::INSPECTOR_EDIT_POSITION_X + x));
 		}
 	}
-	if (wParam == ControlsIds::INSPECTOR_PAINT_STRENGTH && EN_CHANGE == lParam)
+	if (wParam == ControlsIds::INSPECTOR_TEXT_ATTACHED_OFFSET && EN_CHANGE == lParam)
+	{
+		float ayo = 0;
+		GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_TEXT_ATTACHED_OFFSET], ayo);
+		if (m_CurrentEntity != nullptr)
+			m_CurrentEntity->GetAttachYOffset() = ayo;
+	}
+	if (wParam == ControlsIds::INSPECTOR_PAINT_STRENGTH)
 	{
 		GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], m_PaintStrength);
-		if (m_CurrentTerrain != nullptr)
-			m_CurrentTerrain->m_PaintColor = glm::vec3(m_PaintStrength);
 	}
-	if (wParam == ControlsIds::INSPECTOR_PAINT_SIZE && EN_CHANGE == lParam)
+	if (wParam == ControlsIds::INSPECTOR_PAINT_SIZE)
 	{
 		float x;
 		GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_SIZE], x);
 		m_BrushSize = static_cast<int>(x);
-		if (m_CurrentTerrain != nullptr)
-			m_CurrentTerrain->m_BrushSize = m_BrushSize;
 	}
 	switch (wParam)
 	{
@@ -227,7 +235,11 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 			m_AttachToTerrainHeight = !m_AttachToTerrainHeight;
 
 			if (m_AttachToTerrainHeight)
+			{
+				if(m_CurrentEntity != nullptr)
+					m_CurrentEntity->SetPosition(m_Game.GetCurrentScene()->CreatePositionVector(m_CurrentEntity->GetPositionXZ(), m_CurrentEntity->GetAttachYOffset()));
 				PostMessage(m_Hwnd[Hwnds::INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT], BM_SETCHECK, BST_CHECKED, 0);
+			}
 			else
 				PostMessage(m_Hwnd[Hwnds::INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT], BM_SETCHECK, BST_UNCHECKED, 0);
 		}

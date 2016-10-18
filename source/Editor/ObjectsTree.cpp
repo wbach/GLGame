@@ -201,6 +201,8 @@ void CSceneEditor::TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam)
 				{
 					m_CurrentEntity = m_Game.GetCurrentScene()->FindEntity(stoi(id));
 					if (m_CurrentEntity == nullptr) break;
+					
+					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_TEXT_ATTACHED_OFFSET], std::to_string(m_CurrentEntity->GetAttachYOffset()).c_str());
 					PostMessage(m_Hwnd[Hwnds::INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT], BM_SETCHECK, BST_UNCHECKED, 0);
 					m_AttachToTerrainHeight = false;	
 					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_TEXT_CURRENT_SELECTED], m_CurrentEntity->GetNameWithID().c_str());

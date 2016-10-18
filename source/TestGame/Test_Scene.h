@@ -85,7 +85,8 @@ public:
 		grass->m_IsSpecial = true;
 		AddEntity(grass, true);
 	}
-	void setFirstCamera(){
+	void setFirstCamera()
+	{
 		//songo->getReferencedPosition(), songo->getReferencedRotation()
         m_Camera.reset();
 		m_Camera = make_shared<CFirstPersonCamera>(&m_Game.GetInputManager(), &m_Game.GetDisplayManager());
@@ -135,20 +136,20 @@ public:
 		{
 			for (CTerrain& terrain : m_Terrains)
 			{
-				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain);
-				//Utils::PrintVector("Mouse terrain pos: ", point);
-				//terrain.PaintBlendMap(point);
+				bool is_col;
+				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
 				terrain.PaintHeightMap(point);
+				if (is_col) break;
 			}
 		}
 		if (m_Game.GetInputManager().GetKey(KeyCodes::E))
 		{
 			for (CTerrain& terrain : m_Terrains)
 			{
-				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain);
-				//Utils::PrintVector("Mouse terrain pos: ", point);
+				bool is_col;
+				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
 				terrain.PaintBlendMap(point);
-				//terrain.PaintHeightMap(point);
+				if (is_col) break;
 			}
 		}
 		float dt = m_Game.GetDisplayManager().GetDeltaTime();
@@ -167,8 +168,6 @@ public:
 		//	m_Loader.ReloadTexture("Data/Terrain/TerrainTextures/blendMap.png", m_Terrains[0].m_BackgroundTexture[0]);
 			
 		}
-			
-
 		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
 
 		LockCameraUnderTerrain();

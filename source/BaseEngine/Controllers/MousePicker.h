@@ -7,7 +7,7 @@ class CMousePicker
 public:
 	CMousePicker();
 	CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::mat4 projection);
-	glm::vec3 GetMousePointOnTerrain(glm::vec2 mous_pose, CTerrain& terrain);
+	glm::vec3 GetMousePointOnTerrain(glm::vec2 mous_pose, CTerrain& terrain, bool& is_col);
 private:
 	glm::vec3 CalculateMouseRay(glm::vec2 mouse_pos);
 	glm::vec3 ToWorldCoords(glm::vec4  eyeCoords);

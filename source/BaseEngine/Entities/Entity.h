@@ -82,6 +82,7 @@ public:
 	const glm::vec3& GetNormalizedSize();
 
 	float GetMaxBoundingSize() { return m_BoundingSize; }
+	float& GetAttachYOffset() {	return m_AttachYoffset;	}
 
 	void SetIsInAir(bool is) { m_IsInAir = is; }
 
@@ -96,10 +97,12 @@ protected:
 	bool m_IsInAir = false;
 	bool m_TransformsInVao = false;
 
-	glm::vec3					m_NormalizedSize;
-	glm::mat4					m_NormalizedMatrix;
-	glm::mat4					m_RelativeTransformMatrix;
-	glm::mat4					m_FinalTransformMatrix;
+	float		m_AttachYoffset;
+
+	glm::vec3	m_NormalizedSize;
+	glm::mat4	m_NormalizedMatrix;
+	glm::mat4	m_RelativeTransformMatrix;
+	glm::mat4	m_FinalTransformMatrix;
 
 	vector<glm::mat4>			m_TransformMatrixes;
 	vector<STransform>			m_Transforms;

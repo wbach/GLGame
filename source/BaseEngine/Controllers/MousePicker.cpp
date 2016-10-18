@@ -11,13 +11,15 @@ CMousePicker::CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::
 {
 }
 
-glm::vec3 CMousePicker::GetMousePointOnTerrain(glm::vec2 mous_pose, CTerrain & terrain)
+glm::vec3 CMousePicker::GetMousePointOnTerrain(glm::vec2 mous_pose, CTerrain & terrain, bool& is_col)
 {
 	m_CurrentRay = CalculateMouseRay(mous_pose);
 	if (IntersectionInRange(0, RAY_RANGE, m_CurrentRay, terrain))
 	{
+		is_col = true;
 		return BinarySearch(terrain, 0, 0, RAY_RANGE, m_CurrentRay);
 	}
+	is_col = false;
 	return glm::vec3();
 }
 glm::vec3 CMousePicker::CalculateMouseRay(glm::vec2 mouse_pos)

@@ -76,6 +76,8 @@ public:
 	const vector<string>& GetSkyBoxDayTextures() const { return m_DaySkyboxTextures; }
 	const vector<string>& GetSkyBoxNightTextures() const { return m_NightSkyboxTextures; }
 	CMousePicker& GetMousePicker() { return m_MousePicker; }
+	glm::vec3 GetMousePickerTarget();
+	void SetEntityToMousePointByKey(std::shared_ptr<CEntity> entity);
 	//Remove only loaded by parser elements
 
 	bool m_IsDebug = false;

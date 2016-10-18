@@ -69,6 +69,9 @@ void CSceneEditor::CreateFileList()
 	lvc.cx = rcl.right - rcl.left - 350;
 	lvc.pszText = "Date";
 	ListView_InsertColumn(m_Hwnd[Hwnds::FILE_LIST], 2, &lvc);
+
+	RegisterSpawEntityDialogClass();
+	CreateSpawEntityDialog();
 }
 void CSceneEditor::FillFileList()
 {
@@ -209,7 +212,7 @@ void CSceneEditor::CheckAvaibleDrives()
 	}
 	GlobalFree(Bufor);
 }
-void CSceneEditor::SpawnEntity(std::string file_name)
+void CSceneEditor::SpawnEntity(std::string file_name, glm::vec3 normalized_scale)
 {
 	glm::vec3 position = m_Game.GetCurrentScene()->GetCameraPosition();
 	glm::vec3 dir;
@@ -228,6 +231,10 @@ void CSceneEditor::SpawnEntity(std::string file_name)
 	}
 
 	shared_ptr<CEntity> new_entity = m_Game.GetCurrentScene()->CreateEntityFromFile(file_name, false, spawn_position);
+
+	glm::mat4 nm = m_Game.GetCurrentScene()->GetLoader().m_Models[new_entity->GetModelId()]->CalculateNormalizedMatrix(normalized_scale.x, normalized_scale.y, normalized_scale.z);
+	new_entity->SetNormalizedMatrix(nm);
+	new_entity->SetNormalizedSize(normalized_scale);
 	if (m_CurrentEntity != nullptr) 
 	{
 		m_CurrentEntity->AddSubbEntity(new_entity);
@@ -236,6 +243,7 @@ void CSceneEditor::SpawnEntity(std::string file_name)
 	{
 		m_Game.GetCurrentScene()->AddEntity(new_entity);
 	}
+
 	m_CurrentEntity = new_entity;	
 	FillObjectsTree();
 }
@@ -278,8 +286,9 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 				std::string file_extension = m_CurrentPathFiles[index].name.substr(m_CurrentPathFiles[index].name.find_last_of('.') + 1);
 				cout << file_extension << endl;
 				if (!file_extension.compare("obj") || !file_extension.compare("fbx") || !file_extension.compare("3ds"))
-				{					
-					SpawnEntity(file_all_path);
+				{
+					m_SpawnedPathFile = file_all_path;
+					CreateSpawEntityDialog();
 				}
 				else if (!file_extension.compare("map"))
 				{
@@ -297,4 +306,140 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 		}
 		break;
 	}
+}
+
+void CSceneEditor::CreateSpawEntityDialog()
+{
+	RECT rect;
+	GetClientRect(GetDesktopWindow(), &rect);
+	rect.left = (rect.right / 2) - (400 / 2);
+	rect.top = (rect.bottom / 2) - (100 / 2);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG] = CreateWindowEx(WS_EX_TOPMOST, "SpawEntityDialogClass", "Spawn Entity",
+		WS_VISIBLE | WS_SYSMENU, rect.left, rect.top, 270, 250, NULL, NULL, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_PARENT_TEXT] = CreateWindowEx(0, "STATIC", "Parent ", WS_CHILD | WS_VISIBLE
+		, 10, 8, 35, 30, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], NULL, m_Instance, NULL);	
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO] = CreateWindowEx(0, "COMBOBOX", NULL, WS_CHILD | WS_VISIBLE | WS_BORDER |
+		CBS_DROPDOWN, 50, 5, 180, 200, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_COMBO, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_CURRENT_FILE] = CreateWindowEx(0, "STATIC", "File : ", WS_CHILD | WS_VISIBLE
+		, 10, 38, 250, 20, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], NULL, m_Instance, NULL);
+	
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH] = CreateWindowEx(0, "BUTTON", "Normalized mesh", WS_CHILD | WS_VISIBLE | BS_CHECKBOX
+		, 50, 58, 200, 30, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH, m_Instance, NULL);
+	PostMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH], BM_SETCHECK, BST_CHECKED, 0);
+	m_NormalizeSpawnedMesh = true;
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_X] = CreateWindowEx(0, "EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER,
+		50, 88, 150, 20, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_EDIT_X, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_Y] = CreateWindowEx(0, "EDIT", "1", WS_CHILD | WS_VISIBLE | WS_BORDER,
+		50, 108, 150, 20, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_EDIT_Y, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_Z] = CreateWindowEx(0, "EDIT", "0", WS_CHILD | WS_VISIBLE | WS_BORDER,
+		50, 128, 150, 20, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_EDIT_Z, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_BUTTON_OK] = CreateWindowEx(0, "BUTTON", "Ok", WS_CHILD | WS_VISIBLE,
+		25, 158, 100, 30, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_BUTTON_OK, m_Instance, NULL);
+
+	m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_BUTTON_CANCEL] = CreateWindowEx(0, "BUTTON", "Cancel", WS_CHILD | WS_VISIBLE,
+		125, 158, 100, 30, m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], (HMENU)ControlsIds::SPAWN_ENITY_DIALOG_BUTTON_CANCEL, m_Instance, NULL);
+	SetWindowLongPtr(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], GWLP_USERDATA, (long)this);
+
+	SetFont();
+
+	//ShowWindow(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG], SW_SHOWDEFAULT);
+	//UpdateWindow(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG]);
+}
+void CSceneEditor::RegisterSpawEntityDialogClass()
+{
+	WNDCLASSEX wc = { 0 };
+	wc.cbSize = sizeof(WNDCLASSEX);
+	wc.lpfnWndProc = SpawnEntityDialogProc;
+	wc.hInstance = m_Instance;
+	wc.hbrBackground = GetSysColorBrush(COLOR_3DFACE);
+	wc.lpszClassName = "SpawEntityDialogClass";
+	RegisterClassEx(&wc);
+}
+LRESULT CSceneEditor::RealSpawnEntityDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	SetWindowText(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_CURRENT_FILE], m_SpawnedPathFile.c_str());
+	switch (msg)
+	{
+	case WM_ACTIVATE:
+		{
+			
+		}
+	break;
+	case WM_COMMAND:
+		switch (LOWORD(wParam))
+		{			
+		case ControlsIds::SPAWN_ENITY_DIALOG_COMBO:
+			switch (HIWORD(wParam))
+			{
+			case CBN_DROPDOWN:
+				SendMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO], CB_RESETCONTENT, 0, 0);
+				SendMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO], CB_ADDSTRING, 0, (LPARAM) "None");				
+				if (m_CurrentEntity != nullptr) 
+				{
+					SendMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO], CB_ADDSTRING, 0, (LPARAM)m_CurrentEntity->GetNameWithID().c_str());
+					SendMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO], CB_SETCURSEL, 1, 0);
+				}
+				break;
+
+			}
+			break;
+		case ControlsIds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH:
+			m_NormalizeSpawnedMesh = !m_NormalizeSpawnedMesh;
+
+			if (m_NormalizeSpawnedMesh)
+				PostMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH], BM_SETCHECK, BST_CHECKED, 0);
+			else
+				PostMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_NORMALIZED_MESH], BM_SETCHECK, BST_UNCHECKED, 0);
+			break;
+
+		case ControlsIds::SPAWN_ENITY_DIALOG_BUTTON_OK:
+		{
+			float x = 0, y = 0, z = 0;
+			if (m_NormalizeSpawnedMesh)
+			{
+				GetValueFromControl(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_X], x);
+				GetValueFromControl(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_Y], y);
+				GetValueFromControl(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_EDIT_Z], z);
+			}
+			if (SendMessage(m_Hwnd[Hwnds::SPAWN_ENITY_DIALOG_COMBO], CB_GETCURSEL, 0, 0) == 0)
+				m_CurrentEntity = nullptr;
+
+			SpawnEntity(m_SpawnedPathFile, glm::vec3(x, y, z));
+			DestroyWindow(hwnd);
+			break;
+		}
+		case ControlsIds::SPAWN_ENITY_DIALOG_BUTTON_CANCEL:
+			DestroyWindow(hwnd);
+			break;
+			//MessageBox(hwnd, "Wcisn¹³eœ przycisk 1", "Test", MB_ICONINFORMATION);
+			break;
+		}
+		break;
+	case WM_CLOSE:
+		DestroyWindow(hwnd);
+		break;
+
+	case WM_DESTROY:
+		PostQuitMessage(0);
+		break;
+
+	default:
+		return DefWindowProc(hwnd, msg, wParam, lParam);
+	}
+	return 0;
+}
+
+LRESULT CSceneEditor::SpawnEntityDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
+{
+	CSceneEditor* me = (CSceneEditor*)(GetWindowLongPtr(hwnd, GWLP_USERDATA));
+	if (me) return me->RealSpawnEntityDialogProc(hwnd, msg, wParam, lParam);
+	return DefWindowProc(hwnd, msg, wParam, lParam);
 }

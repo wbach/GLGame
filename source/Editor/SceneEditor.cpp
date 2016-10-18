@@ -45,33 +45,11 @@ void CSceneEditor::Init(int width, int height)
 	//Create Inspector
 	CreateInspector(m_Width - 175, 5);
 
-	// Setfont to all elements
-	for (int x = 0; x < Hwnds::COUNT; x++)
-	{
-		SendMessage(m_Hwnd[x], WM_SETFONT, (WPARAM)hNormalFont, 0);		
-	}
+	SetFont();
 
 	ShowWindow(m_Hwnd[Hwnds::MAIN_WINDOW], SW_SHOWDEFAULT); // Poka¿ okienko...
 	UpdateWindow(m_Hwnd[Hwnds::MAIN_WINDOW]);
 
-	
-	/*while (GetMessage(&m_Messages, NULL, 0, 0))
-	{
-		TranslateMessage(&m_Messages);
-		DispatchMessage(&m_Messages);
-	}*/
-
-//	return Komunikat.wParam;
-	//GLubyte* image;
-	//int w, h;
-	//m_Game.GetCurrentScene()->GetLoader().LoadFullTexture("Data/Terrain/TerrainTextures/blendMap.png", image, w, h, 16 );
-
-	//HDC hdc = GetDC(m_Hwnd[Hwnds::MAIN_WINDOW]);
-	//HWND a = GetDesktopWindow();
-	//HBITMAP b = CreateBitmapFromPixels(hdc, w, h, 32, image);
-	//DisplayBitmap(m_Hwnd[Hwnds::MAIN_WINDOW], b, hdc, 0, 0);
-	//DeleteObject(b);
-	//PeekMesages();
 }
 void CSceneEditor::AddMenus() 
 {
@@ -94,23 +72,18 @@ void CSceneEditor::AddMenus()
 	
 
 	SetMenu(m_Hwnd[Hwnds::MAIN_WINDOW], m_Menus[MenuHandles::POUP]);
-
-	//HMENU menu = m_Menus[MenuHandles::ELEMENT_FILE];
-	//MENUINFO MenuInfo = { 0 };
-	//MenuInfo.cbSize = sizeof(MenuInfo);
-	//MenuInfo.hbrBack = CreateSolidBrush(RGB(30, 30, 30)); // Brush you want to draw
-	//MenuInfo.fMask = MIM_BACKGROUND;
-	//MenuInfo.dwStyle = MNS_AUTODISMISS;
-
-	//if (IsMenu(menu) )
-	//{
-	//	SetMenuInfo(menu, &MenuInfo);
-	//}
-
 }
 void CSceneEditor::CheckActiveWindows()
 {
 
+}
+void CSceneEditor::SetFont()
+{
+	// Setfont to all elements
+	for (int x = 0; x < Hwnds::COUNT; x++)
+	{
+		SendMessage(m_Hwnd[x], WM_SETFONT, (WPARAM)hNormalFont, 0);
+	}
 }
 void CSceneEditor::CreateMainWindow()
 {
@@ -126,7 +99,6 @@ void CSceneEditor::CreateMainWindow()
 	AddMenus();
 	RegisterLoadingClass(m_Hwnd[Hwnds::MAIN_WINDOW]);
 //	CreateDialogProgressBar();
-
 }
 
 void CSceneEditor::AttachOpenGLWindow()
@@ -210,6 +182,7 @@ LRESULT CSceneEditor::LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPAR
  
 	return(DefWindowProcW(hwnd, msg, wParam, lParam));
 }
+
 std::string CSceneEditor::GetTextFromControl(HWND hwnd) const
 {
 	DWORD dlugosc = GetWindowTextLength(hwnd);
@@ -234,6 +207,7 @@ void CSceneEditor::PeekMesages()
 	if (m_CurrentEntity != nullptr)
 	{
 		UpdateInspector();
+		m_Game.GetCurrentScene()->SetEntityToMousePointByKey(m_CurrentEntity);
 	}
 }
 //*

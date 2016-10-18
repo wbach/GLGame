@@ -189,6 +189,9 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 		if (!std::string("Position").compare(subnode->name()) && entity != nullptr)
 			entity->SetPosition(ParseVector3d(subnode));
 
+		if (!std::string("AttachYOffset").compare(subnode->name()) && entity != nullptr)
+			entity->GetAttachYOffset() = std::stof(std::string(subnode->value()));
+
 		if (!std::string("Rotation").compare(subnode->name()) && entity != nullptr)
 			entity->SetRotation(ParseVector3d(subnode));
 
@@ -207,7 +210,7 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 		glm::mat4 normalized_matrix = m_Scene->GetLoader().m_Models[entity->GetModelId()]->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
 		entity->SetNormalizedMatrix(normalized_matrix);
 		entity->SetNormalizedSize(normalized_size);
-		m_Scene->GetLoader().m_Models[entity->GetModelId()]->CreateTransformsVbo(entity->GetTransformMatrixes());
+		//m_Scene->GetLoader().m_Models[entity->GetModelId()]->CreateTransformsVbo(entity->GetTransformMatrixes());
 		if (parent == nullptr)
 			m_Scene->AddEntity(entity, is_global);
 		else
@@ -431,6 +434,9 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");
 	AddVectorToNode(document, position, entity->GetLocalPosition());
 
+	rapidxml::xml_node<>* attach_y_offset = document.allocate_node(rapidxml::node_element, "AttachYOffset", document.allocate_string(std::to_string(entity->GetAttachYOffset()).c_str()));
+
+
 	rapidxml::xml_node<>* rotation = document.allocate_node(rapidxml::node_element, "Rotation");
 	AddVectorToNode(document, rotation, entity->GetRotation());
 
@@ -441,9 +447,11 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	AddVectorToNode(document, normalized, entity->GetNormalizedSize());
 
 	rapidxml::xml_node<>* _global = document.allocate_node(rapidxml::node_element, "Global", document.allocate_string(std::to_string(global).c_str()));
+	
 	entity_node->append_node(file);
 	entity_node->append_node(name);
 	entity_node->append_node(position);
+	entity_node->append_node(attach_y_offset);
 	entity_node->append_node(rotation);
 	entity_node->append_node(scale);
 	entity_node->append_node(normalized);

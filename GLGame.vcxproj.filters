@@ -416,6 +416,12 @@
     <ClInclude Include="source\BaseEngine\Shaders\FXAAShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="source\Editor\HwndsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Editor\IdsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include="source\GLgame.vcxproj" />

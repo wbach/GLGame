@@ -253,6 +253,8 @@
     <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h" />
+    <ClInclude Include="source\Editor\HwndsList.h" />
+    <ClInclude Include="source\Editor\IdsList.h" />
     <ClInclude Include="source\Editor\SceneEditor.h" />
     <ClInclude Include="source\TestGame\Player.h" />
     <ClInclude Include="source\BaseEngine\Engine\Scene.h" />

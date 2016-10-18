@@ -11,6 +11,8 @@
 #include <cctype>
 #include "../BaseEngine/Engine/GLgame.h"
 #include <thread>
+#include "HwndsList.h"
+#include "IdsList.h"
 #define TEXTCOLOR RGB(0, 0, 0)
 #define BKCOLOR RGB(250, 250, 250)
 #pragma comment(linker,"\"/manifestdependency:type='win32' name = 'Microsoft.Windows.Common-Controls' version = '6.0.0.0' processorArchitecture = '*' publicKeyToken = '6595b64144ccf1df' language = '*'\"")
@@ -18,48 +20,6 @@
 static HWND s_ProgresBarLoading;
 static HWND s_DialogLoading;
 
-namespace ControlsIds
-{
-	enum Ids 
-	{
-				//File list
-		FILE_LIST = 1001,
-		DRIVE_COMBO,
-		//Inspector
-		INSPECTOR_EDIT_POSITION_X,
-		INSPECTOR_EDIT_POSITION_Y,
-		INSPECTOR_EDIT_POSITION_Z,
-		INSPECTOR_EDIT_ROTATION_X,
-		INSPECTOR_EDIT_ROTATION_Y,
-		INSPECTOR_EDIT_ROTATION_Z,
-		INSPECTOR_EDIT_SCALE_X,
-		INSPECTOR_EDIT_SCALE_Y,
-		INSPECTOR_EDIT_SCALE_Z,
-		INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT,
-		INSPECTOR_DELETE_CURRENT_SELECTED,
-		INSPECTOR_TEXT_CURRENT_SELECTED,
-		INSPECTOR_GO_CAMERA_TO_OBJECT,
-		INSPECTOR_TEXTURE_BACKGROUNG,
-		INSPECTOR_TEXTURE_RED,
-		INSPECTOR_TEXTURE_GREEN,
-		INSPECTOR_TEXTURE_BLUE,
-		INSPECTOR_PAINT_SIZE,
-		INSPECTOR_PAINT_STRENGTH,
-		INSPECTOR_PAINT_SIZE_TEXT,
-		INSPECTOR_PAINT_STRENGTH_TEXT,
-		//Tree
-		OBJECT_TREEE,
-		//Menu
-		MENU_NEW_SCENE,
-		MENU_OPEN_SCENE,
-		MENU_SAVE_SCENE,
-		MENU_SAVEAS_SCENE,
-		MENU_ABOUT,
-		MENU_QUIT,
-		//Count
-		COUNT
-	};
-}
 namespace FilesTypes 
 {
 	enum Type
@@ -71,53 +31,7 @@ namespace FilesTypes
 		COUNT
 	};
 }
-namespace Hwnds
-{
-	enum Type
-	{
-		MAIN_WINDOW = 0,
-		OPENGL_WINDOW,
-		//Inscpector
-		INSPECTOR_TEXT_POSITION,
-		INSPECTOR_TEXT_ROTATION,
-		INSPECTOR_TEXT_SCALE,
-		INSPECTOR_EDIT_POSITION_X,
-		INSPECTOR_EDIT_POSITION_Y,
-		INSPECTOR_EDIT_POSITION_Z,
-		INSPECTOR_EDIT_ROTATION_X,
-		INSPECTOR_EDIT_ROTATION_Y,
-		INSPECTOR_EDIT_ROTATION_Z,
-		INSPECTOR_EDIT_SCALE_X,
-		INSPECTOR_EDIT_SCALE_Y,
-		INSPECTOR_EDIT_SCALE_Z,
-		INSPECTOR_ATTACH_TO_TERRAIN_HEIGHT,
-		INSPECTOR_DELETE_CURRENT_SELECTED,
-		INSPECTOR_TEXT_CURRENT_SELECTED,
-		INSPECTOR_GO_CAMERA_TO_OBJECT,
-		INSPECTOR_TEXTURE_BACKGROUNG,
-		INSPECTOR_TEXTURE_RED,
-		INSPECTOR_TEXTURE_GREEN,
-		INSPECTOR_TEXTURE_BLUE,
-		INSPECTOR_PAINT_SIZE,
-		INSPECTOR_PAINT_STRENGTH,
-		INSPECTOR_PAINT_SIZE_TEXT,
-		INSPECTOR_PAINT_STRENGTH_TEXT,
-		//File list
-		FILE_LIST,
-		DRIVE_COMBO,
-		CURRENT_PATH,
-		//Tree
-		OBJECT_TREEE,		
-		//Menu
-		MENU,
-		MENU_BAR,
-		//
-		LOADING_DIALOG,
-		LOADING_PROGRESS_BAR,
-		//COunt
-		COUNT
-	};
-}
+
 namespace MenuHandles
 {
 	enum Type
@@ -148,7 +62,7 @@ private:
 	void CreateDialogProgressBar();
 	void DeleteDialogProgressBar();
 	void RegisterLoadingClass(HWND hwnd);
-	static LRESULT CALLBACK LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	static LRESULT CALLBACK LoadingDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);	
 	std::string GetTextFromControl(HWND hwnd) const;
 
 
@@ -160,8 +74,7 @@ private:
 	void InspectorProcedure(WPARAM wParam, LPARAM lParam);
 	void UpdateInspector();
 	void UpdateEntity(ControlsIds::Ids type);
-	void GetValueFromControl(HWND hwnd, float& value);
-
+	void GetValueFromControl(HWND hwnd, float& value);	
 
 	// Objects Tree functions
 	void CreateObjectsTree();
@@ -175,8 +88,12 @@ private:
 	void FillFileList();
 	void CreateFileList();
 	void AddFile(int i, const SFile& file);
-	void SpawnEntity(std::string file_name);
+	void SpawnEntity(std::string file_name, glm::vec3 normalized_scale);
 	void FileExplorerProcedure(WPARAM wParam, LPARAM lParam);
+	void RegisterSpawEntityDialogClass();
+	void CreateSpawEntityDialog();
+	static LRESULT CALLBACK SpawnEntityDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
+	LRESULT CALLBACK RealSpawnEntityDialogProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 
 	// Window functions
 	void AttachOpenGLWindow();	
@@ -184,6 +101,7 @@ private:
 	void CreateMainWindow();
 	void AddMenus();
 	void CheckActiveWindows();
+	void SetFont();
 	LRESULT CALLBACK RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam);
 	//*
 	void DisplayBitmap(HWND hwnd, HBITMAP bitmap, HDC hdc, int x, int y);
@@ -201,7 +119,9 @@ private:
 	// File Expllorer variables
 	std::string				 m_CurrentPath;
 	std::vector<SFile>		 m_CurrentPathFiles;
+	std::string				 m_SpawnedPathFile;
 	std::vector<std::string> m_Drives;
+	bool					 m_NormalizeSpawnedMesh = true;
 
 	// Window variables
 	int			m_Width;
