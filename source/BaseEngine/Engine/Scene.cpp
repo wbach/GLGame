@@ -3,6 +3,7 @@
 CScene::CScene(CGame& game) 
 : m_Game(game)
 {
+	m_Loader.SetMaxTextureResolution(m_Game.GetMaxTextureResolution());
 }
 
 void CScene::AddSkyBoxTexture(int type, std::string texture)

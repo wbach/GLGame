@@ -13,6 +13,7 @@ CGame::CGame()
 , m_SoundVolume(1.0)
 , m_WaterQuality(1)
 , m_ViewDistance(1000)
+, m_MaxTextureResolution(4096)
 {
 	ReadConfiguration("./Data/Conf.ini");
 }
@@ -265,11 +266,11 @@ int CGame::ReadConfiguration(string file_name)
 		if (var.compare("SoundVolume") == 0)		m_SoundVolume	= Get::Float(value);
 		if (var.compare("WaterQuality") == 0)		m_WaterQuality	= Get::Float(value);
 		if (var.compare("Shadows") == 0)			m_IsShadows		= Get::Boolean(value);
+		if (var.compare("TextureMaxResolution") == 0)	m_MaxTextureResolution = Get::Vector2d(value);
 		if (var.compare("ShadowMapSize") == 0)		m_ShadowMapSize	= Get::Float(value);
 		if (var.compare("ViewDistance") == 0)		m_ViewDistance  = Get::Float(value);
 		if (var.compare("GrassViewDistance") == 0)	m_GrassViewDistance = Get::Float(value);
-	}
-
+	}	
 	file.close();
 
 	return 0;
@@ -304,6 +305,11 @@ const float & CGame::GetShadowMapSize()
 const bool & CGame::IsShadows()
 {
 	return m_IsShadows;
+}
+
+const glm::vec2 & CGame::GetMaxTextureResolution()
+{
+	return m_MaxTextureResolution;
 }
 
 

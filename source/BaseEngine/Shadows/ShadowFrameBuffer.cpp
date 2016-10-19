@@ -2,7 +2,6 @@
 
 void CShadowFrameBuffer::Init(glm::vec2 size, glm::vec2 window_size)
 {
-	Utils::PrintVector("", size);
 	m_Size = size;
 	m_WindowSize = window_size;
 	InitialiseFrameBuffer();

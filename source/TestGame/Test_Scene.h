@@ -25,6 +25,7 @@ public:
 	{
 		m_Name = "Test Scene";
 		m_SceneFile = "Data/Maps/TestMap.map";
+		
 	}
 	int Initialize() override
 	{
@@ -65,6 +66,7 @@ public:
 		m_Gui.guiButtons.push_back(testButton);
 
 		m_MousePicker = CMousePicker(m_Camera, m_Game.GetDisplayManager().GetWindowSize(), m_Game.GetProjectionMatrix());
+
 		//m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
 		return 0;
 	}

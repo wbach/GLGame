@@ -2,6 +2,7 @@
 CLoader::CLoader()
 : m_TextureLoader(m_Textures)
 {
+
 }
 
 
@@ -16,6 +17,10 @@ void CLoader::CleanUp()
 	m_Textures.clear();
 	m_Models.clear();
 	m_IndexesUpdatingModels.clear();
+}
+void CLoader::SetMaxTextureResolution(const glm::vec2& resolution)
+{
+	m_TextureLoader.SetMaxTextureResolution(resolution);
 }
 void CLoader::UpdateModels(float delta_time)
 {
@@ -59,9 +64,9 @@ GLuint CLoader::LoadTexture(string file_name, bool vertical_flip)
 	return m_TextureLoader.LoadTexture(file_name, vertical_flip);
 }
 
-GLuint CLoader::LoadFullTexture(string file_name, GLubyte *& data, int & width, int & height, float quality)
+GLuint CLoader::LoadFullTexture(string file_name, GLubyte *& data, int & width, int & height)
 {
-	return m_TextureLoader.LoadFullTexture(file_name, true, data, width, height, quality);
+	return m_TextureLoader.LoadFullTexture(file_name, true, data, width, height);
 }
 
 GLuint CLoader::LoadCubeMap(const vector<string>& filenames)

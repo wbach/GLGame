@@ -59,6 +59,8 @@ public:
 	bool m_IsLoadedFromFile = false;
 	std::string m_SceneFileToLoad;
 	
+	const glm::vec2& GetMaxTextureResolution();
+
 private:
 	CDisplayManager m_DisplayManager;
 	CInputManager	m_InputManager;
@@ -81,6 +83,7 @@ private:
 	float	m_ShadowMapSize;
 
 	float m_WaterQuality;
+	glm::vec2 m_MaxTextureResolution;
 
 	bool m_IsLoading;
 	bool m_IsFullScreen;	

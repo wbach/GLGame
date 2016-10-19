@@ -2,11 +2,12 @@
 
 CTextureLoader::CTextureLoader(std::vector<STextInfo>& textures_vector)
 	: m_Textures(textures_vector)
+	, m_MaxTextureResolution(4096)
 {
 
 }
 
-void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int& height, float quality , bool vertical_flip, bool horizontal_flip)
+void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int& height, bool vertical_flip, bool horizontal_flip)
 {
 	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(file_name.c_str(), 0);
 
@@ -42,11 +43,21 @@ void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int
 	int w = FreeImage_GetWidth(imagen);
 	int h = FreeImage_GetHeight(imagen);
 
-	if (quality > 1)
+	bool resize = false;
+	if (w > static_cast<int>(m_MaxTextureResolution.x))
 	{
-		w = static_cast<int>(w / quality);
-		h = static_cast<int>(h / quality);
-		imagen = FreeImage_Rescale(imagen, w, h, FILTER_BILINEAR);
+		w = static_cast<int>(m_MaxTextureResolution.x);
+		resize = true;
+	}
+	if (h > static_cast<int>(m_MaxTextureResolution.y))
+	{
+		h = static_cast<int>(m_MaxTextureResolution.y);
+		resize = true;
+	}
+
+	if (resize)
+	{
+		imagen = FreeImage_Rescale(imagen, w, h, FILTER_BSPLINE);
 	}
 	width = w;
 	height = h;
@@ -67,7 +78,7 @@ void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int
 	FreeImage_Unload(imagen2);
 }
 
-GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&texture, int &width, int &height, float quality, bool vertical_flip, bool horizontal_flip )
+GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte *&texture, int &width, int &height, bool vertical_flip, bool horizontal_flip )
 {
 	string file = file_name.substr(file_name.find_last_of('/') + 1);
 
@@ -79,7 +90,7 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 
 	try
 	{
-		ReadImage(file_name, texture, width, height, quality, vertical_flip, horizontal_flip);
+		ReadImage(file_name, texture, width, height, vertical_flip, horizontal_flip);
 	}
 	catch (const std::exception& e)
 	{
@@ -121,7 +132,7 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 GLuint CTextureLoader::LoadTexture(string filename, bool verticalFlip)
 {
 	int w, h; GLubyte* data = nullptr;
-	return LoadFullTexture(filename, false, data, w, h, 1, verticalFlip);
+	return LoadFullTexture(filename, false, data, w, h, verticalFlip);
 }
 
 GLuint CTextureLoader::LoadCubeMap(const vector<string>& filenames)
@@ -223,6 +234,11 @@ void CTextureLoader::SaveTextureToFile(string file_name, GLubyte* data, int widt
 	FreeImage_FlipVertical(bitmap);
 	FreeImage_Save(FIF_PNG, bitmap, file_name.c_str(), PNG_DEFAULT);
 	FreeImage_Unload(bitmap);
+}
+
+void CTextureLoader::SetMaxTextureResolution(const glm::vec2 & resolution)
+{
+	m_MaxTextureResolution = resolution;
 }
 
 
