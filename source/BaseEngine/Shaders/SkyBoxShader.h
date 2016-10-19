@@ -6,7 +6,7 @@ class CSkyBoxShader : public CShaderProgram
 public:
 	void Init();
 	void LoadProjectionMatrix(const glm::mat4& matrix) const;
-	void LoadViewMatrix(glm::mat4 matrix, const float& deltaTime);
+	void LoadViewMatrix(glm::mat4 matrix, const float& deltaTime, const float& distance_view);
 
 	void GetAllUniformLocations();
 	void ConnectTextureUnits() const;

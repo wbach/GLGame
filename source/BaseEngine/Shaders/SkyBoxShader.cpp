@@ -16,13 +16,13 @@ void CSkyBoxShader::LoadProjectionMatrix(const glm::mat4& matrix) const
 	LoadValue(location_ProjectionMatrix, matrix);
 }
 
-void CSkyBoxShader::LoadViewMatrix(glm::mat4 matrix, const float& deltaTime)
+void CSkyBoxShader::LoadViewMatrix(glm::mat4 matrix, const float& deltaTime, const float& distance_view)
 {
 	matrix[3][0] = 0;
 	matrix[3][1] = 0;
 	matrix[3][2] = 0;
 	m_Rotation += m_RotationSpeed * deltaTime;
-	matrix *= glm::scale(glm::vec3(1000.f));
+	matrix *= glm::scale(glm::vec3(distance_view *0.5f));
 	matrix *= glm::rotate((float) m_Rotation, .0f, 1.f, .0f);
 	LoadValue(location_ViewMatrix, matrix);
 }

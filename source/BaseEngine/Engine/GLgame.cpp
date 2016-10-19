@@ -32,7 +32,8 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 
 	//renderStartSeries();
 	LoadScene();
-	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, m_ShadowMapSize);
+	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, 
+						 m_Fov, m_NearPlane ,m_FarPlane, m_ShadowMapSize);
 }
 void CGame::Uninitialize()
 {

@@ -8,7 +8,7 @@ Kd 2.0 2.0 2.0
 Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
-map_Kd G3_Architecture_Wood_09_Diffuse_01.tga
+map_Kd G3_Architecture_Wood_09_Diffuse_01.png
 
 newmtl None_G3_Architecture_Bricks_01_Diffuse_03.tga
 Ns 0
@@ -17,8 +17,8 @@ Kd 2.0 2.0 2.0
 Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
-map_Kd G3_Architecture_Bricks_01_Diffuse_03.tga
-map_Bump G3_Architecture_Bricks_01_Diffuse_03_NRM.jpg
+map_Kd G3_Architecture_Bricks_01_Diffuse_03.png
+map_Bump G3_Architecture_Bricks_01_Diffuse_03_NRM.png
 
 newmtl None_G3_Architecture_Roofshingle_01_Diffuse_01.tga.004
 Ns 0
@@ -27,8 +27,8 @@ Kd 2.0 2.0 2.0
 Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
-map_Kd G3_Architecture_Roofshingle_01_Diffuse_01.tga
-map_Bump G3_Architecture_Roofshingle_01_Diffuse_01_NRM.jpg
+map_Kd G3_Architecture_Roofshingle_01_Diffuse_01.png
+map_Bump G3_Architecture_Roofshingle_01_Diffuse_01_NRM.png
 
 newmtl None_G3_Architecture_Wood_07_Diffuse_01.tga
 Ns 0
@@ -37,5 +37,5 @@ Kd 2.0 2.0 2.0
 Ks 0.000000 0.000000 0.000000
 d 1
 illum 2
-map_Kd G3_Architecture_Wood_07_Diffuse_01.tga
-map_Bump G3_Architecture_Wood_07_Diffuse_01_NRM.jpg
+map_Kd G3_Architecture_Wood_07_Diffuse_01.png
+map_Bump G3_Architecture_Wood_07_Diffuse_01_NRM.png

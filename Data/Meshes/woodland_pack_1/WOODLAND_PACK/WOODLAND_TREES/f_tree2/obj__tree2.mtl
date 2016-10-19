@@ -9,6 +9,6 @@ Ks 0.000000 0.000000 0.000000
 d 1.000000
 illum 2
 Ns 0.312500
-map_Kd tree2.tga
+map_Kd tree2.png
 
 # num_materials: 1

@@ -90,7 +90,7 @@ private:
 	int		m_RefreshRate;
 
 	const float m_NearPlane = 0.1f;
-	const float m_FarPlane = 2000;
+	const float m_FarPlane = 500;
 	const float m_Fov = 70;
 
 	bool	m_IsSound;

@@ -1,7 +1,8 @@
 #include "SkyBoxRenderer.h"
 
-void CSkyBoxRenderer::Init(const glm::mat4& projection_matrix )
+void CSkyBoxRenderer::Init(const glm::mat4& projection_matrix, const float& distance_view)
 {
+	m_DistanceView = distance_view;
 	m_SkyBoxShader.Init();
 	m_SkyBoxShader.Start();
 	m_SkyBoxShader.LoadProjectionMatrix(projection_matrix);
@@ -11,7 +12,7 @@ void CSkyBoxRenderer::Init(const glm::mat4& projection_matrix )
 void CSkyBoxRenderer::Render(const glm::mat4& view_matrix, const float&  delta_time)
 {
 	m_SkyBoxShader.Start();
-	m_SkyBoxShader.LoadViewMatrix(view_matrix, delta_time);
+	m_SkyBoxShader.LoadViewMatrix(view_matrix, delta_time, m_DistanceView);
 	m_SkyBoxShader.LoadFogColour(.8f, .8f, .8f);
 	m_SkyBoxShader.LoadBlendFactor(0.f);
 

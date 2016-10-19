@@ -26,7 +26,8 @@ public:
 	void GeometryPass(shared_ptr<CScene>& scene, const bool& shadows);
 	void LightPass(shared_ptr<CScene>& scene);
 
-	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, float shadow_map_size = 2048);
+	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix,
+		const float& fov, const float& near, const float& far, float shadow_map_size = 2048);
 	void CleanUp();
 
 	void DebugRenderTextures();

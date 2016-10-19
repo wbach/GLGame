@@ -23,7 +23,7 @@ void CAssimModel::InitModel(string file_name)
 		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
 		return;
 	}
-	RecursiveProcess(path + "/", scene->mRootNode, scene);
+	RecursiveProcess("Data/Textures/" , scene->mRootNode, scene);
 }
 
 const string& CAssimModel::GetName() const

@@ -56,24 +56,54 @@
 		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256.png</HeightMap>
 		<BlendMap>Data/Terrain/TerrainTextures/blendMap.png</BlendMap>
 		<BackgroundTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
+			<DiffTexture>Data/Textures/grass_ground.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassNormal.png</NormalTexture>
 		</BackgroundTexture>
 		<RockTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/165.JPG</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/165.JPG</NormalTexture>
+			<DiffTexture>Data/Textures/165.png</DiffTexture>
+			<NormalTexture>Data/Textures/165.png</NormalTexture>
 		</RockTexture>
 		<RedTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/grassFlowers.png</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/grassFlowers.png</NormalTexture>
+			<DiffTexture>Data/Textures/grassFlowers.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassFlowers.png</NormalTexture>
 		</RedTexture>
 		<GreenTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
+			<DiffTexture>Data/Textures/sand.png</DiffTexture>
+			<NormalTexture>Data/Textures/sand_normal.png</NormalTexture>
 		</GreenTexture>
 		<BlueTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.bmp</NormalTexture>
+			<DiffTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
+			<NormalTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.png</NormalTexture>
+		</BlueTexture>
+	</Terrain>
+	<Terrain>
+		<Name>Test_Terrain2</Name>
+		<Position>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>-1.000000</z>
+		</Position>
+		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256H.png</HeightMap>
+		<BlendMap>Data/Terrain/TerrainTextures/blendMapH.png</BlendMap>
+		<BackgroundTexture>
+			<DiffTexture>Data/Textures/grass_ground.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassNormal.png</NormalTexture>
+		</BackgroundTexture>
+		<RockTexture>
+			<DiffTexture>Data/Textures/165.png</DiffTexture>
+			<NormalTexture>Data/Textures/165.png</NormalTexture>
+		</RockTexture>
+		<RedTexture>
+			<DiffTexture>Data/Textures/grassFlowers.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassFlowers.png</NormalTexture>
+		</RedTexture>
+		<GreenTexture>
+			<DiffTexture>Data/Textures/sand.png</DiffTexture>
+			<NormalTexture>Data/Textures/sand_normal.png</NormalTexture>
+		</GreenTexture>
+		<BlueTexture>
+			<DiffTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
+			<NormalTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.png</NormalTexture>
 		</BlueTexture>
 	</Terrain>
 	<Entity>
@@ -1075,35 +1105,5 @@
 			<Global>0</Global>
 		</Entity>
 	</Entity>
-	<Terrain>
-		<Name>Test_Terrain2</Name>
-		<Position>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>-1.000000</z>
-		</Position>
-		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256H.png</HeightMap>
-		<BlendMap>Data/Terrain/TerrainTextures/blendMapH.png</BlendMap>
-		<BackgroundTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/grass.bmp</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/grassNormal.jpg</NormalTexture>
-		</BackgroundTexture>
-		<RockTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/165.JPG</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/165.JPG</NormalTexture>
-		</RockTexture>
-		<RedTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/grassFlowers.png</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/grassFlowers.png</NormalTexture>
-		</RedTexture>
-		<GreenTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/sand.jpg</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/white-sands-sand_NORM.jpg</NormalTexture>
-		</GreenTexture>
-		<BlueTexture>
-			<DiffTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
-			<NormalTexture>Data/Terrain/TerrainTextures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.bmp</NormalTexture>
-		</BlueTexture>
-	</Terrain>
 </Map>
 

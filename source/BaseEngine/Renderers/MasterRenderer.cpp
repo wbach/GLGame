@@ -1,6 +1,7 @@
 #include "MasterRenderer.h"
 
-void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, float shadow_map_size)
+void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, 
+	const float& fov, const float& near, const float& far, float shadow_map_size)
 {
 	m_WindowSize = window_size;
 
@@ -29,8 +30,8 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
-	m_SkyBoxRenderer.Init(projection_matrix);
-	m_ShadowMapRenderer.Init(camera, window_size, 70.f, 0.1f, shadow_map_size);
+	m_SkyBoxRenderer.Init(projection_matrix, far);
+	m_ShadowMapRenderer.Init(camera, window_size, fov, near, shadow_map_size);
 
 
 }

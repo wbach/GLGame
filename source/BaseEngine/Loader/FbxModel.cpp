@@ -17,7 +17,7 @@ CFbxModel::CFbxModel(CTextureLoader & texture_lodaer)
 void CFbxModel::InitModel(string file_name)
 {
 	m_FileName = file_name;
-	m_FilePath = file_name.substr(0, file_name.find_last_of('/')) + "/";
+	m_FilePath = "Data/Textures/";//file_name.substr(0, file_name.find_last_of('/')) + "/";
 
 	// initialize cache start and stop time
 	m_CacheStart	= FBXSDK_TIME_INFINITE;
