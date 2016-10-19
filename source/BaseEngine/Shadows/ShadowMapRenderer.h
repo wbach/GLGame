@@ -3,18 +3,19 @@
 #include "ShadowBox.h"
 #include "ShadowFrameBuffer.h"
 #include "../Engine/Scene.h"
+#include <stdexcept>
 
 class CShadowMapRenderer 
 {
 public:
 	CShadowMapRenderer();
-	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, int fov, int near_plane);
+	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane);
 	void Render(shared_ptr<CScene>& scene);
 	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity) const;
 	void SetShadowMapSize(float size);
 	void CleanUp();
 	const GLuint& GetShadowMap() const;
-	const glm::mat4& GetToShadowMapSpaceMatrix() const;
+	const glm::mat4 GetToShadowMapSpaceMatrix() const;
 private:
 	void RenderEntity(const shared_ptr<CEntity>&, CModel& model) const;
 	void Prepare(const glm::vec3& light_direction, const CShadowBox &box);

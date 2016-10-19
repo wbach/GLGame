@@ -48,7 +48,7 @@ void CThirdPersonCamera::Move()
 	CalculateCameraPosition(horizontal_distance, vertical_distance);
 	this->m_Yaw = 180 - (m_LookAtRotation.y + m_AngleAroundPlayer) ;
 
-	this->UpdateViewMatrix();
+	__super::Move();
 }
 
 void CThirdPersonCamera::CalculateCameraPosition(float horizontal_distance, float vertical_distance)

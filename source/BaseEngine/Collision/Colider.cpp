@@ -40,7 +40,7 @@ const glm::vec3& CColider::GetPosition() const
 			return m_Sphere.position;
 			break;
 		}
-	
+	return m_Sphere.position;
 }
 
 bool CColider::DetectCollision(CColider& colider)

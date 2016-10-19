@@ -4,7 +4,7 @@ void CFont::Init(std::string file_name, glm::vec2 window_size)
 {
 	std::ifstream tryfile(file_name);
 	if (!tryfile.is_open()) {
-		std::cout << "The file " << file_name << " wasnt successfuly opened \n";
+		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened \n";
 		throw std::runtime_error("The file wasnt successfuly opened");
 	}
 	tryfile.close();
@@ -132,7 +132,7 @@ void CFont::Print(const int& x, const int& y, const char *fmt) const
 
 		glPushMatrix();
 		glLoadIdentity();
-		glTranslatef(x, y - h*i, 0);
+		glTranslatef(static_cast<GLfloat>(x), static_cast<GLfloat>(y) - h * static_cast<GLfloat>(i), 0);
 		glMultMatrixf(modelview_matrix);
 
 		//  The commented out raster position stuff can be useful if you need to

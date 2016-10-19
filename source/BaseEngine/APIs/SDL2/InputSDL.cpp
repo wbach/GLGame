@@ -40,8 +40,8 @@ glm::vec2 CInputSDL::CalcualteMouseMove()
 	SDL_GetMouseState(&tmp_x, &tmp_y);
 
 	glm::vec2 dmove(0);
-	dmove.x = (w / 2 - tmp_x);
-	dmove.y = (h / 2 - tmp_y);
+	dmove.x = ((float)w / 2.f - (float)tmp_x);
+	dmove.y = ((float)h / 2.f - (float)tmp_y);
 	SDL_WarpMouseInWindow(m_SdlWindow, w / 2, h / 2);
 
 	return dmove;

@@ -9,19 +9,34 @@ CCamera::CCamera()
 , m_Roll(0)
 {	
 	UpdateViewMatrix();
+	UpdateFrustrum();
+}
+
+void CCamera::SetProjectionMatrix(const glm::mat4 & projection_matrix)
+{
+	m_ProjectionMatrix = projection_matrix;
 }
 
 void CCamera::SetPosition(glm::vec3 position)
 {
 	m_Position = position;
 }
+void CCamera::UpdateFrustrum()
+{
+	m_Frustrum.CalculatePlanes(m_ProjectionMatrix * m_ViewMatrix);
+}
+bool CCamera::CheckFrustrumSphereCulling(const glm::vec3 & position, const float& radius)
+{	
+	return !m_Frustrum.SphereIntersection(position, radius);
+	return false;// 
+}
 void CCamera::CalculateInput()
 {
 }
 void CCamera::Move()
 {
-
 	UpdateViewMatrix();
+	UpdateFrustrum();
 }
 
 
@@ -35,7 +50,10 @@ const glm::vec3& CCamera::GetPosition() const
 	return m_Position;
 }
 
-const glm::vec3 & CCamera::GetRotation() const { return glm::vec3(m_Pitch, m_Yaw, m_Roll); }
+const glm::vec3 CCamera::GetRotation() const 
+{
+	return glm::vec3(m_Pitch, m_Yaw, m_Roll); 
+}
 
 const float& CCamera::GetPitch() const
 {

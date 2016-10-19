@@ -35,6 +35,9 @@ public:
 	void SetSkyBoxMeshId(GLuint quad_id, int vertex_count);
 	const GLuint& GetShadowMap() const;
 	CSkyBoxRenderer& GetSkyBoxRenderer();
+
+	const unsigned int& GetObjectsPerFrame();
+	const unsigned int& GetVertexPerFrame();
 private:
 	int CreateBuffers();
 	void SetReadBuffer(BufferTexture::Type TextureType);
@@ -63,4 +66,7 @@ private:
 	int m_ResoultionMultipler = 1;
 
 	bool m_DebugRenderTextures;
+
+	unsigned int m_RendererObjectPerFrame = 0;
+	unsigned int m_RendererVertixesPerFrame = 0;
 };

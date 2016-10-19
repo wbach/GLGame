@@ -1,6 +1,7 @@
 #pragma once
 #include "glm/glm.hpp"
 #include "../Utils/Utils.h"
+#include "Frustrum.h"
 
 class CCamera
 {
@@ -11,6 +12,7 @@ public:
 	virtual void AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) = 0;
 
 	CCamera();
+	void SetProjectionMatrix(const glm::mat4& projection_matrix);
 	void UpdateViewMatrix();
 	void InvertPitch();	
 
@@ -29,10 +31,13 @@ public:
 	void SetYaw(float yaw);
 	
 	const glm::vec3& GetPosition() const;
-	const glm::vec3& GetRotation() const;
+	const glm::vec3 GetRotation() const;
 	const glm::mat4& GetViewMatrix() const;
 
 	void SetPosition(glm::vec3 position);
+
+	void UpdateFrustrum();
+	bool CheckFrustrumSphereCulling(const glm::vec3& position, const float& radius);
 
 protected:
 	float m_DistanceFromPlayer;
@@ -44,4 +49,8 @@ protected:
 
 	glm::vec3 m_Position;
 	glm::mat4 m_ViewMatrix;
+	//To frustrum culling
+	glm::mat4 m_ProjectionMatrix;
+	
+	CFrustrum m_Frustrum;
 };

@@ -21,7 +21,7 @@ public:
 	void Update();
 	void Uninitialize();
 
-	void SetRefreshRate(float rate);
+	void SetRefreshRate(int rate);
 	void SetFullScreen(bool full_screen);
 	void CalculateFPS();
 	const int GetFps();

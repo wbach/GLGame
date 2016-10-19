@@ -1,5 +1,6 @@
 #include "SceneEditor.h"
 
+#ifdef EDITOR
 void CSceneEditor::CreateFileList()
 {
 	RECT rcl;
@@ -104,7 +105,7 @@ void CSceneEditor::AddFile(int i, const SFile& file)
 	{
 		size = std::to_string(file.size) + " MB";
 		std::string ext = file.name.substr(file.name.find_last_of('.') + 1);
-		cout << ext << endl;
+
 		if (ext.size() <= 0)
 		{
 			lvi.mask = LVIF_TEXT;
@@ -159,7 +160,7 @@ void CSceneEditor::FindFilesInDirectory(std::string path)
 			file.name = ffd.cFileName;
 			filesize.LowPart = ffd.nFileSizeLow;
 			filesize.HighPart = ffd.nFileSizeHigh;
-			file.size = filesize.QuadPart / 1000000;
+			file.size = static_cast<int>(filesize.QuadPart /(LONGLONG)1000000);
 			FILETIME  lpCreationTime, lpLastAccessTime, lpLastWriteTime;
 			GetFileTime(hFind, &lpCreationTime, &lpLastAccessTime, &lpLastWriteTime);
 			SYSTEMTIME time;
@@ -174,35 +175,30 @@ void CSceneEditor::FindFilesInDirectory(std::string path)
 }
 void CSceneEditor::CheckAvaibleDrives()
 {
-	const WORD nBufferSize = 40;
-	LPSTR Bufor = (LPSTR)GlobalAlloc(GPTR, nBufferSize);
-	WORD Wymagane;
+	const WORD buff_size = 40;
+	LPSTR buff = (LPSTR)GlobalAlloc(GPTR, buff_size);
+	WORD required;
 
-	Wymagane = GetLogicalDriveStrings(nBufferSize, Bufor);
-	if (Wymagane > nBufferSize) {
+	required = (WORD)GetLogicalDriveStrings(buff_size, buff);
+	if (required > buff_size) 
 		return;
-	}
-	std::cout << "Dostepne dyski:" << std::endl;
+	
 	std::string drive;
-
-	for (int x = 0; x < Wymagane; x++)
-		if (Bufor[x] != 0)
+	for (int x = 0; x < required; x++)
+		if (buff[x] != 0)
 		{
-			drive += Bufor[x];
+			drive += buff[x];
 		}
 		else
 		{
-			std::cout << drive << std::endl;
 			SendMessage(m_Hwnd[Hwnds::DRIVE_COMBO], CB_ADDSTRING, 0, (LPARAM)drive.c_str());
 			m_Drives.push_back(drive);
 			drive.clear();
 		}
-
 	int i = 0;
 	for (std::string& drive : m_Drives)
 	{
 		std::string d = m_CurrentPath.substr(0, m_CurrentPath.find_first_of('\\')) + '\\';
-		cout << d << " " << drive << endl;
 		if (drive.compare(d) == 0)
 		{
 			SendMessage(m_Hwnd[Hwnds::DRIVE_COMBO], CB_SETCURSEL, 0, (LPARAM)i);
@@ -210,7 +206,7 @@ void CSceneEditor::CheckAvaibleDrives()
 		}
 		i++;
 	}
-	GlobalFree(Bufor);
+	GlobalFree(buff);
 }
 void CSceneEditor::SpawnEntity(std::string file_name, glm::vec3 normalized_scale)
 {
@@ -267,7 +263,6 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 				m_CurrentPath = m_CurrentPath.substr(0, m_CurrentPath.find_last_of('\\'));
 				m_CurrentPath = m_CurrentPath.substr(0, m_CurrentPath.find_last_of('\\'));
 				m_CurrentPath += "\\";
-				std::cout << m_CurrentPath << std::endl;
 				FindFilesInDirectory(m_CurrentPath);
 				break;
 			}
@@ -284,7 +279,6 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 			else if (m_CurrentPathFiles[index].fileType == FilesTypes::DEFAULT && compare_result != 0)
 			{
 				std::string file_extension = m_CurrentPathFiles[index].name.substr(m_CurrentPathFiles[index].name.find_last_of('.') + 1);
-				cout << file_extension << endl;
 				if (!file_extension.compare("obj") || !file_extension.compare("fbx") || !file_extension.compare("3ds"))
 				{
 					m_SpawnedPathFile = file_all_path;
@@ -292,8 +286,8 @@ void CSceneEditor::FileExplorerProcedure(WPARAM wParam, LPARAM lParam)
 				}
 				else if (!file_extension.compare("map"))
 				{
-					m_Game.m_SceneParser.LoadScene(file_all_path, m_Game.GetCurrentScene(), [](int p) {
-						cout << p << endl;
+					m_Game.m_SceneParser.LoadScene(file_all_path, m_Game.GetCurrentScene(), [](int p) 
+					{
 						SendMessage(s_ProgresBarLoading, PBM_SETPOS, (WPARAM)p, 0);
 					});
 					FillObjectsTree();
@@ -443,3 +437,4 @@ LRESULT CSceneEditor::SpawnEntityDialogProc(HWND hwnd, UINT msg, WPARAM wParam, 
 	if (me) return me->RealSpawnEntityDialogProc(hwnd, msg, wParam, lParam);
 	return DefWindowProc(hwnd, msg, wParam, lParam);
 }
+#endif

@@ -75,7 +75,7 @@ public:
 		{
 			for (int x = 1; x < 100; x++)
 			{
-				grass->AddTransform(STransform(CreatePositionVector(200 + (rand()%2 +1)* x, 100 + (rand() % 2 + 1) * y)));
+				grass->AddTransform(STransform(CreatePositionVector(200 + static_cast<float>(rand()%2 +1)* x, 100 + static_cast<float>(rand() % 2 + 1) * y)));
 				
 			}
 		}
@@ -93,10 +93,13 @@ public:
 		m_Camera->SetPosition(CreatePositionVector(songo->GetPositionXZ(),10));
 		m_Camera->SetPitch(5.6f);
 		m_Camera->SetYaw(94.0f);
+		m_Camera->SetProjectionMatrix(m_Game.GetProjectionMatrix());
 	}
-	void setThridCamera(){
+	void setThridCamera()
+	{
 		m_Camera.reset();
 		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(),songo->GetReferencedPosition(), songo->GetReferencedRotation());
+		m_Camera->SetProjectionMatrix(m_Game.GetProjectionMatrix());
 	}
 	
 	int Update() override
@@ -111,7 +114,7 @@ public:
 		if (m_Game.GetInputManager().GetKey(KeyCodes::T))
 		{
 
-			shared_ptr<CEntity> sphere = CreateEntityFromFile("Data/Meshes/Sphere/sphere.obj", false, CreatePositionVector(200 + (rand() % 10 - 5)*5, 350 + (rand()%10 - 5)*5, 100), glm::vec3(0), glm::vec3(5));
+			shared_ptr<CEntity> sphere = CreateEntityFromFile("Data/Meshes/Sphere/sphere.obj", false, CreatePositionVector(200 + static_cast<float>(rand() % 10 - 5)*5, 350 + static_cast<float>(rand()%10 - 5)*5, 100), glm::vec3(0), glm::vec3(5));
 			sphere->m_IsSpecial = true;
 			sphere->m_RigidBody = CRigidbody(SSphere(glm::vec3(0), 5));
 			g_pages_mutex.lock();
@@ -152,7 +155,7 @@ public:
 				if (is_col) break;
 			}
 		}
-		float dt = m_Game.GetDisplayManager().GetDeltaTime();
+		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());
 		
 		//sphere->IncrasePosition(m_Game.m_PhysicsScene.m_Rigibodys[sphere->m_PhysicsBodyIndex].m_AngularVelocity * dt);
 
@@ -168,7 +171,7 @@ public:
 		//	m_Loader.ReloadTexture("Data/Terrain/TerrainTextures/blendMap.png", m_Terrains[0].m_BackgroundTexture[0]);
 			
 		}
-		m_Loader.UpdateModels(m_Game.GetDisplayManager().GetDeltaTime());
+		m_Loader.UpdateModels(static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime()));
 
 		LockCameraUnderTerrain();
 

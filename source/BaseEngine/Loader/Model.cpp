@@ -64,8 +64,6 @@ void CModel::CalculateBoudnigBox()
 	}
 	m_BoundingSize = m_BoundingBoxMax - m_BoundingBoxMin;
 	m_BoundingCenter = (m_BoundingBoxMax + m_BoundingBoxMin) / 2.f;
-	Utils::PrintVector("Max : ", m_BoundingBoxMax);
-	Utils::PrintVector("Min : ", m_BoundingBoxMin);
 }
 glm::mat4 CModel::CalculateNormalizedMatrix(float w, float h, float z)
 {

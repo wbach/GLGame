@@ -69,7 +69,7 @@ void CFirstPersonCamera::Move()
 
 	//const Uint8* state = SDL_GetKeyboardState(NULL);
 
-	float move_velocity = m_Movevel * m_DisplayManager->GetDeltaTime();
+	float move_velocity = m_Movevel * static_cast<float>(m_DisplayManager->GetDeltaTime());
 	if (m_InputManager->GetKey(KeyCodes::UARROW) )
 	{
 		if(m_Pitch != 90 && m_Pitch != -90)
@@ -89,7 +89,8 @@ void CFirstPersonCamera::Move()
 	{
 		MoveCamera(-move_velocity, 270);
 	}
-	this->UpdateViewMatrix();
+
+	__super::Move();
 }
 void CFirstPersonCamera::AttachToObject(glm::vec3& position_entity, glm::vec3& rotation_entity) {
 	m_LookPosition = position_entity;

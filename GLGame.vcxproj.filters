@@ -231,6 +231,9 @@
     <ClCompile Include="source\BaseEngine\Shaders\FXAAShader.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Camera\Frustrum.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -420,6 +423,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\Editor\IdsList.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Camera\Plane.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Camera\Frustrum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

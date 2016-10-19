@@ -1,5 +1,6 @@
 #include "SceneEditor.h"
 
+#ifdef EDITOR
 
 LRESULT CSceneEditor::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
@@ -173,3 +174,4 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 	return 0;
 }
 
+#endif

@@ -78,7 +78,7 @@ unsigned int CShaderProgram::LoadShader(char *filename, unsigned int mode)
 	GLint compiled = GL_FALSE;
 	glGetShaderiv(id, GL_COMPILE_STATUS, &compiled);
 	if (!compiled) {
-		std::cout << "\n\nERRORS in Shader! \nFile name:\t" << filename << "\nCompile status: \n\n" << error << std::endl;
+		std::cout << "\n\n[Error] ERRORS in Shader! \nFile name:\t" << filename << "\nCompile status: \n\n" << error << std::endl;
 	}
 	if (id == GL_FALSE)
 	{

@@ -1,9 +1,4 @@
-#define EDITOR
-
-#ifdef EDITOR
 #include "Editor/SceneEditor.h"
-#endif
-
 #include "BaseEngine/Engine/GLgame.h"
 #include "BaseEngine/APIs/GLFW3/GLFW3_OpenGL.h"
 #include "BaseEngine/APIs/SDL2/SDLOpenGL.h"
@@ -37,7 +32,7 @@ int main(int argc, char *argv[])
 	myGame.AddScene(testScene);
 	if (myGame.SetCurrentScene(0) < 0)
 	{
-		cout << "Scene not found." << endl;
+		cout << "[Error] Scene not found." << endl;
 	}
 	myGame.Initialize(api);  	
 #ifdef EDITOR	

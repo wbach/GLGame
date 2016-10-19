@@ -58,13 +58,13 @@ void CDisplayManager::Update()
 		m_Api->UpdateWindow();
 
 	if (m_Api != nullptr && m_Sync)
-		m_Api->LockFps(m_FPS_CAP);
+		m_Api->LockFps((float)m_FPS_CAP);
 
 }
 const float CDisplayManager::GetCurrentTime()
 {
 	if (m_Api != nullptr && m_Time)
-		return m_Api->GetTime();
+		return (float)m_Api->GetTime();
 	return 0;
 }
 void CDisplayManager::Uninitialize()
@@ -78,9 +78,9 @@ void CDisplayManager::CalculateFPS()
 {
 	m_FrameCount++;
 
-	m_CurrentTime = m_Api->GetTime();
+	m_CurrentTime = static_cast<float>(m_Api->GetTime());
 
-	int time_interval = m_CurrentTime - m_PreviousTime;
+	int time_interval = (int)(m_CurrentTime - m_PreviousTime);
 
 	if(time_interval > 1)
 	{
@@ -93,7 +93,7 @@ const int CDisplayManager::GetFps()
 {
 	return (int) m_Fps;
 }
-void CDisplayManager::SetRefreshRate(float rate)
+void CDisplayManager::SetRefreshRate(int rate)
 {
 	m_FPS_CAP = rate;
 }

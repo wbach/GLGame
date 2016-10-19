@@ -2,12 +2,12 @@
 <Map>
 	<Camera>
 		<Position>
-			<x>478.807587</x>
-			<y>188.898407</y>
-			<z>408.578064</z>
+			<x>452.143250</x>
+			<y>176.430771</y>
+			<z>387.888824</z>
 		</Position>
-		<Pitch>40.600094</Pitch>
-		<Yaw>144.397858</Yaw>
+		<Pitch>21.200094</Pitch>
+		<Yaw>307.597900</Yaw>
 	</Camera>
 	<SkyBox>
 		<DayTextures>
@@ -79,6 +79,7 @@
 	<Entity>
 		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 		<Name>Small_House</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>100.000000</x>
 			<y>54.500000</y>
@@ -104,6 +105,7 @@
 		<Entity>
 			<File>Data/Meshes/bed1/bed1.obj</File>
 			<Name>Bed</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-2.000000</x>
 				<y>0.000000</y>
@@ -130,6 +132,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\bench\bench.obj</File>
 			<Name>bench.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-4.000000</x>
 				<y>-0.500000</y>
@@ -156,6 +159,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
 			<Name>alchemTable.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>2.000000</x>
 				<y>0.000000</y>
@@ -182,6 +186,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-6.000000</x>
 				<y>0.000000</y>
@@ -208,6 +213,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Table1\table1.obj</File>
 			<Name>table1.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>2.500000</x>
 				<y>0.000000</y>
@@ -234,6 +240,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-2.500000</x>
 				<y>0.000000</y>
@@ -260,6 +267,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-3.000000</x>
 				<y>0.000000</y>
@@ -287,6 +295,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\Gothic_smallHouse1\smallHouse1.obj</File>
 		<Name>smallHouse1.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>120.000000</x>
 			<y>55.851002</y>
@@ -312,6 +321,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
 			<Name>alchemTable.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>698.226013</x>
 				<y>52.876999</y>
@@ -339,6 +349,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\housestorage1\houseStorage.obj</File>
 		<Name>houseStorage.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>117.000000</x>
 			<y>56.951000</y>
@@ -364,6 +375,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>2.500000</x>
 				<y>0.000000</y>
@@ -390,6 +402,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-2.500000</x>
 				<y>0.000000</y>
@@ -416,6 +429,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>0.500000</x>
 				<y>0.000000</y>
@@ -442,6 +456,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>1.500000</x>
 				<y>1.500000</y>
@@ -468,6 +483,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
 			<Name>crate.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-1.100000</x>
 				<y>1.500000</y>
@@ -495,6 +511,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\G3_Myrtana_Castle_Mainhouse\G3_Myrtana_Castle_Mainhouse.obj</File>
 		<Name>G3_Myrtana_Castle_Mainhouse.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>100.000000</x>
 			<y>55.973000</y>
@@ -520,6 +537,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Tron1\tron.obj</File>
 			<Name>tron.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>0.000000</x>
 				<y>0.000000</y>
@@ -547,6 +565,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\smallHouse3\smallHouse3.obj</File>
 		<Name>smallHouse3.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>230.664001</x>
 			<y>50.509998</y>
@@ -573,6 +592,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree1\obj__tree1.obj</File>
 		<Name>obj__tree1.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>79.152000</x>
 			<y>54.308998</y>
@@ -599,6 +619,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree3\obj__tree3.obj</File>
 		<Name>obj__tree3.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>109.587997</x>
 			<y>55.452999</y>
@@ -625,6 +646,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree6\obj__tree6.obj</File>
 		<Name>obj__tree6.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>108.088951</x>
 			<y>54.735638</y>
@@ -651,6 +673,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
 		<Name>barrel.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>97.278000</x>
 			<y>53.558998</y>
@@ -677,6 +700,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
 		<Name>barrel.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>96.171021</x>
 			<y>53.475220</y>
@@ -703,6 +727,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
 		<Name>barrel.obj</Name>
+		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
 			<x>96.180000</x>
 			<y>53.438999</y>
@@ -729,6 +754,7 @@
 	<Entity>
 		<File>F:\Projects\Git\GLGame\Data\Meshes\GothicWallGate\G3_Myrtana_Castle_Wall_Entrance_01.obj</File>
 		<Name>G3_Myrtana_Castle_Wall_Entrance_01.obj</Name>
+		<ChildrenCulling >0</ChildrenCulling >
 		<Position>
 			<x>133.001999</x>
 			<y>55.344002</y>
@@ -754,6 +780,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>8.150000</x>
 				<y>0.900000</y>
@@ -780,6 +807,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>16.230000</x>
 				<y>0.900000</y>
@@ -806,6 +834,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>24.309999</x>
 				<y>0.900000</y>
@@ -832,6 +861,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>32.309998</x>
 				<y>0.900000</y>
@@ -858,6 +888,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-8.060000</x>
 				<y>0.900000</y>
@@ -884,6 +915,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-32.060001</x>
 				<y>0.900000</y>
@@ -910,6 +942,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-24.059999</x>
 				<y>0.900000</y>
@@ -936,6 +969,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-16.059999</x>
 				<y>0.900000</y>
@@ -962,6 +996,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-40.059998</x>
 				<y>0.900000</y>
@@ -988,6 +1023,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-48.059998</x>
 				<y>0.900000</y>
@@ -1014,6 +1050,7 @@
 		<Entity>
 			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
+			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
 				<x>-56.059998</x>
 				<y>0.900000</y>

@@ -85,7 +85,7 @@ private:
 
 	glm::vec2	m_WindowSize;
 	string		m_WindowName;
-	float		m_RefreshRate;
+	int		m_RefreshRate;
 
 	const float m_NearPlane = 0.1f;
 	const float m_FarPlane = 2000;

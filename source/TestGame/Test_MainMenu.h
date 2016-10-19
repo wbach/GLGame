@@ -23,13 +23,14 @@ public:
 		return 0;
 	}
 	int Update() override {
-		if (m_Gui.guiButtons[0].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE) {
-			cout << "Pressed button 0... " << endl;
+		if (m_Gui.guiButtons[0].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE)
+		{
+
 			return 2;
 		}
 			
-		if (m_Gui.guiButtons[1].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE) {
-			cout << "Pressed button 1... " << endl;
+		if (m_Gui.guiButtons[1].CheckStatus(glm::vec2(1000, 600)) == GuiButtonState::ACTIVE) 
+		{
 			return 1;
 		}
 			

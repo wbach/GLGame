@@ -6,12 +6,10 @@ void CSdlOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int h
 	unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
 	if (!(m_Window = SDL_CreateWindow(window_name.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, width, height, flags)))
 	{
-	//	cout << "failed to create window\n";
 		exit(-1);
 	}
 	if (!(m_GlContext = SDL_GL_CreateContext(m_Window)))
 	{
-	//	cout << "failed to create OpenGL context\n";
 		exit(-1);
 	}
 }
@@ -96,7 +94,7 @@ int CSdlOpenGlApi::PeekMessages()
 				break;
 			case SDL_FINGERDOWN:
 			{
-				//cout << "Touch " << endl;
+
 			}
 		}
 	}

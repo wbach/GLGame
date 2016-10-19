@@ -69,8 +69,8 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <OutDir>.\bin\Windows\Debug</OutDir>
-    <IntDir>.\Intermediate\Windows\Debug</IntDir>
+    <OutDir>.\bin\Windows\Debug\</OutDir>
+    <IntDir>.\Intermediate\Windows\Debug\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>.\bin\Windows\$(Configuration)\</OutDir>
@@ -81,8 +81,8 @@
     <IntDir>.\Intermediate\Windows\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
-    <OutDir>.\bin\Windows\Debug</OutDir>
-    <IntDir>.\Intermediate\Windows\Debug</IntDir>
+    <OutDir>.\bin\Windows\Debug\</OutDir>
+    <IntDir>.\Intermediate\Windows\Debug\</IntDir>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -90,6 +90,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -103,6 +104,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
       <AdditionalIncludeDirectories>.\tools\Windows\fbx_sdk\include;.\tools\Windows\Assimp\include;.\tools\Windows\SDL2-2.0.3\include\;.\tools\Windows\glm;.\tools\Windows\;.\tools\Windows\freeImage;.\tools\Windows\freetype\include;.\tools\Windows\GLFW3\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -146,6 +148,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="source\BaseEngine\Camera\Camera.cpp" />
+    <ClCompile Include="source\BaseEngine\Camera\Frustrum.cpp" />
     <ClCompile Include="source\BaseEngine\Collision\Colider.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\CharacterController.cpp" />
     <ClCompile Include="source\BaseEngine\Controllers\MousePicker.cpp" />
@@ -204,6 +207,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Camera\Camera.h" />
+    <ClInclude Include="source\BaseEngine\Camera\Frustrum.h" />
+    <ClInclude Include="source\BaseEngine\Camera\Plane.h" />
     <ClInclude Include="source\BaseEngine\Collision\Colider.h" />
     <ClInclude Include="source\BaseEngine\Controllers\CharacterController.h" />
     <ClInclude Include="source\BaseEngine\APIs\Api.h" />

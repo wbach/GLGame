@@ -6,7 +6,7 @@ CShadowMapRenderer::CShadowMapRenderer()
 	m_Offset = Utils::CreateOffset();	
 }
 
-void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, int fov, int near_plane)
+void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane)
 {
 	m_ShadowShader.Init();
 	m_ShadowFbo.Init(glm::vec2(m_ShadowMapSize), window_size);
@@ -32,8 +32,9 @@ void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 	{
 		light_direction = scene->GetDirectionalLightPosition() * -1.f;
 	}
-	catch (int e)
+	catch (const std::exception& e)
 	{
+		e.what();
 		return;
 	}
 	//if (scene->GetEntities().size() <= 0) return;
@@ -81,7 +82,7 @@ const GLuint& CShadowMapRenderer::GetShadowMap() const
 	return m_ShadowFbo.GetShadowMap();
 }
 
-const glm::mat4 & CShadowMapRenderer::GetToShadowMapSpaceMatrix() const
+const glm::mat4 CShadowMapRenderer::GetToShadowMapSpaceMatrix() const
 {
 	return m_Offset * m_ProjectionViewMatrix;
 }

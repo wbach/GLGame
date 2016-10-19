@@ -15,16 +15,13 @@ void CPhysicsScene::Update(float delta_time)
 			if (y == x) continue;
 			glm::vec3 normal; float penetration;
 			if (a->m_Colider.DetectCollision(b->m_Colider))
-			{
-				
+			{				
 				
 				if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
 				{
 					if (SphereSphere(a->m_Colider, b->m_Colider, normal, penetration))
 					{
-						//Utils::PrintVector("Collision normal: ", normal);
-						//std::cout << "Collision penetration: " << penetration  << std::endl;
-
+						
 						ResolveCollision(*a, *b, normal, delta_time);
 						PositionalCorrection(*a, *b, penetration, normal);
 						IsColl = true;
@@ -37,7 +34,6 @@ void CPhysicsScene::Update(float delta_time)
 				{
 					ResolveCollision(*a, *b, normal, delta_time);
 					PositionalCorrection(*a, *b, penetration, normal);
-					//Utils::PrintVector("Collision normal: ", normal);
 				}
 			}
 			if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::BOX_COLIDER)
@@ -46,7 +42,6 @@ void CPhysicsScene::Update(float delta_time)
 				{
 					ResolveCollision(*b, *a, normal, delta_time);
 					PositionalCorrection(*b, *a, penetration, normal);
-					//Utils::PrintVector("Collision normal: ", normal);
 				}
 			}
 		}
@@ -128,8 +123,8 @@ void CPhysicsScene::ResolveCollision(CRigidbody& a, CRigidbody & b, glm::vec3 no
 }
 void CPhysicsScene::PositionalCorrection(CRigidbody& a, CRigidbody& b, float& penetration, glm::vec3 normal)
 {
-	const float percent = 0.8; // usually 20% to 80%
-	const float slop = 0.01; // usually 0.01 to 0.1
+	const float percent = 0.8f; // usually 20% to 80%
+	const float slop = 0.01f; // usually 0.01 to 0.1
 	glm::vec3 correction = std::max(penetration*-1.f - slop, 0.0f) / (a.m_InvMass + b.m_InvMass) * percent * normal;
 	a.m_Colider.m_Sphere.position -= a.m_InvMass * correction;
 	b.m_Colider.m_Sphere.position += b.m_InvMass * correction;

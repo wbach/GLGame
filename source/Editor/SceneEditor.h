@@ -1,4 +1,6 @@
 #pragma once
+//#define EDITOR
+#ifdef EDITOR
 #include <Windows.h>
 #include <tchar.h> 
 #include <stdio.h>
@@ -137,3 +139,4 @@ private:
 	// Game
 	CGame& m_Game;
 };
+#endif

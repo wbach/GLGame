@@ -52,13 +52,16 @@ CTerrain::CTerrain(string name, CLoader &loader,
 	{
 		GenerateTerrainMap(loader, height_map);
 	}
-	catch (int e)
+	catch (const std::exception& e)
 	{
-		
+		e.what();
 	}
 
 	m_Name = name;
 	m_Id = s_ID++;
+
+	m_WorldCenterPosition = glm::vec3(m_Size) / 2.f + m_Transform.position ;
+	m_WorldCenterPosition.y = 0;
 }
 
 CTerrain::CTerrain(CLoader &loader)
@@ -102,7 +105,12 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 
 	if (m_HeightMapFormat == FIF_UNKNOWN) { printf("%s : wrong image format or file does not exist.", heightMap.c_str()); throw - 1; return; }
 	FIBITMAP* imagen2 = FreeImage_Load(m_HeightMapFormat, heightMap.c_str());
-	if(!imagen2) {printf( "%s : wrong image format or file does not exist.",heightMap.c_str()); throw - 1; return;}
+	if(!imagen2) 
+	{
+		printf( "%s : wrong image format or file does not exist.", heightMap.c_str()); 
+		throw std::runtime_error(std::string("Wrong image format or file does not exist." ).c_str() );
+		return;
+	}
 	m_HeightMapFreeImage = FreeImage_ConvertTo32Bits(imagen2);
 	FreeImage_Unload(imagen2);
 	m_ImageHeight =  FreeImage_GetHeight(m_HeightMapFreeImage);
@@ -163,7 +171,6 @@ void CTerrain::CreateTerrain()
 	SMaterial material;
 	m_Model.AddMesh("Terrain", m_Vertices, m_TextureCoords, m_Normals, m_Tangens, m_Indices, material);
 	m_Model.CreateMeshesVaos();
-	cout << "Terrain created. Vertexses : " << m_Indices.size() << " \n";
 }
 void CTerrain::CreateTerrainVertexes(int x_start, int y_start, int width, int height)
 {
@@ -364,13 +371,13 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 			{
 				RGBQUAD color;
 				FreeImage_GetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
-				color.rgbBlue += m_HeightPaint.z;
+				color.rgbBlue += static_cast<BYTE>(m_HeightPaint.z);
 				if (color.rgbBlue > 250) color.rgbBlue = 250;
 				if (color.rgbBlue < 1) color.rgbBlue = 0;
-				color.rgbGreen += m_HeightPaint.y;
+				color.rgbGreen += static_cast<BYTE>(m_HeightPaint.y);
 				if (color.rgbGreen > 250) color.rgbGreen = 250;
 				if (color.rgbGreen < 1) color.rgbGreen = 0;
-				color.rgbRed += m_HeightPaint.x;
+				color.rgbRed += static_cast<BYTE>(m_HeightPaint.x);
 				if (color.rgbRed > 250) color.rgbRed = 250;
 				if (color.rgbRed < 1) color.rgbRed = 0;
 				FreeImage_SetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
@@ -378,7 +385,7 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 		}
 	}
 
-	m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth / 1.1, m_ImageHeight / 1.1, FILTER_BILINEAR);
+	m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, static_cast<int>(m_ImageWidth / 1.1f), static_cast<int>(m_ImageHeight / 1.1f), FILTER_BILINEAR);
 	m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth, m_ImageHeight , FILTER_BILINEAR);
 
 	m_Vertices.clear();
@@ -392,9 +399,6 @@ void CTerrain::PaintHeightMap(glm::vec3 point)
 	GLuint vbon = m_Model.GetMeshes()[0].GetVbo(VertexBufferObjects::NORMAL);
 	glBindBuffer(GL_ARRAY_BUFFER, vbon);
 	glBufferData(GL_ARRAY_BUFFER, m_Normals.size() * sizeof(float), &m_Normals[0], GL_DYNAMIC_DRAW);
-
-	//FreeImage_Save(m_HeightMapFormat, m_HeightMapFreeImage, "h.bmp", 0);
-	//cout << "Paint height" << endl;
 }
 
 void CTerrain::SaveHeightMap() const

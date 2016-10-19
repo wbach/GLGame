@@ -14,5 +14,10 @@ public :
 	void RenderEntity(const shared_ptr<CEntity>&, const CModel& model, const CEntityGeometryPassShader& geomentry_shader);
 	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, const CEntityGeometryPassShader& geomentry_shader);
 	void Render(const shared_ptr<CScene>& scene, const CEntityGeometryPassShader& geomentry_shader);
+
+	const unsigned int& GetObjectsPerFrame();
+	const unsigned int& GetVertexPerFrame();
 private:
+	unsigned int m_RendererObjectPerFrame = 0;
+	unsigned int m_RendererVertixesPerFrame = 0;
 };

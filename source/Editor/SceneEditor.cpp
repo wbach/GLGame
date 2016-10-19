@@ -1,5 +1,6 @@
 #include "SceneEditor.h"
 
+#ifdef EDITOR
 CSceneEditor::CSceneEditor(CGame& game)
 	: m_Game(game)
 	, m_CurrentEntity(nullptr)
@@ -298,3 +299,4 @@ HBITMAP CSceneEditor::CreateBitmapFromPixels(HDC hDC, UINT uWidth, UINT uHeight,
 
 	return hBitmap;
 }
+#endif

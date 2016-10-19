@@ -30,7 +30,7 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
 	m_SkyBoxRenderer.Init(projection_matrix);
-	m_ShadowMapRenderer.Init(camera, window_size, 70, 0.1);
+	m_ShadowMapRenderer.Init(camera, window_size, 70.f, 0.1f);
 
 
 }
@@ -70,7 +70,7 @@ void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene)
 void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);
-	glViewport(0, 0, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler * m_WindowSize.y);
+	glViewport(0, 0, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x),m_ResoultionMultipler * static_cast<int>(m_WindowSize.y));
 	glDepthMask(GL_TRUE);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -97,13 +97,16 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
 
+	m_RendererObjectPerFrame = m_EntityRenderer.GetObjectsPerFrame() + m_TerrainRenderer.GetObjectsPerFrame();
+	m_RendererVertixesPerFrame = m_EntityRenderer.GetVertexPerFrame() + m_TerrainRenderer.GetVertexPerFrame();
+
 	glDepthMask(GL_FALSE);
 
 	glDisable(GL_DEPTH_TEST);
 
 	glEnable(GL_BLEND);
 
-	glViewport(0, 0, m_WindowSize.x, m_WindowSize.y);
+	glViewport(0, 0, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 }
 
 void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
@@ -153,17 +156,20 @@ void CMasterRenderer::DebugRenderTextures()
 	GLint HalfWidth = (GLint)(m_WindowSize.x / 2.0f);
 	GLint HalfHeight = (GLint)(m_WindowSize.y / 2.0f);
 
+	GLint window_w = static_cast<GLint>(m_WindowSize.x);
+	GLint window_h = static_cast<GLint>(m_WindowSize.y);
+
 	SetReadBuffer(BufferTexture::Type::POSITION);
-	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, 0, 0, HalfWidth, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, window_w, window_h, 0, 0, HalfWidth, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	SetReadBuffer(BufferTexture::Type::DIFFUSE);
-	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, 0, HalfHeight, HalfWidth, m_WindowSize.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, window_w, window_h, 0, HalfHeight, HalfWidth, window_h, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	SetReadBuffer(BufferTexture::Type::NORMAL);
-	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, HalfHeight, m_WindowSize.x, m_WindowSize.y, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, window_w, window_h, HalfWidth, HalfHeight, window_w, window_h, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 
 	SetReadBuffer(BufferTexture::Type::SPECULAR);
-	glBlitFramebuffer(0, 0, m_WindowSize.x, m_WindowSize.y, HalfWidth, 0, m_WindowSize.x, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
+	glBlitFramebuffer(0, 0, window_w, window_h, HalfWidth, 0, window_w, HalfHeight, GL_COLOR_BUFFER_BIT, GL_LINEAR);
 }
 void CMasterRenderer::SetSkyBoxTextures(GLuint day, GLuint night)
 {
@@ -194,7 +200,7 @@ int CMasterRenderer::CreateBuffers()
 	for (unsigned int i = 0; i < BufferTexture::Type::COUNT; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Textures[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler*m_WindowSize.y, 0, GL_RGB, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler*static_cast<int>(m_WindowSize.y), 0, GL_RGB, GL_FLOAT, NULL);
 		if (!m_DebugRenderTextures)
 		{
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
@@ -205,7 +211,7 @@ int CMasterRenderer::CreateBuffers()
 
 	// depth
 	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_ResoultionMultipler*m_WindowSize.x, m_ResoultionMultipler*m_WindowSize.y, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler*static_cast<int>(m_WindowSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
 
 	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
@@ -213,7 +219,8 @@ int CMasterRenderer::CreateBuffers()
 
 	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 
-	if (Status != GL_FRAMEBUFFER_COMPLETE) {
+	if (Status != GL_FRAMEBUFFER_COMPLETE)
+	{
 		printf("[Error]  FB error, status: 0x%x\n", Status);
 		return -1;
 	}
@@ -222,4 +229,12 @@ int CMasterRenderer::CreateBuffers()
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
 	return 1;
+}
+const unsigned int& CMasterRenderer::GetObjectsPerFrame()
+{
+	return m_RendererObjectPerFrame;
+}
+const unsigned int& CMasterRenderer::GetVertexPerFrame()
+{
+	return m_RendererVertixesPerFrame;
 }

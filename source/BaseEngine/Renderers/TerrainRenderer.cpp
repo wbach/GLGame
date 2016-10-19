@@ -1,18 +1,33 @@
 #include "TerrainRenderer.h"
 
-void CTerrainRenderer::Render(shared_ptr<CScene>scene, const CTerrainGeometryPassShader& geomentry_shader)
+void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPassShader& geomentry_shader)
 {
 	if (scene->GetTerrains().size() <= 0) return;
+	
+	m_RendererObjectPerFrame = 0;
+	m_RendererVertixesPerFrame = 0;
 
 	for (const CTerrain &terrain : scene->GetTerrains())
 	{
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize() / 1.5f))
+			continue;
+
 		PrepareTerrain(terrain);
 		LoadModelMatrix(terrain, geomentry_shader);
 		glDrawElements(GL_TRIANGLES, terrain.m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_INT, 0);
 		UnBindTextureModel();
+		m_RendererObjectPerFrame++;
+		m_RendererVertixesPerFrame += terrain.m_Model.GetMeshes()[0].GetVertexCount();
 	}
 }
-
+const unsigned int& CTerrainRenderer::GetObjectsPerFrame()
+{
+	return m_RendererObjectPerFrame;
+}
+const unsigned int& CTerrainRenderer::GetVertexPerFrame()
+{
+	return m_RendererVertixesPerFrame;
+}
 void CTerrainRenderer::RenderElements(CTerrain &terrain)
 {
 

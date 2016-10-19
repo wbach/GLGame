@@ -126,7 +126,7 @@ bool CFbxModel::LoadFile()
 	else
 	{
 		// Import failed, set the scene status flag accordingly.
-		std::cout << "Unable to import file " << m_FileName << endl;
+		std::cout << "[Error] Unable to import file " << m_FileName << endl;
 	}
 
 	// Destroy the importer to release the file.
@@ -147,13 +147,6 @@ void CFbxModel::LoadCacheRecursive(FbxScene* scene, FbxAnimLayer* anim_layer)
 		{
 			// Try to load the texture from absolute path
 			const FbxString file_name = file_texture->GetFileName();
-			FBXSDK_printf("%s\n", file_name.Buffer());
-
-			//if (file_name.Right(3).Upper() == "TGA")
-			//{
-			//	FBXSDK_printf("TGA textures are not supported now: %s\n", file_name.Buffer());
-			//	continue;
-			//}
 
 			GLuint texture_id = 0;
 			std::string texture_file(file_name.Buffer());
@@ -163,7 +156,7 @@ void CFbxModel::LoadCacheRecursive(FbxScene* scene, FbxAnimLayer* anim_layer)
 
 			if (!texture_id)
 			{
-				FBXSDK_printf("Failed to load texture file: %s\n", file_name.Buffer());
+				FBXSDK_printf("[Error] Failed to load texture file: %s\n", file_name.Buffer());
 				continue;
 			}
 
@@ -1168,15 +1161,6 @@ void CFbxModel::CleanUp()
 {
 	FbxArrayDelete(m_AnimStackNameArray);
 
-	//// Unload the cache and free the memory
-	//if (m_Scene)
-	//{
-	//	UnloadCacheRecursive(m_Scene);
-	//}
-
-	// Delete the FBX SDK manager. All the objects that have been allocated 
-	// using the FBX SDK manager and that haven't been explicitly destroyed 
-	// are automatically destroyed at the same time.
 	DestroySdkObjects(m_SdkManager, true);
 
 	for (CMesh& mesh : m_Meshes)
@@ -1245,7 +1229,6 @@ void CFbxModel::DestroySdkObjects(FbxManager* pManager, bool pExitStatus)
 {
 	//Delete the FBX Manager. All the objects that have been allocated using the FBX Manager and that haven't been explicitly destroyed are also automatically destroyed.
 	if (pManager) pManager->Destroy();
-	if (pExitStatus) FBXSDK_printf("FBXLoader Program Success end!\n");
 }
 
 FbxDouble3 CFbxModel::GetMaterialProperty(const FbxSurfaceMaterial* material, const char* property_name, const char* factor_property_name, GLuint& texture_id)

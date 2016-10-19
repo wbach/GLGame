@@ -105,6 +105,8 @@ public:
 
 	std::string m_HeightMapPath, m_BlendMapPath, m_BackgorungTexturePath[2], m_RTexturePath[2], m_BTexturePath[2], m_GTexturePath[2], m_RockTexturePath[2];
 
+	glm::vec3 m_WorldCenterPosition;
+
 	//To painting
 	GLubyte* m_BlendMapData = nullptr;
 	int m_BlendMapWidth;

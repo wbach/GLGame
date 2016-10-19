@@ -1,6 +1,6 @@
 #include "SceneEditor.h"
 
-
+#ifdef EDITOR
 
 void CSceneEditor::CreateInspector(int w, int h)
 {
@@ -281,3 +281,4 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 		break;
 	}
 }
+#endif

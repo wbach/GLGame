@@ -6,7 +6,7 @@ CShadowBox::CShadowBox()
 {
 }
 
-void CShadowBox::Init(std::shared_ptr<CCamera>& camera, glm::vec2 window_size, int fov, int near_plane)
+void CShadowBox::Init(std::shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane)
 {
 	m_Offset = 75;
 	m_Up = glm::vec4(0, 1, 0, 0);

@@ -12,8 +12,6 @@ CPlayer::CPlayer(CInputManager* input_manager, glm::vec3 pos, glm::vec3 rot, glm
 
 void CPlayer::calculateMove(float deltaTime)
 {
-	
-	//Utils::PrintVector("v : ", m_RigidBody.m_AngularVelocity);
 	m_RigidBody.m_Restitution = 0;
 	checkInputs(deltaTime);
 	IncreaseRotation(0, this->currentTurnSpeed * deltaTime, 0);
@@ -23,8 +21,6 @@ void CPlayer::calculateMove(float deltaTime)
 
 	m_RigidBody.m_AngularVelocity.x = dx;
 	m_RigidBody.m_AngularVelocity.z = dz;
-	//Utils::PrintVector("v : ", m_RigidBody.m_AngularVelocity);
-	//IncrasePosition(dx, 0, dz);
 }
 
 void CPlayer::move(float deltaTime, float terrainHeight)

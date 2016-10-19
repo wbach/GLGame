@@ -21,6 +21,9 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot)
 CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	: m_NormalizedMatrix(1.f)
 	, m_RelativeTransformMatrix(1.f)
+	, m_IsCullingChildren(true)
+	, m_TransformsInVao(false)
+	, m_IsInAir(false)
 {	
 	m_Id = s_ID++;
 	m_Name = "No name entity";
@@ -94,53 +97,56 @@ void CEntity::SetTransform(STransform transform, unsigned int i)
 
 glm::vec2 CEntity::GetPositionXZ(unsigned int i)
 {
-//	if (i < 0 || i > m_Transforms.size()) return glm::vec2(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec2_zero;
 	return glm::vec2(m_Transforms[i].position.x, m_Transforms[i].position.z);
 }
 
 const glm::vec3& CEntity::GetLocalPosition(unsigned int i) const
 {
-//	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].position;
 }
 
 const glm::vec3 CEntity::GetWorldPosition(unsigned int i) const
 {
+	//return m_Transforms[i].position;
 	glm::vec4 pos = m_RelativeTransformMatrix * glm::vec4(m_Transforms[i].position, 1.f);
 	return glm::vec3(pos.x, pos.y, pos.z);
 }
 
 const glm::vec3& CEntity::GetRotation(unsigned int i)
 {
-//	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].rotation;
 }
 
 const glm::vec3& CEntity::GetScale(unsigned int i)
 {
-	if (i < 0 || i > m_Transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].scale;
 }
 glm::vec3& CEntity::GetReferencedPosition(unsigned int i)
 {
-	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].position;
 }
 
 glm::vec3& CEntity::GetReferencedRotation(unsigned int i)
 {
-	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].rotation;
 }
 
 glm::vec3& CEntity::GetReferencedScale(unsigned int i)
 {
-	//if (i < 0 || i > transforms.size()) return glm::vec3(0);
+	if (i < 0 || i > m_Transforms.size()) return Utils::s_vec3_zero;
 	return m_Transforms[i].scale;
 }
 vector<shared_ptr<CEntity>>& CEntity::GetChildrenEntities()
 { return m_ChildrenEntities;
 }
+void CEntity::SetFullPath(std::string path) { m_FullPathFile = path; }
+string CEntity::GetFullPath() const { return m_FullPathFile; }
 const string CEntity::GetNameWithID() const
 {
 	string name = m_Name + "__id_e" + std::to_string(m_Id);
@@ -167,6 +173,7 @@ void CEntity::SetNormalizedMatrix(const glm::mat4& m)
 	m_NormalizedMatrix = m;
 	CalculateEntityTransformMatrix();
 }
+void CEntity::SetName(std::string name) { m_Name = name; }
 void CEntity::RecursiveResetEnities(shared_ptr<CEntity>& entity)
 {
 	for (shared_ptr<CEntity>& subentity : entity->GetChildrenEntities())
@@ -183,15 +190,23 @@ void CEntity::CleanUp()
 		entity.reset();
 	}
 }
+void CEntity::SetIsCullingChildren(const bool & is)
+{
+	m_IsCullingChildren = is;
+}
+const bool& CEntity::GetIsCullingChildren()
+{
+	return m_IsCullingChildren;
+}
 const STransform& CEntity::GetTransform(unsigned int i)
 {
-	if (i < 0 || i > m_TransformMatrixes.size()) return STransform();
+	if (i < 0 || i > m_TransformMatrixes.size()) return s_DefaultTransform;
 	return m_Transforms[i];
 }
 
 const glm::mat4& CEntity::GetTransformMatrix(unsigned int i)
 {
-	if (i < 0 || i > m_TransformMatrixes.size()) return glm::mat4(1);
+	if (i < 0 || i > m_TransformMatrixes.size()) return Utils::s_mat4_one;
 	return m_TransformMatrixes[i];
 }
 
@@ -215,8 +230,7 @@ const int& CEntity::GetModelId(unsigned int i) const
 		return m_ModelId[i];
 	}
 	else
-		return -1;
-		
+		return Utils::s_intmone;		
 }
 
 void CEntity::Update()
@@ -306,7 +320,7 @@ void CEntity::RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity> e , const 
 	}
 }
 
-void CEntity::SetRelativeMatrix(const glm::mat4 & parent_matrix)
+void CEntity::SetRelativeMatrix(const glm::mat4& parent_matrix)
 {
 	m_RelativeTransformMatrix = parent_matrix;
 }
@@ -316,12 +330,12 @@ void CEntity::CalculateFinalTransformMatrix(unsigned int x)
 	m_FinalTransformMatrix = m_NormalizedMatrix * m_RelativeTransformMatrix * m_TransformMatrixes[x];
 }
 
-const glm::mat4 & CEntity::GetFinalTransformMatrix()
+const glm::mat4& CEntity::GetFinalTransformMatrix()
 {
 	return m_FinalTransformMatrix;
 }
 
-const glm::mat4 & CEntity::GetNormalizedMatrix()
+const glm::mat4& CEntity::GetNormalizedMatrix()
 {
 	return m_NormalizedMatrix;
 }

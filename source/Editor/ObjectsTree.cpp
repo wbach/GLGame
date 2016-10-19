@@ -1,5 +1,6 @@
 #include "SceneEditor.h"
 
+#ifdef EDITOR
 void CSceneEditor::CreateObjectsTree()
 {
 	m_Hwnd[Hwnds::OBJECT_TREEE] = CreateWindowEx(WS_EX_COMPOSITED, WC_TREEVIEW, "ObjectTree",
@@ -209,8 +210,6 @@ void CSceneEditor::TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam)
 				}				
 				break;
 			}
-			//cout << item.pszText << " is selected" << endl;
-
 		}
 
 	}
@@ -218,3 +217,4 @@ void CSceneEditor::TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam)
 
 	}
 }
+#endif

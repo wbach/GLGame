@@ -13,6 +13,7 @@ void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int
 	if (formato == FIF_UNKNOWN) 
 	{ 
 		printf("[Error] %s : wrong image format or file does not exist.\n", file_name.c_str());
+		throw std::runtime_error(std::string("[Error] %s : wrong image format or file does not exist.\n").c_str());
 		return;
 	}
 
@@ -20,6 +21,7 @@ void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int
 	if (!imagen2) 
 	{ 
 		printf("[Error] %s : wrong image format or file does not exist.\n", file_name.c_str());
+		throw std::runtime_error(std::string("[Error] %s : wrong image format or file does not exist.\n").c_str());
 		return;
 	}
 
@@ -27,6 +29,7 @@ void CTextureLoader::ReadImage(string file_name, GLubyte *&data, int& width, int
 	if (!imagen)
 	{
 		printf("[Error] %s : cant convert to 32 bits.\n", file_name.c_str());
+		throw std::runtime_error(std::string("[Error] Cant convert to 32 bits.\n").c_str());
 		return;
 	}
 //	FreeImage_Unload(imagen2);
@@ -78,9 +81,10 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 	{
 		ReadImage(file_name, texture, width, height, quality, vertical_flip, horizontal_flip);
 	}
-	catch (int e)
+	catch (const std::exception& e)
 	{
-		return 0;
+		e.what();
+		return -1;
 	}
 
 	// Create one OpenGL texture

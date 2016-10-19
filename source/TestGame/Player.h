@@ -25,7 +25,7 @@ public:
 	void attack();
 	int getAction() { return action; }
 private:
-	float RUN_SPEED = Utils::KmToMs(15);
+	float RUN_SPEED = Utils::KmToMs(15.f);
 	float TURN_SPEED = 160;
 	float GRAVITY = -50;
 	float JUMP_POWER = 25;

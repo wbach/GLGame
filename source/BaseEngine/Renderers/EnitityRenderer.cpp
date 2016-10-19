@@ -3,13 +3,16 @@
 
 void CEntityRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, const CEntityGeometryPassShader& geomentry_shader)
 {
-	
 	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
 	RenderEntity(entity, *model, geomentry_shader);
 
 	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 	{
+		if (subEntity->GetIsCullingChildren())
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(subEntity->GetWorldPosition(), 1.5f *subEntity->GetMaxNormalizedSize()))
+			continue;
 		RenderEntityRecursive(scene, subEntity, geomentry_shader);
+		m_RendererObjectPerFrame++;
 	}
 }
 
@@ -17,21 +20,41 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 {
 	if (scene->GetEntities().size() <= 0) return;
 
-	
+	m_RendererObjectPerFrame = 0;
+	m_RendererVertixesPerFrame = 0;
 
 	for (const CTerrain& terr : scene->GetTerrains())
-	{		
+	{	
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(terr.m_WorldCenterPosition, terr.GetSize()/1.5f))
+			continue;
+
 		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
 		{
+			if (entity->GetIsCullingChildren())
+			if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+				continue;
 			RenderEntityRecursive(scene, entity, geomentry_shader);
+			m_RendererObjectPerFrame++;
 		}
 	}
 
 	
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{
+		if (entity->GetIsCullingChildren())
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+			continue;
 		RenderEntityRecursive(scene, entity, geomentry_shader);
+		m_RendererObjectPerFrame++;
 	}
+}
+const unsigned int & CEntityRenderer::GetObjectsPerFrame()
+{
+	return m_RendererObjectPerFrame;
+}
+const unsigned int & CEntityRenderer::GetVertexPerFrame()
+{
+	return m_RendererVertixesPerFrame;
 }
 void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CModel& model, const CEntityGeometryPassShader& geomentry_shader)
 {
@@ -85,6 +108,9 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CMod
 				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);
 			}
 		}
+
+		m_RendererVertixesPerFrame += mesh.GetVertexCount() * entity->GetTransformMatrixes().size();
+
 		if (model.UseInstacedRendering())
 			glDisableVertexAttribArray(4);
 		glDisableVertexAttribArray(3);

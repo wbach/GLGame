@@ -54,11 +54,21 @@ void CGame::GameLoop()
 {	
 	m_ApiMessage = ApiMessages::NONE;
 
-    string loading_text = "FPS : ";
+    string fps_text = "FPS : ";
+	string object_count_text = "Objects : ";
+	string vertex_count_text = "Vertex : ";
 	vector<CGUIText> texts;
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.9475, 0.8975), 1, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(loading_text, glm::vec2(-0.95,0.9), 1, glm::vec3(1, 1, 1)));	
-	texts.push_back(CGUIText("Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", glm::vec2(-0.90, 0.7), 1, glm::vec3(1, 1, 1)));
+	texts.push_back(CGUIText(fps_text, glm::vec2(-0.9475, 0.8575), 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(fps_text, glm::vec2(-0.95,0.85), 1, glm::vec3(0.9)));
+	
+	texts.push_back(CGUIText(object_count_text, glm::vec2(-0.9475, 0.7575), 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(object_count_text, glm::vec2(-0.95, 0.75), 1, glm::vec3(0.9)));
+
+	texts.push_back(CGUIText(vertex_count_text, glm::vec2(-0.9475, 0.6575), 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(vertex_count_text, glm::vec2(-0.95, 0.65), 1, glm::vec3(0.9)));
+	//texts.push_back(CGUIText("Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", glm::vec2(-0.90, 0.7), 1, glm::vec3(1, 1, 1)));
+	
+	
 	vector<CGUITexture> debug_textures;
 	//debug_textures.push_back(CGUITexture(m_MasterRenderer.GetShadowMap(), glm::vec2(0.5), glm::vec2(0.25,0.25) ));
 	
@@ -83,13 +93,13 @@ void CGame::GameLoop()
 	
 		if (m_CurrScene != nullptr)
 		{
-			m_CurrScene->ApplyPhysicsToObjects(m_DisplayManager.GetDeltaTime());
+			m_CurrScene->ApplyPhysicsToObjects(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 			switch (m_CurrScene->Update())
 			{
 			case 1: m_ApiMessage = ApiMessages::QUIT; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
-			GetCurrentScene()->m_PhysicsScene.Update(m_DisplayManager.GetDeltaTime());
+			GetCurrentScene()->m_PhysicsScene.Update(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 
 			m_MasterRenderer.ShadowPass(m_CurrScene);
 			m_MasterRenderer.GeometryPass(m_CurrScene);
@@ -99,8 +109,18 @@ void CGame::GameLoop()
 			m_GuiRenderer.Render(m_CurrScene->GetGui());
 			m_GuiRenderer.RenderTextures(debug_textures);
 		}
-		texts[0].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps() ) );
-		texts[1].updateText("FPS : " + std::to_string(m_DisplayManager.GetFps()));
+		int objects_per_frame = m_MasterRenderer.GetObjectsPerFrame();
+		int vertex_per_frame = m_MasterRenderer.GetVertexPerFrame();
+
+		texts[0].updateText(fps_text + std::to_string(m_DisplayManager.GetFps()));
+		texts[1].updateText(fps_text + std::to_string(m_DisplayManager.GetFps()));
+
+		texts[2].updateText(object_count_text + std::to_string(objects_per_frame));
+		texts[3].updateText(object_count_text + std::to_string(objects_per_frame));
+
+		texts[4].updateText(vertex_count_text + std::to_string(vertex_per_frame));
+		texts[5].updateText(vertex_count_text + std::to_string(vertex_per_frame));
+
 		m_GuiRenderer.RenderText(texts);
 		m_DisplayManager.Update();
 	}
@@ -113,47 +133,32 @@ void CGame::PhysicsLoop()
 	float m_CurrentTime = 0, m_PreviousTime = 0;
 	while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
 	{
-
 		if (m_CurrScene == nullptr) continue;
 
 		auto start = std::chrono::high_resolution_clock::now();
-		//GetCurrentScene()->g_pages_mutex.lock();
-		//GetCurrentScene()->m_PhysicsScene.Update(m_DisplayManager.GetDeltaTime());
-		//GetCurrentScene()->g_pages_mutex.unlock();
 
 		m_FrameCount++;
 
 		m_CurrentTime = m_DisplayManager.GetCurrentTime();
 
-		int time_interval = m_CurrentTime - m_PreviousTime;
+		int time_interval = static_cast<int>(m_CurrentTime) - static_cast<int>(m_PreviousTime);
 
 		if (time_interval > 1)
 		{
-			m_Fps = m_FrameCount / (time_interval);
+			m_Fps = static_cast<float>(m_FrameCount) / static_cast<float>(time_interval);
 			m_PreviousTime = m_CurrentTime;
 			m_FrameCount = 0;
 		}
-	//	std::cout << "Dt: " << m_DisplayManager.GetDeltaTime() << std::endl;
-
-		//double t = static_cast<double>(1000.0f / fps) - (glfwGetTime() - m_StartTime);
-		//std::cout << "Physics fps: " <<m_Fps << std::endl;
 		auto end = std::chrono::high_resolution_clock::now();
 
 		if (std::chrono::milliseconds(16) >  std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
 			std::this_thread::sleep_for(std::chrono::milliseconds(16) - std::chrono::duration_cast<std::chrono::milliseconds>(end - start));
-		
-		//std::this_thread::sleep_for(2s);
-
-
-
 	}
 
 }
 void CGame::LoadScene()
 {
 	if (m_CurrScene == nullptr) return;
-
-	std::cout << "Loading scene..." << std::endl;
 
 	m_IsLoading = true;
 //	thread loading_thread(&CGame::InitializeScene,this) ;
@@ -169,14 +174,16 @@ float CGame::Fade(float delta_time)
 	bool change = false;
 	float alpha = 0.0;
 	if (delta_time < 500) change = true;
-	if (delta_time < 2000 && delta_time > 500) {
+	if (delta_time < 2000 && delta_time > 500) 
+	{
 
 		alpha = (static_cast<float>(delta_time) - 500.0f) / 2000.0f;
 		if (alpha > 1)
 			alpha = 1.0;
 		change = true;
 	}
-	if (delta_time > 4000 ) {
+	if (delta_time > 4000 )
+	{
 		alpha = ((6000.0f - static_cast<float>(delta_time)) / 2000.0f);
 		if (alpha < 0)
 			alpha = 0;
@@ -246,7 +253,7 @@ int CGame::ReadConfiguration(string file_name)
 		if (var.compare("Name") == 0)				m_WindowName	= value; 
 		if (var.compare("Resolution") == 0)			m_WindowSize	= Get::Vector2d(value);
 		if (var.compare("FullScreen") == 0)			m_IsFullScreen	= Get::Boolean(value);
-		if (var.compare("RefreshRate") == 0)		m_RefreshRate	= Get::Float(value);
+		if (var.compare("RefreshRate") == 0)		m_RefreshRate	= Get::Int(value);
 		if (var.compare("Sound") == 0)				m_IsSound		= Get::Boolean(value);
 		if (var.compare("SoundVolume") == 0)		m_SoundVolume	= Get::Float(value);
 		if (var.compare("WaterQuality") == 0)		m_WaterQuality	= Get::Float(value);

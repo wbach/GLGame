@@ -15,19 +15,19 @@ void CShadowFrameBuffer::CleanUp()
 
 void CShadowFrameBuffer::BindFBO()
 {
-	Utils::BindFrameBuffer(m_Fbo, m_Size.x, m_Size.y);
+	Utils::BindFrameBuffer(m_Fbo, static_cast<int>(m_Size.x), static_cast<int>(m_Size.y));
 }
 
 void CShadowFrameBuffer::UnbindFrameBuffer() const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-	glViewport(0, 0, m_WindowSize.x, m_WindowSize.y);
+	glViewport(0, 0, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
 }
 
 void CShadowFrameBuffer::InitialiseFrameBuffer()
 {
 	m_Fbo = Utils::CreateFrameBuffer();
-	m_ShadowMap = Utils::CreateDepthBufferAttachment(m_Size.x, m_Size.y);
+	m_ShadowMap = Utils::CreateDepthBufferAttachment(static_cast<int>(m_Size.x), static_cast<int>(m_Size.y));
 	UnbindFrameBuffer();
 }
 

@@ -13,7 +13,6 @@ bool CInputGLFW::GetKeyUp(int i)
 
 bool CInputGLFW::GetKey(int i)
 {
-	//std::cout << "GLFW input pressed" << std::endl;
 	int glfw_key_scan_code = KeyToGlfw(i);
 
 	if (glfw_key_scan_code >= 0)

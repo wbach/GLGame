@@ -12,6 +12,11 @@ public:
     void UnBindTextureModel();
     void LoadModelMatrix(const CTerrain &terrain, const CTerrainGeometryPassShader& geomentry_shader);
 	void RenderElements(CTerrain &terrain);
+
+	const unsigned int& GetObjectsPerFrame();
+	const unsigned int& GetVertexPerFrame();
 private:
 	glm::mat4 m_TransformationMatrix;
+	unsigned int m_RendererObjectPerFrame = 0;
+	unsigned int m_RendererVertixesPerFrame = 0;
 };

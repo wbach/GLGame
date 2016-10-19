@@ -68,11 +68,11 @@ public:
 
 	vector<shared_ptr<CEntity>>& GetChildrenEntities();
 
-	void SetFullPath(std::string path) { m_FullPathFile = path; }
-	string GetFullPath() const { return m_FullPathFile; };
+	void SetFullPath(std::string path);
+	string GetFullPath() const;;
 	
 	void SetNormalizedMatrix(const glm::mat4& m);
-	void SetName(std::string name) { m_Name = name; }
+	void SetName(std::string name);
 	
 	const string GetNameWithID() const;
 	const string GetName() const;
@@ -84,18 +84,25 @@ public:
 	float GetMaxBoundingSize() { return m_BoundingSize; }
 	float& GetAttachYOffset() {	return m_AttachYoffset;	}
 
+	const float GetMaxNormalizedSize() { return Utils::GetMaxFromVector(m_NormalizedSize); }
+
 	void SetIsInAir(bool is) { m_IsInAir = is; }
 
 	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
 	void CleanUp();
 
+	void SetIsCullingChildren(const bool& is);
+	const bool& GetIsCullingChildren();
+
 	float m_BoundingSize;
 	//m_IsSpecial - enity created in code not from file
 	bool m_IsSpecial = false;
-	CRigidbody					m_RigidBody;
+	CRigidbody	m_RigidBody;
 protected:	
-	bool m_IsInAir = false;
-	bool m_TransformsInVao = false;
+	bool m_IsInAir;
+	bool m_TransformsInVao;
+
+	bool m_IsCullingChildren;
 
 	float		m_AttachYoffset;
 

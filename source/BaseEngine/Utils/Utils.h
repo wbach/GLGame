@@ -16,11 +16,16 @@
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
-namespace Utils{
+namespace Utils
+{
+	static int s_intmone = -1;
+	static glm::vec2 s_vec2_zero(0);
+	static glm::vec3 s_vec3_zero(0);
+	static glm::mat4 s_mat4_one(1.f);
 	template<class type>
-	type ToRadians(type a)
+	float ToRadians(type a)
 	{
-		return a * static_cast<float>(M_PI) / 180.0f;
+		return static_cast<float>(a) * static_cast<float>(M_PI) / 180.0f;
 	}
 	template<class type>
 	type ToDegrees(type a)

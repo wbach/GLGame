@@ -55,7 +55,7 @@ void CGUIButton::DrawText(const FontShader* shader, const CFont& font) const
 	glColor4fv(ActiveColor);
 	shader->loadTranslation(m_Position);
 	glScalef(m_FontSize, m_FontSize, m_FontSize);
-	font.Print(m_Position.x, m_Position.y, m_Text.c_str());
+	font.Print(static_cast<int>(m_Position.x), static_cast<int>(m_Position.y), m_Text.c_str());
 	glPopMatrix();
 	shader->Stop();
 }

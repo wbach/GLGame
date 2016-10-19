@@ -183,6 +183,9 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 		if (!std::string("NormalizedSize").compare(subnode->name()))
 			normalized_size = ParseVector3d(subnode);
 
+		if (!std::string("ChildrenCulling").compare(subnode->name()) && entity != nullptr)
+			entity->SetIsCullingChildren(std::stoi(subnode->value()) != 0 ? true : false);
+
 		if (!std::string("Name").compare(subnode->name()) && entity != nullptr)
 			entity->SetName(subnode->value());
 
@@ -431,6 +434,8 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 
 	rapidxml::xml_node<>* name = document.allocate_node(rapidxml::node_element, "Name", document.allocate_string(entity->GetName().c_str()));
 
+	rapidxml::xml_node<>* children_culling = document.allocate_node(rapidxml::node_element, "ChildrenCulling ", document.allocate_string(std::to_string(entity->GetIsCullingChildren()).c_str()));
+
 	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");
 	AddVectorToNode(document, position, entity->GetLocalPosition());
 
@@ -444,12 +449,13 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	AddVectorToNode(document, scale, entity->GetScale());
 
 	rapidxml::xml_node<>* normalized = document.allocate_node(rapidxml::node_element, "NormalizedSize");
-	AddVectorToNode(document, normalized, entity->GetNormalizedSize());
+	AddVectorToNode(document, normalized, entity->GetNormalizedSize());	
 
 	rapidxml::xml_node<>* _global = document.allocate_node(rapidxml::node_element, "Global", document.allocate_string(std::to_string(global).c_str()));
 	
 	entity_node->append_node(file);
-	entity_node->append_node(name);
+	entity_node->append_node(name); 
+	entity_node->append_node(children_culling);
 	entity_node->append_node(position);
 	entity_node->append_node(attach_y_offset);
 	entity_node->append_node(rotation);

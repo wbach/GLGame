@@ -77,20 +77,8 @@ void CScene::ApplyPhysicsToObjects(float dt)
 	int x = 0;
 	for (shared_ptr<CEntity>& entity : m_PhysicsEntities)
 	{
-		//m_Game.m_PhysicsScene.m_Rigibodys[entity->m_PhysicsBodyIndex].ApplyGravity(dt, -9.8);
 		entity->IncrasePosition(entity->m_RigidBody.m_AngularVelocity *dt );
-		//float linear_decrease = 20.f;
-		//if (entity->m_RigidBody.m_AngularVelocity.x > 0) 
-		//	entity->m_RigidBody.m_AngularVelocity.x -= linear_decrease *dt;
-		//else
-		//	entity->m_RigidBody.m_AngularVelocity.x += linear_decrease *dt;
 
-		//if (entity->m_RigidBody.m_AngularVelocity.z > 0)
-		//	entity->m_RigidBody.m_AngularVelocity.z -= linear_decrease *dt;
-		//else
-		//	entity->m_RigidBody.m_AngularVelocity.z += linear_decrease *dt;
-
-		//Utils::PrintVector(entity->GetName() + "V: ", m_Game.m_PhysicsScene.m_Rigibodys[entity->m_PhysicsBodyIndex].m_AngularVelocity);
 		float h = 0;
 		x++;
 		h = GetHeightOfTerrain(entity->GetPositionXZ());
@@ -103,7 +91,6 @@ void CScene::ApplyPhysicsToObjects(float dt)
 		}
 		entity->m_RigidBody.SetPosition(entity->GetWorldPosition());
 	}
-	//cout << "X: " << x << endl;
 }
 
 void CScene::ClearObjectsVelocity()
@@ -325,7 +312,7 @@ const glm::vec3 CScene::GetDirectionalLightPosition()
 		if (light.GetType() == LightType::DIRECTIONAL_LIGHT)
 			return light.GetPosition();
 	//cout << "[Error] Directional light not found." << endl;
-	throw - 1;
+	throw std::runtime_error(std::string("Directional light not found.").c_str());;
 	return glm::vec3();
 }
 

@@ -35,12 +35,6 @@ void CRigidbody::ApplyGravity(float delta_time, float gravity)
 void CRigidbody::ReflectVelocity(glm::vec3 normal)
 {
 	glm::vec3  reflected = glm::reflect(m_AngularVelocity, glm::normalize(normal));
-	/*glm::vec3 n = glm::normalize(normal);
-	float angle = glm::dot(n, m_AngularVelocity);
-	glm::vec3 dir = m_AngularVelocity - (2.f * angle)*n;
-	m_AngularVelocity = dir ;*/
-	//Utils::PrintVector("v : ", reflected);
-
 	m_AngularVelocity = reflected * m_InvMass;//*m_Restitution;
 }
 
