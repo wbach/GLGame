@@ -136,7 +136,27 @@ void CTerrain::CreateTerrain()
 	CreateTerrainVertexes(0, 0, m_VertexCount, m_VertexCount);
 
 	int pointer = 0;
+	//Triaagnle strip
 	for (int gz = 0; gz <m_VertexCount - 1; gz++)
+	{
+		if ((gz & 1) == 0) 
+		{ // even rows
+			for (int gx = 0; gx <m_VertexCount - 1; gx++)
+			{
+				m_Indices.push_back(gx + gz * m_VertexCount);
+				m_Indices.push_back(gx + (gz + 1) * m_VertexCount);
+			}
+		}
+		else
+		{ // odd rows
+			for (int gx = m_VertexCount - 1; gx>0; gx--)
+			{
+				m_Indices.push_back(gx + (gz + 1) * m_VertexCount);
+				m_Indices.push_back(gx - 1 + +gz * m_VertexCount);
+			}
+		}
+	}
+	/*for (int gz = 0; gz <m_VertexCount - 1; gz++)
 	{
 		for (int gx = 0; gx <m_VertexCount - 1; gx++)
 		{
@@ -166,8 +186,9 @@ void CTerrain::CreateTerrain()
 			m_Indices.push_back(bottomLeft);
 			m_Indices.push_back(bottomRight);
 		}
-	}
-
+	
+	}*/
+	
 	SMaterial material;
 	m_Model.AddMesh("Terrain", m_Vertices, m_TextureCoords, m_Normals, m_Tangens, m_Indices, material);
 	m_Model.CreateMeshesVaos();
