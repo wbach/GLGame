@@ -6,8 +6,9 @@ CShadowMapRenderer::CShadowMapRenderer()
 	m_Offset = Utils::CreateOffset();	
 }
 
-void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane)
+void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size)
 {
+	m_ShadowMapSize = shadow_map_size;
 	m_ShadowShader.Init();
 	m_ShadowFbo.Init(glm::vec2(m_ShadowMapSize), window_size);
 	m_ShadowBox.Init(camera, window_size, fov, near_plane);	

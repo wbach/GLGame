@@ -48,6 +48,9 @@ void CTerrainGeometryPassShader::GetAllUniformLocations()
 	location_RockTexture = GetUniformLocation("RockTexture");
 	location_RockTextureNormal = GetUniformLocation("RockTextureNormal");
 
+
+	//Shadows
+	location_UseShadowMap	  = GetUniformLocation("UseShadowMap");
 	location_shadowMap		  = GetUniformLocation("ShadowMap");
 	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
 }
@@ -77,4 +80,9 @@ void CTerrainGeometryPassShader::LoadViewMatrix(const glm::mat4& matrix) const
 void CTerrainGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4 & matrix) const
 {
 	LoadValue(location_ToShadowMapSpace, matrix);
+}
+
+void CTerrainGeometryPassShader::LoadUseShadows(const float & is) const
+{
+	LoadValue(location_UseShadowMap, is);
 }

@@ -2,8 +2,10 @@
                                                                         
 in vec2 TexCoord0;                                                                  
 in vec3 Normal0;                                                                    
-in vec3 WorldPos0;                                                                  
+in vec3 WorldPos0;  
+                                                                
 in vec4 ShadowCoords ;
+in float UseShadows;
 
 layout (location = 0) out vec3 WorldPosOut;   
 layout (location = 1) out vec3 DiffuseOut;     
@@ -42,7 +44,10 @@ float CalculateShadowFactor()
     for(float x=-0.0005;x<=0.0005;x+=0.0001)
 		for(float y=-0.0005;y<=0.0005;y+=0.0001)
 		{
-			float objectNearestLight = texture(ShadowMap, ShadowCoords.xy +vec2(x, y)).r ;   			 
+			vec2 shadow_coords = ShadowCoords.xy + vec2(x, y);
+			if( shadow_coords.x > 1 || shadow_coords.y > 1 || shadow_coords.x < 0 || shadow_coords.y < 0)
+				shadowFactor--;
+			float objectNearestLight = texture(ShadowMap, ShadowCoords.xy + vec2(x, y)).r ;  			 
             if (ShadowCoords.z > objectNearestLight + 0.001)
 			{
                 shadowFactor += (ShadowCoords.w * 0.4f);
@@ -50,7 +55,10 @@ float CalculateShadowFactor()
             a++ ;
 		}
 	lightFactor = 1.0f - ( shadowFactor / a) ;
-
+	if(lightFactor < 0)
+		lightFactor = 0;
+	if(lightFactor > 1)
+		lightFactor = 1;
     return lightFactor ;
 }
 vec4 CalculateTerrainColor()
@@ -77,9 +85,10 @@ vec4 CalculateTerrainColor()
 }
 											
 void main()									
-{											
+{		
+	float shadow_factor = UseShadows > 0.5f ? CalculateShadowFactor() : 1.f;									
 	WorldPosOut     = WorldPos0;					
-	DiffuseOut      = CalculateTerrainColor().xyz *  CalculateShadowFactor();	
+	DiffuseOut      = CalculateTerrainColor().xyz * shadow_factor;	
 	NormalOut       = normalize(Normal0);					
 	SpecularOut     = vec3(0.f);				
 }

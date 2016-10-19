@@ -9,7 +9,9 @@ layout (location = 4) in mat4 TransformationMatrixes;
 uniform mat4 TransformationMatrix ;
 uniform mat4 ProjectionMatrix ;
 uniform mat4 ViewMatrix ;
+
 uniform mat4 ToShadowMapSpace;
+uniform float UseShadowMap;
                          
 uniform float IsUseNormalMap;
 uniform float IsUseFakeLighting;
@@ -23,7 +25,7 @@ out vec3 PassTangent;
 out float UseNormalMap;
 
 out vec4 ShadowCoords;
-
+out float UseShadows;
 void main()
 {     
 	mat4 transform_matrix = IsInstancedRender > 0.5f ? TransformationMatrixes : TransformationMatrix;
@@ -48,12 +50,17 @@ void main()
     {
         Normal0 = vec3(.0f ,1.f, .0f) ;
     }
-	const float shadow_distance		= 250.f ;
-	const float transition_distance = 10.f;
 
-	float distance_to_cam   = length(model_view_position.xyz) ;
-	ShadowCoords			= ToShadowMapSpace * vec4(WorldPos0, 1.f); 
-	distance_to_cam			= distance_to_cam - (shadow_distance - transition_distance);
-	distance_to_cam			= distance_to_cam / shadow_distance;
-	ShadowCoords.w			= clamp(1.f - distance_to_cam, 0.f, 1.f);
+	UseShadows = UseShadowMap;
+	if (UseShadowMap > 0.5f)
+	{
+		const float shadow_distance		= 50.f ;
+		const float transition_distance = 10.f;
+
+		float distance_to_cam   = length(model_view_position.xyz) ;
+		ShadowCoords			= ToShadowMapSpace * vec4(WorldPos0, 1.f); 
+		distance_to_cam			= distance_to_cam - (shadow_distance - transition_distance);
+		distance_to_cam			= distance_to_cam / shadow_distance;
+		ShadowCoords.w			= clamp(1.f - distance_to_cam, 0.f, 1.f);
+	}
 }

@@ -1,6 +1,6 @@
 #include "MasterRenderer.h"
 
-void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix)
+void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, float shadow_map_size)
 {
 	m_WindowSize = window_size;
 
@@ -30,7 +30,7 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
 	m_SkyBoxRenderer.Init(projection_matrix);
-	m_ShadowMapRenderer.Init(camera, window_size, 70.f, 0.1f);
+	m_ShadowMapRenderer.Init(camera, window_size, 70.f, 0.1f, shadow_map_size);
 
 
 }
@@ -61,16 +61,18 @@ void CMasterRenderer::SetReadBuffer(BufferTexture::Type TextureType)
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + TextureType);
 }
 
-void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene)
+void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene, const bool& shadows)
 {
+	if (!shadows)
+		return;
 	glDepthMask(GL_TRUE);
 	m_ShadowMapRenderer.Render(scene);
 }
 
-void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
+void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadows)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);
-	glViewport(0, 0, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x),m_ResoultionMultipler * static_cast<int>(m_WindowSize.y));
+	glViewport(0, 0, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler * static_cast<int>(m_WindowSize.y));
 	glDepthMask(GL_TRUE);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -81,19 +83,30 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene)
 
 	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
 
-	glActiveTexture(GL_TEXTURE11);
-	glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
+	// Terrain render
 	m_TerrainGeometryPassShader.Start();
-	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());
-	m_TerrainGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
+	if (shadows)
+	{
+		glActiveTexture(GL_TEXTURE11);
+		glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
+		m_TerrainGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
+	}
+	m_TerrainGeometryPassShader.LoadUseShadows(static_cast<float>(shadows));
+	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_TerrainRenderer.Render(scene, m_TerrainGeometryPassShader);
 	m_TerrainGeometryPassShader.Stop();
 
-	glActiveTexture(GL_TEXTURE2);
-	glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
+	// Entities Render
+
 	m_EntityGeometryPassShader.Start();
-	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());
-	m_EntityGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
+	if (shadows)
+	{
+		glActiveTexture(GL_TEXTURE2);
+		glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
+		m_EntityGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
+	}	
+	m_EntityGeometryPassShader.LoadUseShadows(static_cast<float>(shadows));
+	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
 

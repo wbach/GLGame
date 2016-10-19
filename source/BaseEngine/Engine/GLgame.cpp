@@ -9,7 +9,7 @@ CGame::CGame()
 , m_GrassViewDistance(500)
 , m_IsFullScreen(false)
 , m_RefreshRate(60)
-, m_ShadowMapSize(2048)
+, m_ShadowMapSize(1024)
 , m_SoundVolume(1.0)
 , m_WaterQuality(1)
 , m_ViewDistance(1000)
@@ -32,7 +32,7 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 
 	//renderStartSeries();
 	LoadScene();
-	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix);	
+	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, m_ShadowMapSize);
 }
 void CGame::Uninitialize()
 {
@@ -58,14 +58,19 @@ void CGame::GameLoop()
 	string object_count_text = "Objects : ";
 	string vertex_count_text = "Vertex : ";
 	vector<CGUIText> texts;
-	texts.push_back(CGUIText(fps_text, glm::vec2(-0.9475, 0.8575), 1, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(fps_text, glm::vec2(-0.95,0.85), 1, glm::vec3(0.9)));
-	
-	texts.push_back(CGUIText(object_count_text, glm::vec2(-0.9475, 0.7575), 1, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(object_count_text, glm::vec2(-0.95, 0.75), 1, glm::vec3(0.9)));
 
-	texts.push_back(CGUIText(vertex_count_text, glm::vec2(-0.9475, 0.6575), 1, glm::vec3(0, 0, 0)));
-	texts.push_back(CGUIText(vertex_count_text, glm::vec2(-0.95, 0.65), 1, glm::vec3(0.9)));
+	glm::vec2 shadow_offset(-0.002);
+	glm::vec2 fps_pos(-0.9475, 0.8575);
+	texts.push_back(CGUIText(fps_text, fps_pos + shadow_offset, 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(fps_text, fps_pos, 1, glm::vec3(0.9)));
+	
+	glm::vec2 oc(-0.9475, 0.7575);
+	texts.push_back(CGUIText(object_count_text, oc + shadow_offset, 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(object_count_text, oc, 1, glm::vec3(0.9)));
+
+	glm::vec2 vc(-0.9475, 0.6575);
+	texts.push_back(CGUIText(vertex_count_text, vc + shadow_offset, 1, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(vertex_count_text, vc, 1, glm::vec3(0.9)));
 	//texts.push_back(CGUIText("Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", glm::vec2(-0.90, 0.7), 1, glm::vec3(1, 1, 1)));
 	
 	
@@ -101,8 +106,9 @@ void CGame::GameLoop()
 			}
 			GetCurrentScene()->m_PhysicsScene.Update(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 
-			m_MasterRenderer.ShadowPass(m_CurrScene);
-			m_MasterRenderer.GeometryPass(m_CurrScene);
+
+			m_MasterRenderer.ShadowPass(m_CurrScene, m_IsShadows);
+			m_MasterRenderer.GeometryPass(m_CurrScene, m_IsShadows);
 			m_MasterRenderer.LightPass(m_CurrScene);
 			//m_MasterRenderer.DebugRenderTextures();
 
@@ -287,6 +293,16 @@ int CGame::ReadConfiguration(string file_name)
 shared_ptr<CScene>& CGame::GetCurrentScene()
 {
 	return m_CurrScene;
+}
+
+const float & CGame::GetShadowMapSize()
+{
+	return m_ShadowMapSize;
+}
+
+const bool & CGame::IsShadows()
+{
+	return m_IsShadows;
 }
 
 

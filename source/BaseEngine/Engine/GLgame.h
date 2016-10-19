@@ -52,6 +52,8 @@ public:
 
 	CXmlSceneParser m_SceneParser;
 	
+	const float& GetShadowMapSize();
+	const bool& IsShadows();
 
 	//Loading in this thread
 	bool m_IsLoadedFromFile = false;
