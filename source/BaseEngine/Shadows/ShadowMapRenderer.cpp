@@ -6,12 +6,12 @@ CShadowMapRenderer::CShadowMapRenderer()
 	m_Offset = Utils::CreateOffset();	
 }
 
-void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size)
+void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size, float shadows_distance)
 {
 	m_ShadowMapSize = shadow_map_size;
 	m_ShadowShader.Init();
 	m_ShadowFbo.Init(glm::vec2(m_ShadowMapSize), window_size);
-	m_ShadowBox.Init(camera, window_size, fov, near_plane);	
+	m_ShadowBox.Init(camera, window_size, fov, near_plane, shadows_distance);
 	m_LightViewMatrix = glm::mat4(1.f);
 	m_ShadowBox.SetLightViewMatrix(m_LightViewMatrix);
 }
@@ -107,7 +107,7 @@ void CShadowMapRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel 
 		if (model.UseInstacedRendering())
 		{
 			m_ShadowShader.LoadUseInstancedRendering(1.f);
-			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0, entity->GetTransformMatrixes().size());
+			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0, entity->GetTransformMatrixes().size());
 		}
 		else
 		{
@@ -115,7 +115,7 @@ void CShadowMapRenderer::RenderEntity(const shared_ptr<CEntity>& entity, CModel 
 			{
 				m_ShadowShader.LoadUseInstancedRendering(0.f);
 				m_ShadowShader.LoadTransformMatrix(entity->GetRelativeTransformMatrix() * mat);
-				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 			}
 		}
 		if (model.UseInstacedRendering())

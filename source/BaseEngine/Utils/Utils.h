@@ -8,7 +8,7 @@
 #include "glm/gtc/type_ptr.hpp"
 #include <sstream>
 #include <iostream>
-
+#include <algorithm>
 #ifndef M_PI
 #define M_PI    3.14159265358979323846264338327950288   /* pi */
 #endif
@@ -36,6 +36,20 @@ namespace Utils
 	type KmToMs(type a)
 	{
 		return a * 0.277777778f;
+	}
+	static std::string ConvertToRelativePath(std::string path)
+	{
+		if (path.empty()) return path;
+
+		std::replace(path.begin(), path.end(), '\\', '/');
+		std::size_t found = path.find("Data/");
+		if (found != std::string::npos)
+		{
+			path = path.substr(found);
+		}
+
+		return path;
+
 	}
 	static void PrintVector(const std::string& text, const glm::vec3& v)
 	{
@@ -146,11 +160,18 @@ namespace Utils
 		glGenTextures(1, &texture);
 		glBindTexture(GL_TEXTURE_2D, texture);
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_MODE, GL_COMPARE_REF_TO_TEXTURE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_COMPARE_FUNC, GL_LEQUAL);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
 		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
 		glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
+		// Disable writes to the color buffer
+		glDrawBuffer(GL_NONE);
+
+		// Disable reads from the color buffer
+		glReadBuffer(GL_NONE);
 		return texture;
 	}
 	static int CreateVao()
@@ -160,12 +181,12 @@ namespace Utils
 		glBindVertexArray(vao_id);
 		return vao_id;
 	}
-	static GLuint BindIndicesBuffer(const std::vector<unsigned int>& indices)
+	static GLuint BindIndicesBuffer(const std::vector<unsigned short>& indices)
 	{
 		GLuint vbo_id;
 		glGenBuffers(1, &vbo_id);
 		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo_id);
-		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+		glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(unsigned short), &indices[0], GL_STATIC_DRAW);
 		return vbo_id;
 	}
 	static GLuint StoreDataInAttributesList(const int& attributeNumber, const int& coordinateSize, const std::vector<float>& data)
@@ -203,7 +224,7 @@ namespace Utils
 			0, 1,
 			1, 1,
 			1, 0 };
-		std::vector<unsigned int> indices = { 0, 1, 3, 3, 1, 2 };
+		std::vector<unsigned short> indices = { 0, 1, 3, 3, 1, 2 };
 		indices_size = indices.size();
 		vao = CreateVao();
 		vbo_indices = BindIndicesBuffer(indices);
@@ -217,7 +238,7 @@ namespace Utils
 		for (int x = 0; x < attributes; x++)
 			glEnableVertexAttribArray(x);
 
-		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLES, indices, GL_UNSIGNED_SHORT, 0);
 
 		for (int x = attributes; x > 0; x--)
 			glDisableVertexAttribArray(x);

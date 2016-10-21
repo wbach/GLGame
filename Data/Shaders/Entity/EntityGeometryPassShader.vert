@@ -11,7 +11,7 @@ uniform mat4 ProjectionMatrix ;
 uniform mat4 ViewMatrix ;
 
 uniform mat4 ToShadowMapSpace;
-uniform float UseShadowMap;
+uniform vec3 ShadowVariables;
                          
 uniform float IsUseNormalMap;
 uniform float IsUseFakeLighting;
@@ -26,6 +26,7 @@ out float UseNormalMap;
 
 out vec4 ShadowCoords;
 out float UseShadows;
+out float ShadowMapSize;
 void main()
 {     
 	mat4 transform_matrix = IsInstancedRender > 0.5f ? TransformationMatrixes : TransformationMatrix;
@@ -51,10 +52,12 @@ void main()
         Normal0 = vec3(.0f ,1.f, .0f) ;
     }
 
-	UseShadows = UseShadowMap;
-	if (UseShadowMap > 0.5f)
+	UseShadows = ShadowVariables.x;
+	if (ShadowVariables.x > 0.5f)
 	{
-		const float shadow_distance		= 50.f ;
+		ShadowMapSize = ShadowVariables.z;
+
+		float shadow_distance			= ShadowVariables.y;
 		const float transition_distance = 10.f;
 
 		float distance_to_cam   = length(model_view_position.xyz) ;

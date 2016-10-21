@@ -48,7 +48,7 @@ void CAssimModel::ProcessMesh(string file_path, aiMesh* mesh, const aiScene* sce
 	vector<float> diffuse;
 	vector<float> specular;
 	vector<float> ambient;
-	vector<unsigned int> indices;
+	vector<unsigned short> indices;
 
 	aiColor4D diff;
 	aiColor4D amb;
@@ -116,12 +116,12 @@ void CAssimModel::ProcessMesh(string file_path, aiMesh* mesh, const aiScene* sce
 		}
 	}
 
-	for (unsigned int i = 0; i<mesh->mNumFaces; i++)
+	for (unsigned short i = 0; i<mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
-		for (unsigned int j = 0; j<face.mNumIndices; j++)
+		for (unsigned short j = 0; j<face.mNumIndices; j++)
 		{
-			indices.push_back(face.mIndices[j]);
+			indices.push_back(static_cast<unsigned short>(face.mIndices[j]));
 		}
 	}
 

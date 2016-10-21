@@ -22,7 +22,7 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 	location_NormalMap		= GetUniformLocation("NormalMap");
 
 	//Shadows
-	location_UseShadowMap	  = GetUniformLocation("UseShadowMap");
+	location_ShadowVariables  = GetUniformLocation("ShadowVariables");
 	location_ShadowMap		  = GetUniformLocation("ShadowMap");
 	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
 
@@ -74,11 +74,13 @@ void CEntityGeometryPassShader::LoadMeshMaterial(const SMaterial& material) cons
 	LoadValue(location_MaterialDiffuse, material.diffuse);
 	LoadValue(location_MaterialSpecular, material.specular);
 }
-void CEntityGeometryPassShader::LoadUseShadows(const float & is) const
-{
-	LoadValue(location_UseShadowMap, is);
-}
-void CEntityGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4 & matrix) const
+
+void CEntityGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4& matrix) const
 {
 	LoadValue(location_ToShadowMapSpace, matrix);
+}
+
+void CEntityGeometryPassShader::LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const
+{
+	LoadValue(location_ShadowVariables, glm::vec3(is, distance - 5, shadow_map_size));
 }

@@ -50,7 +50,7 @@ void CTerrainGeometryPassShader::GetAllUniformLocations()
 
 
 	//Shadows
-	location_UseShadowMap	  = GetUniformLocation("UseShadowMap");
+	location_ShadowVariables = GetUniformLocation("ShadowVariables");
 	location_shadowMap		  = GetUniformLocation("ShadowMap");
 	location_ToShadowMapSpace = GetUniformLocation("ToShadowMapSpace");
 }
@@ -81,8 +81,9 @@ void CTerrainGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4 & matri
 {
 	LoadValue(location_ToShadowMapSpace, matrix);
 }
-
-void CTerrainGeometryPassShader::LoadUseShadows(const float & is) const
+void CTerrainGeometryPassShader::LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const
 {
-	LoadValue(location_UseShadowMap, is);
+	LoadValue(location_ShadowVariables, glm::vec3(is, distance - 5, shadow_map_size));
 }
+
+

@@ -19,7 +19,7 @@ void CSkyBoxRenderer::Render(const glm::mat4& view_matrix, const float&  delta_t
 	glBindVertexArray(m_QubeID);
 	glEnableVertexAttribArray(0);
 	BindTextures(delta_time);
-	glDrawElements(GL_TRIANGLES, m_QubeVertexCount, GL_UNSIGNED_INT, 0);
+	glDrawElements(GL_TRIANGLES, m_QubeVertexCount, GL_UNSIGNED_SHORT, 0);
 	//glDrawArrays(GL_TRIANGLES, 0, m_QubeVertexCount);
 	glDisableVertexAttribArray(0);
 	glBindVertexArray(0);

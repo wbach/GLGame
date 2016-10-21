@@ -20,4 +20,5 @@ public :
 private:
 	unsigned int m_RendererObjectPerFrame = 0;
 	unsigned int m_RendererVertixesPerFrame = 0;
+	unsigned int m_MaxVerices = 0;
 };

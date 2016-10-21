@@ -21,7 +21,7 @@ void CModel::CreateTransformsVbo(std::vector<glm::mat4>& m)
 	m_InstancedRendering = true;
 }
 
-CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned int> &indices, SMaterial &material)
+CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned short> &indices, SMaterial &material)
 {
 	CMesh mesh;
 	// Normalize to define scale (height) 1 unit = 1 metr

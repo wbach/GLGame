@@ -2,12 +2,12 @@
 <Map>
 	<Camera>
 		<Position>
-			<x>452.143250</x>
-			<y>176.430771</y>
-			<z>387.888824</z>
+			<x>128.473419</x>
+			<y>71.216667</y>
+			<z>144.251358</z>
 		</Position>
-		<Pitch>21.200094</Pitch>
-		<Yaw>307.597900</Yaw>
+		<Pitch>30.000015</Pitch>
+		<Yaw>321.598328</Yaw>
 	</Camera>
 	<SkyBox>
 		<DayTextures>
@@ -55,36 +55,6 @@
 		</Position>
 		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256.png</HeightMap>
 		<BlendMap>Data/Terrain/TerrainTextures/blendMap.png</BlendMap>
-		<BackgroundTexture>
-			<DiffTexture>Data/Textures/grass_ground.png</DiffTexture>
-			<NormalTexture>Data/Textures/grassNormal.png</NormalTexture>
-		</BackgroundTexture>
-		<RockTexture>
-			<DiffTexture>Data/Textures/165.png</DiffTexture>
-			<NormalTexture>Data/Textures/165.png</NormalTexture>
-		</RockTexture>
-		<RedTexture>
-			<DiffTexture>Data/Textures/grassFlowers.png</DiffTexture>
-			<NormalTexture>Data/Textures/grassFlowers.png</NormalTexture>
-		</RedTexture>
-		<GreenTexture>
-			<DiffTexture>Data/Textures/sand.png</DiffTexture>
-			<NormalTexture>Data/Textures/sand_normal.png</NormalTexture>
-		</GreenTexture>
-		<BlueTexture>
-			<DiffTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
-			<NormalTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.png</NormalTexture>
-		</BlueTexture>
-	</Terrain>
-	<Terrain>
-		<Name>Test_Terrain2</Name>
-		<Position>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>-1.000000</z>
-		</Position>
-		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256H.png</HeightMap>
-		<BlendMap>Data/Terrain/TerrainTextures/blendMapH.png</BlendMap>
 		<BackgroundTexture>
 			<DiffTexture>Data/Textures/grass_ground.png</DiffTexture>
 			<NormalTexture>Data/Textures/grassNormal.png</NormalTexture>
@@ -160,7 +130,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\bench\bench.obj</File>
+			<File>Data/Meshes/bench/bench.obj</File>
 			<Name>bench.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -187,7 +157,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
+			<File>Data/Meshes/alchemTable/alchemTable.obj</File>
 			<Name>alchemTable.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -214,7 +184,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -241,7 +211,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Table1\table1.obj</File>
+			<File>Data/Meshes/Table1/table1.obj</File>
 			<Name>table1.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -268,7 +238,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -295,7 +265,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -323,7 +293,7 @@
 		</Entity>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\Gothic_smallHouse1\smallHouse1.obj</File>
+		<File>Data/Meshes/Gothic_smallHouse1/smallHouse1.obj</File>
 		<Name>smallHouse1.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -349,7 +319,7 @@
 		</NormalizedSize>
 		<Global>0</Global>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\alchemTable\alchemTable.obj</File>
+			<File>Data/Meshes/alchemTable/alchemTable.obj</File>
 			<Name>alchemTable.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -377,7 +347,7 @@
 		</Entity>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\housestorage1\houseStorage.obj</File>
+		<File>Data/Meshes/housestorage1/houseStorage.obj</File>
 		<Name>houseStorage.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -403,7 +373,7 @@
 		</NormalizedSize>
 		<Global>0</Global>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -430,7 +400,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -457,7 +427,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -484,7 +454,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -511,7 +481,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Crate\crate.obj</File>
+			<File>Data/Meshes/Crate/crate.obj</File>
 			<Name>crate.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -539,7 +509,7 @@
 		</Entity>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\G3_Myrtana_Castle_Mainhouse\G3_Myrtana_Castle_Mainhouse.obj</File>
+		<File>Data/Meshes/G3_Myrtana_Castle_Mainhouse/G3_Myrtana_Castle_Mainhouse.obj</File>
 		<Name>G3_Myrtana_Castle_Mainhouse.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -565,7 +535,7 @@
 		</NormalizedSize>
 		<Global>0</Global>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Tron1\tron.obj</File>
+			<File>Data/Meshes/Tron1/tron.obj</File>
 			<Name>tron.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -593,7 +563,7 @@
 		</Entity>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\smallHouse3\smallHouse3.obj</File>
+		<File>Data/Meshes/smallHouse3/smallHouse3.obj</File>
 		<Name>smallHouse3.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -620,7 +590,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree1\obj__tree1.obj</File>
+		<File>Data/Meshes/woodland_pack_1/WOODLAND_PACK/WOODLAND_TREES/f_tree1/obj__tree1.obj</File>
 		<Name>obj__tree1.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -647,7 +617,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree3\obj__tree3.obj</File>
+		<File>Data/Meshes/woodland_pack_1/WOODLAND_PACK/WOODLAND_TREES/f_tree3/obj__tree3.obj</File>
 		<Name>obj__tree3.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -674,7 +644,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\woodland_pack_1\WOODLAND_PACK\WOODLAND_TREES\f_tree6\obj__tree6.obj</File>
+		<File>Data/Meshes/woodland_pack_1/WOODLAND_PACK/WOODLAND_TREES/f_tree6/obj__tree6.obj</File>
 		<Name>obj__tree6.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -701,7 +671,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<File>Data/Meshes/Barrel/barrel.obj</File>
 		<Name>barrel.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -728,7 +698,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<File>Data/Meshes/Barrel/barrel.obj</File>
 		<Name>barrel.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -755,7 +725,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\Barrel\barrel.obj</File>
+		<File>Data/Meshes/Barrel/barrel.obj</File>
 		<Name>barrel.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
 		<Position>
@@ -782,7 +752,7 @@
 		<Global>0</Global>
 	</Entity>
 	<Entity>
-		<File>F:\Projects\Git\GLGame\Data\Meshes\GothicWallGate\G3_Myrtana_Castle_Wall_Entrance_01.obj</File>
+		<File>Data/Meshes/GothicWallGate/G3_Myrtana_Castle_Wall_Entrance_01.obj</File>
 		<Name>G3_Myrtana_Castle_Wall_Entrance_01.obj</Name>
 		<ChildrenCulling >0</ChildrenCulling >
 		<Position>
@@ -808,7 +778,7 @@
 		</NormalizedSize>
 		<Global>0</Global>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -835,7 +805,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -862,7 +832,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -889,7 +859,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -916,7 +886,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -943,7 +913,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -970,7 +940,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -997,7 +967,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -1024,7 +994,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -1051,7 +1021,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -1078,7 +1048,7 @@
 			<Global>0</Global>
 		</Entity>
 		<Entity>
-			<File>F:\Projects\Git\GLGame\Data\Meshes\Wall\G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
+			<File>Data/Meshes/Wall/G3_Myrtana_Castle_Wall_Straight_01_all.obj</File>
 			<Name>G3_Myrtana_Castle_Wall_Straight_01_all.obj</Name>
 			<ChildrenCulling >1</ChildrenCulling >
 			<Position>
@@ -1105,5 +1075,35 @@
 			<Global>0</Global>
 		</Entity>
 	</Entity>
+	<Terrain>
+		<Name>Test_Terrain2</Name>
+		<Position>
+			<x>0.000000</x>
+			<y>0.000000</y>
+			<z>-1.000000</z>
+		</Position>
+		<HeightMap>Data/Terrain/TerrainTextures/TdkWN256H.png</HeightMap>
+		<BlendMap>Data/Terrain/TerrainTextures/blendMapH.png</BlendMap>
+		<BackgroundTexture>
+			<DiffTexture>Data/Textures/grass_ground.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassNormal.png</NormalTexture>
+		</BackgroundTexture>
+		<RockTexture>
+			<DiffTexture>Data/Textures/165.png</DiffTexture>
+			<NormalTexture>Data/Textures/165.png</NormalTexture>
+		</RockTexture>
+		<RedTexture>
+			<DiffTexture>Data/Textures/grassFlowers.png</DiffTexture>
+			<NormalTexture>Data/Textures/grassFlowers.png</NormalTexture>
+		</RedTexture>
+		<GreenTexture>
+			<DiffTexture>Data/Textures/sand.png</DiffTexture>
+			<NormalTexture>Data/Textures/sand_normal.png</NormalTexture>
+		</GreenTexture>
+		<BlueTexture>
+			<DiffTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png</DiffTexture>
+			<NormalTexture>Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01_Normal.png</NormalTexture>
+		</BlueTexture>
+	</Terrain>
 </Map>
 

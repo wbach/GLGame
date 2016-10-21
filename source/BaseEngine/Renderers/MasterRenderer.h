@@ -27,7 +27,7 @@ public:
 	void LightPass(shared_ptr<CScene>& scene);
 
 	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix,
-		const float& fov, const float& near, const float& far, float shadow_map_size = 2048);
+		const float& fov, const float& near, const float& far, float rendering_resolution_modifier = 1.f, float shadow_map_size = 2048.f, float shadows_distance = 35);
 	void CleanUp();
 
 	void DebugRenderTextures();
@@ -52,6 +52,9 @@ private:
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
 	CLightPassShader			m_LightPassShader;
 
+	float		m_ShadowMapSize;
+	float		m_ShadowsDistance;
+
 	glm::vec2	m_WindowSize;
 	GLuint		m_Fbo;
 	GLuint		m_FinalTexture;
@@ -64,7 +67,7 @@ private:
 	GLuint m_QuadVertex;
 	GLuint m_QuadTexCoord;
 
-	int m_ResoultionMultipler = 1;
+	float m_ResoultionMultipler = .5f;
 
 	bool m_DebugRenderTextures;
 

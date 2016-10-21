@@ -217,7 +217,7 @@ bool CFbxModel::InitializeMesh(FbxMesh * pMesh)
 	vector<float> diffuse;
 	vector<float> specular;
 	vector<float> ambient;
-	vector<unsigned int> indices;
+	vector<unsigned short> indices;
 
 	const int lPolygonCount = pMesh->GetPolygonCount();
 
@@ -260,7 +260,7 @@ bool CFbxModel::InitializeMesh(FbxMesh * pMesh)
 		{
 			const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
 			
-			indices.push_back(static_cast<unsigned int>(lVertexCount));
+			indices.push_back(static_cast<unsigned short>(lVertexCount));
 
 			current_vertex = lControlPoints[lControlPointIndex];
 			postions.push_back(static_cast<float>(current_vertex[0]));

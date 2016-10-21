@@ -14,7 +14,7 @@ void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPa
 
 		PrepareTerrain(terrain);
 		LoadModelMatrix(terrain, geomentry_shader);
-		glDrawElements(GL_TRIANGLE_STRIP, terrain.m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_INT, 0);
+		glDrawElements(GL_TRIANGLE_STRIP, terrain.m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 		UnBindTextureModel();
 		m_RendererObjectPerFrame++;
 		m_RendererVertixesPerFrame += terrain.m_Model.GetMeshes()[0].GetVertexCount();

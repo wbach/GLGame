@@ -1,11 +1,14 @@
 #include "MasterRenderer.h"
 
 void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, 
-	const float& fov, const float& near, const float& far, float shadow_map_size)
+	const float& fov, const float& near, const float& far, float rendering_resolution_modifier, float shadow_map_size, float shadows_distance)
 {
 	m_WindowSize = window_size;
 
-	m_ResoultionMultipler = 1;
+	m_ShadowMapSize = shadow_map_size;
+	m_ShadowsDistance = shadows_distance;
+
+	m_ResoultionMultipler = rendering_resolution_modifier;
 	m_DebugRenderTextures = false;
 
 	if (CreateBuffers() == -1)
@@ -31,7 +34,7 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	Utils::CreateQuad(m_QuadVao, m_QuadIndices, m_QuadVertex, m_QuadTexCoord, m_QuadIndicesSize);
 
 	m_SkyBoxRenderer.Init(projection_matrix, far);
-	m_ShadowMapRenderer.Init(camera, window_size, fov, near, shadow_map_size);
+	m_ShadowMapRenderer.Init(camera, window_size, fov, near, shadow_map_size, shadows_distance);
 
 
 }
@@ -92,7 +95,7 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 		glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 		m_TerrainGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
 	}
-	m_TerrainGeometryPassShader.LoadUseShadows(static_cast<float>(shadows));
+	m_TerrainGeometryPassShader.LoadShadowValues(static_cast<float>(shadows), m_ShadowsDistance, m_ShadowMapSize);
 	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_TerrainRenderer.Render(scene, m_TerrainGeometryPassShader);
 	m_TerrainGeometryPassShader.Stop();
@@ -106,7 +109,7 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 		glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 		m_EntityGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
 	}	
-	m_EntityGeometryPassShader.LoadUseShadows(static_cast<float>(shadows));
+	m_EntityGeometryPassShader.LoadShadowValues(static_cast<float>(shadows),  m_ShadowsDistance, m_ShadowMapSize);
 	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
@@ -217,8 +220,8 @@ int CMasterRenderer::CreateBuffers()
 		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler*static_cast<int>(m_WindowSize.y), 0, GL_RGB, GL_FLOAT, NULL);
 		if (!m_DebugRenderTextures)
 		{
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 		}
 		glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + i, GL_TEXTURE_2D, m_Textures[i], 0);
 	}

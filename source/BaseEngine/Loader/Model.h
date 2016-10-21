@@ -77,7 +77,7 @@ private:
 	vector<float> text_coords;
 	vector<float> normals;
 	vector<float> tangents;
-	vector<unsigned int> indices;
+	vector<unsigned short> indices;
 
 	friend class CModel;
 };
@@ -90,7 +90,7 @@ public:
 	void CreateTransformsVbo(std::vector<glm::mat4>& m);
 
 	CMesh* AddMesh(string name, vector<float>& positions, vector<float>& text_coords, vector<float>& normals, vector<float>& tangents,
-		vector<unsigned int>& indices, SMaterial& material);
+		vector<unsigned short>& indices, SMaterial& material);
 	
 	void		SetUseInstancedRendering(const bool& s) { m_InstancedRendering = s; }
 	const bool&	UseInstacedRendering() const { return m_InstancedRendering; }

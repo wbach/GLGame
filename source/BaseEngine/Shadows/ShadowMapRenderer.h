@@ -9,7 +9,7 @@ class CShadowMapRenderer
 {
 public:
 	CShadowMapRenderer();
-	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size = 2048);
+	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size = 2048, float shadows_distance = 35);
 	void Render(shared_ptr<CScene>& scene);
 	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity) const;
 	void SetShadowMapSize(float size);

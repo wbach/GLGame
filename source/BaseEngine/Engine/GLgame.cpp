@@ -34,7 +34,7 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 	//renderStartSeries();
 	LoadScene();
 	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, 
-						 m_Fov, m_NearPlane ,m_FarPlane, m_ShadowMapSize);
+						 m_Fov, m_NearPlane ,m_FarPlane, m_RenderingResolutionModifier, m_ShadowMapSize, m_ShadowsDistance);
 }
 void CGame::Uninitialize()
 {
@@ -264,9 +264,11 @@ int CGame::ReadConfiguration(string file_name)
 		if (var.compare("RefreshRate") == 0)		m_RefreshRate	= Get::Int(value);
 		if (var.compare("Sound") == 0)				m_IsSound		= Get::Boolean(value);
 		if (var.compare("SoundVolume") == 0)		m_SoundVolume	= Get::Float(value);
+		if (var.compare("RenderingResolution") == 0)	m_RenderingResolutionModifier = Get::Float(value);
 		if (var.compare("WaterQuality") == 0)		m_WaterQuality	= Get::Float(value);
-		if (var.compare("Shadows") == 0)			m_IsShadows		= Get::Boolean(value);
 		if (var.compare("TextureMaxResolution") == 0)	m_MaxTextureResolution = Get::Vector2d(value);
+		if (var.compare("Shadows") == 0)			m_IsShadows		= Get::Boolean(value);
+		if (var.compare("ShadowsDistance") == 0)	m_ShadowsDistance = Get::Float(value);
 		if (var.compare("ShadowMapSize") == 0)		m_ShadowMapSize	= Get::Float(value);
 		if (var.compare("ViewDistance") == 0)		m_ViewDistance  = Get::Float(value);
 		if (var.compare("GrassViewDistance") == 0)	m_GrassViewDistance = Get::Float(value);

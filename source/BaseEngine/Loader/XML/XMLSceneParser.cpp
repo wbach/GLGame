@@ -178,7 +178,7 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 	{			
 
 		if (!std::string("File").compare(subnode->name()) && entity == nullptr)
-			entity = m_Scene->CreateEntityFromFile(subnode->value());
+			entity = m_Scene->CreateEntityFromFile(Utils::ConvertToRelativePath(subnode->value()));
 
 		if (!std::string("NormalizedSize").compare(subnode->name()))
 			normalized_size = ParseVector3d(subnode);

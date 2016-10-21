@@ -47,6 +47,8 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 		RenderEntityRecursive(scene, entity, geomentry_shader);
 		m_RendererObjectPerFrame++;
 	}
+
+	//cout << "Max vertixec in models on scene: " << m_MaxVerices << endl;
 }
 const unsigned int & CEntityRenderer::GetObjectsPerFrame()
 {
@@ -97,7 +99,7 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CMod
 		if (model.UseInstacedRendering())
 		{
 			geomentry_shader.LoadUseInstancedRendering(1.f);
-			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0, entity->GetTransformMatrixes().size());
+			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0, entity->GetTransformMatrixes().size());
 		}
 		else
 		{
@@ -105,10 +107,11 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CMod
 			{
 				geomentry_shader.LoadUseInstancedRendering(0.f);
 				geomentry_shader.LoadTransformMatrix(entity->GetRelativeTransformMatrix() * mat);
-				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_INT, 0);
+				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 			}
 		}
-
+		if (m_MaxVerices < mesh.GetVertexCount())
+			m_MaxVerices = mesh.GetVertexCount();
 		m_RendererVertixesPerFrame += mesh.GetVertexCount() * entity->GetTransformMatrixes().size();
 
 		if (model.UseInstacedRendering())

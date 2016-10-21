@@ -123,14 +123,14 @@ public:
 	CLoader&	 m_Loader;
 	CEmptyLoader m_Model;
 private:
-	std::vector<unsigned int> m_Indices;
+	std::vector<unsigned short> m_Indices;
 	std::vector<float> m_Vertices;
 	std::vector<float> m_Normals;
 	std::vector<float> m_Tangens;
 	std::vector<float> m_TextureCoords;
 
 
-	float m_Size = 1000.0f;
+	float m_Size = 500.0f;
 	float m_MaxHeight = 50.0f;	
 
 	glm::vec3 m_Position;

@@ -4,8 +4,9 @@ in vec2 TexCoord0;
 in vec3 Normal0;                                                                    
 in vec3 WorldPos0;  
                                                                 
-in vec4 ShadowCoords ;
+in vec4 ShadowCoords;
 in float UseShadows;
+in float ShadowMapSize;
 
 layout (location = 0) out vec3 WorldPosOut;   
 layout (location = 1) out vec3 DiffuseOut;     
@@ -21,45 +22,36 @@ uniform sampler2D BackgroundTextureNormal;
 uniform sampler2D rTextureNormal ;
 uniform sampler2D gTextureNormal ;
 uniform sampler2D bTextureNormal ;
-uniform sampler2D ShadowMap ;           
+uniform sampler2DShadow  ShadowMap ;           
 
 uniform sampler2D RockTexture;
 uniform sampler2D RockTextureNormal;     
 
-float CalculateShadowFactorSimple()
-{
-    float objectNearestLight = texture(ShadowMap, ShadowCoords.xy).r ;
-    float lightFactor = 1.0 ;
-    if (ShadowCoords.z > objectNearestLight){
-        lightFactor = 1.0f - (ShadowCoords.w * 0.4f);
-    }
-    return lightFactor ;
 
-}
 float CalculateShadowFactor()
 {
-    float lightFactor = 1.0 ;
-    float shadowFactor = 0 ;
-    float a = 0 ;
-    for(float x=-0.0005;x<=0.0005;x+=0.0001)
-		for(float y=-0.0005;y<=0.0005;y+=0.0001)
+    float xOffset = 1.0/ShadowMapSize;
+    float yOffset = 1.0/ShadowMapSize;
+
+    float Factor = 0.0;
+
+	float a = 0;
+    for (int y = -1 ; y <= 1 ; y++) 
+	{
+        for (int x = -1 ; x <= 1 ; x++) 
 		{
-			vec2 shadow_coords = ShadowCoords.xy + vec2(x, y);
-			if( shadow_coords.x > 1 || shadow_coords.y > 1 || shadow_coords.x < 0 || shadow_coords.y < 0)
-				shadowFactor--;
-			float objectNearestLight = texture(ShadowMap, ShadowCoords.xy + vec2(x, y)).r ;  			 
-            if (ShadowCoords.z > objectNearestLight + 0.001)
-			{
-                shadowFactor += (ShadowCoords.w * 0.4f);
-            }	
-            a++ ;
-		}
-	lightFactor = 1.0f - ( shadowFactor / a) ;
-	if(lightFactor < 0)
-		lightFactor = 0;
-	if(lightFactor > 1)
-		lightFactor = 1;
-    return lightFactor ;
+            vec2 Offsets = vec2(float(x) * xOffset, float(y) * yOffset);
+            vec3 UVC = vec3(ShadowCoords.xy + Offsets, ShadowCoords.z);
+			
+			if (texture(ShadowMap, UVC) >  0.f)
+				Factor += (ShadowCoords.w * 0.4f);
+		   a++;
+        }
+    }
+	float value = (0.5 + (Factor / a)) ;
+	if( value > 1 )
+	value = 1 ;
+    return value ;
 }
 vec4 CalculateTerrainColor()
 {

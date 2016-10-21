@@ -127,6 +127,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>comctl32.lib;libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3.lib;glfw3dll.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tools\Windows\fbx_sdk\lib\vs2015\x86\release;.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -144,6 +145,7 @@
       <SubSystem>Console</SubSystem>
       <AdditionalDependencies>comctl32.lib;libfbxsdk-md.lib;FreeImage.lib;SDL2.lib;glew32.lib;glu32.lib;SDL2main.lib;SDL2test.lib;SDL2_image.lib;opengl32.lib;assimp.lib;libfreetype.lib;glfw3;glfw3dll;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>.\tools\Windows\fbx_sdk\lib\vs2015\x86\release;.\tools\Windows\Assimp\lib\x86;.\tools\Windows\GL;.\tools\Windows\SDL2-2.0.3\lib\x86;.\tools\Windows\freeImage;.\tools\Windows\freetype\lib;.\tools\Windows\GLFW3\lib-vc2015;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -191,6 +193,7 @@
     <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Utils\Float16.cpp" />
     <ClCompile Include="source\Editor\FileExplorer.cpp" />
     <ClCompile Include="source\Editor\Inspector.cpp" />
     <ClCompile Include="source\Editor\ObjectsTree.cpp" />
@@ -258,6 +261,7 @@
     <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h" />
+    <ClInclude Include="source\BaseEngine\Utils\Float16.h" />
     <ClInclude Include="source\Editor\HwndsList.h" />
     <ClInclude Include="source\Editor\IdsList.h" />
     <ClInclude Include="source\Editor\SceneEditor.h" />
