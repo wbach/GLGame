@@ -22,13 +22,23 @@ uniform sampler2D PositionMap;
 uniform sampler2D ColorMap;
 uniform sampler2D NormalMap;
 uniform sampler2D SpecularMap;
+uniform sampler2D DepthTexture;
+
 uniform vec3	  CameraPosition;
 uniform vec2	  ScreenSize;
 
 uniform int		NumberOfLights;
 uniform SLight  lights[MAX_LIGHTS];										             
 
+//Fog
+uniform vec3 SkyColour; 	
+uniform	float ViewDistance;
+const	float density = 0.0025 ;
+const	float gradient = 2.5 ;
+
+
 out vec4 FragColor;
+
 
 vec2 CalcTexCoord()
 {
@@ -132,15 +142,37 @@ vec4 CalculateColor(SMaterial material, vec3 world_pos, vec3 unit_normal)
 
 	return total_color;
 }
-										
+
+float ToZBuffer(sampler2D texture, vec2 coord)
+{
+	float zNear = 0.1f;
+	float zFar = 1000.f;
+    float z_b = texture2D(texture, coord).x;
+    float z_n = 2.0 * z_b - 1.0;
+    float z_e = 2.0 * zNear * zFar / (zFar + zNear - z_n * (zFar - zNear));
+	return z_e;
+}			
 void main()									
-{											
+{									
 	vec2 tex_coord	= CalcTexCoord();
+	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;
+
+
+	vec4 normal4	= texture(NormalMap, tex_coord);
+
 	vec3 world_pos	= texture(PositionMap, tex_coord).xyz;
 	vec3 color		= texture(ColorMap, tex_coord).xyz;
-	vec3 normal		= texture(NormalMap, tex_coord).xyz;
+	vec3 normal		= normal4.xyz;
 	vec3 specular	= texture(SpecularMap, tex_coord).xyz;
-	normal			= normalize(normal);		
+
+	float visibility;
+	float distance = z ;
+    visibility = exp(-pow((distance*((1.5 / ViewDistance))), gradient));
+    visibility = clamp(visibility, 0.0f, 1.0f) ;
+
+	if (normal4.a < .5f)
+		visibility= 1;
+
 
 	SMaterial material;
 	material.m_Ambient = color * 0.2f;
@@ -157,5 +189,5 @@ void main()
 
 	const float contrast = .5f;
 	FragColor.rgb = (FragColor.rgb - .5f) * (1.f + contrast) + .5f;
-
+	FragColor	  = mix(vec4(SkyColour, 1.f), FragColor, visibility);
 }

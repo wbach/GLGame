@@ -259,6 +259,11 @@ const vector<CLight>& CScene::GetLights() const
 	return m_Lights;
 }
 
+vector<CWaterTile>& CScene::GetWaterTiles() 
+{
+	return m_WaterTiles;
+}
+
 const string& CScene::GetName()
 { 
 	return m_Name;

@@ -193,7 +193,10 @@
     <ClCompile Include="source\BaseEngine\Shadows\ShadowFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowMapRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Shadows\ShadowShader.cpp" />
-    <ClCompile Include="source\BaseEngine\Utils\Float16.cpp" />
+    <ClCompile Include="source\BaseEngine\Water\WaterFrameBuffer.cpp" />
+    <ClCompile Include="source\BaseEngine\Water\WaterRenderer.cpp" />
+    <ClCompile Include="source\BaseEngine\Water\WaterShader.cpp" />
+    <ClCompile Include="source\BaseEngine\Water\WaterTile.cpp" />
     <ClCompile Include="source\Editor\FileExplorer.cpp" />
     <ClCompile Include="source\Editor\Inspector.cpp" />
     <ClCompile Include="source\Editor\ObjectsTree.cpp" />
@@ -261,7 +264,10 @@
     <ClInclude Include="source\BaseEngine\Shadows\ShadowFrameBuffer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowMapRenderer.h" />
     <ClInclude Include="source\BaseEngine\Shadows\ShadowShader.h" />
-    <ClInclude Include="source\BaseEngine\Utils\Float16.h" />
+    <ClInclude Include="source\BaseEngine\Water\WaterFrameBuffer.h" />
+    <ClInclude Include="source\BaseEngine\Water\WaterRenderer.h" />
+    <ClInclude Include="source\BaseEngine\Water\WaterShader.h" />
+    <ClInclude Include="source\BaseEngine\Water\WaterTile.h" />
     <ClInclude Include="source\Editor\HwndsList.h" />
     <ClInclude Include="source\Editor\IdsList.h" />
     <ClInclude Include="source\Editor\SceneEditor.h" />

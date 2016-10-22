@@ -34,4 +34,6 @@ private:
 	glm::mat4 m_Offset;
 
 	float	m_ShadowMapSize;
+
+	bool   m_IsInitialized = false;
 };

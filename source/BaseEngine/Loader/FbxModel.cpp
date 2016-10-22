@@ -12,6 +12,7 @@ CFbxModel::CFbxModel(CTextureLoader & texture_lodaer)
 , m_Time(0)
 , m_FramePerSecond(60.f)
 {
+	m_UseFakeLight = false;
 }
 
 void CFbxModel::InitModel(string file_name)

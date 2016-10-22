@@ -22,6 +22,12 @@ void CLightPassShader::GetAllUniformLocations()
 	location_ColorMap = GetUniformLocation("ColorMap");
 	location_NormalMap = GetUniformLocation("NormalMap");
 	location_SpecularMap = GetUniformLocation("SpecularMap");
+	location_DepthTexture = GetUniformLocation("DepthTexture");
+	
+	location_SkyColour = GetUniformLocation("SkyColour");
+
+	location_ViewDistance = GetUniformLocation("ViewDistance");
+
 	// Lights 
 	location_NumberOfLights = GetUniformLocation("NumberOfLights");
 	for (int i = 0; i < MAX_LIGHTS; i++)
@@ -95,4 +101,14 @@ void CLightPassShader::ConnectTextureUnits() const
 	LoadValue(location_ColorMap, 1);
 	LoadValue(location_NormalMap, 2);
 	LoadValue(location_SpecularMap, 3);
+	LoadValue(location_DepthTexture, 4);
+	
+}
+void CLightPassShader::LoadSkyColour(const glm::vec3& color) const
+{
+	LoadValue(location_SkyColour, color);
+}
+void CLightPassShader::LoadViewDistance(const float& distance) const
+{
+	LoadValue(location_ViewDistance, distance);
 }

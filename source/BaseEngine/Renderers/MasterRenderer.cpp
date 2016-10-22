@@ -1,9 +1,14 @@
 #include "MasterRenderer.h"
 
 void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, 
-	const float& fov, const float& near, const float& far, float rendering_resolution_modifier, float shadow_map_size, float shadows_distance)
+	const float& fov, const float& near, const float& far, float rendering_resolution_modifier, float shadow_map_size, float shadows_distance,
+	float water_quality, glm::vec2 reflection_size, glm::vec2 refraction_size,
+	float view_distance
+	)
 {
 	m_WindowSize = window_size;
+
+	m_ViewDistance = view_distance + 60;
 
 	m_ShadowMapSize = shadow_map_size;
 	m_ShadowsDistance = shadows_distance;
@@ -19,15 +24,19 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	m_EntityGeometryPassShader.Init();
 	m_EntityGeometryPassShader.Start();
 	m_EntityGeometryPassShader.LoadProjectionMatrix(projection_matrix);
+	m_EntityGeometryPassShader.LoadViewDistance(view_distance + 50);
 	m_EntityGeometryPassShader.Stop();
 
 	m_TerrainGeometryPassShader.Init();
 	m_TerrainGeometryPassShader.Start();
 	m_TerrainGeometryPassShader.LoadProjectionMatrix(projection_matrix);
+	m_TerrainGeometryPassShader.LoadViewDistance(view_distance +50);
 	m_TerrainGeometryPassShader.Stop();
 
 	m_LightPassShader.Init();
 	m_LightPassShader.Start();
+	m_LightPassShader.LoadSkyColour(glm::vec3(0.8));
+	m_LightPassShader.LoadViewDistance(view_distance);
 	m_LightPassShader.LoadProjectionMatrix(projection_matrix);
 	m_LightPassShader.Stop();
 
@@ -36,7 +45,11 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	m_SkyBoxRenderer.Init(projection_matrix, far);
 	m_ShadowMapRenderer.Init(camera, window_size, fov, near, shadow_map_size, shadows_distance);
 
+	m_ReflectionSize = reflection_size*  m_ResoultionMultipler;
+	m_RefractionSize = refraction_size*  m_ResoultionMultipler;
+	m_WaterQuality	 = water_quality;
 
+	m_WaterRenderer.Init(window_size, projection_matrix, m_ReflectionSize , m_RefractionSize, m_WaterQuality);
 }
 
 void CMasterRenderer::CleanUp()
@@ -52,6 +65,7 @@ void CMasterRenderer::CleanUp()
 	if (m_Fbo != 0) 
 		glDeleteFramebuffers(1, &m_Fbo);	
 
+	m_WaterRenderer.CleanUp();
 	m_EntityGeometryPassShader.CleanUp();
 	m_TerrainGeometryPassShader.CleanUp();
 	m_LightPassShader.CleanUp();
@@ -72,11 +86,60 @@ void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene, const bool& shadows)
 	glDepthMask(GL_TRUE);
 	m_ShadowMapRenderer.Render(scene);
 }
+void CMasterRenderer::RenderWaterTextures(shared_ptr<CScene>& scene, const bool& shadows)
+{
+	glEnable(GL_CLIP_DISTANCE0);
+	m_WaterRenderer.SetIsRender(false);
 
+	for (const CWaterTile& tile : scene->GetWaterTiles())
+	{		
+		glm::vec3 camera_position = scene->GetCamera()->GetPosition();
+		float distance = 2 * (camera_position.y - tile.GetPosition().y);
+		camera_position.y -= distance;
+		scene->GetCamera()->SetPosition(camera_position);
+		scene->GetCamera()->InvertPitch();
+		scene->GetCamera()->UpdateViewMatrix();
+		m_ClipPlane = glm::vec4(0, 1, 0, -tile.GetPosition().y + 0.0f);
+		
+		m_WaterRenderer.ChangeToReflectionViewPort();
+		GeometryPass(scene, shadows);
+		LightPass(scene, m_WindowSize, m_WaterRenderer.GetReflectionFrameBuffer());
+		m_WaterRenderer.UnbindCurrentFrameBuffer();
+
+		camera_position.y += distance;
+		scene->GetCamera()->SetPosition(camera_position);
+		scene->GetCamera()->InvertPitch();
+		scene->GetCamera()->UpdateViewMatrix();
+
+		m_WaterRenderer.ChangeToRefractionViewPort();
+		m_ClipPlane = glm::vec4(0, 1, 0, tile.GetPosition().y - 0.0f);
+		GeometryPass(scene, shadows);
+		LightPass(scene, m_WindowSize, m_WaterRenderer.GetRefractionFrameBuffer());		
+
+		m_WaterRenderer.UnbindCurrentFrameBuffer();
+	}
+	m_WaterRenderer.CopyTextureDepthTexture(m_Fbo, m_DepthTexture, m_RefractionSize);
+
+	m_WaterRenderer.SetIsRender(true);
+	glDisable(GL_CLIP_DISTANCE0);
+}
+void CMasterRenderer::Render(shared_ptr<CScene>& scene, const bool& shadows)
+{
+	if (m_WaterQuality > 0.5f)
+	RenderWaterTextures(scene, shadows);
+
+	m_ClipPlane = glm::vec4(0, 1, 0, 100000);
+
+	ShadowPass(scene, shadows);
+	glViewport(0, 0, static_cast<int>(m_ResoultionMultipler*m_WindowSize.x), static_cast<int>(m_ResoultionMultipler *m_WindowSize.y));
+	GeometryPass(scene, shadows);
+	glViewport(0, 0, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	LightPass(scene, m_WindowSize, 0);
+
+}
 void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadows)
 {
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);
-	glViewport(0, 0, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler * static_cast<int>(m_WindowSize.y));
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);	
 	glDepthMask(GL_TRUE);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -101,18 +164,20 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	m_TerrainGeometryPassShader.Stop();
 
 	// Entities Render
-
 	m_EntityGeometryPassShader.Start();
 	if (shadows)
 	{
 		glActiveTexture(GL_TEXTURE2);
 		glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
 		m_EntityGeometryPassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
-	}	
+	}
+	m_EntityGeometryPassShader.LoadClipPlane(m_ClipPlane);
 	m_EntityGeometryPassShader.LoadShadowValues(static_cast<float>(shadows),  m_ShadowsDistance, m_ShadowMapSize);
 	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
+
+	m_WaterRenderer.Render(scene, 0.001);
 
 	m_RendererObjectPerFrame = m_EntityRenderer.GetObjectsPerFrame() + m_TerrainRenderer.GetObjectsPerFrame();
 	m_RendererVertixesPerFrame = m_EntityRenderer.GetVertexPerFrame() + m_TerrainRenderer.GetVertexPerFrame();
@@ -121,12 +186,10 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 
 	glDisable(GL_DEPTH_TEST);
 
-	glEnable(GL_BLEND);
-
-	glViewport(0, 0, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	glEnable(GL_BLEND);	
 }
 
-void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
+void CMasterRenderer::LightPass(shared_ptr<CScene>& scene, glm::vec2 window_size, GLuint target)
 {	
 	if (m_DebugRenderTextures)
 	{
@@ -134,18 +197,20 @@ void CMasterRenderer::LightPass(shared_ptr<CScene>& scene)
 		return;
 	}
 
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target);
 
 	for (unsigned int i = 0; i < BufferTexture::Type::COUNT ; i++) 
 	{
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, m_Textures[BufferTexture::Type::POSITION + i]);
 	}
+	glActiveTexture(GL_TEXTURE0 + BufferTexture::Type::COUNT);
+	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
 
-	glClear(GL_COLOR_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	m_LightPassShader.Start();
-	m_LightPassShader.LoadScreenSize(m_WindowSize);
+	m_LightPassShader.LoadScreenSize(window_size);
 	m_LightPassShader.LoadViewMatrix(scene->GetViewMatrix());
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(1.0));
 	m_LightPassShader.LoadTransformMatrix(transformation_matrix);
@@ -212,12 +277,12 @@ int CMasterRenderer::CreateBuffers()
 
 	// Create the gbuffer textures
 	glGenTextures(BufferTexture::Type::COUNT, m_Textures);
-	glGenTextures(1, &m_DepthTexture);
+	
 
 	for (unsigned int i = 0; i < BufferTexture::Type::COUNT; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Textures[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB32F, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler*static_cast<int>(m_WindowSize.y), 0, GL_RGB, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(m_ResoultionMultipler * m_WindowSize.x), static_cast<int>(m_ResoultionMultipler*m_WindowSize.y), 0, GL_RGBA, GL_FLOAT, NULL);
 		if (!m_DebugRenderTextures)
 		{
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -227,9 +292,13 @@ int CMasterRenderer::CreateBuffers()
 	}
 
 	// depth
+	glGenTextures(1, &m_DepthTexture);
 	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32F, m_ResoultionMultipler*static_cast<int>(m_WindowSize.x), m_ResoultionMultipler*static_cast<int>(m_WindowSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, static_cast<int>(m_ResoultionMultipler*m_WindowSize.x), static_cast<int>(m_ResoultionMultipler*m_WindowSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_DepthTexture, 0);
+	//glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
 
 	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
 	glDrawBuffers(4, DrawBuffers);
@@ -244,6 +313,13 @@ int CMasterRenderer::CreateBuffers()
 
 	// restore default FBO
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
+	glGenTextures(1, &m_TestDepthMap);
+	glBindTexture(GL_TEXTURE_2D, m_TestDepthMap);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
 
 	return 1;
 }

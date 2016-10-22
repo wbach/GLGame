@@ -34,7 +34,9 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 	//renderStartSeries();
 	LoadScene();
 	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, 
-						 m_Fov, m_NearPlane ,m_FarPlane, m_RenderingResolutionModifier, m_ShadowMapSize, m_ShadowsDistance);
+						 m_Fov, m_NearPlane ,m_FarPlane, m_RenderingResolutionModifier, m_ShadowMapSize, m_ShadowsDistance,
+						m_WaterQuality, m_ReflectionSize, m_RefractionSize, m_ViewDistance
+						);
 }
 void CGame::Uninitialize()
 {
@@ -109,9 +111,7 @@ void CGame::GameLoop()
 			GetCurrentScene()->m_PhysicsScene.Update(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 
 
-			m_MasterRenderer.ShadowPass(m_CurrScene, m_IsShadows);
-			m_MasterRenderer.GeometryPass(m_CurrScene, m_IsShadows);
-			m_MasterRenderer.LightPass(m_CurrScene);
+			m_MasterRenderer.Render(m_CurrScene, m_IsShadows);
 			//m_MasterRenderer.DebugRenderTextures();
 
 			m_GuiRenderer.Render(m_CurrScene->GetGui());
@@ -266,6 +266,8 @@ int CGame::ReadConfiguration(string file_name)
 		if (var.compare("SoundVolume") == 0)		m_SoundVolume	= Get::Float(value);
 		if (var.compare("RenderingResolution") == 0)	m_RenderingResolutionModifier = Get::Float(value);
 		if (var.compare("WaterQuality") == 0)		m_WaterQuality	= Get::Float(value);
+		if(var.compare("WaterReflectionResolution") == 0)	m_ReflectionSize = Get::Vector2d(value);
+		if(var.compare("WaterRefractionResolution") == 0)	m_RefractionSize = Get::Vector2d(value);
 		if (var.compare("TextureMaxResolution") == 0)	m_MaxTextureResolution = Get::Vector2d(value);
 		if (var.compare("Shadows") == 0)			m_IsShadows		= Get::Boolean(value);
 		if (var.compare("ShadowsDistance") == 0)	m_ShadowsDistance = Get::Float(value);

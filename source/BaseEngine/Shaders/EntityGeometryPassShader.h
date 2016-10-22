@@ -12,6 +12,9 @@ public:
 	void LoadTransformMatrix(const glm::mat4&) const;
 	void LoadProjectionMatrix(const glm::mat4&) const;
 	void LoadViewMatrix(const glm::mat4&) const;
+	
+	void LoadViewDistance(const float& distance) const;
+	void LoadUseFakeLight(const float& use) const;
 
 	void LoadUseInstancedRendering(const float& use) const;
 
@@ -21,6 +24,7 @@ public:
 	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
 
 	void LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const;
+	void LoadClipPlane(const glm::vec4 clip_plane = glm::vec4(0, 1, 0, 100000)) const;
 private:
 	int location_TransformationMatrix;
 	int location_ProjectionMatrix;
@@ -42,4 +46,8 @@ private:
 	int location_MaterialSpecular;
 
 	int location_IsInstancedRender;
+
+	int location_ClipPlane;
+	int location_ViewDistance;
+	int location_UseFakeLighting;
 };

@@ -10,6 +10,7 @@ CModel::CModel()
 	, m_BoundingCenter(0)
 	, m_BoundingSize(0)
 {
+	m_UseFakeLight = false;
 }
 
 void CModel::CreateTransformsVbo(std::vector<glm::mat4>& m)

@@ -17,7 +17,10 @@ public:
 	void LoadLightNumber(const int& i) const;
 	void LoadLight(const CLight& light, const int& i) const;
 	void LoadCameraPosition(const glm::vec3& camera_position) const;
-
+	
+	void LoadSkyColour(const glm::vec3& color) const;
+	void LoadViewDistance(const float& distance) const;
+	
 	void LoadScreenSize(glm::vec2 screen_size);
 	void ConnectTextureUnits() const;
 	
@@ -33,8 +36,13 @@ private:
 	int location_ColorMap;
 	int location_NormalMap;
 
+	int location_DepthTexture;
+
 	int location_SpecularMap;
 	int location_CameraPosition;
+
+	int location_SkyColour;
+	int location_ViewDistance;
 
 	int location_NumberOfLights;
 	std::vector<int> location_LightType;

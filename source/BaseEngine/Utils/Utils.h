@@ -284,5 +284,4 @@ namespace Utils
 			s += std::to_string(m[y][0]) + " " + std::to_string(m[y][1]) + " " + std::to_string(m[y][2]) + " " + std::to_string(m[y][3]) + "\n";
 		return s;
 	}
-	
 }

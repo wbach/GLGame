@@ -104,11 +104,14 @@ public:
 	virtual void CleanUp();
 
 	glm::mat4 CalculateNormalizedMatrix(float w, float h, float z);
+	bool m_UseFakeLight;
 protected:
 	string			 m_Name;
 	vector<CMesh>	 m_Meshes;
 	LoaderType::Type m_LoaderType;
 	
+	
+
 	bool		m_InstancedRendering;
 	//Bounding for all meshes in model
 	glm::vec3	m_BoundingBoxMin,

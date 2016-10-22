@@ -15,8 +15,10 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 	location_ViewMatrix				= GetUniformLocation("ViewMatrix");
 
 	location_IsInstancedRender = GetUniformLocation("IsInstancedRender");
-
-	location_UseNormalMap	= GetUniformLocation("IsUseNormalMap");
+	location_ClipPlane = GetUniformLocation("ClipPlane");
+	
+	location_UseFakeLighting = GetUniformLocation("IsUseFakeLighting");
+	location_UseNormalMap	 = GetUniformLocation("IsUseNormalMap");
 	//Textures
 	location_ModelTexture	= GetUniformLocation("gColorMap");
 	location_NormalMap		= GetUniformLocation("NormalMap");
@@ -30,6 +32,9 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 	location_MaterialAmbient  = GetUniformLocation("ModelMaterial.m_Ambient");
 	location_MaterialDiffuse  = GetUniformLocation("ModelMaterial.m_Diffuse");
 	location_MaterialSpecular = GetUniformLocation("ModelMaterial.m_Specular");
+
+	//Skip render
+	location_ViewDistance	= GetUniformLocation("ViewDistance");
 }
 void CEntityGeometryPassShader::ConnectTextureUnits()
 {
@@ -83,4 +88,17 @@ void CEntityGeometryPassShader::LoadToShadowSpaceMatrix(const glm::mat4& matrix)
 void CEntityGeometryPassShader::LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const
 {
 	LoadValue(location_ShadowVariables, glm::vec3(is, distance - 5, shadow_map_size));
+}
+
+void CEntityGeometryPassShader::LoadClipPlane(const glm::vec4 clip_plane) const
+{
+	LoadValue(location_ClipPlane, clip_plane);
+}
+void CEntityGeometryPassShader::LoadViewDistance(const float& distance) const
+{
+	LoadValue(location_ViewDistance, distance);
+}
+void CEntityGeometryPassShader::LoadUseFakeLight(const float& use) const
+{
+	LoadValue(location_UseFakeLighting, use);
 }

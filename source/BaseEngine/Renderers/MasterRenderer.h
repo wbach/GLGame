@@ -8,6 +8,8 @@
 #include "./TerrainRenderer.h"
 #include "../Engine/Scene.h"
 #include "../Engine/OpenGLRenderer.h"
+#include "../Water/WaterRenderer.h"
+
 namespace BufferTexture
 {
 	enum Type
@@ -24,10 +26,16 @@ class CMasterRenderer
 public:
 	void ShadowPass(shared_ptr<CScene>& scene, const bool& shadows);
 	void GeometryPass(shared_ptr<CScene>& scene, const bool& shadows);
-	void LightPass(shared_ptr<CScene>& scene);
+	void LightPass(shared_ptr<CScene>& scene, glm::vec2 window_size, GLuint target);
+	void RenderWaterTextures(shared_ptr<CScene>& scene, const bool& shadows);
+	
+	void Render(shared_ptr<CScene>& scene, const bool& shadows);
 
 	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix,
-		const float& fov, const float& near, const float& far, float rendering_resolution_modifier = 1.f, float shadow_map_size = 2048.f, float shadows_distance = 35);
+		const float& fov, const float& near, const float& far, float rendering_resolution_modifier = 1.f, float shadow_map_size = 2048.f, float shadows_distance = 35,
+		float water_quality = 1, glm::vec2 reflection_size = glm::vec2(320, 240), glm::vec2 refraction_size = glm::vec2(640, 480),
+		float view_distance = 250
+	);
 	void CleanUp();
 
 	void DebugRenderTextures();
@@ -43,6 +51,9 @@ private:
 	int CreateBuffers();
 	void SetReadBuffer(BufferTexture::Type TextureType);
 
+	GLuint m_TestDepthMap;
+
+	CWaterRenderer	   m_WaterRenderer;
 	CTerrainRenderer   m_TerrainRenderer;
 	CEntityRenderer    m_EntityRenderer;
 	CSkyBoxRenderer    m_SkyBoxRenderer;
@@ -51,6 +62,13 @@ private:
 	CEntityGeometryPassShader	m_EntityGeometryPassShader;
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
 	CLightPassShader			m_LightPassShader;
+
+	glm::vec4	m_ClipPlane;
+	glm::vec2	m_ReflectionSize;
+	glm::vec2	m_RefractionSize;
+	float		m_WaterQuality;
+
+	float		m_ViewDistance;
 
 	float		m_ShadowMapSize;
 	float		m_ShadowsDistance;

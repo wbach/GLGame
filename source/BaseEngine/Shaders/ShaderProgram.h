@@ -41,4 +41,6 @@ private:
 	int m_FragmentShaderID;
 	int m_TesselationControlShaderID;
 	int m_TesselationEvaluationShaderID;
+
+	bool   m_IsInitialized = false;
 };

@@ -76,6 +76,7 @@ void CTerrainRenderer::BindTextures(const CTerrain &terrain)
 void CTerrainRenderer::UnBindTextureModel()
 {
 	Utils::EnableCulling();
+	glDisable(GL_TEXTURE_2D);
 	glDisableVertexAttribArray(3);
 	glDisableVertexAttribArray(2);
 	glDisableVertexAttribArray(1);

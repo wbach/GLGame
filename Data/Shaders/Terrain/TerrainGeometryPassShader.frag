@@ -9,8 +9,8 @@ in float UseShadows;
 in float ShadowMapSize;
 
 layout (location = 0) out vec3 WorldPosOut;   
-layout (location = 1) out vec3 DiffuseOut;     
-layout (location = 2) out vec3 NormalOut;     
+layout (location = 1) out vec4 DiffuseOut;     
+layout (location = 2) out vec4 NormalOut;     
 layout (location = 3) out vec3 SpecularOut;    
 
 uniform sampler2D BlendMap ;									
@@ -27,6 +27,9 @@ uniform sampler2DShadow  ShadowMap ;
 uniform sampler2D RockTexture;
 uniform sampler2D RockTextureNormal;     
 
+		
+in float Distance;
+uniform float ViewDistance;
 
 float CalculateShadowFactor()
 {
@@ -77,10 +80,15 @@ vec4 CalculateTerrainColor()
 }
 											
 void main()									
-{		
+{	
+	if (Distance > ViewDistance)
+	discard;
+
 	float shadow_factor = UseShadows > 0.5f ? CalculateShadowFactor() : 1.f;									
 	WorldPosOut     = WorldPos0;					
-	DiffuseOut      = CalculateTerrainColor().xyz * shadow_factor;	
-	NormalOut       = normalize(Normal0);					
+	DiffuseOut      = CalculateTerrainColor() * shadow_factor;	
+
+	NormalOut       = vec4(normalize(Normal0), 1.f); 		
+	
 	SpecularOut     = vec3(0.f);				
 }

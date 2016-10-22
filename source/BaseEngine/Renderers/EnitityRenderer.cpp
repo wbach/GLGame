@@ -29,7 +29,7 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 			continue;
 
 		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
-		{
+		{			
 			if (entity->GetIsCullingChildren())
 			if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
 				continue;
@@ -60,6 +60,9 @@ const unsigned int & CEntityRenderer::GetVertexPerFrame()
 }
 void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CModel& model, const CEntityGeometryPassShader& geomentry_shader)
 {
+	geomentry_shader.LoadUseFakeLight(static_cast<float>(model.m_UseFakeLight));
+
+
 	for (const CMesh& mesh : model.GetMeshes()) 
 	{
 		glBindVertexArray(mesh.GetVao());
@@ -114,6 +117,7 @@ void CEntityRenderer::RenderEntity(const shared_ptr<CEntity>& entity, const CMod
 			m_MaxVerices = mesh.GetVertexCount();
 		m_RendererVertixesPerFrame += mesh.GetVertexCount() * entity->GetTransformMatrixes().size();
 
+		glDisable(GL_TEXTURE_2D);
 		if (model.UseInstacedRendering())
 			glDisableVertexAttribArray(4);
 		glDisableVertexAttribArray(3);

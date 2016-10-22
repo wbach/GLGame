@@ -234,7 +234,16 @@
     <ClCompile Include="source\BaseEngine\Camera\Frustrum.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="source\BaseEngine\Utils\Float16.cpp">
+    <ClCompile Include="source\BaseEngine\Water\WaterFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Water\WaterTile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Water\WaterShader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Water\WaterRenderer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -434,7 +443,16 @@
     <ClInclude Include="source\BaseEngine\Camera\Frustrum.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="source\BaseEngine\Utils\Float16.h">
+    <ClInclude Include="source\BaseEngine\Water\WaterTile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Water\WaterFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Water\WaterRenderer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Water\WaterShader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

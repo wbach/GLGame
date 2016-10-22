@@ -156,6 +156,15 @@ void CTerrain::CreateTerrain()
 			}
 		}
 	}
+
+	//for (unsigned short i = 0 ; i < m_Indices.size() ; i+=3)
+	//{/*
+	//	SFace tmp = CreateFace(m_Indices[i], m_Indices[i+1], m_Indices[i+2], m_Vertices, m_TextureCoords);
+	//	glm::vec3 tang = CalculateTangents(tmp);
+	//	m_Tangens.push_back(tang.x);
+	//	m_Tangens.push_back(tang.y);
+	//	m_Tangens.push_back(tang.z);*/
+	//}
 	/*for (int gz = 0; gz <m_VertexCount - 1; gz++)
 	{
 		for (int gx = 0; gx <m_VertexCount - 1; gx++)
@@ -286,13 +295,6 @@ const float CTerrain::GetHeightofTerrain(float worldX, float worldZ) const
 			glm::vec3(0, m_Heights[grid_x][grid_z + 1], 1),glm::vec2(x_coord, z_coord));
 	}
 	return answer;
-}
-
-void CTerrain::FiltrElementOffTerrain()
-{
-	vector<SElement>::iterator iter;
-	for(iter = m_ElementsMap.begin(); iter != m_ElementsMap.end() ; iter++)
-			iter->filtr();
 }
 
 const float& CTerrain::GetSize() const
@@ -439,103 +441,8 @@ bool CompareColour(RGBQUAD colour,BYTE r, BYTE g, BYTE b)
 }
 void CTerrain::LoadFloora(string flooraMap)
 {
-	m_FlooraMap = flooraMap;
-	FREE_IMAGE_FORMAT formato = FreeImage_GetFileType(flooraMap.c_str(), 0);
 
-	if(formato  == FIF_UNKNOWN) { printf( "%s : wrong image format or file does not exist.",flooraMap.c_str());return;}
-	FIBITMAP* imagen2 = FreeImage_Load(formato, flooraMap.c_str());
-	if(!imagen2) {printf( "%s : wrong image format or file does not exist.",flooraMap.c_str());return;}
-	FIBITMAP* imagen = FreeImage_ConvertTo32Bits(imagen2);
-	FreeImage_Unload(imagen2);
-	int floraHeight =  FreeImage_GetHeight(imagen);
-	int floraWidth = FreeImage_GetWidth(imagen);
-	m_FloraSize = static_cast<float>(floraHeight);
-
-	for (int i = 0; i < floraWidth; i++)
-	{
-		for (int j = 0; j < floraHeight; j++)
-		{
-			RGBQUAD colour;
-			FreeImage_GetPixelColor(imagen,i,j,&colour) ;
-
-			if(CompareColour(colour,0,0,0)) continue;
-			if(CompareColour(colour,255,0,0)){
-				AddElementToList(glm::vec3(255.0f, .0f, .0f), 0, static_cast<float>(floraHeight), i, j, 25);
-			 }
-			if(CompareColour(colour,0,0,255)){
-				AddElementToList(glm::vec3(.0f, .0f, 255.0f), 1, static_cast<float>(floraHeight), i, j, 30);
-			}
-			if(CompareColour(colour,0,255,0)){
-				AddElementToList(glm::vec3(0.0f, 255.0f, .0f), 2, static_cast<float>(floraHeight), i, j, 10);
-			}
-		}
-	}
-	FreeImage_Unload(imagen);
 	return ;
-}
-
-
-
-vector<SElement> CTerrain::GetElementsMap()
-{
-	return m_ElementsMap;
-}
-
-void CTerrain::AddElementToList(glm::vec3 colorOnMap,int value, float floraSize, int i, int j, float distanceFilter)
-{
-	float xx = i * ((float)m_Size/floraSize) ;
-	float zz = j * ((float)m_Size/floraSize) ;
-	float height = GetHeightofTerrain(xx,zz);
-	bool isElement = false ;
-	SElement *a = FindElement(value,isElement);
-	if (!isElement)
-	{
-		SElement nowy;
-		nowy.flitrDistance  = distanceFilter ;
-		nowy.value = value ;
-		nowy.colorOnMap = colorOnMap ;
-		nowy.positions.push_back(glm::vec3(xx,height,zz));
-		m_ElementsMap.push_back(nowy);
-	}
-	else
-		a->positions.push_back(glm::vec3(xx,height,zz));
-}
-
-SElement* CTerrain::FindElement(int value ,bool &finded)
-{
-	SElement* element = NULL;
-	finded = false;
-	vector<SElement>::iterator it;
-	for (it = m_ElementsMap.begin() ; it != m_ElementsMap.end() ; ++it)
-	{
-		if ((*it).value == value)
-		{
-			element = &*it;
-			finded = true ;
-			return element;
-		}
-	}
-	return element;
-}
-
-void CTerrain::SaveCorrectedFloraMap()
-{
-	FIBITMAP *bitmap = FreeImage_Allocate(static_cast<int>(m_FloraSize), static_cast<int>(m_FloraSize), 24);
-	for ( SElement element : m_ElementsMap)
-	{
-		for( glm::vec3 pos : element.positions)
-		{
-			int i = static_cast<int>( floor( pos.x / ((float)m_Size / m_FloraSize) ) );
-			int j = static_cast<int>( floor( pos.z / ((float)m_Size / m_FloraSize) ) );
-
-			RGBQUAD color;
-			color.rgbRed = static_cast<BYTE>(element.colorOnMap.x) ;
-			color.rgbGreen = static_cast<BYTE>(element.colorOnMap.y);
-			color.rgbBlue = static_cast<BYTE>(element.colorOnMap.z);
-			FreeImage_SetPixelColor(bitmap, i, j, &color);
-		}
-	}
-	FreeImage_Save(FIF_BMP, bitmap, m_FlooraMap.c_str(), 0);
 }
 
 void CTerrain::SetName(std::string name) 

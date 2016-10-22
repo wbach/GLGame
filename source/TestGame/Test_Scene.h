@@ -29,14 +29,18 @@ public:
 	}
 	int Initialize() override
 	{
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(100, 100));
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(100, 110));
 		songo->SetName("Player");
 		unsigned int model_id = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true);
 		unsigned int model_id2 = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true);
-		glm::mat4 nm = m_Loader.m_Models[model_id]->CalculateNormalizedMatrix(0, 1.8f, 0);
+		glm::vec3 normalized_size(0, 1.8f, 0);
+		glm::mat4 nm = m_Loader.m_Models[model_id]->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
+		m_Loader.m_Models[model_id]->m_UseFakeLight = true;
+		m_Loader.m_Models[model_id2]->m_UseFakeLight = true;
 		songo->SetNormalizedMatrix(nm);
 		songo->AddModel(model_id, "Data/Meshes/Garen/garen_idle.fbx");
 		songo->AddModel(model_id2, "Data/Meshes/Garen/garen_idle.fbx");
+		songo->SetNormalizedSize(normalized_size);
 		//m_IsSpecial - enity created in code not from file
 		songo->m_IsSpecial = true;
 		songo->m_RigidBody = CRigidbody(SSphere(glm::vec3(0), 5));
@@ -49,18 +53,21 @@ public:
 		else
 			setFirstCamera();
 		
-
+		normalized_size = glm::vec3(0, 1.f, 0);
 		shared_ptr<CEntity> cube = CreateEntityFromFile("Data/Meshes/Cube.obj", false, CreatePositionVector(200 , 350 , 10));
 		cube->SetName("Test physics cube");
 		cube->m_IsSpecial = true;
+		cube->SetNormalizedSize(normalized_size);
 		cube->m_RigidBody = CRigidbody(SAabb(glm::vec3(-1, -1, -1) * 5.f, glm::vec3(1, 1, 1) * 5.f));
 		AddEntity(cube, true);
 		m_PhysicsEntities.push_back(cube);
 		m_PhysicsScene.AddRigidBody(&cube->m_RigidBody);
 
-		
+		GLuint water_dudv	= m_Loader.LoadTexture("Data/Textures/waterDUDV.png");
+		GLuint water_normal = m_Loader.LoadTexture("Data/Textures/waternormal.png");
 
-	
+		CWaterTile water(glm::vec3(100, 55, 110), 100, 0.3, water_dudv, water_normal, glm::vec4(43.0f/255.f, 106.f / 255.f, 134.f/255.f, 0.2));
+		m_WaterTiles.push_back(water);	
 		
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);

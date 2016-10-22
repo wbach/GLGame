@@ -9,6 +9,7 @@ void CShaderProgram::InitShaderProgram(char* vertex_shader_file, char* fragment_
 	BindAttributes();
 	glLinkProgram(m_ProgramID);
 	glValidateProgram(m_ProgramID);
+	m_IsInitialized = true;
 }
 void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragment_shader_file, char * tesselation_shader_file, char * tesselation_evaluation_shader_file)
 {	
@@ -24,6 +25,7 @@ void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragmen
 	BindAttributes();
 	glLinkProgram(m_ProgramID);
 	glValidateProgram(m_ProgramID);
+	m_IsInitialized = true;
 }
 void CShaderProgram::LoadFile(const char* fn, std::string& str)
 {
@@ -95,7 +97,10 @@ void CShaderProgram::Stop() const
 {
 	glUseProgram(0);
 }
-void CShaderProgram::CleanUp() {
+void CShaderProgram::CleanUp() 
+{
+	if (!m_IsInitialized)
+		return;
 	Stop();
 	glDetachShader(m_ProgramID, m_VertexShaderID);
 	glDetachShader(m_ProgramID, m_FragmentShaderID);

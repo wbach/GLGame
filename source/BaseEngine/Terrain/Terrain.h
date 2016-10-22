@@ -7,41 +7,7 @@
 #include "../Utils/Utils.h"
 #include <math.h>
 #include "glm/glm.hpp"
-
-
 static const float MAX_PIXEL_COLOUR = 256.0f * 256.0f * 256.0f;
-
-struct SElement
-{
-	int value ;
-	float flitrDistance;
-	vector<glm::vec3> positions;
-	glm::vec3 colorOnMap;
-
-	void filtr(){
-		vector<glm::vec3> tmp ;
-		printf("Size before : %i\n", positions.size());
-		vector<glm::vec3>::iterator iter;
-		vector<glm::vec3>::iterator it;
-
-		for (it = positions.begin() ; it != positions.end() ; it++)
-		{
-			bool add = true ;
-			for (iter = tmp.begin() ; iter != tmp.end() ; iter++)
-			{
-				float d = glm::length(*iter - *it);
-				if (d < flitrDistance)
-				{
-					add = false ; break ;
-				}
-			}
-			if(add)
-				tmp.push_back(*it);			
-		}
-		positions = tmp ;
-		printf("Size after : %i\n", positions.size());
-	}
-};
 
 class CTerrain
 {	
@@ -62,25 +28,20 @@ public:
 	}
 	
 	void CleanUp();
-	void LoadFloora(string flooraMap) ;
+	
+	void LoadFloora(string flora_file) ;
 	
 	void CreateTerrainVertexes(int x_start, int y_start, int width, int height);
 
-	void GenerateTerrainMap(CLoader &loader,string heightMap);
 	void CreateTerrain();
-
+	void GenerateTerrainMap(CLoader &loader,string heightMap);
 	glm::vec3 CalculateNormalMap(int x, int z, FIBITMAP*  image);
 	float GetHeightMap(int x, int z, FIBITMAP*  image);
 
 	const float GetHeightofTerrain(glm::vec2 posXZ) const;
 	const float GetHeightofTerrain(float worldX, float worldZ) const;
 	
-	void FiltrElementOffTerrain();
 	const float& GetSize() const;
-	vector<SElement> GetElementsMap();
-	void AddElementToList(glm::vec3 colorOnMap,int value, float floraSize, int i, int j, float distanceFilter);
-	SElement* FindElement(int value ,bool &finded);
-	void SaveCorrectedFloraMap();
 
 	const int& GetId() { return m_Id; }
 
@@ -94,6 +55,7 @@ public:
 	void PaintBlendMap(glm::vec3 point);
 	void PaintHeightMap(glm::vec3 point);
 
+	vector<shared_ptr<CEntity>> m_FloraObjects;
 	vector<shared_ptr<CEntity>> m_TerrainEntities;
 	STransform m_Transform;
 	GLuint m_BlendMap;
@@ -136,8 +98,6 @@ private:
 	glm::vec3 m_Position;
 
 	string m_Name;
-
-	vector<SElement> m_ElementsMap;
 
 	int m_VertexCount;
 	float** m_Heights;

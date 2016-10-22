@@ -11,16 +11,16 @@
 	</Camera>
 	<SkyBox>
 		<DayTextures>
-			<RightTexture>Data/Skybox/Calm/right.jpg</RightTexture>
-			<LeftTexture>Data/Skybox/Calm/left.jpg</LeftTexture>
+			<RightTexture>Data/Skybox/Calm/left.jpg</RightTexture>
+			<LeftTexture>Data/Skybox/Calm/right.jpg</LeftTexture>
 			<TopTexture>Data/Skybox/Calm/top.jpg</TopTexture>
 			<BottomTexture>Data/Skybox/Calm/bottom.jpg</BottomTexture>
 			<BackTexture>Data/Skybox/Calm/front.jpg</BackTexture>
 			<FrontTexture>Data/Skybox/Calm/back.jpg</FrontTexture>
 		</DayTextures>
 		<NightTextures>
-			<RightTexture>Data/Skybox/Calm/right.jpg</RightTexture>
-			<LeftTexture>Data/Skybox/Calm/left.jpg</LeftTexture>
+			<RightTexture>Data/Skybox/Calm/left.jpg</RightTexture>
+			<LeftTexture>Data/Skybox/Calm/right.jpg</LeftTexture>
 			<TopTexture>Data/Skybox/Calm/top.jpg</TopTexture>
 			<BottomTexture>Data/Skybox/Calm/bottom.jpg</BottomTexture>
 			<BackTexture>Data/Skybox/Calm/front.jpg</BackTexture>

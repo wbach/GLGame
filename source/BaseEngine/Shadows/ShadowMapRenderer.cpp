@@ -8,6 +8,7 @@ CShadowMapRenderer::CShadowMapRenderer()
 
 void CShadowMapRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size, float shadows_distance)
 {
+	m_IsInitialized = true;
 	m_ShadowMapSize = shadow_map_size;
 	m_ShadowShader.Init();
 	m_ShadowFbo.Init(glm::vec2(m_ShadowMapSize), window_size);
@@ -23,11 +24,19 @@ void CShadowMapRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, 
 
 	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 	{
+		if (entity->GetIsCullingChildren())
+			if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+				continue;
 		RenderEntityRecursive(scene, subEntity);
 	}
 }
 void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 {
+	if (!m_IsInitialized)
+	{
+		return;
+	}	
+
 	glm::vec3 light_direction;
 	try
 	{
@@ -53,14 +62,21 @@ void CShadowMapRenderer::Render(shared_ptr<CScene>& scene)
 
 	for (const CTerrain& terr : scene->GetTerrains())
 	{
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(terr.m_WorldCenterPosition, terr.GetSize() / 1.5f))
+			continue;
 		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
 		{
+			if (entity->GetIsCullingChildren())
+				if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+					continue;
 			RenderEntityRecursive(scene, entity);
 		}
 	}
 
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+			continue;
 		RenderEntityRecursive(scene, entity);
 	}
 	m_ShadowShader.Stop();
@@ -74,6 +90,9 @@ void CShadowMapRenderer::SetShadowMapSize(float size)
 
 void CShadowMapRenderer::CleanUp()
 {
+	if (!m_IsInitialized)
+		return;
+
 	m_ShadowShader.CleanUp();
 	m_ShadowFbo.CleanUp();
 }

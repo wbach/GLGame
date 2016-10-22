@@ -13,14 +13,15 @@ in vec3 WorldPos0;
                                                                  
 in vec3 PassTangent;
 in float UseNormalMap;
+in float FakeLight;
 
 in vec4 ShadowCoords;
 in float UseShadows;
 in float ShadowMapSize;
 
 layout (location = 0) out vec3 WorldPosOut;   
-layout (location = 1) out vec3 DiffuseOut;     
-layout (location = 2) out vec3 NormalOut;     
+layout (location = 1) out vec4 DiffuseOut;     
+layout (location = 2) out vec4 NormalOut;     
 layout (location = 3) out vec3 MaterialSpecular;  
 								
 uniform sampler2D gColorMap;
@@ -28,6 +29,9 @@ uniform sampler2D NormalMap;
 uniform sampler2DShadow ShadowMap;
 
 uniform SMaterial ModelMaterial;
+
+in float Distance;
+uniform float ViewDistance;
 
 float CalculateShadowFactor()
 {
@@ -71,6 +75,9 @@ vec3 CalcBumpedNormal(vec3 surface_normal, vec3 pass_tangent, sampler2D normal_m
 									
 void main()									
 {		
+	if (Distance > ViewDistance)
+	discard;
+
 	vec4 texture_color = texture(gColorMap, TexCoord0);
 	if(texture_color.a < 0.5)
     {   
@@ -78,7 +85,15 @@ void main()
     }
 	float shadow_factor = UseShadows > 0.5f ? CalculateShadowFactor() : 1.f;
 	WorldPosOut      = WorldPos0;					
-	DiffuseOut       = texture_color.xyz * ModelMaterial.m_Diffuse * shadow_factor;	
-	NormalOut        = UseNormalMap > .5f ?  CalcBumpedNormal(Normal0, PassTangent, NormalMap, TexCoord0) : normalize(Normal0);					
+	DiffuseOut       = texture_color * vec4(ModelMaterial.m_Diffuse, 1.0f) * shadow_factor;	
+
+	vec3 normal;
+
+	if (FakeLight < .5f)
+		normal    = UseNormalMap > .5f ?  CalcBumpedNormal(Normal0, PassTangent, NormalMap, TexCoord0) :  normalize(Normal0) ;		
+	else
+		normal    = normalize(Normal0);
+
+	NormalOut = vec4(normal, 1.f); // w use fog
 	MaterialSpecular = ModelMaterial.m_Specular;
 }

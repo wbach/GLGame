@@ -48,6 +48,8 @@ void CTerrainGeometryPassShader::GetAllUniformLocations()
 	location_RockTexture = GetUniformLocation("RockTexture");
 	location_RockTextureNormal = GetUniformLocation("RockTextureNormal");
 
+	//Distance
+	location_ViewDistance = GetUniformLocation("ViewDistance");
 
 	//Shadows
 	location_ShadowVariables = GetUniformLocation("ShadowVariables");
@@ -85,5 +87,8 @@ void CTerrainGeometryPassShader::LoadShadowValues(const float& is, const float& 
 {
 	LoadValue(location_ShadowVariables, glm::vec3(is, distance - 5, shadow_map_size));
 }
-
+void CTerrainGeometryPassShader::LoadViewDistance(const float& distance) const
+{
+	LoadValue(location_ViewDistance, distance);
+}
 

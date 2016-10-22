@@ -11,6 +11,8 @@
 #include <string>
 #include <vector>
 #include <mutex>
+#include "../Water/WaterTile.h"
+
 using namespace std;
 
 class CGame;
@@ -43,6 +45,7 @@ public:
 	const vector<shared_ptr<CEntity>>&	GetEntities() const;
 	const vector<CTerrain>&				GetTerrains() const;
 	const vector<CLight>&				GetLights() const;
+	vector<CWaterTile>&					GetWaterTiles();
 
 	const string& GetName();
 
@@ -92,14 +95,15 @@ protected:
 	CLoader m_Loader;
 	string	m_Name;
 	CGame&	m_Game;
-	SGUI m_Gui;
+	SGUI	m_Gui;
 
+	shared_ptr<CCamera> m_Camera;
+	vector<CWaterTile>	m_WaterTiles;
+	vector<CTerrain>	m_Terrains;
+	vector<CLight>		m_Lights;
 	vector<shared_ptr<CEntity>> m_PhysicsEntities;
 	vector<shared_ptr<CEntity>> m_Entities;
-	vector<CTerrain> m_Terrains;
-	vector<CLight> m_Lights;
-	shared_ptr<CCamera> m_Camera;
-
+	
 	friend class CXmlSceneParser;
 
 	vector<string> m_DaySkyboxTextures;

@@ -19,6 +19,10 @@ out vec3 WorldPos0;
 out vec4 ShadowCoords;
 out float UseShadows;
 out float ShadowMapSize;
+
+//Fog
+out float Distance;
+
 void main()
 {    
 	vec4 model_view_position  = ViewMatrix * TransformationMatrix * vec4(Position, 1.0);
@@ -27,6 +31,8 @@ void main()
     Normal0        = (TransformationMatrix * vec4(Normal, 0.0)).xyz;   
     WorldPos0      = (TransformationMatrix * vec4(Position, 1.0)).xyz;
 
+	Distance = length(model_view_position.xyz) ;
+	
 	const float shadow_distance		= 50.f ;
 	const float transition_distance = 10.f;
 

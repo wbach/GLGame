@@ -4,6 +4,7 @@ CAssimModel::CAssimModel(CTextureLoader & texture_lodaer)
 : CModel()
 , m_TextureLodaer(texture_lodaer)
 {
+	m_UseFakeLight = false;
 }
 
 void CAssimModel::InitModel(string file_name)

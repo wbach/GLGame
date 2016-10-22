@@ -3,8 +3,8 @@
 in vec3 TextureCoords;
 
 layout (location = 0) out vec3 WorldPosOut;   
-layout (location = 1) out vec3 DiffuseOut;     
-layout (location = 2) out vec3 NormalOut;     
+layout (location = 1) out vec4 DiffuseOut;     
+layout (location = 2) out vec4 NormalOut;     
 layout (location = 3) out vec3 MaterialSpecular;  
 
 uniform samplerCube DayCubeMap;
@@ -12,8 +12,8 @@ uniform samplerCube NightCubeMap;
 uniform float		BlendFactor ;
 uniform vec3		FogColour ;
 
-const float LowerLimit = 0;
-const float UpperLimit = 0.1;
+const float LowerLimit = 0.1;
+const float UpperLimit = 0.3;
 
 void main(void)
 {
@@ -26,7 +26,7 @@ void main(void)
     final_colour	= mix(vec4(FogColour, 1.f), final_colour, factor);
 
 	WorldPosOut      = TextureCoords;					
-	DiffuseOut       = final_colour.rgb;	
-	NormalOut        = vec3(0.f, 1.f, 0.f);					
+	DiffuseOut       = final_colour;	
+	NormalOut        = vec4(0.f, 1.f, 0.f, 0.f); // w = 0; dont use fog on skybox					
 	MaterialSpecular = vec3(0.f);
 }
