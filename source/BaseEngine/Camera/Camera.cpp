@@ -118,3 +118,8 @@ const glm::mat4& CCamera::GetViewMatrix() const
 	return m_ViewMatrix;
 }
 
+const glm::vec2 CCamera::GetPositionXZ() const
+{
+	return glm::vec2(m_Position.x, m_Position.z);
+}
+

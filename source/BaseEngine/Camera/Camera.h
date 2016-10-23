@@ -33,7 +33,7 @@ public:
 	const glm::vec3& GetPosition() const;
 	const glm::vec3 GetRotation() const;
 	const glm::mat4& GetViewMatrix() const;
-
+	const glm::vec2 GetPositionXZ() const;
 	void SetPosition(glm::vec3 position);
 
 	void UpdateFrustrum();

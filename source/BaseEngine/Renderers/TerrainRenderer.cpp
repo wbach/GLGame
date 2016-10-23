@@ -9,7 +9,7 @@ void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPa
 
 	for (const CTerrain &terrain : scene->GetTerrains())
 	{
-		if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize() / 1.5f))
+		if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize()))
 			continue;
 
 		PrepareTerrain(terrain);

@@ -8,6 +8,14 @@
 #include <math.h>
 #include "glm/glm.hpp"
 static const float MAX_PIXEL_COLOUR = 256.0f * 256.0f * 256.0f;
+static const int IndicesGridWidth = 500;
+static const int IndicesGridHeight = 500;
+
+struct SPaintInfo
+{
+	glm::vec2 Point;
+	float value;
+};
 
 class CTerrain
 {	
@@ -22,21 +30,17 @@ public:
 		string g_texture, string g_normal_texture,
 		string b_texture, string b_normal_texture);
 
-	void AddTerrainEntity(shared_ptr<CEntity> e)
-	{ 
-		m_TerrainEntities.push_back(e);
-	}
-	
+	void AddTerrainEntity(shared_ptr<CEntity> e);
+	vector<int> GetNerbyEntities(glm::vec2 position_xz, int range) const;
+
 	void CleanUp();
-	
-	void LoadFloora(string flora_file) ;
 	
 	void CreateTerrainVertexes(int x_start, int y_start, int width, int height);
 
 	void CreateTerrain();
 	void GenerateTerrainMap(CLoader &loader,string heightMap);
-	glm::vec3 CalculateNormalMap(int x, int z, FIBITMAP*  image);
-	float GetHeightMap(int x, int z, FIBITMAP*  image);
+	glm::vec3 CalculateNormalMap(int x, int z);
+	float GetHeightMap(int x, int z);
 
 	const float GetHeightofTerrain(glm::vec2 posXZ) const;
 	const float GetHeightofTerrain(float worldX, float worldZ) const;
@@ -54,9 +58,14 @@ public:
 
 	void PaintBlendMap(glm::vec3 point);
 	void PaintHeightMap(glm::vec3 point);
+	void PaintHeightMapPoint(glm::vec2 point, BYTE value);
+	void ReloadVertex();
+
 
 	vector<shared_ptr<CEntity>> m_FloraObjects;
 	vector<shared_ptr<CEntity>> m_TerrainEntities;
+	vector<int>** m_ObjectIndicesGrid;
+
 	STransform m_Transform;
 	GLuint m_BlendMap;
 	GLuint m_BackgroundTexture[2];
@@ -81,6 +90,9 @@ public:
 	FREE_IMAGE_FORMAT m_HeightMapFormat;
 	glm::vec3 m_HeightPaint = glm::vec3(1);
 	void SaveHeightMap()const;
+	int m_ImageWidth;
+	int m_ImageHeight;
+	float** m_Heights;
 
 	CLoader&	 m_Loader;
 	CEmptyLoader m_Model;
@@ -92,7 +104,7 @@ private:
 	std::vector<float> m_TextureCoords;
 
 
-	float m_Size = 500.0f;
+	float m_Size = 100.0f;
 	float m_MaxHeight = 50.0f;	
 
 	glm::vec3 m_Position;
@@ -100,15 +112,14 @@ private:
 	string m_Name;
 
 	int m_VertexCount;
-	float** m_Heights;
-	FIBITMAP* m_HighMapImage;
-
-	int m_ImageWidth;
-	int m_ImageHeight;
+	
+	FIBITMAP* m_HighMapImage;	
 
 	string m_FlooraMap;
 	float m_FloraSize;
 
 	int m_Id;
 	static int s_ID;
+
+
 };

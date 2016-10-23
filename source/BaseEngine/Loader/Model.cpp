@@ -100,6 +100,10 @@ const string & CModel::GetName() const
 {
 	return m_Name;
 }
+vector<CMesh>& CModel::GetModifyMeshes()
+{
+	return m_Meshes;
+}
 const vector<CMesh>& CModel::GetMeshes() const
 {
 	return m_Meshes;
@@ -187,7 +191,24 @@ void CMesh::CreateTransformsVbo(std::vector<glm::mat4>& m)
 		glVertexAttribPointer(4 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
 		glVertexAttribDivisor(4 + i, 1);			
 	}
-	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m.size(), &m[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m.size(), &m[0], GL_DYNAMIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+}
+
+void CMesh::UpdateTransformVbo(std::vector<glm::mat4>& m)
+{
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::TRANSFORM_MATRIX]);
+	glBindVertexArray(m_Vao);	
+	glGenBuffers(1, &m_Vbos[VertexBufferObjects::TRANSFORM_MATRIX]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Vbos[VertexBufferObjects::TRANSFORM_MATRIX]);
+	for (unsigned int i = 0; i < 4; i++)
+	{
+		glEnableVertexAttribArray(4 + i);
+		glVertexAttribPointer(4 + i, 4, GL_FLOAT, GL_FALSE, sizeof(glm::mat4), (const GLvoid*)(sizeof(GLfloat) * i * 4));
+		glVertexAttribDivisor(4 + i, 1);
+	}
+	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m.size(), &m[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
 }

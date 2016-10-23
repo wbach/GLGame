@@ -281,9 +281,6 @@
     <ClInclude Include="source\BaseEngine\Loader\Model.h">
       <Filter>Header Files\Loader</Filter>
     </ClInclude>
-    <ClInclude Include="source\BaseEngine\Terrain\Terrain.h">
-      <Filter>Header Files\Terrain</Filter>
-    </ClInclude>
     <ClInclude Include="source\BaseEngine\GUI\GUI.h">
       <Filter>Header Files\GUI</Filter>
     </ClInclude>
@@ -454,6 +451,9 @@
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Water\WaterShader.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Terrain\Terrain.h">
+      <Filter>Header Files\Terrain</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -18,6 +18,20 @@ int main(int argc, char *argv[])
 	//  shared_ptr<CScene> mainMenu = make_shared<CTestMainMenu>(myGame);
 
 	//myGame.addScene(mainMenu);
+
+	//std::ofstream file;
+	//file.open("Data/Terrain/FloatTerrain32x32Empty.terrain");
+	//file << "r256x256" << endl;
+	//for (int y = 0; y < 256; y++)
+	//{
+	//	for (int x = 0; x < 256; x++)
+	//	{
+	//		file << 0 << " ";
+	//	}
+	//	file << endl;
+	//}
+	//file.close();
+
 	int test_scene_camera_type = 0;
 	std::shared_ptr<CApi> api;
 #ifdef EDITOR
@@ -42,6 +56,7 @@ int main(int argc, char *argv[])
 	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
 #else
 	myGame.m_SceneParser.LoadScene(testScene->m_SceneFile, testScene);
+	myGame.GetCurrentScene()->PostInitialize();
 #endif
     myGame.GameLoop();
 	//a.detach();

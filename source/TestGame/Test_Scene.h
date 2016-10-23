@@ -29,7 +29,7 @@ public:
 	}
 	int Initialize() override
 	{
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(100, 110));
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(1, 1));
 		songo->SetName("Player");
 		unsigned int model_id = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true);
 		unsigned int model_id2 = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true);
@@ -74,25 +74,52 @@ public:
 
 		m_MousePicker = CMousePicker(m_Camera, m_Game.GetDisplayManager().GetWindowSize(), m_Game.GetProjectionMatrix());
 
+	
+
 		//m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
 		return 0;
 	}
 	virtual void PostInitialize() override
 	{
-		shared_ptr<CEntity> grass = CreateEntityFromFile("Data/Terrain/Grass/grassGothic.obj", true, CreatePositionVector(200, 100));
+		CTerrain* t1 = FindTerrainByName("Terrain0x-1");
+		CTerrain* t2 = FindTerrainByName("Terrain0x0");
+		if(t1 != nullptr && t2 !=nullptr)
+		MergeTerrains(*t1, *t2, 1);
+
+		t1 = FindTerrainByName("Terrain0x0");
+		t2 = FindTerrainByName("Test_Terrain1x0");
+		if (t1 != nullptr && t2 != nullptr)
+			MergeTerrains(*t1, *t2, 0);
+
+		t1 = FindTerrainByName("Terrain0x0");
+		t2 = FindTerrainByName("Terrain0x1");
+		if (t1 != nullptr && t2 != nullptr)
+			MergeTerrains(*t1, *t2, 1);
+
+		t1 = FindTerrainByName("Terrain0x1");
+		t2 = FindTerrainByName("Terrain0x2");
+		if (t1 != nullptr && t2 != nullptr)
+			MergeTerrains(*t1, *t2, 1);
+
+		return;
+		shared_ptr<CEntity> grass = CreateEntityFromFile("Data/Terrain/Grass/grassGothic.obj", true, CreatePositionVector(100, 200));
 		for (int y = 0; y < 100; y++)
 		{
 			for (int x = 1; x < 100; x++)
 			{
-				grass->AddTransform(STransform(CreatePositionVector(200 + static_cast<float>(rand()%2 +1)* x, 100 + static_cast<float>(rand() % 2 + 1) * y)));
+				glm::vec2 pos = glm::vec2(100, 200) + 2.f*glm::vec2(rand() % 100, rand() % 100);
+				grass->AddTransform(STransform(CreatePositionVector(pos)) );
 				
 			}
 		}
 		m_Loader.m_Models[grass->GetModelId()]->CreateTransformsVbo(grass->GetTransformMatrixes());
-		
+		grass->m_Instanced = true;
 		grass->SetName("Test grass");
 		grass->m_IsSpecial = true;
+		m_Loader.m_Models[grass->GetModelId()]->m_UseFakeLight = true;
 		AddEntity(grass, true);
+
+		LoadTerrainsFloora("Data/Terrain/TestTerrainFlora.tf");
 	}
 	void setFirstCamera()
 	{
@@ -146,12 +173,24 @@ public:
 		m_Camera->Move();
 		if (m_Game.GetInputManager().GetKey(KeyCodes::Q))
 		{
-			for (CTerrain& terrain : m_Terrains)
+			if (m_CurrentTerrain != nullptr)
 			{
-				bool is_col;
-				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
-				terrain.PaintHeightMap(point);
-				if (is_col) break;
+				bool col;
+				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), *m_CurrentTerrain, col);
+				
+					for (CTerrain& terr : m_Terrains)
+					{
+						terr.PaintHeightMapPoint(glm::vec2(point.x, point.z),1);
+					}
+				
+
+				/*m_CurrentTerrain->PaintHeightMap(point);
+				float terrain_x = point.x - m_CurrentTerrain->m_Transform.position.x;
+				float terrain_z = point.z - m_CurrentTerrain->m_Transform.position.z;
+				float x = terrain_x / m_CurrentTerrain->GetSize();
+				float z = terrain_z / m_CurrentTerrain->GetSize();*/
+				//cout << x << "  " << z << endl;
+			//	Utils::PrintVector("",point);
 			}
 		}
 		if (m_Game.GetInputManager().GetKey(KeyCodes::E))
@@ -197,6 +236,11 @@ public:
 		for (shared_ptr<CEntity>& entity : m_Entities)
 			entity->CleanUp();
 		m_Entities.clear();
+
+		for (CWaterTile& tile : m_WaterTiles)
+		{
+			tile.CleanUp();
+		}
 
 		m_Gui.guiButtons.clear();
 		m_Gui.guiTexts.clear();

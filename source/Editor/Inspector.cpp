@@ -221,6 +221,8 @@ void CSceneEditor::InspectorProcedure(WPARAM wParam, LPARAM lParam)
 	if (wParam == ControlsIds::INSPECTOR_PAINT_STRENGTH)
 	{
 		GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], m_PaintStrength);
+		if (m_CurrentTerrain != nullptr)
+			m_CurrentTerrain->m_HeightPaint = glm::vec3(m_PaintStrength);
 	}
 	if (wParam == ControlsIds::INSPECTOR_PAINT_SIZE)
 	{

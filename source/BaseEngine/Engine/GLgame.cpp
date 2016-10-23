@@ -230,29 +230,6 @@ int CGame::ReadConfiguration(string file_name)
 	}
 	string line;
 
-	struct Get 
-	{
-		static float Float(string line)
-		{
-			return stof(line);
-		}
-		static int Int(string line)
-		{
-			return stoi(line);
-		}
-		static glm::vec2 Vector2d(string line)
-		{
-			float x = stof(line.substr(0, line.find_last_of("x")));
-			float y = stof(line.substr(line.find_last_of("x") + 1));
-			return glm::vec2(x, y);
-		}
-		static bool Boolean(string line)
-		{
-			return stof(line) > 0 ? true : false;
-		}
-	};
-	
-
 	while (std::getline(file, line))
 	{
 		string var = line.substr(0, line.find_last_of("="));

@@ -2,6 +2,7 @@
 #include "GLgame.h"
 CScene::CScene(CGame& game) 
 : m_Game(game)
+, m_CurrentTerrain(nullptr)
 {
 	m_Loader.SetMaxTextureResolution(m_Game.GetMaxTextureResolution());
 }
@@ -49,13 +50,76 @@ void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
 	{
 		m_Entities.push_back(entity);
 		return;
-	}
+	}	
 	int tnr = TerrainNumber(entity->GetPositionXZ());
 
 	if (tnr >= 0)
 		m_Terrains[tnr].AddTerrainEntity(entity);
 	else
 		m_Entities.push_back(entity);
+
+}
+
+void CScene::AddInstancedEntityFromFile(string file, std::vector<STransform>& transforms, glm::vec3 normalized_size)
+{
+	struct T
+	{
+		int nr;
+		std::vector<STransform> transforms;
+	};
+	std::vector<T> tt;
+
+	for (STransform& transform : transforms)
+	{
+		int tnr = TerrainNumber(transform.GetPositionXZ());
+		bool added = false;
+		for (T& t : tt)
+		{
+			if (t.nr == tnr)
+			{
+				t.transforms.push_back(transform);
+				added = true;
+			}
+		}
+		if (!added)
+		{
+			T nt;
+			nt.nr = tnr;
+			nt.transforms.push_back(transform);
+			tt.push_back(nt);
+		}
+	}
+	for (T& t : tt)
+	{		
+		glm::vec3 position;	
+		position = CreatePositionVector(t.transforms[0].GetPositionXZ());
+		
+		shared_ptr<CEntity> new_entity = CreateEntityFromFile(file, true, position);
+		bool first = true;
+		for (STransform& transform : t.transforms)
+		{
+			if (first)
+			{
+				first = false;
+				continue;
+			}
+			transform.position = CreatePositionVector(transform.GetPositionXZ());
+			new_entity->AddTransform(transform);
+		}		
+		int model_id = new_entity->GetModelId();
+		shared_ptr<CModel> model = m_Loader.m_Models[model_id];		
+		glm::mat4 normalized_matrix = model->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
+		new_entity->SetNormalizedMatrix(normalized_matrix);
+		new_entity->SetNormalizedSize(normalized_size);
+		new_entity->CalculateEntityTransformMatrix(-1);
+		model->CreateTransformsVbo(new_entity->GetTransformMatrixes());
+		new_entity->m_Instanced = true;
+		model->m_UseFakeLight = true;
+		if (t.nr >= 0)
+			m_Terrains[t.nr].AddTerrainEntity(new_entity);
+		else
+			m_Entities.push_back(new_entity);
+	}
 
 }
 
@@ -68,9 +132,58 @@ void CScene::SaveTerrains()
 {
 	for (const CTerrain& terrain : m_Terrains)
 	{
-		m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
-		terrain.SaveHeightMap();
+		//m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
+		//terrain.SaveHeightMap();
+		std::ofstream file;
+		string fn = "Data/Terrain/" + terrain.GetName() + ".terrain";
+		file.open(fn);
+		string size = "r" + to_string(terrain.m_ImageWidth) + "x" + to_string(terrain.m_ImageHeight);
+		file << size << endl;
+		for (int y = 0; y < terrain.m_ImageWidth; y++)
+		{
+			for (int x = 0; x < terrain.m_ImageHeight; x++)
+			{
+				file << terrain.m_Heights[x][y] << " ";
+			}
+			file << endl;
+		}
+		file.close();
 	}
+}
+
+void CScene::MergeTerrains(CTerrain & t1, CTerrain & t2, int axis)
+{
+	if (t1.m_ImageWidth != t2.m_ImageWidth) return;
+
+	for (int x = 0; x < t1.m_ImageWidth; x++)
+	{
+		if (axis == 0)
+		{
+			float height = t1.m_Heights[t1.m_ImageWidth - 1][x] + t2.m_Heights[0][x];
+			height /= 2;
+			t1.m_Heights[t1.m_ImageWidth - 1][x] = height;
+			t2.m_Heights[0][x] = height;
+		}
+		else
+		{
+			float height = t1.m_Heights[x][t1.m_ImageWidth - 1] + t2.m_Heights[x][0];
+			height /= 2;
+			t1.m_Heights[x][t1.m_ImageWidth - 1] = height;
+			t2.m_Heights[x][0] = height;
+		}
+	}
+	t1.ReloadVertex();
+	t2.ReloadVertex();
+}
+
+CTerrain* CScene::FindTerrainByName(string name)
+{
+	for (CTerrain& t : m_Terrains)
+	{
+		if (!t.GetName().compare(name))
+			return &t;
+	}
+	return nullptr;
 }
 
 void CScene::ApplyPhysicsToObjects(float dt)
@@ -357,4 +470,58 @@ void CScene::Reset()
 CScene::~CScene()
 {
 	m_Loader.CleanUp();
+}
+void CScene::LoadTerrainsFloora(string file_name)
+{
+	std::ifstream file;
+	file.open(file_name);
+	if (!file.is_open())
+	{
+		std::cout << "[Error] Cant open flora: " << file_name << "." << std::endl;
+		return;
+	}
+	std::string line;
+	std::string all_file;
+	string object;
+	std::vector<STransform> transforms;
+	glm::vec3 normalized_size(0);
+	int x = -1;
+	bool creating_object = false;
+	while (std::getline(file, line))
+	{
+		if (line.size() < 2) continue;
+
+		if (line[0] == '#' && line[1] != '#')
+		{
+			line = line.substr(1);
+			transforms.clear();
+			cout << "New Terrain Object:\nName: " << line << endl;
+			object = line;
+			x++;
+			creating_object = true;
+		}
+		else if (line[0] == 'v' && creating_object)
+		{
+			line = line.substr(1);
+			glm::vec2 position =  Get::Vector2d(line);
+			Utils::PrintVector("Object position: ", position);
+			for(int x= 0; x < 100 ; x++)
+				transforms.push_back(STransform(position + 5.f*glm::vec2(rand()%100, rand()%100)));
+		}
+		else if (line[0] == 'n' && creating_object)
+		{
+			line = line.substr(1);
+			normalized_size = Get::Vector3d(line);
+			Utils::PrintVector("Normalized size: ", normalized_size);
+		}
+		else if (line[0] == '#' && line[1] == '#' && creating_object)
+		{
+			cout << "End Object"<< endl;
+			AddInstancedEntityFromFile(object, transforms, normalized_size);
+			creating_object = false;
+		}
+	}
+	file.close();
+
+	return;
 }

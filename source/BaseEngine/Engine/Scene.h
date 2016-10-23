@@ -12,7 +12,7 @@
 #include <vector>
 #include <mutex>
 #include "../Water/WaterTile.h"
-
+#include <list>
 using namespace std;
 
 class CGame;
@@ -27,9 +27,13 @@ public:
 	void AddLight(CLight light) { m_Lights.push_back(light); }
 	void AddTerrain(CTerrain& terrain);
 	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
+	void AddInstancedEntityFromFile(string file, std::vector<STransform>& transforms, glm::vec3 normalized_size = glm::vec3(0));
 	void AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity);
 	
 	void SaveTerrains();
+	void MergeTerrains(CTerrain& t1, CTerrain& t2, int axis);
+	CTerrain* FindTerrainByName(string name);
+
 	void ApplyPhysicsToObjects(float dt);
 	void ClearObjectsVelocity();
 
@@ -41,11 +45,12 @@ public:
 	shared_ptr<CEntity> FindSubEntity(shared_ptr<CEntity>& entity, int id);
 	CTerrain* FindTerrainById(int id);
 
-
 	const vector<shared_ptr<CEntity>>&	GetEntities() const;
 	const vector<CTerrain>&				GetTerrains() const;
 	const vector<CLight>&				GetLights() const;
 	vector<CWaterTile>&					GetWaterTiles();
+
+	void LoadTerrainsFloora(string file_name);
 
 	const string& GetName();
 
@@ -85,6 +90,10 @@ public:
 
 	bool m_IsDebug = false;
 	std::string m_SceneFile;
+
+	//ForPainting
+	FIBITMAP*	m_WholeWorrldMap;
+	CTerrain*	m_CurrentTerrain;
 
 	CPhysicsScene m_PhysicsScene;
 	std::mutex g_pages_mutex;

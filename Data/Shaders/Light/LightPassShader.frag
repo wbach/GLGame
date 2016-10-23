@@ -59,7 +59,7 @@ vec4 CalculateBaseLight(SMaterial material, vec3 light_direction, vec3 world_pos
 	//ambient color
 	diffuse_color = diffuse_color * material.m_Diffuse;
 	ambient_color =  material.m_Ambient;
-
+	material.m_ShineDamper = 20;
 	if (material.m_ShineDamper > .0f)
 	{
 		vec3	vertex_to_camera	= normalize(CameraPosition - world_pos);

@@ -60,6 +60,7 @@ public:
 	const glm::mat4& GetTransformMatrix(unsigned int i = 0);
 	const glm::mat4& GetRelativeTransformMatrix(unsigned int i = 0);
 
+	vector<STransform>& GetTransforms() { return m_Transforms; }
 	vector<glm::mat4>& GetTransformMatrixes() { return m_TransformMatrixes; }
 
 	glm::vec3& GetReferencedPosition(unsigned int i = 0);
@@ -94,6 +95,8 @@ public:
 	void SetIsCullingChildren(const bool& is);
 	const bool& GetIsCullingChildren();
 
+	bool m_Instanced; // Not culling using primary position
+
 	float m_BoundingSize;
 	//m_IsSpecial - enity created in code not from file
 	bool m_IsSpecial = false;
@@ -102,6 +105,7 @@ protected:
 	bool m_IsInAir;
 	bool m_TransformsInVao;
 
+	
 	bool m_IsCullingChildren;
 
 	float		m_AttachYoffset;

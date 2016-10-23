@@ -46,6 +46,7 @@ public:
 	void UpdateVertexPosition(const vector<float>& vertices) const;	
 	void CreateVaoMesh();
 	void CreateTransformsVbo(std::vector<glm::mat4>& m);
+	void UpdateTransformVbo(std::vector<glm::mat4>& m);
 	void CreateFaces();
 
 	const GLuint& GetVao() const;
@@ -99,6 +100,8 @@ public:
 
 	const	string& GetName() const;
 	const	vector<CMesh>& GetMeshes() const;	
+	vector<CMesh>& GetModifyMeshes();
+
 	float	GetBoundingMaxSize();	
 
 	virtual void CleanUp();

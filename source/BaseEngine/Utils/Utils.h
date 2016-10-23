@@ -9,12 +9,42 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <string>
 #ifndef M_PI
 #define M_PI    3.14159265358979323846264338327950288   /* pi */
 #endif
 
 #define ZERO_MEM(a) memset(a, 0, sizeof(a))
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
+
+namespace Get
+{
+	static float Float(std::string line)
+	{
+		return std::stof(line);
+	}
+	static int Int(std::string line)
+	{
+		return stoi(line);
+	}
+	static glm::vec2 Vector2d(std::string line)
+	{
+		float x = std::stof(line.substr(0, line.find_last_of("x")));
+		float y = std::stof(line.substr(line.find_last_of("x") + 1));
+		return glm::vec2(x, y);
+	}
+	static glm::vec3 Vector3d(std::string line)
+	{
+		float z = std::stof(line.substr(line.find_last_of("x") + 1));
+		float x = std::stof(line.substr(0, line.find_first_of("x")));
+		float y = std::stof(line.substr(line.find_first_of("x")+1, line.find_last_of("x")));
+		return glm::vec3(x, y, z);
+	}
+	static bool Boolean(std::string line)
+	{
+		return std::stof(line) > 0 ? true : false;
+	}
+}
 
 namespace Utils
 {
@@ -81,6 +111,7 @@ namespace Utils
 		else
 			return vector.z;
 	}
+	
 	static glm::mat4 CreateTransformationMatrix(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale)
 	{
 		glm::mat4  matrix = glm::mat4(1.0);

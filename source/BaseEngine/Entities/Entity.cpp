@@ -24,6 +24,7 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	, m_IsCullingChildren(true)
 	, m_TransformsInVao(false)
 	, m_IsInAir(false)
+	, m_Instanced(false)
 {	
 	m_Id = s_ID++;
 	m_Name = "No name entity";
@@ -295,7 +296,7 @@ void CEntity::CalculateEntityTransformMatrix(unsigned int x)
 	{
 		int i = 0;
 		for (STransform transform : m_Transforms)
-			m_TransformMatrixes[i++] = Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale);
+			m_TransformMatrixes[i++] = Utils::CreateTransformationMatrix(transform.position, transform.rotation, transform.scale) * m_NormalizedMatrix;
 	}
 	else
 	{

@@ -100,7 +100,8 @@ GLuint CWaterFrameBuffers::CreateDepthTextureAttachment(const glm::vec2 & size) 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT32, static_cast<int>(size.x), static_cast<int>(size.y), 0, GL_DEPTH_COMPONENT, GL_FLOAT, (void*)NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, texture, 0);
+	//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, texture, 0);
 	return texture;
 }
 
@@ -129,13 +130,14 @@ void CWaterFrameBuffers::CopyTextureDepthTexture(const GLuint& source_fbo, const
 
 	// bind source texture to color attachment
 	glBindTexture(GL_TEXTURE_2D, source_text);
-	glFramebufferTexture2D(GL_TEXTURE_2D, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, source_text, 0);
-	glDrawBuffer(GL_DEPTH_COMPONENT);
+	glFramebufferTexture2D(GL_READ_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, source_text, 0);
+	//glDrawBuffer(GL_DEPTH_COMPONENT);
 
 	// bind destination texture to another color attachment
 	glBindTexture(GL_TEXTURE_2D, m_RefractionDepthTexture);
-	glFramebufferTexture2D(GL_TEXTURE_2D, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_RefractionDepthTexture, 0);
-	glReadBuffer(GL_DEPTH_COMPONENT);
+	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_RefractionDepthTexture, 0);
+	//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, source_text, 0);
+	//glReadBuffer(GL_DEPTH_COMPONENT);
 
 
 	// specify source, destination drawing (sub)rectangles. 

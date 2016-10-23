@@ -252,10 +252,10 @@ void CXmlSceneParser::LoadScene(std::string file_name, std::shared_ptr<CScene> s
 	catch (rapidxml::parse_error p)
 	{
 		p.what();
+		return;
 	}
 	percent = 5;
 	if (func != nullptr) func(percent);
-
 
 	rapidxml::xml_node <>* map = dokument.first_node();
 	for (rapidxml::xml_node <>* node = map->first_node(); node; node = node->next_sibling())
