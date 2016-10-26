@@ -56,8 +56,14 @@ void CSceneEditor::FillObjectsTree()
 	HTREEITEM h_camera = TreeView_InsertItem(m_Hwnd[Hwnds::OBJECT_TREEE], &tvins);
 
 	bool first = true;
-	for (const CTerrain& terrain : m_Game.GetCurrentScene()->GetTerrains())
+	for (int y = 0; y < m_Game.GetCurrentScene()->m_TerrainsYCount -1; y++)
+	for (int x = 0; x < m_Game.GetCurrentScene()->m_TerrainsXCount -1; x++)
 	{
+		CTerrain& terrain = m_Game.GetCurrentScene()->m_Terrains[x][y];
+
+		if (!terrain.m_IsInit)
+			continue;
+
 		tvi.pszText = (LPSTR)terrain.GetNameWithId().c_str();
 		tvi.iImage = tvi.iSelectedImage = 2;
 		tvins.item = tvi;
@@ -192,8 +198,8 @@ void CSceneEditor::TreeProcedure(HWND hwnd, WPARAM wParam, LPARAM lParam)
 				{
 					m_CurrentTerrain = m_Game.GetCurrentScene()->FindTerrainById(stoi(id));
 					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_TEXT_CURRENT_SELECTED], m_CurrentTerrain->GetNameWithId().c_str());
-					GetValueFromControl(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], m_PaintStrength);
-					m_CurrentTerrain->m_HeightPaint = glm::vec3(m_PaintStrength);
+					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_PAINT_STRENGTH], to_string(m_Game.GetCurrentScene()->m_HeightPaintStrength).c_str());
+					SetWindowText(m_Hwnd[Hwnds::INSPECTOR_PAINT_SIZE], to_string(m_Game.GetCurrentScene()->m_BrushSize).c_str());
 					m_Game.GetCurrentScene()->m_CurrentTerrain = m_CurrentTerrain;
 				}
 				break;

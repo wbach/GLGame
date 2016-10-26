@@ -1,6 +1,8 @@
 #include "MousePicker.h"
 
-CMousePicker::CMousePicker() {}
+CMousePicker::CMousePicker() 
+: m_Terrains(nullptr) 
+{}
 
 CMousePicker::CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::mat4 projection)
 	: m_WindowSize(window_size)
@@ -8,19 +10,23 @@ CMousePicker::CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::
 	, m_Camera(cam)
 	, RECURSION_COUNT(200)
 	, RAY_RANGE(600)
+	, m_Terrains(nullptr)
 {
 }
 
-glm::vec3 CMousePicker::GetMousePointOnTerrain(glm::vec2 mous_pose, CTerrain & terrain, bool& is_col)
+void CMousePicker::SetTerrainsPtr(std::vector<std::vector<CTerrain>>* terrains)
+{
+	m_Terrains = terrains;
+}
+
+CTerrain* CMousePicker::GetMousePointOnTerrain(glm::vec3& point, glm::vec2 mous_pose)
 {
 	m_CurrentRay = CalculateMouseRay(mous_pose);
-	if (IntersectionInRange(0, RAY_RANGE, m_CurrentRay, terrain))
+	if (IntersectionInRange(0, RAY_RANGE, m_CurrentRay))
 	{
-		is_col = true;
-		return BinarySearch(terrain, 0, 0, RAY_RANGE, m_CurrentRay);
+		return BinarySearch(point, 0, 0, RAY_RANGE, m_CurrentRay);
 	}
-	is_col = false;
-	return glm::vec3();
+	return false;
 }
 glm::vec3 CMousePicker::CalculateMouseRay(glm::vec2 mouse_pos)
 {
@@ -56,36 +62,54 @@ glm::vec3 CMousePicker::GetPointOnRay(glm::vec3 ray, float distance)
 	return (cam_pos + scaled_ray);
 }
 
-glm::vec3 CMousePicker::BinarySearch(CTerrain & terrain, int count, float start, float finish, glm::vec3 ray) {
+CTerrain* CMousePicker::BinarySearch(glm::vec3& out, int count, float start, float finish, glm::vec3 ray) {
 	float half = start + ((finish - start) / 2.0f);
 	if (count >= RECURSION_COUNT) {
-		return GetPointOnRay(ray, half);
-
+		out = GetPointOnRay(ray, half);
+		return GetTerrain(out.x, out.z);
 	}
-	if (IntersectionInRange(start, half, ray, terrain)) {
-		return BinarySearch(terrain, count + 1, start, half, ray);
+	if (IntersectionInRange(start, half, ray)) {
+		return BinarySearch(out, count + 1, start, half, ray);
 	}
 	else {
-		return BinarySearch(terrain, count + 1, half, finish, ray);
+		return BinarySearch(out, count + 1, half, finish, ray);
 	}
 }
 
-bool CMousePicker::IntersectionInRange(float start, float finish, glm::vec3 ray, CTerrain & terrain)
+bool CMousePicker::IntersectionInRange(float start, float finish, glm::vec3 ray)
 {
 	glm::vec3 startPoint = GetPointOnRay(ray, start);
 	glm::vec3 endPoint = GetPointOnRay(ray, finish);
-	if (!IsUnderGround(startPoint, terrain) && IsUnderGround(endPoint, terrain))
+	if (!IsUnderGround(startPoint) && IsUnderGround(endPoint))
 		return true;
 	else
 		return false;
 }
 
-bool CMousePicker::IsUnderGround(glm::vec3 testPoint, CTerrain & terrain)
+bool CMousePicker::IsUnderGround(glm::vec3 testPoint)
 {
-	float height = terrain.GetHeightofTerrain(testPoint.x, testPoint.z);
+	CTerrain* terrain = GetTerrain(testPoint.x, testPoint.z);
+	float height = 0;
 
-	if (testPoint.y < height)
+	if (terrain != nullptr)
+	{
+		height = terrain->GetHeightofTerrain(testPoint.x, testPoint.z);
+	}
+
+	if (testPoint.y <= height)
+	{
 		return true;
+	}
+		
 	else
 		return false;
+}
+CTerrain* CMousePicker::GetTerrain(float world_x, float world_z)
+{
+	int x = static_cast<int>(world_x / TERRAIN_SIZE);
+	int z = static_cast<int>(world_z / TERRAIN_SIZE);
+	if (x < 0 || z < 0)
+		return nullptr;
+
+	return &(*m_Terrains)[x][z];
 }

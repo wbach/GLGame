@@ -21,16 +21,16 @@ int main(int argc, char *argv[])
 
 	//std::ofstream file;
 	//file.open("Data/Terrain/FloatTerrain32x32Empty.terrain");
-	//file << "r256x256" << endl;
-	//for (int y = 0; y < 256; y++)
+	//file << "r32x32" << endl;
+	//for (int y = 0; y < 32; y++)
 	//{
-	//	for (int x = 0; x < 256; x++)
+	//	for (int x = 0; x < 32; x++)
 	//	{
 	//		file << 0 << " ";
 	//	}
 	//	file << endl;
 	//}
-	//file.close();
+	//file.close();	
 
 	int test_scene_camera_type = 0;
 	std::shared_ptr<CApi> api;

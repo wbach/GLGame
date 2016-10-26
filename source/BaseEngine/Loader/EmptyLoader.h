@@ -6,5 +6,5 @@ class CEmptyLoader : public CModel
 public:
 	CEmptyLoader();
 	virtual void InitModel(string file_name) override;
-
+	void CleanUp();
 };

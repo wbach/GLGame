@@ -146,15 +146,15 @@ void CXmlSceneParser::ParseTerrain(rapidxml::xml_node<>* node)
 			ParseTexture(subnode, b_texture[0], b_texture[1]);
 	}
 
-	m_Scene->AddTerrain(CTerrain(name, m_Scene->m_Loader,
-		position.x, position.z, 
-		height_map, blend_map,
-		backgorung_texture[0], backgorung_texture[1],
-		rock_texture[0], rock_texture[1],
-		r_texture[0], r_texture[1],
-		g_texture[0], g_texture[1],
-		b_texture[0], b_texture[1]
-	));
+	//m_Scene->AddTerrain(CTerrain(name, m_Scene->m_Loader,
+	//	position.x, position.z, 
+	//	height_map, blend_map,
+	//	backgorung_texture[0], backgorung_texture[1],
+	//	rock_texture[0], rock_texture[1],
+	//	r_texture[0], r_texture[1],
+	//	g_texture[0], g_texture[1],
+	//	b_texture[0], b_texture[1]
+	//));
 }
 
 void CXmlSceneParser::ParseTexture(rapidxml::xml_node<>* node, std::string& diff_texture, std::string& normal_texture)
@@ -274,7 +274,7 @@ void CXmlSceneParser::LoadScene(std::string file_name, std::shared_ptr<CScene> s
 		}
 		if (!std::string("Terrain").compare(node->name()))
 		{
-			ParseTerrain(node);
+			//ParseTerrain(node);
 			percent += 35;
 			if (func != nullptr) func(percent);
 		}
@@ -330,9 +330,12 @@ void CXmlSceneParser::SaveToFile(std::string file_name, std::shared_ptr<CScene> 
 		AddEntityNode(dokument, root, entity, 1);
 	}
 
-	for (const CTerrain& terrain: scene->GetTerrains())
+	for (int y = 0; y < scene->m_TerrainsYCount - 1; y++)
+		for (int x = 0; x < scene->m_TerrainsXCount - 1; x++)
+	
 	{
-		AddTerrainNode(dokument, root, terrain);
+		CTerrain& terrain = scene->m_Terrains[x][y];
+		//AddTerrainNode(dokument, root, terrain);
 		for (const shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
 		{
 			AddEntityNode(dokument, root, entity, 0);

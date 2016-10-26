@@ -60,8 +60,9 @@ void CSceneEditor::AddMenus()
 
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_NEW_SCENE, L"&New");
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_OPEN_SCENE, L"&Open");
-	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVE_SCENE, L"&Save");
-	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVEAS_SCENE, L"&Save as");
+	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVE_OBJECTS, L"&Save objects");
+	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVE_BLENDMAPS, L"&Save blend maps");
+	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_SAVE_HEIGHTMAPS, L"&Save heightmaps");
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_SEPARATOR, 0, NULL);
 	AppendMenuW(m_Menus[MenuHandles::ELEMENT_FILE], MF_STRING, ControlsIds::MENU_QUIT, L"&Quit");
 

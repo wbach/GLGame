@@ -143,7 +143,14 @@ void CMesh::CalculateBoudnigBox(const vector<float>& positions )
 
 void CMesh::CleanUp()
 {	
-	glDeleteBuffers(VertexBufferObjects::COUNT, m_Vbos);	
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::INDICES]);
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::POSITION]);
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::TEXT_COORD]);
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::NORMAL]);
+	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::TANGENT]);
+	if(m_TransformVboCreated)
+		glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::TRANSFORM_MATRIX]);
+	//glDeleteBuffers(VertexBufferObjects::COUNT, m_Vbos);
 	glDeleteVertexArrays(1, &m_Vao);
 }
 
@@ -194,6 +201,7 @@ void CMesh::CreateTransformsVbo(std::vector<glm::mat4>& m)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m.size(), &m[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+	m_TransformVboCreated = true;
 }
 
 void CMesh::UpdateTransformVbo(std::vector<glm::mat4>& m)

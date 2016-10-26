@@ -74,6 +74,11 @@ GLuint CLoader::LoadCubeMap(const vector<string>& filenames)
 	return m_TextureLoader.LoadCubeMap(filenames);
 }
 
+void CLoader::CreateEmptyImage(const std::string filename, int width, int height)
+{
+	m_TextureLoader.CreateEmptyImage(filename, width, height);
+}
+
 void CLoader::ReloadTexture(string file_name, GLuint& texture_id)
 {
 	m_TextureLoader.ReloadTexture(file_name, &texture_id);

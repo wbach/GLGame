@@ -13,6 +13,7 @@ class CShaderProgram
 {
 public:
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file);
+	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file, char* geometry_shader_file);
 	void InitShaderProgram(char* vertex_shader_file, char* fragment_shader_file, char *tesselation_shader_file, char * tesselation_evaluation_shader_file);
 	void Start() const;
 	void Stop() const;
@@ -39,6 +40,7 @@ private:
 	int m_ProgramID;
 	int m_VertexShaderID;
 	int m_FragmentShaderID;
+	int m_GeometryShaderID;
 	int m_TesselationControlShaderID;
 	int m_TesselationEvaluationShaderID;
 

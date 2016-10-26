@@ -2,15 +2,31 @@
 
 void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPassShader& geomentry_shader)
 {
-	if (scene->GetTerrains().size() <= 0) return;
+	std::vector<std::vector<CTerrain>>& terrains = scene->GetTerrains();
+	if (terrains.size() <= 0) return;
 	
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
 
-	for (const CTerrain &terrain : scene->GetTerrains())
+	int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
+	scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
+
+
+	/*for (int y = 0; y < scene->m_TerrainsYCount -1; y++)
+		for (int x = 0; x < scene->m_TerrainsXCount - 1; x++)*/		
+	for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
+		for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
 	{
-		if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize()))
-			continue;
+			if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+				continue;
+
+		CTerrain& terrain = terrains[x][y];
+		if (!terrain.m_IsInit) continue;
+
+		//if(abs(glm::length(scene->GetCamera()->GetPosition() - terrain.m_WorldCenterPosition)) > 2* terrain.GetSize()) continue;
+
+	//	if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize()))
+		//	continue;
 
 		PrepareTerrain(terrain);
 		LoadModelMatrix(terrain, geomentry_shader);

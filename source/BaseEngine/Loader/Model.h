@@ -73,6 +73,7 @@ private:
 	GLuint			m_Vbos[VertexBufferObjects::COUNT];
 	vector<SFace>	m_Faces;
 	GLuint			m_VertexCount;
+	bool m_TransformVboCreated = false;
 
 	vector<float> positions;
 	vector<float> text_coords;

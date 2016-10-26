@@ -79,7 +79,7 @@ void main()
 		float shadow_distance			= ShadowVariables.y;
 		const float transition_distance = 10.f;
 
-		float distance_to_cam   = length(model_view_position.xyz) ;
+		float distance_to_cam   = Distance;
 		ShadowCoords			= ToShadowMapSpace * vec4(WorldPos0, 1.f); 
 		distance_to_cam			= distance_to_cam - (shadow_distance - transition_distance);
 		distance_to_cam			= distance_to_cam / shadow_distance;

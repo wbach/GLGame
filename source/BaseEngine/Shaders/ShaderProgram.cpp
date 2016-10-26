@@ -11,6 +11,20 @@ void CShaderProgram::InitShaderProgram(char* vertex_shader_file, char* fragment_
 	glValidateProgram(m_ProgramID);
 	m_IsInitialized = true;
 }
+void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragment_shader_file, char * geometry_shader_file)
+{
+	m_VertexShaderID = LoadShader(vertex_shader_file, GL_VERTEX_SHADER);
+	m_GeometryShaderID = LoadShader(geometry_shader_file, GL_GEOMETRY_SHADER);
+	m_FragmentShaderID = LoadShader(fragment_shader_file, GL_FRAGMENT_SHADER);
+	m_ProgramID = glCreateProgram();
+	glAttachShader(m_ProgramID, m_VertexShaderID);
+	glAttachShader(m_ProgramID, m_GeometryShaderID);
+	glAttachShader(m_ProgramID, m_FragmentShaderID);
+	BindAttributes();
+	glLinkProgram(m_ProgramID);
+	glValidateProgram(m_ProgramID);
+	m_IsInitialized = true;
+}
 void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragment_shader_file, char * tesselation_shader_file, char * tesselation_evaluation_shader_file)
 {	
 	m_VertexShaderID = LoadShader(vertex_shader_file, GL_VERTEX_SHADER);
@@ -91,6 +105,7 @@ unsigned int CShaderProgram::LoadShader(char *filename, unsigned int mode)
 }
 void CShaderProgram::Start() const
 {
+	if(m_IsInitialized)
 	glUseProgram(m_ProgramID);
 }
 void CShaderProgram::Stop() const 
@@ -103,6 +118,7 @@ void CShaderProgram::CleanUp()
 		return;
 	Stop();
 	glDetachShader(m_ProgramID, m_VertexShaderID);
+	glDetachShader(m_ProgramID, m_GeometryShaderID);
 	glDetachShader(m_ProgramID, m_FragmentShaderID);
 	glDeleteShader(m_VertexShaderID);
 	glDeleteShader(m_FragmentShaderID);

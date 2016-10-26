@@ -9,6 +9,7 @@
 #include <sstream>
 #include <iostream>
 #include <algorithm>
+#include <math.h>
 #include <string>
 #ifndef M_PI
 #define M_PI    3.14159265358979323846264338327950288   /* pi */
@@ -18,7 +19,7 @@
 #define ARRAY_SIZE_IN_ELEMENTS(a) (sizeof(a)/sizeof(a[0]))
 
 namespace Get
-{
+{	
 	static float Float(std::string line)
 	{
 		return std::stof(line);
@@ -80,6 +81,10 @@ namespace Utils
 
 		return path;
 
+	}
+	inline bool CheckFile(const std::string& name) {
+		struct stat buffer;
+		return (stat(name.c_str(), &buffer) == 0);
 	}
 	static void PrintVector(const std::string& text, const glm::vec3& v)
 	{

@@ -14,7 +14,7 @@ void CSceneEditor::CreateFileList()
 	SetWindowText(m_Hwnd[Hwnds::CURRENT_PATH], m_CurrentPath.c_str());
 
 	m_Hwnd[Hwnds::FILE_LIST] = CreateWindowEx(0, WC_LISTVIEW, NULL, WS_CHILD | WS_VISIBLE | LVS_REPORT |
-		LVS_EDITLABELS, 0, 480, rcl.right - rcl.left, 250,
+		LVS_EDITLABELS, 0, 485, rcl.right - rcl.left, 250,
 		m_Hwnd[Hwnds::MAIN_WINDOW], (HMENU)ControlsIds::FILE_LIST, m_Instance, NULL);
 
 	ListView_SetExtendedListViewStyle(m_Hwnd[Hwnds::FILE_LIST], LVS_EX_FULLROWSELECT);

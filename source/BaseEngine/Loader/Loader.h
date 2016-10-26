@@ -25,6 +25,7 @@ public:
 	GLuint	LoadTexture(string file_name, bool vertical_flip = false);
 	GLuint	LoadFullTexture(string file_name, GLubyte *&data, int &width, int &height);
 	GLuint	LoadCubeMap(const vector<string>& filenames);
+	void	CreateEmptyImage(const std::string filename, int width, int height);
 	void	ReloadTexture(string file_name, GLuint& texture_id);
 	void	ReloadTexture(GLubyte *data, GLuint& texture_id, int width, int height);
 	void	UpdateSubTexture(GLuint& texture_id, GLubyte* subdata, int start_x, int start_y, int width, int height);

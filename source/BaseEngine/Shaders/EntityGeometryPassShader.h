@@ -22,8 +22,8 @@ public:
 	void LoadMeshMaterial(const SMaterial& material) const;
 
 	void LoadToShadowSpaceMatrix(const glm::mat4& matrix) const;
-
 	void LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const;
+
 	void LoadClipPlane(const glm::vec4 clip_plane = glm::vec4(0, 1, 0, 100000)) const;
 private:
 	int location_TransformationMatrix;

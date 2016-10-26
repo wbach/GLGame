@@ -9,6 +9,7 @@
 #include "../Engine/Scene.h"
 #include "../Engine/OpenGLRenderer.h"
 #include "../Water/WaterRenderer.h"
+#include "../Shaders/GrassShader.h"
 
 namespace BufferTexture
 {
@@ -62,6 +63,7 @@ private:
 	CEntityGeometryPassShader	m_EntityGeometryPassShader;
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
 	CLightPassShader			m_LightPassShader;
+	CGrassShader				m_GrassShader;
 
 	glm::vec4	m_ClipPlane;
 	glm::vec2	m_ReflectionSize;
@@ -83,7 +85,7 @@ private:
 	GLuint m_QuadVao;
 	GLuint m_QuadIndices;
 	GLuint m_QuadVertex;
-	GLuint m_QuadTexCoord;
+	GLuint m_QuadTexCoord;	
 
 	float m_ResoultionMultipler = .5f;
 

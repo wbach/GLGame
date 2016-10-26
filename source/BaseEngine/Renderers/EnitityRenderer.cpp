@@ -23,24 +23,36 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
 
-	for (const CTerrain& terr : scene->GetTerrains())
-	{	
-		if (scene->GetCamera()->CheckFrustrumSphereCulling(terr.m_WorldCenterPosition, terr.GetSize()/1.5f))
-			continue;
+	//for (const CTerrain& terr : scene->GetTerrains())
 
-		//cout << "Nerby objects: " << terr.GetNerbyEntities(scene->GetCamera()->GetPositionXZ(), 100).size() << endl;		
-		//for( int& i : terr.GetNerbyEntities(scene->GetCamera()->GetPositionXZ(), 25))
-		for (const shared_ptr<CEntity>& entity : terr.m_TerrainEntities)
-		{			
-			//shared_ptr<CEntity> entity = terr.m_TerrainEntities[i];
-			if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-			if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-				continue;
-			RenderEntityRecursive(scene, entity, geomentry_shader);
-			m_RendererObjectPerFrame++;
-		}
+	std::vector<std::vector<CTerrain>>& terrains = scene->GetTerrains();
+	if (terrains.size() > 0)
+	{
+		int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
+		scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
+
+		for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
+			for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
+			{
+				if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+					continue;
+
+				CTerrain& terrain = terrains[x][y];
+				if (!terrain.m_IsInit) continue;
+
+				if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize() / 1.5f))
+					continue;
+
+				for (const shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
+				{
+					if (entity->GetIsCullingChildren() && !entity->m_Instanced)
+						if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+							continue;
+					RenderEntityRecursive(scene, entity, geomentry_shader);
+					m_RendererObjectPerFrame++;
+				}
+			}
 	}
-
 	
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{

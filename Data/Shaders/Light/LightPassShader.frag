@@ -156,7 +156,8 @@ void main()
 {									
 	vec2 tex_coord	= CalcTexCoord();
 	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;
-
+	
+	//FragColor = texture(NormalMap, tex_coord);	return;
 
 	vec4 normal4	= texture(NormalMap, tex_coord);
 

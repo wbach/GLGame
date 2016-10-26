@@ -23,6 +23,7 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 	case WM_NOTIFY:
 		FileExplorerProcedure(wParam, lParam);	
 		TreeProcedure(hwnd, wParam,lParam);
+		TexturePaintProcedure( wParam, lParam);
 		break;
 	case WM_COMMAND:
 		InspectorProcedure(LOWORD(wParam), HIWORD(wParam));
@@ -94,7 +95,13 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 		case  ControlsIds::MENU_SAVE_SCENE:
 			m_Game.m_SceneParser.SaveToFile(m_CurrentPath, m_Game.GetCurrentScene());
 			break;
-		case  ControlsIds::MENU_SAVEAS_SCENE:
+		case ControlsIds::MENU_SAVE_HEIGHTMAPS:
+			m_Game.GetCurrentScene()->SaveHeightMaps();			
+				break;
+		case ControlsIds::MENU_SAVE_BLENDMAPS:
+			m_Game.GetCurrentScene()->SaveBlendMaps();
+			break;
+		case  ControlsIds::MENU_SAVE_OBJECTS:
 		{
 			OPENFILENAME ofn;
 			char sNazwaPliku[MAX_PATH] = "";
@@ -114,8 +121,7 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 			{
 				SetCurrentDirectory(current_directory);
 				CreateDialogProgressBar();
-				m_Game.m_SceneParser.SaveToFile(sNazwaPliku, m_Game.GetCurrentScene());
-				m_Game.GetCurrentScene()->SaveTerrains();
+				m_Game.m_SceneParser.SaveToFile(sNazwaPliku, m_Game.GetCurrentScene());				
 				DeleteDialogProgressBar();
 			}
 		}
@@ -155,17 +161,16 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 	//	break;
 	//}
 	//case WM_CTLCOLORLISTBOX:
-	//case WM_CTLCOLORSTATIC:
-	//case WM_CTLCOLOREDIT:
-	//{
-	//	HWND hCtl = (HWND)lParam;
-	//	HDC hdc = (HDC)wParam;
+	case WM_CTLCOLORSTATIC:
+	{
+		HWND hCtl = (HWND)lParam;
+		HDC hdc = (HDC)wParam;
 
-	//	SetTextColor(hdc, TEXTCOLOR);
-	//	SetBkColor(hdc, BKCOLOR);
-	//	return (LRESULT)GetStockObject(NULL_BRUSH);
-	//	
-	//}
+		SetTextColor(hdc, TEXTCOLOR);
+		SetBkColor(hdc, BKCOLOR);
+		return (LRESULT)GetStockObject(NULL_BRUSH);
+		
+	}
 	break;
 
 	default:

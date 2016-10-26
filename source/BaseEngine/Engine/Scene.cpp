@@ -3,6 +3,10 @@
 CScene::CScene(CGame& game) 
 : m_Game(game)
 , m_CurrentTerrain(nullptr)
+, m_TerrainsXCount(10)
+, m_TerrainsYCount(10)
+, m_TerrainViewRadius(1)
+, m_GloabalTime(0.f)
 {
 	m_Loader.SetMaxTextureResolution(m_Game.GetMaxTextureResolution());
 }
@@ -36,13 +40,13 @@ void CScene::LoadSkyBox()
 		m_Game.GetMasterRenderer().SetSkyBoxMeshId(m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVao(), m_Loader.m_Models[skybox_cube]->GetMeshes()[0].GetVertexCount());
 	}
 }
-
-void CScene::AddTerrain(CTerrain & terrain) 
-{ 
-	if (terrain.GetName().size() <=0 || terrain.GetName().compare("No name terrain") == 0)
-		terrain.SetName(string("Terrain_") + to_string(m_Terrains.size() ));
-	m_Terrains.push_back(terrain); 
-}
+//
+//void CScene::AddTerrain(CTerrain terrain, int x, int z) 
+//{ 
+//	if (terrain.GetName().size() <=0 || terrain.GetName().compare("No name terrain") == 0)
+//		terrain.SetName(string("Terrain_") + to_string(x) + "x" + to_string(z) );
+//	m_Terrains[x][z] = terrain;
+//}
 
 void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
 { 
@@ -50,11 +54,12 @@ void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
 	{
 		m_Entities.push_back(entity);
 		return;
-	}	
-	int tnr = TerrainNumber(entity->GetPositionXZ());
-
-	if (tnr >= 0)
-		m_Terrains[tnr].AddTerrainEntity(entity);
+	}
+	int xx, zz;
+	TerrainNumber(entity->GetPositionXZ(), xx, zz);
+	cout << xx << " " << zz << endl;
+	if (xx >= 0 && zz >= 0)
+		m_Terrains[xx][zz].AddTerrainEntity(entity);
 	else
 		m_Entities.push_back(entity);
 
@@ -62,64 +67,64 @@ void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
 
 void CScene::AddInstancedEntityFromFile(string file, std::vector<STransform>& transforms, glm::vec3 normalized_size)
 {
-	struct T
-	{
-		int nr;
-		std::vector<STransform> transforms;
-	};
-	std::vector<T> tt;
+	//struct T
+	//{
+	//	int nr;
+	//	std::vector<STransform> transforms;
+	//};
+	//std::vector<T> tt;
 
-	for (STransform& transform : transforms)
-	{
-		int tnr = TerrainNumber(transform.GetPositionXZ());
-		bool added = false;
-		for (T& t : tt)
-		{
-			if (t.nr == tnr)
-			{
-				t.transforms.push_back(transform);
-				added = true;
-			}
-		}
-		if (!added)
-		{
-			T nt;
-			nt.nr = tnr;
-			nt.transforms.push_back(transform);
-			tt.push_back(nt);
-		}
-	}
-	for (T& t : tt)
-	{		
-		glm::vec3 position;	
-		position = CreatePositionVector(t.transforms[0].GetPositionXZ());
-		
-		shared_ptr<CEntity> new_entity = CreateEntityFromFile(file, true, position);
-		bool first = true;
-		for (STransform& transform : t.transforms)
-		{
-			if (first)
-			{
-				first = false;
-				continue;
-			}
-			transform.position = CreatePositionVector(transform.GetPositionXZ());
-			new_entity->AddTransform(transform);
-		}		
-		int model_id = new_entity->GetModelId();
-		shared_ptr<CModel> model = m_Loader.m_Models[model_id];		
-		glm::mat4 normalized_matrix = model->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
-		new_entity->SetNormalizedMatrix(normalized_matrix);
-		new_entity->SetNormalizedSize(normalized_size);
-		new_entity->CalculateEntityTransformMatrix(-1);
-		model->CreateTransformsVbo(new_entity->GetTransformMatrixes());
-		new_entity->m_Instanced = true;
-		model->m_UseFakeLight = true;
-		if (t.nr >= 0)
-			m_Terrains[t.nr].AddTerrainEntity(new_entity);
-		else
-			m_Entities.push_back(new_entity);
-	}
+	//for (STransform& transform : transforms)
+	//{
+	//	int tnr = TerrainNumber(transform.GetPositionXZ());
+	//	bool added = false;
+	//	for (T& t : tt)
+	//	{
+	//		if (t.nr == tnr)
+	//		{
+	//			t.transforms.push_back(transform);
+	//			added = true;
+	//		}
+	//	}
+	//	if (!added)
+	//	{
+	//		T nt;
+	//		nt.nr = tnr;
+	//		nt.transforms.push_back(transform);
+	//		tt.push_back(nt);
+	//	}
+	//}
+	//for (T& t : tt)
+	//{		
+	//	glm::vec3 position;	
+	//	position = CreatePositionVector(t.transforms[0].GetPositionXZ());
+	//	
+	//	shared_ptr<CEntity> new_entity = CreateEntityFromFile(file, true, position);
+	//	bool first = true;
+	//	for (STransform& transform : t.transforms)
+	//	{
+	//		if (first)
+	//		{
+	//			first = false;
+	//			continue;
+	//		}
+	//		transform.position = CreatePositionVector(transform.GetPositionXZ());
+	//		new_entity->AddTransform(transform);
+	//	}		
+	//	int model_id = new_entity->GetModelId();
+	//	shared_ptr<CModel> model = m_Loader.m_Models[model_id];		
+	//	glm::mat4 normalized_matrix = model->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
+	//	new_entity->SetNormalizedMatrix(normalized_matrix);
+	//	new_entity->SetNormalizedSize(normalized_size);
+	//	new_entity->CalculateEntityTransformMatrix(-1);
+	//	model->CreateTransformsVbo(new_entity->GetTransformMatrixes());
+	//	new_entity->m_Instanced = true;
+	//	model->m_UseFakeLight = true;
+	//	if (t.nr >= 0)
+	//		m_Terrains[t.nr].AddTerrainEntity(new_entity);
+	//	else
+	//		m_Entities.push_back(new_entity);
+	//}
 
 }
 
@@ -128,47 +133,95 @@ void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity
 	parent->AddSubbEntity(entity);
 }
 
-void CScene::SaveTerrains()
+void CScene::CreateNewEmptyTerrain(string name, float x, float z)
 {
-	for (const CTerrain& terrain : m_Terrains)
+	string height_map = "Data/Terrain/HeightMaps/terrain_" + name + ".terrain";// +name + ".terrain";
+	CreateEmptyHeightMap(height_map,32,32);
+	string blend_map = "Data/Terrain/BlendMaps/terrain_" + name + ".png";
+	if (!Utils::CheckFile(blend_map)) 
+	m_Loader.CreateEmptyImage(blend_map, 128, 128);
+
+	m_Terrains[x][z].Init(name,
+		x, z,
+		height_map, blend_map,
+		"Data/Textures/grass_ground.png", "Data/Textures/grass_ground.png",
+		"Data/Textures/165.png", "Data/Textures/165.png",
+		"Data/Textures/grassFlowers.png", "Data/Textures/grassFlowers.png",
+		"Data/Textures/sand.png", "Data/Textures/sand.png",
+		"Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png", "Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png"
+	);
+}
+
+void CScene::CreateEmptyHeightMap(string filename, int xx, int yy)
+{
+	if (Utils::CheckFile(filename)) return;
+	std::ofstream file;
+	//"Data/Terrain/HeightMaps/FloatTerrain" + to_string(xx)+ "x" + to_string(yy) + "Empty.terrain"
+	file.open(filename);
+	file << "r"<<xx<<"x" << yy << endl;
+	for (int y = 0; y < yy; y++)
 	{
-		//m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
-		//terrain.SaveHeightMap();
-		std::ofstream file;
-		string fn = "Data/Terrain/" + terrain.GetName() + ".terrain";
-		file.open(fn);
-		string size = "r" + to_string(terrain.m_ImageWidth) + "x" + to_string(terrain.m_ImageHeight);
-		file << size << endl;
-		for (int y = 0; y < terrain.m_ImageWidth; y++)
+		for (int x = 0; x < xx; x++)
 		{
-			for (int x = 0; x < terrain.m_ImageHeight; x++)
-			{
-				file << terrain.m_Heights[x][y] << " ";
-			}
-			file << endl;
+			file << 0 << " ";
 		}
-		file.close();
+		file << endl;
 	}
+	file.close();
+}
+
+void CScene::SaveHeightMaps()
+{
+	//for (const CTerrain& terrain : m_Terrains)
+	for (int y = 0; y < m_TerrainsYCount-1; y++)
+		for (int x = 0; x < m_TerrainsXCount-1; x++)
+		{
+			CTerrain& terrain = m_Terrains[x][y];
+			std::ofstream file;
+			string fn = terrain.m_HeightMapPath;
+			file.open(fn);
+			string size = "r" + to_string(terrain.m_HeightMapResolution) + "x" + to_string(terrain.m_HeightMapResolution);
+			file << size << endl;
+			for (int y = 0; y < terrain.m_HeightMapResolution; y++)
+			{
+				for (int x = 0; x < terrain.m_HeightMapResolution; x++)
+				{
+					file << terrain.m_Heights[x][y] << " ";
+				}
+				file << endl;
+			}
+			file.close();
+		}	
+}
+
+void CScene::SaveBlendMaps()
+{
+	for (int y = 0; y < m_TerrainsYCount - 1; y++)
+		for (int x = 0; x < m_TerrainsXCount - 1; x++)
+		{
+			CTerrain& terrain = m_Terrains[x][y];
+			m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
+		}	
 }
 
 void CScene::MergeTerrains(CTerrain & t1, CTerrain & t2, int axis)
 {
-	if (t1.m_ImageWidth != t2.m_ImageWidth) return;
+	if (t1.m_HeightMapResolution != t2.m_HeightMapResolution) return;
 
-	for (int x = 0; x < t1.m_ImageWidth; x++)
+	for (int x = 0; x < t1.m_HeightMapResolution; x++)
 	{
 		if (axis == 0)
 		{
-			float height = t1.m_Heights[t1.m_ImageWidth - 1][x] + t2.m_Heights[0][x];
+			float height = t1.m_Heights[t1.m_HeightMapResolution - 1][x] + t2.m_Heights[0][x];
 			height /= 2;
-			t1.m_Heights[t1.m_ImageWidth - 1][x] = height;
+			t1.m_Heights[t1.m_HeightMapResolution - 1][x] = height;
 			t2.m_Heights[0][x] = height;
 		}
 		else
 		{
-			float height = t1.m_Heights[x][t1.m_ImageWidth - 1] + t2.m_Heights[x][0];
+			float height = t1.m_Heights[x][t1.m_HeightMapResolution - 1] + t2.m_Heights[x][0];
 			height /= 2;
-			t1.m_Heights[x][t1.m_ImageWidth - 1] = height;
+			t1.m_Heights[x][t1.m_HeightMapResolution - 1] = height;
 			t2.m_Heights[x][0] = height;
 		}
 	}
@@ -176,13 +229,27 @@ void CScene::MergeTerrains(CTerrain & t1, CTerrain & t2, int axis)
 	t2.ReloadVertex();
 }
 
+void CScene::MergeAllTerrains()
+{
+	for (int y = 0; y < m_TerrainsYCount -1; y++)
+		for (int x = 0; x < m_TerrainsXCount -1; x++)
+		{
+			MergeTerrains(m_Terrains[x][y], m_Terrains[x+1][y], 0);
+			MergeTerrains(m_Terrains[x][y], m_Terrains[x][y+1], 1);
+		}
+}
+
 CTerrain* CScene::FindTerrainByName(string name)
 {
-	for (CTerrain& t : m_Terrains)
-	{
-		if (!t.GetName().compare(name))
-			return &t;
-	}
+	
+	for (int y = 0; y < m_TerrainsYCount; y++)
+		for (int x = 0; x < m_TerrainsXCount; x++)
+		{
+			CTerrain& terrain = m_Terrains[x][y];
+			if (!terrain.GetName().compare(name))
+				return &terrain;
+		}
+	
 	return nullptr;
 }
 
@@ -221,8 +288,11 @@ void CScene::ClearObjectsVelocity()
 void CScene::DeleteEntity(shared_ptr<CEntity> deleted_entity)
 {
 	bool deleted = false;
-	for (CTerrain& terrain : m_Terrains)
+	//for (CTerrain& terrain : m_Terrains)
+	for (int y = 0; y < m_TerrainsYCount; y++)
+		for (int x = 0; x < m_TerrainsXCount; x++)
 	{
+		CTerrain& terrain = m_Terrains[x][y];
 		int i = 0;
 		for (shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
 		{
@@ -301,8 +371,11 @@ shared_ptr<CEntity> CScene::FindEntity(int id)
 {
 	shared_ptr<CEntity> founded_entity = nullptr;
 
-	for (CTerrain& terrain : m_Terrains)
+	//for (CTerrain& terrain : m_Terrains)
+	for (int y = 0; y < m_TerrainsYCount; y++)
+	for (int x = 0; x < m_TerrainsXCount; x++)
 	{
+		CTerrain& terrain = m_Terrains[x][y];
 		for (shared_ptr<CEntity>& entity : terrain.m_TerrainEntities) 
 		{
 			if (entity->GetId() == id)
@@ -347,13 +420,16 @@ shared_ptr<CEntity> CScene::FindSubEntity(shared_ptr<CEntity>& entity, int id)
 
 CTerrain * CScene::FindTerrainById(int id)
 {
-	for (CTerrain& terrain : m_Terrains)
-	{
-		if (terrain.GetId() == id)
+	//for (CTerrain& terrain : m_Terrains)
+	for (int y = 0; y < m_TerrainsYCount; y++)
+		for (int x = 0; x < m_TerrainsXCount; x++)
 		{
-			return &terrain;
+			CTerrain& terrain = m_Terrains[x][y];
+			if (terrain.GetId() == id)
+			{
+				return &terrain;
+			}
 		}
-	}
 	return nullptr;
 }
 
@@ -362,7 +438,7 @@ const vector<shared_ptr<CEntity>>& CScene::GetEntities() const
 	return m_Entities;
 }
 
-const vector<CTerrain>& CScene::GetTerrains() const
+std::vector<std::vector<CTerrain>>&	 CScene::GetTerrains()
 { 
 	return m_Terrains;
 }
@@ -395,11 +471,10 @@ glm::vec3 CScene::CreatePositionVector(glm::vec2 xzPos, float yOffset)
 //return height form current terrain
 const float CScene::GetHeightOfTerrain(float x, float z)
 {
-	for (const CTerrain& ter : m_Terrains) 
-		if (x > ter.m_Transform.position.x && x <  ter.m_Transform.position.x + ter.GetSize())
-			if (z > ter.m_Transform.position.z && z <  ter.m_Transform.position.z + ter.GetSize()) 
-				return ter.GetHeightofTerrain(x, z);			
-	
+	int xx, zz;
+	TerrainNumber(x, z, xx, zz);
+	if(xx >= 0 && zz >= 0)	
+		return m_Terrains[xx][zz].GetHeightofTerrain(x, z);	
 	return -1;
 }
 
@@ -408,22 +483,31 @@ const float CScene::GetHeightOfTerrain(glm::vec2 xzPos)
 	return GetHeightOfTerrain(xzPos.x, xzPos.y);
 }
 
-const int CScene::TerrainNumber(float x, float z) 
+void CScene::TerrainNumber(float world_x, float world_z, int & x, int & z)
 {
-	int nr = 0;
-	for (const CTerrain& ter : m_Terrains) {
-		if (x > ter.m_Transform.position.x && x <  ter.m_Transform.position.x + ter.GetSize())
-			if (z > ter.m_Transform.position.z && z <  ter.m_Transform.position.z + ter.GetSize())			
-				return nr;			
-		nr++;
+	x = world_x / TERRAIN_SIZE;
+	z = world_z / TERRAIN_SIZE;
+
+	if (x < 0 && x > m_TerrainsXCount - 1 && z < 0 && z > m_TerrainsYCount - 1)
+	{
+		z = -1;
+		x = -1;
 	}
-	return -1;
+	else
+	{
+		if (!m_Terrains[x][z].m_IsInit)
+		{
+			z = -1;
+			x = -1;
+		}
+	}
 }
 
-const int CScene::TerrainNumber(glm::vec2 xz_pos)
+void CScene::TerrainNumber(glm::vec2 xz_pos, int & x, int & z)
 {
-	return TerrainNumber(xz_pos.x, xz_pos.y);
+	TerrainNumber(xz_pos.x, xz_pos.y, x, z);
 }
+
 
 const glm::vec3 CScene::GetDirectionalLightPosition()
 {
@@ -437,27 +521,22 @@ const glm::vec3 CScene::GetDirectionalLightPosition()
 
 glm::vec3 CScene::GetMousePickerTarget()
 {
-	for (CTerrain& terrain : m_Terrains)
-	{  
-		bool is_col;
-		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
-		if (is_col) return point;
-	}
-	return glm::vec3();
+	for (int y = 0; y < m_TerrainsYCount; y++)
+		for (int x = 0; x < m_TerrainsXCount; x++)
+		{	
+		}
+		return glm::vec3();
 }
 
 void CScene::SetEntityToMousePointByKey(std::shared_ptr<CEntity> entity)
 {
 	if (!m_Game.GetInputManager().GetKey(KeyCodes::M)) return;
-	for (CTerrain& terrain : m_Terrains)
+	for (int y = 0; y < m_TerrainsYCount; y++)
+		for (int x = 0; x < m_TerrainsXCount; x++)
 	{
-		bool is_col;
-		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
-		if (is_col)
-		{
-			entity->SetPosition(CreatePositionVector(point.x, point.z, entity->GetAttachYOffset()));
-			return;
-		}
+		CTerrain& terrain = m_Terrains[x][y];
+//		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition());
+	//	entity->SetPosition(CreatePositionVector(point.x, point.z, entity->GetAttachYOffset()));		
 	}
 }
 

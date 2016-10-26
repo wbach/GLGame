@@ -77,6 +77,7 @@ private:
 	void UpdateInspector();
 	void UpdateEntity(ControlsIds::Ids type);
 	void GetValueFromControl(HWND hwnd, float& value);	
+	void TexturePaintProcedure(WPARAM wParam, LPARAM lParam);
 
 	// Objects Tree functions
 	void CreateObjectsTree();
@@ -114,7 +115,7 @@ private:
 	bool m_AttachToTerrainHeight = false;
 	shared_ptr<CEntity> m_CurrentEntity = nullptr;
 	CTerrain* m_CurrentTerrain = nullptr;
-
+	int m_CurrentPaintColor = 0;
 	int m_BrushSize = 50;
 	float m_PaintStrength = 1.f;
 

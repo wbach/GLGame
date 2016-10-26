@@ -117,7 +117,17 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+
+	//if (gltIsExtSupported("GL_EXT_texture_filter_anisotropic"))
+	//{
+
+	//}
+	
+	GLfloat max_t;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_t);
+	//float amount = min(4.f, max_t);
+	//glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, max_t);
 
 	if (!keepData)
 		delete[] texture;
@@ -167,6 +177,33 @@ GLuint CTextureLoader::LoadCubeMap(const vector<string>& filenames)
 	return tex;
 }
 
+void CTextureLoader::CreateEmptyImage(const std::string file_name, int width, int height)
+{
+	
+
+	FIBITMAP* bitmap = FreeImage_Allocate(width, height, 32, 8, 8, 8);
+
+	width = FreeImage_GetWidth(bitmap);
+	height = FreeImage_GetHeight(bitmap);
+
+	for (int y = height - 1; y >= 0; y--)
+	{
+		BYTE *bits = FreeImage_GetScanLine(bitmap, height - 1 - y);
+		for (int x = 0; x < width; x++)
+		{
+			bits[0] = 0;
+			bits[1] = 0;
+			bits[2] = 0;
+			bits[3] = 255;
+			bits += 4;
+		}
+	}
+
+	FreeImage_FlipVertical(bitmap);
+	FreeImage_Save(FIF_PNG, bitmap, file_name.c_str(), PNG_DEFAULT);
+	FreeImage_Unload(bitmap);
+}
+
 void CTextureLoader::ReloadTexture(string file_name, GLuint* texture_id)
 {
 	glDeleteTextures(1, texture_id);
@@ -193,7 +230,13 @@ void CTextureLoader::ReloadTexture(GLubyte * data, GLuint& texture_id, int width
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, -0.4f);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_LOD_BIAS, 0);
+
+	float max_t;
+	//glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_t);
+	//float amount = min(4.f, max_t);
+	//glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, amount);
+
 }
 
 void CTextureLoader::UpdateSubTexture(GLuint & texture_id, GLubyte * subdata, int start_x, int start_y, int width, int height)

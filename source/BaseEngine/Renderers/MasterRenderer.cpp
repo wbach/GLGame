@@ -50,6 +50,14 @@ void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, g
 	m_WaterQuality	 = water_quality;
 
 	m_WaterRenderer.Init(window_size, projection_matrix, m_ReflectionSize , m_RefractionSize, m_WaterQuality);
+
+	m_GrassShader.Init();
+	m_GrassShader.Start();
+	m_GrassShader.LoadProjectionMatrix(projection_matrix);
+	m_GrassShader.LoadTransformMatrix(Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(1)));
+	m_GrassShader.Stop();
+
+	
 }
 
 void CMasterRenderer::CleanUp()
@@ -71,7 +79,7 @@ void CMasterRenderer::CleanUp()
 	m_LightPassShader.CleanUp();
 	m_ShadowMapRenderer.CleanUp();
 	m_SkyBoxRenderer.CleanUp();
-	
+	m_GrassShader.CleanUp();	
 }
 
 void CMasterRenderer::SetReadBuffer(BufferTexture::Type TextureType)
@@ -147,10 +155,11 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	glEnable(GL_DEPTH_TEST);
 
 	glDisable(GL_BLEND);
-
+	
+	// *********************************************SkyBox render******************************************
 	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
-
-	// Terrain render
+	//*****************************************************************************************************
+	// ******************************Terrain render********************************************************
 	m_TerrainGeometryPassShader.Start();
 	if (shadows)
 	{
@@ -162,8 +171,8 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	m_TerrainGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_TerrainRenderer.Render(scene, m_TerrainGeometryPassShader);
 	m_TerrainGeometryPassShader.Stop();
-
-	// Entities Render
+	//****************************************************************************************************
+	// **************************************Entities render**********************************************
 	m_EntityGeometryPassShader.Start();
 	if (shadows)
 	{
@@ -176,7 +185,39 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	m_EntityGeometryPassShader.Stop();
+	//****************************************************************************************************
+	// **************************************Grass(Flora) render******************************************
+	int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
+	scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
+	
+	for (int y = z_camera - view_radius; y < z_camera + view_radius + 1; y++)
+		for (int x = x_camera - view_radius; x < x_camera + view_radius + 1; x++)
+		{
+			if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+				continue;
 
+			CTerrain& terrain = scene->m_Terrains[x][y];
+			if (!terrain.m_IsInit) continue;
+
+			m_GrassShader.Start();
+			if (shadows)
+			{
+				glActiveTexture(GL_TEXTURE1);
+				glBindTexture(GL_TEXTURE_2D, m_ShadowMapRenderer.GetShadowMap());
+				m_GrassShader.LoadToShadowSpaceMatrix(m_ShadowMapRenderer.GetToShadowMapSpaceMatrix());
+			}
+			m_GrassShader.LoadGlobalTime(scene->m_GloabalTime);			
+			m_GrassShader.LoadShadowValues(static_cast<float>(shadows), m_ShadowsDistance, m_ShadowMapSize);
+			m_GrassShader.LoadViewMatrix(scene->GetViewMatrix());			
+			for (CGrass& grass : terrain.m_Grass)
+			{
+				m_GrassShader.LoadViewDistance(grass.m_ViewDistance);
+				grass.Render();
+			}
+			m_GrassShader.Stop();
+		}
+	//****************************************************************************************************
+	// **************************************Water render******************************************
 	m_WaterRenderer.Render(scene, 0.001);
 
 	m_RendererObjectPerFrame = m_EntityRenderer.GetObjectsPerFrame() + m_TerrainRenderer.GetObjectsPerFrame();

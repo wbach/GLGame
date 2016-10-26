@@ -1,7 +1,13 @@
 #include "Terrain.h"
 int CTerrain::s_ID = 0;
-
-CTerrain::CTerrain(string name, CLoader &loader,
+CTerrain::CTerrain(CLoader &loader)
+	: m_Loader(loader)
+{
+	m_Name = "No name terrain";
+	m_Id = s_ID++;
+	m_IsInit = false;
+}
+void CTerrain::Init(string name,
 	float x, float z,
 	string height_map,  string blend_map,
 	string background_texture, string background_normal_texture,
@@ -9,10 +15,10 @@ CTerrain::CTerrain(string name, CLoader &loader,
 	string r_texture, string r_normal_texture,
 	string g_texture, string g_normal_texture,
 	string b_texture, string b_normal_texture)
-	: m_HeightMapPath(height_map)
-	, m_BlendMapPath(blend_map)
-	, m_Loader(loader)
 {
+
+	m_HeightMapPath = height_map;
+	m_BlendMapPath = blend_map;
 
 	m_RockTexturePath[0] = rock_texture;
 	m_RockTexturePath[1] = rock_normal_texture;
@@ -31,42 +37,53 @@ CTerrain::CTerrain(string name, CLoader &loader,
 
 	m_Position = glm::vec3(x, 0, z);
 
-	m_Transform.position.x = x * m_Size;
-	m_Transform.position.y = m_MaxHeight;
-	m_Transform.position.z = z * m_Size;
+	m_Transform.position.x = x * TERRAIN_SIZE;
+	m_Transform.position.y = 0;
+	m_Transform.position.z = z * TERRAIN_SIZE;
 
-	m_BlendMap = loader.LoadFullTexture(blend_map, m_BlendMapData, m_BlendMapWidth, m_BlendMapHeight);
+	m_BlendMap = m_Loader.LoadFullTexture(blend_map, m_BlendMapData, m_BlendMapWidth, m_BlendMapHeight);
 
-	m_BackgroundTexture[0] = loader.LoadTexture(background_texture);
-	m_RTexture[0] = loader.LoadTexture(r_texture);
-	m_GTexture[0] = loader.LoadTexture(g_texture);
-	m_BTexture[0] = loader.LoadTexture(b_texture);
-	m_BackgroundTexture[1] = loader.LoadTexture(background_normal_texture);
-	m_RTexture[1] = loader.LoadTexture(r_normal_texture);
-	m_GTexture[1] = loader.LoadTexture(g_normal_texture);
-	m_BTexture[1] = loader.LoadTexture(b_normal_texture);
+	m_BackgroundTexture[0] = m_Loader.LoadTexture(background_texture);
+	m_RTexture[0] = m_Loader.LoadTexture(r_texture);
+	m_GTexture[0] = m_Loader.LoadTexture(g_texture);
+	m_BTexture[0] = m_Loader.LoadTexture(b_texture);
+	m_BackgroundTexture[1] = m_Loader.LoadTexture(background_normal_texture);
+	m_RTexture[1] = m_Loader.LoadTexture(r_normal_texture);
+	m_GTexture[1] = m_Loader.LoadTexture(g_normal_texture);
+	m_BTexture[1] = m_Loader.LoadTexture(b_normal_texture);
 
-	m_RockTexture[0] = loader.LoadTexture(rock_texture);
-	m_RockTexture[1] = loader.LoadTexture(rock_normal_texture);
+	m_RockTexture[0] = m_Loader.LoadTexture(rock_texture);
+	m_RockTexture[1] = m_Loader.LoadTexture(rock_normal_texture);
 
 	try
 	{
-		GenerateTerrainMap(loader, height_map);
+		GenerateTerrainMap(m_Loader, height_map);
 	}
 	catch (const std::exception& e)
 	{
 		e.what();
+		return;
 	}
 
 	m_Name = name;
-	m_Id = s_ID++;
 
-	m_WorldCenterPosition = glm::vec3(m_Size) / 2.f + m_Transform.position ;
-	m_WorldCenterPosition.y = 2*m_MaxHeight;
+	m_WorldCenterPosition = glm::vec3(TERRAIN_SIZE) / 2.f + m_Transform.position ;
+	m_WorldCenterPosition.y = 0;
+
+	m_IsInit = true;
+	
+	m_Indices.clear();
+	m_Vertices.clear();
+	m_Normals.clear();
+	m_Tangens.clear();
+	m_TextureCoords.clear();
 }
 
 void CTerrain::AddTerrainEntity(shared_ptr<CEntity> e)
 {
+	if (!m_IsInit)
+		return;
+
 	m_TerrainEntities.push_back(e);
 
 	//glm::vec2 position = e->GetPositionXZ();
@@ -113,11 +130,21 @@ void CTerrain::AddTerrainEntity(shared_ptr<CEntity> e)
 	//file.close();
 }
 
+void CTerrain::AddTerrainGrass(const std::vector<glm::vec3>& positions, const GLuint & texture)
+{
+	m_Grass.push_back(CGrass());
+	m_Grass.back().Init(positions, texture);
+}
+
 vector<int> CTerrain::GetNerbyEntities(glm::vec2 position_xz, int range) const
 {
 	vector<int> indexes;
-	if (m_Transform.position.x < position_xz.x && m_Transform.position.x + m_Size > position_xz.x)
-		if (m_Transform.position.z < position_xz.y && m_Transform.position.z + m_Size > position_xz.y)
+
+	if (!m_IsInit)
+		return indexes;
+
+	if (m_Transform.position.x < position_xz.x && m_Transform.position.x + TERRAIN_SIZE > position_xz.x)
+		if (m_Transform.position.z < position_xz.y && m_Transform.position.z + TERRAIN_SIZE > position_xz.y)
 		{
 			int x = static_cast<int> (position_xz.x);
 			int z = static_cast<int> (position_xz.y);
@@ -126,9 +153,9 @@ vector<int> CTerrain::GetNerbyEntities(glm::vec2 position_xz, int range) const
 				for (int xx = -range; xx < range; xx++)
 				{
 					if (x + xx < 0) continue;
-					if (x + xx > (int)m_Size-1) continue;
+					if (x + xx > (int)TERRAIN_SIZE -1) continue;
 					if (z + zz < 0) continue;
-					if (z + zz > (int)m_Size-1) continue;
+					if (z + zz > (int)TERRAIN_SIZE -1) continue;
 
 					//cout << xx + x << " | " << z + zz << endl;
 					//Utils::PrintVector("Camera pos: ", position_xz);
@@ -155,12 +182,52 @@ vector<int> CTerrain::GetNerbyEntities(glm::vec2 position_xz, int range) const
 	return indexes;
 }
 
-CTerrain::CTerrain(CLoader &loader)
-	: m_Loader(loader)
+void CTerrain::InitGrassFromFile(std::string filename, GLuint texture)
 {
-	m_Name = "No name terrain";
-	m_Id = s_ID++;
+	vector<glm::vec3> grass_positions;
+	std::ifstream file;
+	file.open(filename);
+	string line;
+	while (std::getline(file, line))
+	{
+		glm::vec3 position = Get::Vector3d(line);
+		grass_positions.push_back(position);
+	}
+	file.close();
+	AddTerrainGrass(grass_positions, texture);
 }
+
+vector<glm::vec3> CTerrain::GenerateGrassPositions(const string & filename, const int & count) const
+{
+	vector<glm::vec3> grass_positions;
+	std::ofstream file;
+	file.open(filename);
+
+	for (int i = 0; i < count; i++)
+	{
+		glm::vec3 position;
+		position.x = m_Transform.position.x + (rand() % static_cast<int>(2 * TERRAIN_SIZE)) / 2.f;
+		position.z = m_Transform.position.z + (rand() % static_cast<int>(2 * TERRAIN_SIZE)) / 2.f;
+		position.y = GetHeightofTerrain(position.x, position.z) + 1.0f;
+
+		bool is = false;
+		for (glm::vec3& p : grass_positions)
+		{
+			float l = glm::length(position - p);
+			if (abs(l) < 1.f)
+				is = true;
+		}
+		if (!is)
+		{
+			file << position.x << "x" << position.y << "x" << position.z << endl;
+			grass_positions.push_back(position);
+		}
+	}
+	file.close();
+	return grass_positions;
+}
+
+
 
 glm::vec3 CalculateTangents(const SFace& f) 
 {
@@ -207,11 +274,10 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 			resolution = Get::Vector2d(line);
 
 
-			m_ImageHeight = resolution.x;
-			m_ImageWidth = resolution.y;
-			m_Heights = new float*[m_ImageHeight];
-			for (int i = 0; i < m_ImageHeight; ++i)
-				m_Heights[i] = new float[m_ImageHeight];
+			m_HeightMapResolution = resolution.x;
+			m_Heights = new float*[m_HeightMapResolution];
+			for (int i = 0; i < m_HeightMapResolution; ++i)
+				m_Heights[i] = new float[m_HeightMapResolution];
 		}
 		else
 		{
@@ -226,19 +292,21 @@ void CTerrain::GenerateTerrainMap(CLoader &loader,string heightMap)
 			{
 				float height = std::stof(tokens[x]);
 				m_Heights[x][k] = height;
+				m_AvarageHeight += height;
 			}
 			k++;
 		}
 	}
 	file.close();
-
-
+	m_AvarageHeight /= (resolution.x*resolution.x);
+	m_Transform.position.y = m_AvarageHeight;
+	m_WorldCenterPosition.y = m_AvarageHeight;
 
 	CreateTerrain();
 }
 void CTerrain::CreateTerrain()
 {
-	m_VertexCount = m_ImageHeight;	
+	m_VertexCount = m_HeightMapResolution;
 
 	CreateTerrainVertexes(0, 0, m_VertexCount, m_VertexCount);
 
@@ -307,7 +375,6 @@ void CTerrain::CreateTerrain()
 	
 	SMaterial material;
 	m_Model.AddMesh("Terrain", m_Vertices, m_TextureCoords, m_Normals, m_Tangens, m_Indices, material);
-	m_Model.CreateMeshesVaos();
 }
 void CTerrain::CreateTerrainVertexes(int x_start, int y_start, int width, int height)
 {
@@ -319,9 +386,9 @@ void CTerrain::CreateTerrainVertexes(int x_start, int y_start, int width, int he
 			//float height = GetHeightMap(j, i, m_HeightMapFreeImage);
 			//m_Heights[j][i] = height;
 			float height = m_Heights[j][i];
-			m_Vertices.push_back(static_cast<float>(j) / (static_cast<float>(m_VertexCount - 1)) * m_Size);
+			m_Vertices.push_back(static_cast<float>(j) / (static_cast<float>(m_VertexCount - 1)) * TERRAIN_SIZE);
 			m_Vertices.push_back(height);
-			m_Vertices.push_back(static_cast<float>(i) / (static_cast<float>(m_VertexCount) - 1) * m_Size);
+			m_Vertices.push_back(static_cast<float>(i) / (static_cast<float>(m_VertexCount) - 1) * TERRAIN_SIZE);
 
 			glm::vec3 normal = CalculateNormalMap(j, i);
 
@@ -332,27 +399,26 @@ void CTerrain::CreateTerrainVertexes(int x_start, int y_start, int width, int he
 			m_TextureCoords.push_back(static_cast<float>(j) / static_cast<float>(m_VertexCount - 1));
 			m_TextureCoords.push_back(static_cast<float>(i) / static_cast<float>(m_VertexCount - 1));
 		}
-		cout << endl;
 	}
 }
 glm::vec3 CTerrain::CalculateNormalMap(int x, int z)
 {
 	int lx = x - 1; if (lx < 0) lx = 0;
-	int rx = x + 1; if (rx > m_ImageHeight - 1) rx = m_ImageHeight-1;
+	int rx = x + 1; if (rx > m_HeightMapResolution - 1) rx = m_HeightMapResolution -1;
 	int dz = z - 1; if (dz < 0) dz = 0;
-	int uz = z + 1; if (uz > m_ImageHeight - 1) uz = m_ImageWidth-1;
+	int uz = z + 1; if (uz > m_HeightMapResolution - 1) uz = m_HeightMapResolution -1;
 	float heightL = GetHeightMap(lx, z);
 	float heightR = GetHeightMap(rx, z);
 	float heightD = GetHeightMap(x, dz);
 	float heightU = GetHeightMap(x, uz);
-	glm::vec3 normal(heightL -heightR, 0.35f , heightD - heightU  ) ;
+	glm::vec3 normal(heightL -heightR, 2.0f , heightD - heightU  ) ;
 	glm::normalize(normal);	
 	return normal ;
 }
 
-float CTerrain::GetHeightMap(int x, int z){
-
-	if (x < 0 || x >= m_ImageHeight || z < 0 || z >= m_ImageWidth) 
+float CTerrain::GetHeightMap(int x, int z)
+{	
+	if (x < 0 || x >= m_HeightMapResolution || z < 0 || z >= m_HeightMapResolution)
 	{
 		return 0;
 	}
@@ -367,10 +433,13 @@ const float CTerrain::GetHeightofTerrain(glm::vec2 posXZ) const
 
 const float CTerrain::GetHeightofTerrain(float worldX, float worldZ) const
 {
+	if (!m_IsInit)
+		return -1;
+
 	float terrain_x = worldX - m_Transform.position.x ;
 	float terrain_z = worldZ - m_Transform.position.z ;
 
-	float grid_squere_size = m_Size / ((float) m_VertexCount - 1) ;
+	float grid_squere_size = TERRAIN_SIZE / ((float) m_VertexCount - 1) ;
 	int grid_x = (int) floor(terrain_x / grid_squere_size);
 	int grid_z = (int) floor(terrain_z / grid_squere_size);
 
@@ -400,7 +469,7 @@ const float CTerrain::GetHeightofTerrain(float worldX, float worldZ) const
 
 const float& CTerrain::GetSize() const
 {
-	return m_Size;
+	return TERRAIN_SIZE;
 }
 
 void CTerrain::RecursiveResetEnities(shared_ptr<CEntity>& entity)
@@ -411,25 +480,17 @@ void CTerrain::RecursiveResetEnities(shared_ptr<CEntity>& entity)
 		subentity.reset();
 	}
 }
-void CTerrain::PaintBlendMap(glm::vec3 point)
+void CTerrain::PaintBlendMap(glm::vec3 point, int m_BrushSize, glm::vec3 paint_color)
 {
+
 	float terrain_x = point.x - m_Transform.position.x;
 	float terrain_z = point.z - m_Transform.position.z;
 
-	float x = terrain_x / m_Size;
-	float z = terrain_z / m_Size;
-	//float x = point.x / m_Size;
-	//float z = point.z / m_Size;
-
+	float x = terrain_x / TERRAIN_SIZE;
+	float z = terrain_z / TERRAIN_SIZE;
 
 	int blend_x = static_cast<int>(x * (float)m_BlendMapWidth);
 	int blend_y = static_cast<int>(z * (float)m_BlendMapHeight);
-
-	if (blend_y < 0) blend_y = 0;
-	if (blend_x < 0) blend_x = 0;
-
-	if (blend_y > m_BlendMapHeight) blend_y = m_BlendMapHeight -1;
-	if (blend_x > m_BlendMapWidth) blend_x = m_BlendMapWidth -1;
 
 	GLubyte* pixels = new GLubyte[4 * 2 * m_BrushSize * 2 * m_BrushSize];
 	int i = 0;
@@ -437,8 +498,14 @@ void CTerrain::PaintBlendMap(glm::vec3 point)
 	{
 		for (int x = -m_BrushSize; x < m_BrushSize; x++)
 		{
-			if ((4 * (blend_x + x + (blend_y + y) * m_BlendMapWidth)) < 0 || (4 * (blend_x + x + (blend_y + y) * m_BlendMapWidth) + 3) >= 4 * m_BlendMapWidth * m_BlendMapHeight)
-				continue;
+			int mx = 4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth);
+			int my = 4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth)+3;
+
+			if (mx < 0) continue;
+			if (my > 4 * m_BlendMapWidth * m_BlendMapHeight) continue;
+
+		/*	if ((4 * (blend_x + x + (blend_y + y) * m_BlendMapWidth)) < 0 || (4 * (blend_x + x + (blend_y + y) * m_BlendMapWidth) + 3) >= 4 * m_BlendMapWidth * m_BlendMapHeight)
+				continue;*/
 
 			if (((x ) * (x ) + (y) * (y)) <= m_BrushSize * m_BrushSize)
 			{
@@ -446,22 +513,39 @@ void CTerrain::PaintBlendMap(glm::vec3 point)
 				float distance = glm::length(l) / m_BrushSize;
 				float r = 1.f - distance;
 
-				GLubyte b_old = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 2];
-				GLubyte g_old = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 1];
-				GLubyte r_old = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 0];
+				GLubyte b_old = m_BlendMapData[mx + 2];
+				GLubyte g_old = m_BlendMapData[mx + 1];
+				GLubyte r_old = m_BlendMapData[mx + 0];
 
+				glm::vec3 color;
+				color.x = (static_cast<float>(r_old) * distance) + (paint_color.x * 255.f * r);
+				color.y = (static_cast<float>(g_old) * distance) + (paint_color.y * 255.f * r);
+				color.z = (static_cast<float>(b_old) * distance) + (paint_color.z * 255.f * r);
 
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 0] = static_cast<GLubyte>(static_cast<float>(r_old) * distance) + static_cast<GLubyte>(m_PaintColor.x * 255.f * r); //r				
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 1] = static_cast<GLubyte>(static_cast<float>(g_old) * distance) + static_cast<GLubyte>(m_PaintColor.y * 255.f * r); //g
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 2] = static_cast<GLubyte>(static_cast<float>(b_old) * distance) + static_cast<GLubyte>(m_PaintColor.z * 255.f * r); //b
-				pixels[i++] = m_BlendMapData[4 * (blend_x + blend_y*m_BlendMapWidth) + 3];
+				//color.x = (paint_color.x * 2.f * r);
+				//color.y = (paint_color.y * 2.f * r);
+				//color.z = (paint_color.z * 255.f * r);
+
+				if (color.x > 255) color.x = 255;
+				if (color.y > 255) color.y = 255;
+				if (color.z > 255) color.z = 255;
+
+				if (color.x < 0) color.x = 0;
+				if (color.y < 0) color.y = 0;
+				if (color.z < 0) color.z = 0;
+
+				pixels[i++] = m_BlendMapData[mx + 0] = static_cast<GLubyte>(color.x);
+				pixels[i++] = m_BlendMapData[mx + 1] = static_cast<GLubyte>(color.y);
+				pixels[i++] = m_BlendMapData[mx + 2] = static_cast<GLubyte>(color.z);
+				pixels[i++] = m_BlendMapData[mx + 3];
+
 			}
 			else
 			{
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 0];//r				
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 1]; //g
-				pixels[i++] = m_BlendMapData[4 * (blend_x + x + (blend_y + y)*m_BlendMapWidth) + 2];//b
-				pixels[i++] = m_BlendMapData[4 * (blend_x + blend_y*m_BlendMapWidth) + 3];
+				pixels[i++] = m_BlendMapData[mx + 0];//r				
+				pixels[i++] = m_BlendMapData[mx + 1]; //g
+				pixels[i++] = m_BlendMapData[mx + 2];//b
+				pixels[i++] = m_BlendMapData[mx + 3];
 			}
 		}
 	}
@@ -471,86 +555,31 @@ void CTerrain::PaintBlendMap(glm::vec3 point)
 	//m_Loader.ReloadTexture(m_BlendMapData, m_BlendMap, m_BlendMapWidth, m_BlendMapHeight);
 	//m_Loader.SaveTextureToFile(m_BlendMapPath, m_BlendMapData, m_BlendMapWidth, m_BlendMapHeight);
 }
-
-void CTerrain::PaintHeightMap(glm::vec3 point)
+void gaussBlur_1(float** scl, float** tcl, int w, int h, float r)
 {
-	if (point.x < m_Transform.position.x && point.x > m_Transform.position.x + m_Size)
-	{
-		return;
-	}
-	if (point.z < m_Transform.position.z && point.z > m_Transform.position.z + m_Size)
-	{
-		return;
-	}
-
-	float terrain_x = point.x - m_Transform.position.x;
-	float terrain_z = point.z - m_Transform.position.z;
-
-	float x = terrain_x / m_Size;
-	float z = terrain_z / m_Size;
-
-	int height = FreeImage_GetHeight(m_HeightMapFreeImage);
-	int width = FreeImage_GetWidth(m_HeightMapFreeImage);
-
-	int blend_x = static_cast<int>(x * (float)width);
-	int blend_y = static_cast<int>(z * (float)height);
-
-	if (blend_y < 0) blend_y = 0;
-	if (blend_x < 0) blend_x = 0;
-
-	if (blend_y > height) blend_y = height - 1;
-	if (blend_x > width) blend_x = width - 1;
-
-	m_BrushSize = 5;
-	int i = 0;
-	for (int y = -m_BrushSize; y < m_BrushSize; y++)
-	{
-		for (int x = -m_BrushSize; x < m_BrushSize; x++)
+	float rs = ceil(r * 2.57);     // significant radius
+	for (int i = 0; i<h; i++)
+		for (int j = 0; j<w; j++)
 		{
-			if ((4 * (blend_x + x + (blend_y + y) * width)) < 0 || (4 * (blend_x + x + (blend_y + y) * width) + 3) >= 4 * width * height)
-				continue;
-
-			if (((x) * (x)+(y) * (y)) <= m_BrushSize * m_BrushSize)
-			{
-				RGBQUAD color;
-				FreeImage_GetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
-				color.rgbBlue += static_cast<BYTE>(m_HeightPaint.z);
-				if (color.rgbBlue > 250) color.rgbBlue = 250;
-				if (color.rgbBlue < 1) color.rgbBlue = 0;
-				color.rgbGreen += static_cast<BYTE>(m_HeightPaint.y);
-				if (color.rgbGreen > 250) color.rgbGreen = 250;
-				if (color.rgbGreen < 1) color.rgbGreen = 0;
-				color.rgbRed += static_cast<BYTE>(m_HeightPaint.x);
-				if (color.rgbRed > 250) color.rgbRed = 250;
-				if (color.rgbRed < 1) color.rgbRed = 0;
-				FreeImage_SetPixelColor(m_HeightMapFreeImage, x + blend_x, y + blend_y, &color);
-			}			
+			float val = 0, wsum = 0;
+			for (int iy = i - rs; iy<i + rs + 1; iy++)
+				for (int ix = j - rs; ix<j + rs + 1; ix++) {
+					int x = min(w - 1, max(0, ix));
+					int y = min(h - 1, max(0, iy));
+					int dsq = (ix - j)*(ix - j) + (iy - i)*(iy - i);
+					float wght = exp(-dsq / (2 * r*r)) / (M_PI * 2 * r*r);
+					val += scl[y][x] * wght;  wsum += wght;
+				}
+			tcl[i][j] = round(val / wsum);
 		}
-	}
-
-	//m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, static_cast<int>(m_ImageWidth / 1.1f), static_cast<int>(m_ImageHeight / 1.1f), FILTER_BILINEAR);
-	//m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth, m_ImageHeight , FILTER_BILINEAR);
-
-	m_Vertices.clear();
-	m_Normals.clear();
-	m_TextureCoords.clear();
-	CreateTerrainVertexes(0, 0, m_VertexCount, m_VertexCount);
-	GLuint vbo = m_Model.GetMeshes()[0].GetVbo(VertexBufferObjects::POSITION);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, m_Vertices.size() * sizeof(float), &m_Vertices[0], GL_DYNAMIC_DRAW);
-
-	GLuint vbon = m_Model.GetMeshes()[0].GetVbo(VertexBufferObjects::NORMAL);
-	glBindBuffer(GL_ARRAY_BUFFER, vbon);
-	glBufferData(GL_ARRAY_BUFFER, m_Normals.size() * sizeof(float), &m_Normals[0], GL_DYNAMIC_DRAW);
 }
-
-void CTerrain::PaintHeightMapPoint(glm::vec2 point, BYTE value)
+void CTerrain::PaintHeightMapPoint(glm::vec2 point, int brush_size, float strength, bool apply_limits, float up_limit, float down_limit)
 {
-	if(point.x < m_Transform.position.x && point.x > m_Transform.position.x + m_Size)
+	if(point.x < m_Transform.position.x && point.x > m_Transform.position.x + TERRAIN_SIZE)
 	{
 		return;
 	}
-	if (point.y < m_Transform.position.z && point.y > m_Transform.position.z + m_Size)
+	if (point.y < m_Transform.position.z && point.y > m_Transform.position.z + TERRAIN_SIZE)
 	{
 		return;
 	}
@@ -558,27 +587,20 @@ void CTerrain::PaintHeightMapPoint(glm::vec2 point, BYTE value)
 	float terrain_x = point.x - m_Transform.position.x;
 	float terrain_z = point.y - m_Transform.position.z;
 
-	float x = terrain_x / m_Size;
-	float z = terrain_z / m_Size;
+	float x = terrain_x / TERRAIN_SIZE;
+	float z = terrain_z / TERRAIN_SIZE;
 
-	int height = m_ImageHeight;
-	int width = m_ImageHeight;
+	int height = m_HeightMapResolution;
+	int width = m_HeightMapResolution;
 
 	int blend_x = static_cast<int>(x * (float)width);
 	int blend_y = static_cast<int>(z * (float)height);
 
-	//if (blend_y < 0) return;
-	//if (blend_x < 0) return;
-
-	//if (blend_y > height) return;
-	//if (blend_x > width) return;
-
-	m_BrushSize = 5;
 	int i = 0;
-	m_BrushSize = 100;
-	for (int y = -m_BrushSize; y < m_BrushSize; y++)
+
+	for (int y = -brush_size; y < brush_size; y++)
 	{
-		for (int x = -m_BrushSize; x < m_BrushSize; x++)
+		for (int x = -brush_size; x < brush_size; x++)
 		{
 			int mx = blend_x + x;
 			int my = blend_y + y;
@@ -588,24 +610,29 @@ void CTerrain::PaintHeightMapPoint(glm::vec2 point, BYTE value)
 			if (my < 0) continue;
 			if (my > width -1) continue;
 
-			if (((x) * (x)+(y) * (y)) <= m_BrushSize * m_BrushSize)
+			if (((x) * (x)+(y) * (y)) <= brush_size * brush_size)
 			{
 				glm::vec2 l = glm::vec2(mx, my) - glm::vec2(blend_x, blend_y);
 
-				float distance = glm::length(l) / m_BrushSize;				
+				float distance = glm::length(l) / brush_size;
 
 				float r = 1.f - distance;
 
+				float& blend_height = m_Heights[blend_x + x][blend_y + y];
 				//float old_h = m_Heights[mx][my];
-				m_Heights[blend_x + x][blend_y + y] += (1.f * r); //r		
+				blend_height += (strength * r); //r	
+				if (apply_limits)
+				{
+					if (blend_height > up_limit)
+						blend_height = up_limit;
+					if (blend_height < down_limit)
+						blend_height = down_limit;
+				}
+				
 			}
 		}
 	}
 	ReloadVertex();
-	//m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, static_cast<int>(m_ImageWidth / 1.1f), static_cast<int>(m_ImageHeight / 1.1f), FILTER_BILINEAR);
-	//m_HeightMapFreeImage = FreeImage_Rescale(m_HeightMapFreeImage, m_ImageWidth, m_ImageHeight , FILTER_BILINEAR);
-
-
 }
 
 void CTerrain::ReloadVertex()
@@ -622,14 +649,6 @@ void CTerrain::ReloadVertex()
 	glBindBuffer(GL_ARRAY_BUFFER, vbon);
 	glBufferData(GL_ARRAY_BUFFER, m_Normals.size() * sizeof(float), &m_Normals[0], GL_DYNAMIC_DRAW);
 }
-
-void CTerrain::SaveHeightMap() const
-{
-	FreeImage_FlipHorizontal(m_HeightMapFreeImage);
-	FreeImage_Save(m_HeightMapFormat, m_HeightMapFreeImage, m_HeightMapPath.c_str(), 0);	
-	FreeImage_FlipHorizontal(m_HeightMapFreeImage);
-}
-
 
 bool CompareColour(RGBQUAD colour,BYTE r, BYTE g, BYTE b)
 {
@@ -662,6 +681,9 @@ const glm::vec3 CTerrain::GetPosition() const
 }
 void CTerrain::CleanUp()
 {
+	if (!m_IsInit)
+		return;
+
 	for (int i = 0; i < m_VertexCount; ++i)
 	{
 		delete[] m_Heights[i];
@@ -674,6 +696,11 @@ void CTerrain::CleanUp()
 	{
 		RecursiveResetEnities(entity);
 		entity.reset();
+	}
+
+	for (CGrass& grass : m_Grass)
+	{
+		grass.CleanUp();
 	}
 
 	if (m_BlendMapData != nullptr)

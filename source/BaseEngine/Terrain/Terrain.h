@@ -7,7 +7,10 @@
 #include "../Utils/Utils.h"
 #include <math.h>
 #include "glm/glm.hpp"
+#include "Grass.h"
+
 static const float MAX_PIXEL_COLOUR = 256.0f * 256.0f * 256.0f;
+static const float TERRAIN_SIZE = 100.f;
 static const int IndicesGridWidth = 500;
 static const int IndicesGridHeight = 500;
 
@@ -21,7 +24,10 @@ class CTerrain
 {	
 public:	
 	CTerrain(CLoader &loader);
-	CTerrain(string name, CLoader &loader, 
+
+	bool m_IsInit = false;
+
+	void Init(string name, 
 		float x, float z,
 		string height_map, string blend_map,		
 		string background_texture, string background_normal_texture, 
@@ -31,7 +37,12 @@ public:
 		string b_texture, string b_normal_texture);
 
 	void AddTerrainEntity(shared_ptr<CEntity> e);
+	void AddTerrainGrass(const std::vector<glm::vec3>& positions, const GLuint& texture);
+
 	vector<int> GetNerbyEntities(glm::vec2 position_xz, int range) const;
+	void InitGrassFromFile(std::string filename, GLuint texture);
+	vector<glm::vec3> GenerateGrassPositions(const string& filename, const int& count) const;
+	
 
 	void CleanUp();
 	
@@ -47,7 +58,10 @@ public:
 	
 	const float& GetSize() const;
 
-	const int& GetId() { return m_Id; }
+	const int& GetId()
+	{
+		return m_Id; 
+	}
 
 	void SetName(std::string name);
 	const string GetName() const;
@@ -56,9 +70,8 @@ public:
 
 	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
 
-	void PaintBlendMap(glm::vec3 point);
-	void PaintHeightMap(glm::vec3 point);
-	void PaintHeightMapPoint(glm::vec2 point, BYTE value);
+	void PaintBlendMap(glm::vec3 point, int m_BrushSize, glm::vec3 paint_color);
+	void PaintHeightMapPoint(glm::vec2 point, int brush_size, float strength, bool apply_limits, float up_limit, float down_limit);
 	void ReloadVertex();
 
 
@@ -81,18 +94,15 @@ public:
 	//To painting
 	GLubyte* m_BlendMapData = nullptr;
 	int m_BlendMapWidth;
-	int m_BlendMapHeight;
-	glm::vec3 m_PaintColor = glm::vec3(0);
-	int m_BrushSize = 50;
+	int m_BlendMapHeight;	
 
 	//Terrain height paint
-	FIBITMAP* m_HeightMapFreeImage;
-	FREE_IMAGE_FORMAT m_HeightMapFormat;
-	glm::vec3 m_HeightPaint = glm::vec3(1);
-	void SaveHeightMap()const;
-	int m_ImageWidth;
-	int m_ImageHeight;
+	int m_HeightMapResolution;
 	float** m_Heights;
+	float m_AvarageHeight;
+	
+	// Grass and other flora elements - flowers...
+	std::vector<CGrass> m_Grass;
 
 	CLoader&	 m_Loader;
 	CEmptyLoader m_Model;
@@ -102,10 +112,6 @@ private:
 	std::vector<float> m_Normals;
 	std::vector<float> m_Tangens;
 	std::vector<float> m_TextureCoords;
-
-
-	float m_Size = 100.0f;
-	float m_MaxHeight = 50.0f;	
 
 	glm::vec3 m_Position;
 

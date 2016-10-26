@@ -11,11 +11,11 @@ class CTestSCene : public CScene
 {
     CLight m_DirLight;
 	CLight m_PointLight;
-
+	shared_ptr<CEntity> sphere_plane;
     shared_ptr<CPlayer> songo;	
 	int m_CameraType = 0;
 
-	
+	float time_x = 0;
 	
 public:
     bool thridCamera = true;
@@ -29,7 +29,48 @@ public:
 	}
 	int Initialize() override
 	{
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(1, 1));
+
+	//	m_Terrains.resize(m_TerrainsYCount);
+
+		for (int j = 0; j < m_TerrainsYCount; ++j)
+		{
+			std::vector<CTerrain> v;
+			for (int i = 0; i < m_TerrainsXCount; ++i)
+				v.push_back(CTerrain(m_Loader));
+			m_Terrains.push_back(v);
+		}
+		for (int z = 0; z < m_TerrainsXCount - 1; z++)
+			for (int x = 0; x < m_TerrainsXCount - 1; x++)
+			{
+				CTerrain& current_terrain = m_Terrains[x][z];
+
+				string name;
+				name += "Terrain" + to_string(x) + "x" + to_string(z);
+
+				//CreateNewEmptyTerrain(name, x, z);
+
+				string height_map = "Data/Terrain/HeightMaps/terrain_" + name + ".terrain";// +name + ".terrain";
+
+				string blend_map = "Data/Terrain/BlendMaps/terrain_" + name + ".png";
+				//CreateEmptyHeightMap(height_map, 32, 32);
+				current_terrain.Init(name,
+					x, z,
+					height_map, blend_map,
+					"Data/Textures/G3_Nature_Ground_Grass_01_Diffuse_01.png", "Data/Textures/G3_Nature_Ground_Grass_01_Diffuse_01.png",
+					"Data/Textures/165.png", "Data/Textures/165.png",
+					"Data/Textures/grassFlowers.png", "Data/Textures/grassFlowers.png",
+					"Data/Textures/sand.png", "Data/Textures/sand.png",
+					"Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png", "Data/Textures/G3_Architecture_Ground_City_03_Diffuse_01.png"
+				);
+
+				glm::vec3 world_pos = m_Terrains[x][z].m_Transform.position;
+				string grass_file = "Data/Terrain/GrassPositions/terrain_" + name + ".terrain";
+				current_terrain.InitGrassFromFile(grass_file, m_Loader.LoadTexture("Data/Textures/G3_Nature_Plant_Grass_06_Diffuse_01.png"));
+				//current_terrain.GenerateGrassPositions(grass_file, 10000);
+			}
+		
+
+		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(100, 150));
 		songo->SetName("Player");
 		unsigned int model_id = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true);
 		unsigned int model_id2 = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true);
@@ -53,6 +94,12 @@ public:
 		else
 			setFirstCamera();
 		
+
+		sphere_plane = CreateEntityFromFile("Data/Meshes/plane_sphere.obj");
+		sphere_plane->SetName("sphere_plane");
+		sphere_plane->m_IsSpecial = true;
+		AddEntity(sphere_plane, true);
+
 		normalized_size = glm::vec3(0, 1.f, 0);
 		shared_ptr<CEntity> cube = CreateEntityFromFile("Data/Meshes/Cube.obj", false, CreatePositionVector(200 , 350 , 10));
 		cube->SetName("Test physics cube");
@@ -66,21 +113,23 @@ public:
 		GLuint water_dudv	= m_Loader.LoadTexture("Data/Textures/waterDUDV.png");
 		GLuint water_normal = m_Loader.LoadTexture("Data/Textures/waternormal.png");
 
-		CWaterTile water(glm::vec3(100, 55, 110), 100, 0.3, water_dudv, water_normal, glm::vec4(43.0f/255.f, 106.f / 255.f, 134.f/255.f, 0.2));
+		CWaterTile water(glm::vec3(100, 0.1, 110), 100, 0.3, water_dudv, water_normal, glm::vec4(43.0f/255.f, 106.f / 255.f, 134.f/255.f, 0.2));
 		m_WaterTiles.push_back(water);	
 		
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
 		m_Gui.guiButtons.push_back(testButton);
 
 		m_MousePicker = CMousePicker(m_Camera, m_Game.GetDisplayManager().GetWindowSize(), m_Game.GetProjectionMatrix());
-
-	
-
+		m_MousePicker.SetTerrainsPtr(&m_Terrains);
+		time_x = 0;
 		//m_SceneParser.SaveToFile("Data/Maps/SavedTestMap.map", this);
 		return 0;
 	}
 	virtual void PostInitialize() override
 	{
+		
+
+		return;
 		CTerrain* t1 = FindTerrainByName("Terrain0x-1");
 		CTerrain* t2 = FindTerrainByName("Terrain0x0");
 		if(t1 != nullptr && t2 !=nullptr)
@@ -140,6 +189,10 @@ public:
 	
 	int Update() override
 	{
+		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());
+
+		m_GloabalTime += dt;
+
 		if (m_Game.GetInputManager().GetKey(KeyCodes::P))
 		{
 			for (shared_ptr<CEntity> entity : m_PhysicsEntities)
@@ -171,39 +224,58 @@ public:
 			//m_Game.GetDisplayManager().ShowCoursor(true);
 		}
 		m_Camera->Move();
-		if (m_Game.GetInputManager().GetKey(KeyCodes::Q))
-		{
-			if (m_CurrentTerrain != nullptr)
-			{
-				bool col;
-				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), *m_CurrentTerrain, col);
-				
-					for (CTerrain& terr : m_Terrains)
-					{
-						terr.PaintHeightMapPoint(glm::vec2(point.x, point.z),1);
-					}
-				
+		
+			
 
-				/*m_CurrentTerrain->PaintHeightMap(point);
-				float terrain_x = point.x - m_CurrentTerrain->m_Transform.position.x;
-				float terrain_z = point.z - m_CurrentTerrain->m_Transform.position.z;
-				float x = terrain_x / m_CurrentTerrain->GetSize();
-				float z = terrain_z / m_CurrentTerrain->GetSize();*/
-				//cout << x << "  " << z << endl;
-			//	Utils::PrintVector("",point);
-			}
+		if (m_Game.GetInputManager().GetKey(KeyCodes::M))
+		{
+			MergeAllTerrains();
 		}
+
+
+			if (m_Game.GetInputManager().GetKey(KeyCodes::Q))
+			{
+				glm::vec3 point;
+				CTerrain* terr = m_MousePicker.GetMousePointOnTerrain(point, m_Game.GetInputManager().GetMousePosition());
+				if (terr != nullptr)
+				{					
+
+					for (int y = (int)terr->GetPosition().z-1; y < (int)terr->GetPosition().z + 2; y++)
+						for (int x = (int)terr->GetPosition().x - 1; x < (int)terr->GetPosition().x + 2; x++)
+						{
+							if (y < 0 || x < 0 || y > m_TerrainsYCount - 1 || x > m_TerrainsYCount - 1)
+								continue;
+							m_Terrains[x][y].PaintHeightMapPoint(glm::vec2(point.x, point.z), m_BrushSize, m_HeightPaintStrength, m_ApplyLimits, m_HeightUpperLimit, m_HeightDownLimit);
+						}
+				}
+								
+			}
+
+			
 		if (m_Game.GetInputManager().GetKey(KeyCodes::E))
 		{
-			for (CTerrain& terrain : m_Terrains)
-			{
-				bool is_col;
-				glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition(), terrain, is_col);
-				terrain.PaintBlendMap(point);
-				if (is_col) break;
-			}
+			
+
+		
+				glm::vec3 point;
+				//CTerrain& terrain = m_Game.GetCurrentScene()->m_Terrains[x][y];
+				CTerrain* terrain = m_MousePicker.GetMousePointOnTerrain(point, m_Game.GetInputManager().GetMousePosition());
+				if (terrain != nullptr)
+				{
+
+					for (int y = (int)terrain->GetPosition().z - 1; y < (int)terrain->GetPosition().z + 2; y++)
+						for (int x = (int)terrain->GetPosition().x - 1; x < (int)terrain->GetPosition().x + 2; x++)
+						{
+							if (y < 0 || x < 0 || y > m_TerrainsYCount - 1 || x > m_TerrainsYCount - 1)
+								continue;
+							terrain->PaintBlendMap(point, m_BrushSize, m_PaintColor);
+						}
+				}
+			
+				
+			
 		}
-		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());
+		
 		
 		//sphere->IncrasePosition(m_Game.m_PhysicsScene.m_Rigibodys[sphere->m_PhysicsBodyIndex].m_AngularVelocity * dt);
 
@@ -219,7 +291,7 @@ public:
 		//	m_Loader.ReloadTexture("Data/Terrain/TerrainTextures/blendMap.png", m_Terrains[0].m_BackgroundTexture[0]);
 			
 		}
-		m_Loader.UpdateModels(static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime()));
+		m_Loader.UpdateModels(static_cast<float>(dt));
 
 		LockCameraUnderTerrain();
 
@@ -228,11 +300,27 @@ public:
 	int CleanUp() override
 	{
 		m_Loader.CleanUp();
-		for (unsigned int x = 0; x < m_Terrains.size(); x++) 
+
+		for (int y = 0; y < m_Game.GetCurrentScene()->m_TerrainsYCount-1; y++)
+			for (int x = 0; x < m_Game.GetCurrentScene()->m_TerrainsXCount-1; x++)
+			{
+				m_Terrains[x][y].CleanUp();
+				//glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition());
+				//terrain.PaintBlendMap(point);
+			}
+
+		for (std::vector<CTerrain>& v : m_Terrains)
+		{
+			
+			v.clear();
+		}
+		m_Terrains.clear();
+		
+	/*	for (unsigned int x = 0; x < m_Terrains.size(); x++) 
 		{
 			m_Terrains[x].CleanUp();
 		}
-		m_Terrains.clear();
+		m_Terrains.clear();*/
 		for (shared_ptr<CEntity>& entity : m_Entities)
 			entity->CleanUp();
 		m_Entities.clear();
@@ -255,10 +343,11 @@ public:
 	void LockCameraUnderTerrain()
 	{
 		glm::vec2 camera_position = glm::vec2(m_Camera->GetPosition().x, m_Camera->GetPosition().z);
-		int tnr = TerrainNumber(camera_position);
-		if (tnr >= 0)
+		int x, z;
+		TerrainNumber(camera_position, x, z);
+		if (x >= 0 && z >= 0)
 		{
-			float height = m_Terrains[tnr].GetHeightofTerrain(camera_position.x, camera_position.y);
+			float height = m_Terrains[x][z].GetHeightofTerrain(camera_position.x, camera_position.y);
 			if (m_Camera->GetPosition().y > height) return;
 			m_Camera->SetPosition(glm::vec3(camera_position.x, height + .1f, camera_position.y));
 			m_Camera->UpdateViewMatrix();
