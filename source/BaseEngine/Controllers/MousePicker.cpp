@@ -4,7 +4,7 @@ CMousePicker::CMousePicker()
 : m_Terrains(nullptr) 
 {}
 
-CMousePicker::CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::mat4 projection)
+CMousePicker::CMousePicker(shared_ptr<CCamera>& cam, glm::vec2 window_size, glm::mat4 projection)
 	: m_WindowSize(window_size)
 	, m_ProjectionMatrix(projection)
 	, m_Camera(cam)
@@ -14,9 +14,10 @@ CMousePicker::CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::
 {
 }
 
-void CMousePicker::SetTerrainsPtr(std::vector<std::vector<CTerrain>>* terrains)
+void CMousePicker::SetTerrainsPtr(std::vector<CTerrain>* terrains, int height)
 {
 	m_Terrains = terrains;
+	m_TerrainsHeight = height;
 }
 
 CTerrain* CMousePicker::GetMousePointOnTerrain(glm::vec3& point, glm::vec2 mous_pose)
@@ -110,6 +111,6 @@ CTerrain* CMousePicker::GetTerrain(float world_x, float world_z)
 	int z = static_cast<int>(world_z / TERRAIN_SIZE);
 	if (x < 0 || z < 0)
 		return nullptr;
-
-	return &(*m_Terrains)[x][z];
+	return nullptr;
+	//return &(*m_Terrains)[x + m_TerrainsHeight*z];
 }

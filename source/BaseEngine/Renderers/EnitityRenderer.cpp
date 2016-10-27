@@ -1,7 +1,7 @@
 #include "EnitityRenderer.h"
 
 
-void CEntityRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, const CEntityGeometryPassShader& geomentry_shader)
+void CEntityRenderer::RenderEntityRecursive(CScene* scene, CEntity* entity, const CEntityGeometryPassShader& geomentry_shader)
 {
 	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
 	RenderEntity(scene, entity, *model, geomentry_shader);
@@ -11,22 +11,18 @@ void CEntityRenderer::RenderEntityRecursive(const shared_ptr<CScene>& scene, con
 		if (subEntity->GetIsCullingChildren() && !subEntity->m_Instanced)
 		if (scene->GetCamera()->CheckFrustrumSphereCulling(subEntity->GetWorldPosition(), 1.5f *subEntity->GetMaxNormalizedSize()))
 			continue;
-		RenderEntityRecursive(scene, subEntity, geomentry_shader);
+		RenderEntityRecursive(scene, subEntity.get(), geomentry_shader);
 		m_RendererObjectPerFrame++;
 	}
 }
 
-void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeometryPassShader& geomentry_shader)
+void CEntityRenderer::Render(CScene* scene, const CEntityGeometryPassShader& geomentry_shader)
 {
-	if (scene->GetEntities().size() <= 0) return;
-
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
 
-	//for (const CTerrain& terr : scene->GetTerrains())
 
-	std::vector<std::vector<CTerrain>>& terrains = scene->GetTerrains();
-	if (terrains.size() > 0)
+	if (scene->GetTerrains().size() > 0)
 	{
 		int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
 		scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
@@ -34,21 +30,24 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 		for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
 			for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
 			{
-				if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+				if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
+					continue;		
+
+				CTerrain* terrain = scene->GetTerrain(x, y);
+				if (terrain == nullptr)
 					continue;
 
-				CTerrain& terrain = terrains[x][y];
-				if (!terrain.m_IsInit) continue;
+				if (!terrain->m_IsInit) continue;
 
-				if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize() / 1.5f))
+				if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain->m_WorldCenterPosition, terrain->GetSize() / 1.5f))
 					continue;
 
-				for (const shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
+				for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
 				{
 					if (entity->GetIsCullingChildren() && !entity->m_Instanced)
 						if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
 							continue;
-					RenderEntityRecursive(scene, entity, geomentry_shader);
+					RenderEntityRecursive(scene, entity.get(), geomentry_shader);
 					m_RendererObjectPerFrame++;
 				}
 			}
@@ -59,7 +58,7 @@ void CEntityRenderer::Render(const shared_ptr<CScene>& scene, const CEntityGeome
 		if (entity->GetIsCullingChildren() && !entity->m_Instanced)
 		if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
 			continue;
-		RenderEntityRecursive(scene, entity, geomentry_shader);
+		RenderEntityRecursive(scene, entity.get(), geomentry_shader);
 		m_RendererObjectPerFrame++;
 	}
 
@@ -73,7 +72,7 @@ const unsigned int & CEntityRenderer::GetVertexPerFrame()
 {
 	return m_RendererVertixesPerFrame;
 }
-void CEntityRenderer::RenderEntity(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader)
+void CEntityRenderer::RenderEntity(CScene* scene, CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader)
 {
 	geomentry_shader.LoadUseFakeLight(static_cast<float>(model.m_UseFakeLight));
 

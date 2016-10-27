@@ -4,6 +4,12 @@
 #include "BaseEngine/APIs/SDL2/SDLOpenGL.h"
 #include "TestGame/Test_Scene.h"
 #include <map>
+
+#define CRTDBG_MAP_ALLOC
+#include <stdlib.h>
+#include <crtdbg.h>
+
+
 CGame myGame;
 #ifdef EDITOR
 CSceneEditor editor(myGame);
@@ -42,8 +48,7 @@ int main(int argc, char *argv[])
 	api = std::make_shared<CGlfwOpenGlApi>();
 #endif
 	
-	shared_ptr<CScene> testScene = std::make_shared<CTestSCene>(myGame, test_scene_camera_type);
-	myGame.AddScene(testScene);
+	myGame.AddScene(std::make_shared<CTestSCene>(myGame, test_scene_camera_type));
 	if (myGame.SetCurrentScene(0) < 0)
 	{
 		cout << "[Error] Scene not found." << endl;
@@ -55,11 +60,13 @@ int main(int argc, char *argv[])
 	editor.PeekMesages();
 	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
 #else
-	myGame.m_SceneParser.LoadScene(testScene->m_SceneFile, testScene);
+	myGame.m_SceneParser.LoadScene(myGame.GetCurrentScene()->m_SceneFile, myGame.GetCurrentScene());
 	myGame.GetCurrentScene()->PostInitialize();
 #endif
     myGame.GameLoop();
 	//a.detach();
     myGame.Uninitialize();
+
+	_CrtDumpMemoryLeaks();
 	return 0;
 }

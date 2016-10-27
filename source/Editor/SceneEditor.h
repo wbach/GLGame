@@ -1,5 +1,5 @@
 #pragma once
-//#define EDITOR
+#define EDITOR
 #ifdef EDITOR
 #include <Windows.h>
 #include <tchar.h> 

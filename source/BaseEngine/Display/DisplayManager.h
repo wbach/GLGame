@@ -35,7 +35,7 @@ public:
 	void ShowCoursor(bool show);
 	bool CheckActiveWindow();
 
-	void SetApi(std::shared_ptr<CApi> api);
+	void SetApi(std::shared_ptr<CApi>& api);
 	void SetInput(std::shared_ptr<CInput>&);
 
 	void EnableTime() { m_Time = true; }

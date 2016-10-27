@@ -1,6 +1,6 @@
 #include "MasterRenderer.h"
 
-void CMasterRenderer::Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix, 
+void CMasterRenderer::Init(CCamera* camera, glm::vec2 window_size, glm::mat4& projection_matrix, 
 	const float& fov, const float& near, const float& far, float rendering_resolution_modifier, float shadow_map_size, float shadows_distance,
 	float water_quality, glm::vec2 reflection_size, glm::vec2 refraction_size,
 	float view_distance
@@ -87,14 +87,14 @@ void CMasterRenderer::SetReadBuffer(BufferTexture::Type TextureType)
 	glReadBuffer(GL_COLOR_ATTACHMENT0 + TextureType);
 }
 
-void CMasterRenderer::ShadowPass(shared_ptr<CScene>& scene, const bool& shadows)
+void CMasterRenderer::ShadowPass(CScene* scene, const bool& shadows)
 {
 	if (!shadows)
 		return;
 	glDepthMask(GL_TRUE);
 	m_ShadowMapRenderer.Render(scene);
 }
-void CMasterRenderer::RenderWaterTextures(shared_ptr<CScene>& scene, const bool& shadows)
+void CMasterRenderer::RenderWaterTextures(CScene* scene, const bool& shadows)
 {
 	glEnable(GL_CLIP_DISTANCE0);
 	m_WaterRenderer.SetIsRender(false);
@@ -131,7 +131,7 @@ void CMasterRenderer::RenderWaterTextures(shared_ptr<CScene>& scene, const bool&
 	m_WaterRenderer.SetIsRender(true);
 	glDisable(GL_CLIP_DISTANCE0);
 }
-void CMasterRenderer::Render(shared_ptr<CScene>& scene, const bool& shadows)
+void CMasterRenderer::Render(CScene* scene, const bool& shadows)
 {
 	if (m_WaterQuality > 0.5f)
 	RenderWaterTextures(scene, shadows);
@@ -145,7 +145,7 @@ void CMasterRenderer::Render(shared_ptr<CScene>& scene, const bool& shadows)
 	LightPass(scene, m_WindowSize, 0);
 
 }
-void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadows)
+void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, m_Fbo);	
 	glDepthMask(GL_TRUE);
@@ -193,11 +193,14 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	for (int y = z_camera - view_radius; y < z_camera + view_radius + 1; y++)
 		for (int x = x_camera - view_radius; x < x_camera + view_radius + 1; x++)
 		{
-			if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+			if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
 				continue;
 
-			CTerrain& terrain = scene->m_Terrains[x][y];
-			if (!terrain.m_IsInit) continue;
+			CTerrain* terrain = scene->GetTerrain(x, y);
+			if (terrain == nullptr)
+				continue;
+
+			if (!terrain->m_IsInit) continue;
 
 			m_GrassShader.Start();
 			if (shadows)
@@ -209,7 +212,7 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 			m_GrassShader.LoadGlobalTime(scene->m_GloabalTime);			
 			m_GrassShader.LoadShadowValues(static_cast<float>(shadows), m_ShadowsDistance, m_ShadowMapSize);
 			m_GrassShader.LoadViewMatrix(scene->GetViewMatrix());			
-			for (CGrass& grass : terrain.m_Grass)
+			for (CGrass& grass : terrain->m_Grass)
 			{
 				m_GrassShader.LoadViewDistance(grass.m_ViewDistance);
 				grass.Render();
@@ -230,13 +233,16 @@ void CMasterRenderer::GeometryPass(shared_ptr<CScene>& scene, const bool& shadow
 	glEnable(GL_BLEND);	
 }
 
-void CMasterRenderer::LightPass(shared_ptr<CScene>& scene, glm::vec2 window_size, GLuint target)
+void CMasterRenderer::LightPass(CScene* scene, glm::vec2 window_size, GLuint target)
 {	
 	if (m_DebugRenderTextures)
 	{
 		DebugRenderTextures();
 		return;
 	}
+	//glEnable(GL_BLEND);
+	//glBlendEquation(GL_FUNC_ADD);
+	//glBlendFunc(GL_ONE, GL_ONE);
 
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, target);
 
@@ -245,10 +251,12 @@ void CMasterRenderer::LightPass(shared_ptr<CScene>& scene, glm::vec2 window_size
 		glActiveTexture(GL_TEXTURE0 + i);
 		glBindTexture(GL_TEXTURE_2D, m_Textures[BufferTexture::Type::POSITION + i]);
 	}
+	
+
 	glActiveTexture(GL_TEXTURE0 + BufferTexture::Type::COUNT);
 	glBindTexture(GL_TEXTURE_2D, m_DepthTexture);
 
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glClear(GL_COLOR_BUFFER_BIT);
 
 	m_LightPassShader.Start();
 	m_LightPassShader.LoadScreenSize(window_size);
@@ -323,7 +331,7 @@ int CMasterRenderer::CreateBuffers()
 	for (unsigned int i = 0; i < BufferTexture::Type::COUNT; i++)
 	{
 		glBindTexture(GL_TEXTURE_2D, m_Textures[i]);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, static_cast<int>(m_ResoultionMultipler * m_WindowSize.x), static_cast<int>(m_ResoultionMultipler*m_WindowSize.y), 0, GL_RGBA, GL_FLOAT, NULL);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA32F, static_cast<int>(m_ResoultionMultipler * m_WindowSize.x), static_cast<int>(m_ResoultionMultipler*m_WindowSize.y), 0, GL_RGBA, GL_FLOAT, NULL);
 		if (!m_DebugRenderTextures)
 		{
 			glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -341,8 +349,8 @@ int CMasterRenderer::CreateBuffers()
 	//glFramebufferTexture(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, m_DepthTexture, 0);
 	glFramebufferTexture2D(GL_DRAW_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, m_DepthTexture, 0);
 
-	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3 };
-	glDrawBuffers(4, DrawBuffers);
+	GLenum DrawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1, GL_COLOR_ATTACHMENT2, GL_COLOR_ATTACHMENT3, GL_COLOR_ATTACHMENT4 };
+	glDrawBuffers(5, DrawBuffers);
 
 	GLenum Status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
 

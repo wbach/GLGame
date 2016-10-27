@@ -9,6 +9,11 @@ CLight::CLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation, floa
 {
 }
 
+void CLight::SetPosition(glm::vec3 position)
+{
+	m_Position = position;
+}
+
 CLight::CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation)
 : m_Type(LightType::POINT_LIGHT)
 , m_Position(position)

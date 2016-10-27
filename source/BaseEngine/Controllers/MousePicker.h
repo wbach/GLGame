@@ -6,9 +6,9 @@ class CMousePicker
 {
 public:
 	CMousePicker();
-	CMousePicker(shared_ptr<CCamera> cam, glm::vec2 window_size, glm::mat4 projection);
+	CMousePicker(shared_ptr<CCamera>& cam, glm::vec2 window_size, glm::mat4 projection);
 	CTerrain* GetMousePointOnTerrain(glm::vec3& point, glm::vec2 mous_pose);
-	void SetTerrainsPtr(std::vector<std::vector<CTerrain>>* terrains);
+	void SetTerrainsPtr(std::vector<CTerrain>* terrains, int height);
 private:
 	glm::vec3 CalculateMouseRay(glm::vec2 mouse_pos);
 	glm::vec3 ToWorldCoords(glm::vec4  eyeCoords);
@@ -31,6 +31,6 @@ private:
 
 	glm::vec2	m_WindowSize;
 
-	std::vector<std::vector<CTerrain>>* m_Terrains;
-
+	std::vector<CTerrain>* m_Terrains;
+	int m_TerrainsHeight;
 };

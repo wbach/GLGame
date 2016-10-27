@@ -3,8 +3,7 @@
 CScene::CScene(CGame& game) 
 : m_Game(game)
 , m_CurrentTerrain(nullptr)
-, m_TerrainsXCount(10)
-, m_TerrainsYCount(10)
+, m_TerrainsCount(10)
 , m_TerrainViewRadius(1)
 , m_GloabalTime(0.f)
 {
@@ -48,7 +47,7 @@ void CScene::LoadSkyBox()
 //	m_Terrains[x][z] = terrain;
 //}
 
-void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
+void CScene::AddEntity(shared_ptr<CEntity>& entity, bool direct)
 { 
 	if (direct)
 	{
@@ -59,7 +58,13 @@ void CScene::AddEntity(shared_ptr<CEntity> entity, bool direct)
 	TerrainNumber(entity->GetPositionXZ(), xx, zz);
 	cout << xx << " " << zz << endl;
 	if (xx >= 0 && zz >= 0)
-		m_Terrains[xx][zz].AddTerrainEntity(entity);
+	{
+		CTerrain* terrain = GetTerrain(xx, zz);
+		if(terrain != nullptr)
+			GetTerrain(xx, zz)->AddTerrainEntity(entity);
+		else
+			m_Entities.push_back(entity);
+	}		
 	else
 		m_Entities.push_back(entity);
 
@@ -128,7 +133,7 @@ void CScene::AddInstancedEntityFromFile(string file, std::vector<STransform>& tr
 
 }
 
-void CScene::AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity)
+void CScene::AddSubEntity(CEntity* parent, shared_ptr<CEntity>& entity)
 {
 	parent->AddSubbEntity(entity);
 }
@@ -141,7 +146,9 @@ void CScene::CreateNewEmptyTerrain(string name, float x, float z)
 	if (!Utils::CheckFile(blend_map)) 
 	m_Loader.CreateEmptyImage(blend_map, 128, 128);
 
-	m_Terrains[x][z].Init(name,
+	CTerrain* terrain = GetTerrain(x, z);
+	if (terrain != nullptr)
+		terrain->Init(name,
 		x, z,
 		height_map, blend_map,
 		"Data/Textures/grass_ground.png", "Data/Textures/grass_ground.png",
@@ -173,20 +180,22 @@ void CScene::CreateEmptyHeightMap(string filename, int xx, int yy)
 void CScene::SaveHeightMaps()
 {
 	//for (const CTerrain& terrain : m_Terrains)
-	for (int y = 0; y < m_TerrainsYCount-1; y++)
-		for (int x = 0; x < m_TerrainsXCount-1; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 		{
-			CTerrain& terrain = m_Terrains[x][y];
+			CTerrain* terrain = GetTerrain(x, y);
+			if (terrain == nullptr)
+				continue;
 			std::ofstream file;
-			string fn = terrain.m_HeightMapPath;
+			string fn = terrain->m_HeightMapPath;
 			file.open(fn);
-			string size = "r" + to_string(terrain.m_HeightMapResolution) + "x" + to_string(terrain.m_HeightMapResolution);
+			string size = "r" + to_string(terrain->m_HeightMapResolution) + "x" + to_string(terrain->m_HeightMapResolution);
 			file << size << endl;
-			for (int y = 0; y < terrain.m_HeightMapResolution; y++)
+			for (int y = 0; y < terrain->m_HeightMapResolution; y++)
 			{
-				for (int x = 0; x < terrain.m_HeightMapResolution; x++)
+				for (int x = 0; x < terrain->m_HeightMapResolution; x++)
 				{
-					file << terrain.m_Heights[x][y] << " ";
+					file << terrain->GetHeight(x, y) << " ";
 				}
 				file << endl;
 			}
@@ -196,10 +205,10 @@ void CScene::SaveHeightMaps()
 
 void CScene::SaveBlendMaps()
 {
-	for (int y = 0; y < m_TerrainsYCount - 1; y++)
-		for (int x = 0; x < m_TerrainsXCount - 1; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount ; x++)
 		{
-			CTerrain& terrain = m_Terrains[x][y];
+			CTerrain& terrain = *GetTerrain(x, y);
 			m_Loader.SaveTextureToFile(terrain.m_BlendMapPath, terrain.m_BlendMapData, terrain.m_BlendMapWidth, terrain.m_BlendMapHeight);
 		}	
 }
@@ -212,17 +221,17 @@ void CScene::MergeTerrains(CTerrain & t1, CTerrain & t2, int axis)
 	{
 		if (axis == 0)
 		{
-			float height = t1.m_Heights[t1.m_HeightMapResolution - 1][x] + t2.m_Heights[0][x];
+			float height = t1.GetHeight(t1.m_HeightMapResolution - 1, x) + t2.GetHeight(0, x);
 			height /= 2;
-			t1.m_Heights[t1.m_HeightMapResolution - 1][x] = height;
-			t2.m_Heights[0][x] = height;
+			t1.SetHeight(t1.m_HeightMapResolution - 1, x, height);
+			t2.SetHeight(0, x, height);
 		}
 		else
 		{
-			float height = t1.m_Heights[x][t1.m_HeightMapResolution - 1] + t2.m_Heights[x][0];
+			float height = t1.GetHeight(x, t1.m_HeightMapResolution - 1) + t2.GetHeight(x, 0);
 			height /= 2;
-			t1.m_Heights[x][t1.m_HeightMapResolution - 1] = height;
-			t2.m_Heights[x][0] = height;
+			t1.SetHeight(x, t1.m_HeightMapResolution - 1, height);
+			t2.SetHeight(x, 0, height);
 		}
 	}
 	t1.ReloadVertex();
@@ -231,21 +240,21 @@ void CScene::MergeTerrains(CTerrain & t1, CTerrain & t2, int axis)
 
 void CScene::MergeAllTerrains()
 {
-	for (int y = 0; y < m_TerrainsYCount -1; y++)
-		for (int x = 0; x < m_TerrainsXCount -1; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 		{
-			MergeTerrains(m_Terrains[x][y], m_Terrains[x+1][y], 0);
-			MergeTerrains(m_Terrains[x][y], m_Terrains[x][y+1], 1);
+			MergeTerrains(*GetTerrain(x, y), *GetTerrain(x+1, y), 0);
+			MergeTerrains(*GetTerrain(x, y), *GetTerrain(x, y+1), 1);
 		}
 }
 
 CTerrain* CScene::FindTerrainByName(string name)
 {
 	
-	for (int y = 0; y < m_TerrainsYCount; y++)
-		for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 		{
-			CTerrain& terrain = m_Terrains[x][y];
+			CTerrain& terrain = *GetTerrain(x, y);
 			if (!terrain.GetName().compare(name))
 				return &terrain;
 		}
@@ -256,7 +265,7 @@ CTerrain* CScene::FindTerrainByName(string name)
 void CScene::ApplyPhysicsToObjects(float dt)
 {
 	int x = 0;
-	for (shared_ptr<CEntity>& entity : m_PhysicsEntities)
+	for (CEntity* entity : m_PhysicsEntities)
 	{
 		entity->IncrasePosition(entity->m_RigidBody.m_AngularVelocity *dt );
 
@@ -276,7 +285,7 @@ void CScene::ApplyPhysicsToObjects(float dt)
 
 void CScene::ClearObjectsVelocity()
 {
-	for (shared_ptr<CEntity> entity :m_PhysicsEntities)
+	for (CEntity* entity : m_PhysicsEntities)
 	{
 		float h = GetHeightOfTerrain(entity->GetPositionXZ());
 		entity->SetPositionY(h);
@@ -285,14 +294,14 @@ void CScene::ClearObjectsVelocity()
 	}
 }
 
-void CScene::DeleteEntity(shared_ptr<CEntity> deleted_entity)
+void CScene::DeleteEntity(shared_ptr<CEntity>& deleted_entity)
 {
 	bool deleted = false;
 	//for (CTerrain& terrain : m_Terrains)
-	for (int y = 0; y < m_TerrainsYCount; y++)
-		for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 	{
-		CTerrain& terrain = m_Terrains[x][y];
+		CTerrain& terrain = *GetTerrain(x, y);
 		int i = 0;
 		for (shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
 		{
@@ -343,8 +352,7 @@ bool CScene::DeleteSubEntity(shared_ptr<CEntity>& entity, int id)
 	return false;
 }
 shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, bool instanced, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
-{
-	
+{	
 	shared_ptr<CEntity> new_entity;
 	new_entity = make_shared<CEntity>(pos, rot, scale);	
 
@@ -372,10 +380,10 @@ shared_ptr<CEntity> CScene::FindEntity(int id)
 	shared_ptr<CEntity> founded_entity = nullptr;
 
 	//for (CTerrain& terrain : m_Terrains)
-	for (int y = 0; y < m_TerrainsYCount; y++)
-	for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+	for (int x = 0; x < m_TerrainsCount; x++)
 	{
-		CTerrain& terrain = m_Terrains[x][y];
+		CTerrain& terrain = *GetTerrain(x, y);
 		for (shared_ptr<CEntity>& entity : terrain.m_TerrainEntities) 
 		{
 			if (entity->GetId() == id)
@@ -421,10 +429,10 @@ shared_ptr<CEntity> CScene::FindSubEntity(shared_ptr<CEntity>& entity, int id)
 CTerrain * CScene::FindTerrainById(int id)
 {
 	//for (CTerrain& terrain : m_Terrains)
-	for (int y = 0; y < m_TerrainsYCount; y++)
-		for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 		{
-			CTerrain& terrain = m_Terrains[x][y];
+			CTerrain& terrain = *GetTerrain(x, y);
 			if (terrain.GetId() == id)
 			{
 				return &terrain;
@@ -438,9 +446,16 @@ const vector<shared_ptr<CEntity>>& CScene::GetEntities() const
 	return m_Entities;
 }
 
-std::vector<std::vector<CTerrain>>&	 CScene::GetTerrains()
+std::vector<CTerrain>&	 CScene::GetTerrains()
 { 
 	return m_Terrains;
+}
+
+CTerrain* CScene::GetTerrain(int x, int y)
+{
+	if (x + y*m_TerrainsCount > m_Terrains.size())
+		return nullptr;
+	return &m_Terrains[x + y*m_TerrainsCount];
 }
 
 const vector<CLight>& CScene::GetLights() const 
@@ -473,8 +488,12 @@ const float CScene::GetHeightOfTerrain(float x, float z)
 {
 	int xx, zz;
 	TerrainNumber(x, z, xx, zz);
-	if(xx >= 0 && zz >= 0)	
-		return m_Terrains[xx][zz].GetHeightofTerrain(x, z);	
+	if (xx >= 0 && zz >= 0)
+	{
+		CTerrain* terrain = GetTerrain(xx, zz);
+		if(terrain!=nullptr)
+			return terrain->GetHeightofTerrain(x, z);
+	}		 
 	return -1;
 }
 
@@ -488,14 +507,16 @@ void CScene::TerrainNumber(float world_x, float world_z, int & x, int & z)
 	x = world_x / TERRAIN_SIZE;
 	z = world_z / TERRAIN_SIZE;
 
-	if (x < 0 && x > m_TerrainsXCount - 1 && z < 0 && z > m_TerrainsYCount - 1)
+	if (x < 0 && x > m_TerrainsCount && z < 0 && z > m_TerrainsCount)
 	{
 		z = -1;
 		x = -1;
 	}
 	else
 	{
-		if (!m_Terrains[x][z].m_IsInit)
+		CTerrain* terrain = GetTerrain(x, z);
+		if (terrain != nullptr)
+		if (!terrain->m_IsInit)
 		{
 			z = -1;
 			x = -1;
@@ -521,20 +542,20 @@ const glm::vec3 CScene::GetDirectionalLightPosition()
 
 glm::vec3 CScene::GetMousePickerTarget()
 {
-	for (int y = 0; y < m_TerrainsYCount; y++)
-		for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 		{	
 		}
 		return glm::vec3();
 }
 
-void CScene::SetEntityToMousePointByKey(std::shared_ptr<CEntity> entity)
+void CScene::SetEntityToMousePointByKey(std::shared_ptr<CEntity>& entity)
 {
 	if (!m_Game.GetInputManager().GetKey(KeyCodes::M)) return;
-	for (int y = 0; y < m_TerrainsYCount; y++)
-		for (int x = 0; x < m_TerrainsXCount; x++)
+	for (int y = 0; y < m_TerrainsCount; y++)
+		for (int x = 0; x < m_TerrainsCount; x++)
 	{
-		CTerrain& terrain = m_Terrains[x][y];
+		CTerrain* terrain = GetTerrain(x, y);
 //		glm::vec3 point = m_MousePicker.GetMousePointOnTerrain(m_Game.GetInputManager().GetMousePosition());
 	//	entity->SetPosition(CreatePositionVector(point.x, point.z, entity->GetAttachYOffset()));		
 	}

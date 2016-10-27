@@ -1,9 +1,8 @@
 #include "TerrainRenderer.h"
 
-void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPassShader& geomentry_shader)
+void CTerrainRenderer::Render(CScene* scene, const CTerrainGeometryPassShader& geomentry_shader)
 {
-	std::vector<std::vector<CTerrain>>& terrains = scene->GetTerrains();
-	if (terrains.size() <= 0) return;
+	if (scene->GetTerrains().size() <= 0) return;
 	
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
@@ -12,28 +11,30 @@ void CTerrainRenderer::Render(shared_ptr<CScene> scene, const CTerrainGeometryPa
 	scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
 
 
-	/*for (int y = 0; y < scene->m_TerrainsYCount -1; y++)
-		for (int x = 0; x < scene->m_TerrainsXCount - 1; x++)*/		
+	/*for (int y = 0; y < scene->m_TerrainsCount -1; y++)
+		for (int x = 0; x < scene->m_TerrainsCount - 1; x++)*/		
 	for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
 		for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
 	{
-			if (y < 0 || x < 0 || y > scene->m_TerrainsYCount - 1 || x > scene->m_TerrainsYCount - 1)
+			if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
 				continue;
 
-		CTerrain& terrain = terrains[x][y];
-		if (!terrain.m_IsInit) continue;
+		CTerrain* terrain = scene->GetTerrain(x, y);
+		if (terrain == nullptr)
+			continue;
+		if (!terrain->m_IsInit) continue;
 
 		//if(abs(glm::length(scene->GetCamera()->GetPosition() - terrain.m_WorldCenterPosition)) > 2* terrain.GetSize()) continue;
 
 	//	if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize()))
 		//	continue;
 
-		PrepareTerrain(terrain);
-		LoadModelMatrix(terrain, geomentry_shader);
-		glDrawElements(GL_TRIANGLE_STRIP, terrain.m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_SHORT, 0);
+		PrepareTerrain(*terrain);
+		LoadModelMatrix(*terrain, geomentry_shader);
+		glDrawElements(GL_TRIANGLE_STRIP, terrain->m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 		UnBindTextureModel();
 		m_RendererObjectPerFrame++;
-		m_RendererVertixesPerFrame += terrain.m_Model.GetMeshes()[0].GetVertexCount();
+		m_RendererVertixesPerFrame += terrain->m_Model.GetMeshes()[0].GetVertexCount();
 	}
 }
 const unsigned int& CTerrainRenderer::GetObjectsPerFrame()

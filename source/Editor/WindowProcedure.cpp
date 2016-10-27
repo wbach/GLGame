@@ -1,5 +1,5 @@
 #include "SceneEditor.h"
-
+#include "../TestGame/Test_Scene.h"
 #ifdef EDITOR
 
 LRESULT CSceneEditor::WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
@@ -73,6 +73,9 @@ LRESULT CSceneEditor::RealWndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lPa
 				//CreateDialogProgressBar();
 				m_Game.GetDisplayManager().DisableTime();
 				m_Game.GetCurrentScene()->Reset();
+				//m_Game.ClearScenes();
+				//m_Game.AddScene(std::make_shared<CTestSCene>(m_Game, 1));
+				//m_Game.SetCurrentScene(0);
 				m_Game.m_SceneParser.LoadScene(sNazwaPliku, m_Game.GetCurrentScene());
 				m_Game.GetCurrentScene()->PostInitialize();
 				m_Game.GetDisplayManager().EnableTime();

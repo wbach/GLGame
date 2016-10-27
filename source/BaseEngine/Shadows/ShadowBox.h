@@ -7,7 +7,7 @@ class CShadowBox
 {	
 public:
 	CShadowBox();
-	void Init(std::shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadows_distance);
+	void Init(CCamera* camera, glm::vec2 window_size, float fov, float near_plane, float shadows_distance);
 	void Update();
 	glm::vec3 GetCenter() const;
 	float GetWidth() const;
@@ -26,7 +26,7 @@ private:
 	glm::vec3	m_Max;
 
 	glm::mat4	m_LightViewMatrix;
-	std::shared_ptr<CCamera> m_Camera;
+	CCamera*	m_Camera;
 
 	float		m_FarHeight,
 				m_FarWidth, 

@@ -121,7 +121,7 @@ bool CDisplayManager::CheckActiveWindow()
 	return false;
 }
 
-void CDisplayManager::SetApi(std::shared_ptr<CApi> api)
+void CDisplayManager::SetApi(std::shared_ptr<CApi>& api)
 {
 	m_Api = api;
 }

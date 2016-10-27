@@ -84,6 +84,7 @@ void CXmlSceneParser::ParseSkyBox(rapidxml::xml_node<>* node)
 
 void CXmlSceneParser::ParseLight(rapidxml::xml_node<>* node)
 {
+	shared_ptr<CEntity> entity = nullptr;
 	glm::vec3 position, color, attentionn;
 	int type;
 	float cutOff;
@@ -110,6 +111,7 @@ void CXmlSceneParser::ParseLight(rapidxml::xml_node<>* node)
 
 	m_Scene->AddLight(light);
 
+	
 }
 
 void CXmlSceneParser::ParseTerrain(rapidxml::xml_node<>* node)
@@ -169,7 +171,7 @@ void CXmlSceneParser::ParseTexture(rapidxml::xml_node<>* node, std::string& diff
 	}
 }
 
-void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntity> parent)
+void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, CEntity* parent)
 {
 	shared_ptr<CEntity> entity = nullptr; 
 	glm::vec3 normalized_size(0);
@@ -205,7 +207,7 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 			is_global = ParaseBolean(subnode);
 
 		if (!std::string("Entity").compare(subnode->name()) && entity != nullptr)
-			ParaseEntity(subnode, entity);
+			ParaseEntity(subnode, entity.get());
 	}
 
 	if (entity != nullptr)
@@ -222,7 +224,7 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, shared_ptr<CEntit
 	
 }
 
-void CXmlSceneParser::LoadScene(std::string file_name, std::shared_ptr<CScene> scene, void(*func)(int p))
+void CXmlSceneParser::LoadScene(std::string file_name, CScene* scene, void(*func)(int p))
 {
 	int percent = 0;
 	if (func != nullptr) func(percent);
@@ -304,7 +306,7 @@ void CXmlSceneParser::LoadScene(std::string file_name, std::shared_ptr<CScene> s
 	dokument.clear();
 }
 
-void CXmlSceneParser::SaveToFile(std::string file_name, std::shared_ptr<CScene> scene)
+void CXmlSceneParser::SaveToFile(std::string file_name, CScene* scene)
 {
 	rapidxml::xml_document <> dokument;
 
@@ -330,13 +332,14 @@ void CXmlSceneParser::SaveToFile(std::string file_name, std::shared_ptr<CScene> 
 		AddEntityNode(dokument, root, entity, 1);
 	}
 
-	for (int y = 0; y < scene->m_TerrainsYCount - 1; y++)
-		for (int x = 0; x < scene->m_TerrainsXCount - 1; x++)
-	
+	for (int y = 0; y < scene->m_TerrainsCount; y++)
+		for (int x = 0; x < scene->m_TerrainsCount; x++)	
 	{
-		CTerrain& terrain = scene->m_Terrains[x][y];
+		CTerrain* terrain = scene->GetTerrain(x, y);
+		if (terrain == nullptr)
+			return;
 		//AddTerrainNode(dokument, root, terrain);
-		for (const shared_ptr<CEntity>& entity : terrain.m_TerrainEntities)
+		for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
 		{
 			AddEntityNode(dokument, root, entity, 0);
 		}
@@ -356,7 +359,7 @@ void CXmlSceneParser::SaveToFile(std::string file_name, std::shared_ptr<CScene> 
 
 	dokument.clear();
 }
-void CXmlSceneParser::LoadPrefab(std::string file_name, std::shared_ptr<CScene> scene, rapidxml::xml_node<>* parent)
+void CXmlSceneParser::LoadPrefab(std::string file_name, CScene* scene, rapidxml::xml_node<>* parent)
 {
 	std::ifstream file;
 	file.open(file_name);
@@ -529,7 +532,7 @@ void CXmlSceneParser::AddTerrainNode(rapidxml::xml_document<>& document, rapidxm
 	node->append_node(terrain_node);
 }
 
-void CXmlSceneParser::AddCameraNode(rapidxml::xml_document<>& document, rapidxml::xml_node<>* node, shared_ptr<CCamera> camera)
+void CXmlSceneParser::AddCameraNode(rapidxml::xml_document<>& document, rapidxml::xml_node<>* node, const shared_ptr<CCamera>& camera)
 {
 	rapidxml::xml_node<>* camera_node = document.allocate_node(rapidxml::node_element, "Camera");
 	rapidxml::xml_node<>* position = document.allocate_node(rapidxml::node_element, "Position");

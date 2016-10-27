@@ -53,6 +53,8 @@ namespace Utils
 	static glm::vec2 s_vec2_zero(0);
 	static glm::vec3 s_vec3_zero(0);
 	static glm::mat4 s_mat4_one(1.f);
+
+
 	template<class type>
 	float ToRadians(type a)
 	{
@@ -169,6 +171,14 @@ namespace Utils
 		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
 		float l3 = 1.0f - l1 - l2;
 		return l1 * p1.y + l2 * p2.y + l3 * p3.y;
+	}
+	static glm::vec3 BarryCentricVec3(const glm::vec3& p1, const glm::vec3& p2, const glm::vec3& p3, const glm::vec2& pos)
+	{
+		float det = (p2.z - p3.z) * (p1.x - p3.x) + (p3.x - p2.x) * (p1.z - p3.z);
+		float l1 = ((p2.z - p3.z) * (pos.x - p3.x) + (p3.x - p2.x) * (pos.y - p3.z)) / det;
+		float l2 = ((p3.z - p1.z) * (pos.x - p3.x) + (p1.x - p3.x) * (pos.y - p3.z)) / det;
+		float l3 = 1.0f - l1 - l2;
+		return glm::vec3(l1, l2, l3);
 	}
 	static glm::mat4 CreateOffset()
 	{

@@ -38,7 +38,7 @@ CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text
 	mesh.text_coords = text_coords;
 	mesh.CreateVaoMesh();
 	m_Meshes.push_back(mesh);
-	return &m_Meshes[m_Meshes.size()-1];
+	return &m_Meshes.back();
 }
 void CModel::CreateMeshesVaos()
 {
@@ -143,6 +143,13 @@ void CMesh::CalculateBoudnigBox(const vector<float>& positions )
 
 void CMesh::CleanUp()
 {	
+	m_Faces.clear();
+	positions.clear();
+	text_coords.clear();
+	normals.clear();
+	tangents.clear();
+	indices.clear();
+
 	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::INDICES]);
 	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::POSITION]);
 	glDeleteBuffers(1, &m_Vbos[VertexBufferObjects::TEXT_COORD]);

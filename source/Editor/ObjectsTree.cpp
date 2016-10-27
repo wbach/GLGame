@@ -56,15 +56,17 @@ void CSceneEditor::FillObjectsTree()
 	HTREEITEM h_camera = TreeView_InsertItem(m_Hwnd[Hwnds::OBJECT_TREEE], &tvins);
 
 	bool first = true;
-	for (int y = 0; y < m_Game.GetCurrentScene()->m_TerrainsYCount -1; y++)
-	for (int x = 0; x < m_Game.GetCurrentScene()->m_TerrainsXCount -1; x++)
+	for (int y = 0; y < m_Game.GetCurrentScene()->m_TerrainsCount -1; y++)
+	for (int x = 0; x < m_Game.GetCurrentScene()->m_TerrainsCount -1; x++)
 	{
-		CTerrain& terrain = m_Game.GetCurrentScene()->m_Terrains[x][y];
-
-		if (!terrain.m_IsInit)
+		CTerrain* terrain = m_Game.GetCurrentScene()->GetTerrain(x, y);
+		if (terrain == nullptr)
 			continue;
 
-		tvi.pszText = (LPSTR)terrain.GetNameWithId().c_str();
+		if (!terrain->m_IsInit)
+			continue;
+
+		tvi.pszText = (LPSTR)terrain->GetNameWithId().c_str();
 		tvi.iImage = tvi.iSelectedImage = 2;
 		tvins.item = tvi;
 		tvins.hParent = TVI_ROOT;		
@@ -79,7 +81,7 @@ void CSceneEditor::FillObjectsTree()
 		}
 		HTREEITEM h_terrain = TreeView_InsertItem(m_Hwnd[Hwnds::OBJECT_TREEE], &tvins);
 
-		for (const std::shared_ptr<CEntity>& enity : terrain.m_TerrainEntities)
+		for (const std::shared_ptr<CEntity>& enity : terrain->m_TerrainEntities)
 		{
 			RecursiveSetEntity(enity, h_terrain);
 		}

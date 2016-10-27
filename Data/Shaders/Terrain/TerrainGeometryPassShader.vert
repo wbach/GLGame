@@ -14,7 +14,7 @@ uniform vec3 ShadowVariables;
                                         
 out vec2 TexCoord0;                                                                 
 out vec3 Normal0;                                                                   
-out vec3 WorldPos0;             
+out vec4 WorldPos0;             
                                                     
 out vec4 ShadowCoords;
 out float UseShadows;
@@ -25,11 +25,12 @@ out float Distance;
 
 void main()
 {    
-	vec4 model_view_position  = ViewMatrix * TransformationMatrix * vec4(Position, 1.0);
+	vec4 world_pos = TransformationMatrix* vec4(Position, 1.0);
+	vec4 model_view_position  = ViewMatrix * world_pos;
     gl_Position    = ProjectionMatrix * model_view_position;
     TexCoord0      = TexCoord;                  
     Normal0        = (TransformationMatrix * vec4(Normal, 0.0)).xyz;   
-    WorldPos0      = (TransformationMatrix * vec4(Position, 1.0)).xyz;
+    WorldPos0      = world_pos;
 
 	Distance = length(model_view_position.xyz) ;
 	
@@ -46,7 +47,7 @@ void main()
 		const float transition_distance = 2.f;
 
 		float distance_to_cam   = length(model_view_position.xyz) ;
-		ShadowCoords			= ToShadowMapSpace * vec4(WorldPos0, 1.f); 
+		ShadowCoords			= ToShadowMapSpace * vec4(WorldPos0.xyz, 1.f); 
 		distance_to_cam			= distance_to_cam - (shadow_distance - transition_distance);
 		distance_to_cam			= distance_to_cam / shadow_distance;
 		ShadowCoords.w			= clamp(1.f - distance_to_cam, 0.f, 1.f);

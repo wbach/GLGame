@@ -11,9 +11,9 @@ class CEntityRenderer
 {	
 public :
 	CEntityRenderer() {}
-	void RenderEntity(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>&, CModel& model, const CEntityGeometryPassShader& geomentry_shader);
-	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity, const CEntityGeometryPassShader& geomentry_shader);
-	void Render(const shared_ptr<CScene>& scene, const CEntityGeometryPassShader& geomentry_shader);
+	void RenderEntity(CScene* scene, CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader);
+	void RenderEntityRecursive(CScene* scene, CEntity* entity, const CEntityGeometryPassShader& geomentry_shader);
+	void Render(CScene* scene, const CEntityGeometryPassShader& geomentry_shader);
 
 	const unsigned int& GetObjectsPerFrame();
 	const unsigned int& GetVertexPerFrame();

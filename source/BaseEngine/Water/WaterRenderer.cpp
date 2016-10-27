@@ -56,7 +56,7 @@ void CWaterRenderer::CleanUp()
 	m_Shader.CleanUp();
 }
 
-void CWaterRenderer::Render(shared_ptr<CScene> scene, const float& delta_time)
+void CWaterRenderer::Render(CScene* scene, const float& delta_time)
 {
 	if (!m_IsInitialized || !m_Render)
 		return;

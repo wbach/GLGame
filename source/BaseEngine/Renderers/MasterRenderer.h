@@ -25,14 +25,14 @@ namespace BufferTexture
 class CMasterRenderer
 {
 public:
-	void ShadowPass(shared_ptr<CScene>& scene, const bool& shadows);
-	void GeometryPass(shared_ptr<CScene>& scene, const bool& shadows);
-	void LightPass(shared_ptr<CScene>& scene, glm::vec2 window_size, GLuint target);
-	void RenderWaterTextures(shared_ptr<CScene>& scene, const bool& shadows);
+	void ShadowPass(CScene* scene, const bool& shadows);
+	void GeometryPass(CScene* scene, const bool& shadows);
+	void LightPass(CScene* scene, glm::vec2 window_size, GLuint target);
+	void RenderWaterTextures(CScene* scene, const bool& shadows);
 	
-	void Render(shared_ptr<CScene>& scene, const bool& shadows);
+	void Render(CScene* scene, const bool& shadows);
 
-	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, glm::mat4& projection_matrix,
+	void Init(CCamera* camera, glm::vec2 window_size, glm::mat4& projection_matrix,
 		const float& fov, const float& near, const float& far, float rendering_resolution_modifier = 1.f, float shadow_map_size = 2048.f, float shadows_distance = 35,
 		float water_quality = 1, glm::vec2 reflection_size = glm::vec2(320, 240), glm::vec2 refraction_size = glm::vec2(640, 480),
 		float view_distance = 250

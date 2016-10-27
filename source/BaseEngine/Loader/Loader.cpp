@@ -9,7 +9,10 @@ CLoader::CLoader()
 void CLoader::CleanUp()
 {
 	for (shared_ptr<CModel>& model : m_Models)
+	{
 		model->CleanUp();
+		model.reset();
+	}
 	
 	for (STextInfo& text : m_Textures)
 		text.CleanUp();

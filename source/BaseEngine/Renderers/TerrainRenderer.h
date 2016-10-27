@@ -6,7 +6,7 @@
 class CTerrainRenderer
 {	
 public:
-    void Render(shared_ptr<CScene>scene, const CTerrainGeometryPassShader& geomentry_shader);
+    void Render(CScene* scene, const CTerrainGeometryPassShader& geomentry_shader);
     void PrepareTerrain(const CTerrain &terrain);
     void BindTextures(const CTerrain &terrain);
     void UnBindTextureModel();

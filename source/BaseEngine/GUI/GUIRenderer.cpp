@@ -28,7 +28,7 @@ void CGUIRenderer::SetFont(const string & filename)
 	m_TextFont.Init(filename.c_str(), m_WindowSize);
 }
 
-void CGUIRenderer::LoadCursor(shared_ptr<CGUITexture> cur)
+void CGUIRenderer::LoadCursor(shared_ptr<CGUITexture>& cur)
 {
 	m_Cursor = cur;
 }

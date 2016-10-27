@@ -14,7 +14,7 @@ class CGUIRenderer
 public:
 	void Init(int window_width, int window_height);
 	void SetFont(const string& filename);
-	void LoadCursor(shared_ptr<CGUITexture> cur);
+	void LoadCursor(shared_ptr<CGUITexture>& cur);
 
 	void Render(const SGUI &gui);
 	void RenderText(const vector<CGUIText> &texts) const;

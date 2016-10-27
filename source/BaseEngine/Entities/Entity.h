@@ -20,13 +20,13 @@ public:
 
 	void Update();
 
-	void AddSubbEntity(shared_ptr<CEntity> e);
+	void AddSubbEntity(shared_ptr<CEntity>& e);
 	void IncrasePosition(float dx, float dy, float dz, unsigned int index = 0);
 	void IncrasePosition(glm::vec3 v, unsigned int index = 0);
 	void IncreaseRotation(float dx, float dy, float dz, unsigned int index = 0);
 	void CalculateEntityTransformMatrix(unsigned int x = 0);
 	
-	void RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity> e, const glm::mat4& parent_matrix);
+	void RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity>& e, const glm::mat4& parent_matrix);
 	void SetRelativeMatrix(const glm::mat4& parent_matrix);
 	void CalculateFinalTransformMatrix(unsigned int x = 0);
 	const glm::mat4& GetFinalTransformMatrix();

@@ -19,7 +19,7 @@ public:
 	CGame();
 	bool m_FroceQuit = false;
 
-	void Initialize(std::shared_ptr<CApi> api);
+	void Initialize(std::shared_ptr<CApi>& api);
 	void GameLoop();
 	void PhysicsLoop();
 	void Uninitialize();
@@ -36,6 +36,7 @@ public:
     int SetCurrentScene(int i);
     void LoadScene();
 	void InitializeScene() ;
+	void ClearScenes();
 	void AddScene(shared_ptr<CScene> scene);
 
 	void RenderStartSeries();
@@ -48,7 +49,7 @@ public:
 	void(*OnGameLoopRun)();
 
 	//For editor
-	shared_ptr<CScene>& GetCurrentScene();	
+	CScene* GetCurrentScene();	
 
 	CXmlSceneParser m_SceneParser;
 	
@@ -68,7 +69,7 @@ private:
 	LoadingShader m_LoadingShader;
 
 	vector<shared_ptr<CScene>> m_Scenes;
-	shared_ptr<CScene> m_CurrScene;
+	CScene* m_CurrScene;
 
 	CGUIRenderer	m_GuiRenderer;
 	CMasterRenderer m_MasterRenderer;

@@ -2,7 +2,7 @@
 layout (location = 0) out vec3 WorldPosOut;   
 layout (location = 1) out vec4 DiffuseOut;     
 layout (location = 2) out vec4 NormalOut;     
-layout (location = 3) out vec3 MaterialSpecular;  
+layout (location = 3) out vec4 MaterialSpecular;  
 
 in vec2 TexCoord0;                                                                  
 in vec3 Normal0;                                                                    
@@ -47,7 +47,7 @@ void main(void)
 				WorldPosOut      = WorldPos0;					
 				DiffuseOut       = vec4(WaterColor.xyz, 1.f) * normalMapColour * 0.45f;
 				NormalOut        = vec4(normal, 1.f);			
-				MaterialSpecular = vec3(1.f);		
+				MaterialSpecular = vec4(vec3(1.f), 20.f);		
 				return;
 		}
 
@@ -87,5 +87,5 @@ void main(void)
 		DiffuseOut       = mix(out_Color, vec4(WaterColor.xyz, 1.f), WaterColor.w);	
 		DiffuseOut.a = edgesFactor ;
 		NormalOut        = vec4(normal, 1.f);			
-		MaterialSpecular = vec3(1.f);		
+		MaterialSpecular = vec4(vec3(1.f), 20.f);		
 }

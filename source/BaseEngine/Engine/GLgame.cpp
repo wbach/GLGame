@@ -18,7 +18,7 @@ CGame::CGame()
 	ReadConfiguration("./Data/Conf.ini");
 }
 
-void CGame::Initialize(std::shared_ptr<CApi> api)
+void CGame::Initialize(std::shared_ptr<CApi>& api)
 {	
 	m_DisplayManager.SetApi(api);
 	m_DisplayManager.Initialize(m_WindowName, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
@@ -33,7 +33,7 @@ void CGame::Initialize(std::shared_ptr<CApi> api)
 
 	//renderStartSeries();
 	LoadScene();
-	m_MasterRenderer.Init(m_CurrScene->GetCamera(), m_WindowSize, m_ProjectionMatrix, 
+	m_MasterRenderer.Init(m_CurrScene->GetCamera().get(), m_WindowSize, m_ProjectionMatrix, 
 						 m_Fov, m_NearPlane ,m_FarPlane, m_RenderingResolutionModifier, m_ShadowMapSize, m_ShadowsDistance,
 						m_WaterQuality, m_ReflectionSize, m_RefractionSize, m_ViewDistance
 						);
@@ -273,7 +273,7 @@ int CGame::ReadConfiguration(string file_name)
 	//fclose(f);
 	return 0;
 }
-shared_ptr<CScene>& CGame::GetCurrentScene()
+CScene* CGame::GetCurrentScene()
 {
 	return m_CurrScene;
 }
@@ -489,6 +489,10 @@ void CGame::InitializeScene()
 	//grenderer.CleanUP();
 //	SDL_GL_DeleteContext(gl_loading_context);
 }
+void CGame::ClearScenes()
+{
+	m_Scenes.clear();
+}
 void CGame::CreateProjectionMatrix()
 {
 	float aspect_ratio = (float)m_WindowSize.x / (float)m_WindowSize.y;
@@ -513,7 +517,7 @@ int CGame::SetCurrentScene(int i)
 	{
 		if (x == i)
 		{
-			m_CurrScene = m_Scenes[x];
+			m_CurrScene = m_Scenes[x].get();
 			return 1;
 		}
 	}

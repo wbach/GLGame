@@ -24,6 +24,7 @@ void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragmen
 	glLinkProgram(m_ProgramID);
 	glValidateProgram(m_ProgramID);
 	m_IsInitialized = true;
+	m_GeometryShader = true;
 }
 void CShaderProgram::InitShaderProgram(char * vertex_shader_file, char * fragment_shader_file, char * tesselation_shader_file, char * tesselation_evaluation_shader_file)
 {	
@@ -117,11 +118,16 @@ void CShaderProgram::CleanUp()
 	if (!m_IsInitialized)
 		return;
 	Stop();
-	glDetachShader(m_ProgramID, m_VertexShaderID);
-	glDetachShader(m_ProgramID, m_GeometryShaderID);
+	glDetachShader(m_ProgramID, m_VertexShaderID);	
 	glDetachShader(m_ProgramID, m_FragmentShaderID);
 	glDeleteShader(m_VertexShaderID);
 	glDeleteShader(m_FragmentShaderID);
+
+	if (m_GeometryShader)
+	{
+		glDetachShader(m_ProgramID, m_GeometryShaderID);
+		glDeleteShader(m_GeometryShaderID);
+	}
 	glDeleteProgram(m_ProgramID);
 }
 int CShaderProgram::GetUniformLocation(const string& uniformName) const

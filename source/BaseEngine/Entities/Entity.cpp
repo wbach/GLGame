@@ -286,7 +286,7 @@ void CEntity::IncreaseRotation(float dx, float dy, float dz, unsigned int index)
 	this->m_Transforms[index].rotation.z += dz;
 	CalculateEntityTransformMatrix(index);
 }
-void CEntity::AddSubbEntity(shared_ptr<CEntity> e)
+void CEntity::AddSubbEntity(shared_ptr<CEntity>& e)
 {
 	m_ChildrenEntities.push_back(e);
 }
@@ -302,7 +302,7 @@ void CEntity::CalculateEntityTransformMatrix(unsigned int x)
 	{
 		m_TransformMatrixes[x] = Utils::CreateTransformationMatrix(m_Transforms[x].position, m_Transforms[x].rotation, m_Transforms[x].scale);
 
-		for (std::shared_ptr<CEntity> entity : m_ChildrenEntities)
+		for (std::shared_ptr<CEntity>& entity : m_ChildrenEntities)
 		{
 			RecursiveSetRelativeTransformMatrix(entity, m_TransformMatrixes[x]);
 		}
@@ -311,11 +311,11 @@ void CEntity::CalculateEntityTransformMatrix(unsigned int x)
 	m_TransformsInVao = false;
 }
 
-void CEntity::RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity> e , const glm::mat4& parent_matrix)
+void CEntity::RecursiveSetRelativeTransformMatrix(shared_ptr<CEntity>& e , const glm::mat4& parent_matrix)
 {
 	e->SetRelativeMatrix(parent_matrix);
 
-	for (std::shared_ptr<CEntity> subentity : e->GetChildrenEntities())
+	for (std::shared_ptr<CEntity>& subentity : e->GetChildrenEntities())
 	{
 		RecursiveSetRelativeTransformMatrix(subentity, parent_matrix * e->GetTransformMatrix());
 	}

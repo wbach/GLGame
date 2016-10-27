@@ -8,7 +8,7 @@ class CWaterRenderer
 {	
 public:	
 	void Init(glm::vec2 WindowSize, glm::mat4 projectionMatrix, glm::vec2 reflection_map_size, glm::vec2 refraction_map_size, float quality);
-	void Render(shared_ptr<CScene> scene,const float& delta_time);
+	void Render(CScene* scene,const float& delta_time);
 
 	void ChangeToReflectionViewPort();
 	void ChangeToRefractionViewPort();

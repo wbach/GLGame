@@ -1,5 +1,6 @@
 #version 330
-#define MAX_LIGHTS				10
+#define MAX_LIGHTS				100
+#define M_PI    3.14159265358979323846264338327950288   /* pi */
 #define LIGHT_TYPE_DIRECTIONAL	0
 #define LIGHT_TYPE_POINT		1
 #define LIGHT_TYPE_SPOT			2
@@ -59,14 +60,13 @@ vec4 CalculateBaseLight(SMaterial material, vec3 light_direction, vec3 world_pos
 	//ambient color
 	diffuse_color = diffuse_color * material.m_Diffuse;
 	ambient_color =  material.m_Ambient;
-	material.m_ShineDamper = 20;
 	if (material.m_ShineDamper > .0f)
 	{
 		vec3	vertex_to_camera	= normalize(CameraPosition - world_pos);
 		vec3	light_reflect		= normalize(reflect(light_direction, unit_normal));
 		float	specular_factor		= dot(vertex_to_camera, light_reflect);
 				specular_factor		= pow(specular_factor, material.m_ShineDamper);
-		if (specular_factor > .0f) 
+		if (specular_factor > .0f && specular_factor < 90.f*M_PI/180.f) 
 		{
             specular_color = light_color * material.m_Specular * specular_factor;
         }
@@ -99,6 +99,7 @@ vec4 CalculatePointLight(SMaterial material, SLight light, vec3 world_pos, vec3 
 						light.m_Attenuation.z * distance_to_light * distance_to_light;
 
 	return color / att_factor; 
+	//return vec4(light_direction, 1.f);
 }
 // not end 
 vec4 CalcSpotLight(SMaterial material, SLight light, vec3 world_pos, vec3 unit_normal)                                                
@@ -155,35 +156,43 @@ float ToZBuffer(sampler2D texture, vec2 coord)
 void main()									
 {									
 	vec2 tex_coord	= CalcTexCoord();
-	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;
-	
+	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;	
 	//FragColor = texture(NormalMap, tex_coord);	return;
 
 	vec4 normal4	= texture(NormalMap, tex_coord);
-
+	vec4 specular	= texture(SpecularMap, tex_coord);
 	vec3 world_pos	= texture(PositionMap, tex_coord).xyz;
 	vec3 color		= texture(ColorMap, tex_coord).xyz;
 	vec3 normal		= normal4.xyz;
-	vec3 specular	= texture(SpecularMap, tex_coord).xyz;
 
 	float visibility;
 	float distance = z ;
     visibility = exp(-pow((distance*((1.5 / ViewDistance))), gradient));
     visibility = clamp(visibility, 0.0f, 1.0f) ;
 
-	if (normal4.a < .5f)
-		visibility= 1;
-
-
 	SMaterial material;
 	material.m_Ambient = color * 0.2f;
 	material.m_Diffuse = color;
-	material.m_Specular = specular;
-	material.m_ShineDamper = 20.f;
+	material.m_Specular = specular.xyz;
+	material.m_ShineDamper = specular.a;
+	
+	vec3 final_color;
+
+	if (normal4.a < .5f)
+	{
+		visibility = 1.f;
+	}Powiêksz C++. 50 efektywnych sposobów na udoskonalenie Twoich programów pdf
 
 	const float gamma = 2.2f;
 	const float exposure = 0.0f; 
-	vec3 final_color = CalculateColor(material, world_pos, normal).rgb;
+	if (normal4.a > .5f)
+	{
+		final_color = CalculateColor(material, world_pos, normal).rgb;
+	}
+	else
+	{
+		final_color = material.m_Diffuse * SkyColour; 
+	}
 	//vec3 mapped = vec3(1.0) - exp(-final_color * exposure);
 	final_color = pow(final_color, vec3(1.f / gamma));
 	FragColor = vec4(final_color, 1.f);

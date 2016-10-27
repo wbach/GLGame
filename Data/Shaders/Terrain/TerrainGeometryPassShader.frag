@@ -2,16 +2,16 @@
                                                                         
 in vec2 TexCoord0;                                                                  
 in vec3 Normal0;                                                                    
-in vec3 WorldPos0;  
+in vec4 WorldPos0;  
                                                                 
 in vec4 ShadowCoords;
 in float UseShadows;
 in float ShadowMapSize;
 
-layout (location = 0) out vec3 WorldPosOut;   
+layout (location = 0) out vec4 WorldPosOut;   
 layout (location = 1) out vec4 DiffuseOut;     
 layout (location = 2) out vec4 NormalOut;     
-layout (location = 3) out vec3 SpecularOut;    
+layout (location = 3) out vec4 SpecularOut;    
 
 uniform sampler2D BlendMap ;									
 uniform sampler2D BackgroundTexture ;
@@ -26,7 +26,6 @@ uniform sampler2DShadow  ShadowMap ;
 
 uniform sampler2D RockTexture;
 uniform sampler2D RockTextureNormal;     
-
 		
 in float Distance;
 uniform float ViewDistance;
@@ -61,7 +60,7 @@ vec4 CalculateTerrainColor()
 	vec4 blend_map_colour = texture(BlendMap, TexCoord0) ;
 		
 	float back_texture_amount = 1 - (blend_map_colour.r + blend_map_colour.g + blend_map_colour.b) ;
-	vec2 tiled_coords = TexCoord0 * 25.0f ;
+	vec2 tiled_coords = TexCoord0 * 40.0f ;
 
 	float normal_y = abs(normalize(Normal0).y);
 
@@ -71,7 +70,6 @@ vec4 CalculateTerrainColor()
 
 	vec4 backgorund_texture_colour = texture(BackgroundTexture, tiled_coords) * back_texture_amount * normal_y + ( texture(RockTexture, tiled_coords * 0.5) * back_texture_amount * (1 - normal_y)) ;
 	
-
 	vec4 r_texture_colour = texture(rTexture, tiled_coords) * blend_map_colour.r;
 	vec4 g_texture_colour = texture(gTexture, tiled_coords) * blend_map_colour.g;
 	vec4 b_texture_colour = texture(bTexture, tiled_coords) * blend_map_colour.b;
@@ -87,8 +85,6 @@ void main()
 	float shadow_factor = UseShadows > 0.5f ? CalculateShadowFactor() : 1.f;									
 	WorldPosOut     = WorldPos0;					
 	DiffuseOut      = CalculateTerrainColor() * shadow_factor;	
-
-	NormalOut       = vec4(normalize(Normal0), 1.f); 		
-	
-	SpecularOut     = vec3(0.f);				
+	NormalOut       = vec4(normalize(Normal0), 1.f); 
+	SpecularOut     = vec4(0.f);				
 }

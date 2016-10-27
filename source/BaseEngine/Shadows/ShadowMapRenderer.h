@@ -9,15 +9,15 @@ class CShadowMapRenderer
 {
 public:
 	CShadowMapRenderer();
-	void Init(shared_ptr<CCamera>& camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size = 2048, float shadows_distance = 35);
-	void Render(shared_ptr<CScene>& scene);
-	void RenderEntityRecursive(const shared_ptr<CScene>& scene, const shared_ptr<CEntity>& entity) const;
+	void Init(CCamera* camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size = 2048, float shadows_distance = 35);
+	void Render(CScene* scene);
+	void RenderEntityRecursive(CScene* scene, CEntity* entity) const;
 	void SetShadowMapSize(float size);
 	void CleanUp();
 	const GLuint& GetShadowMap() const;
 	const glm::mat4 GetToShadowMapSpaceMatrix() const;
 private:
-	void RenderEntity(const shared_ptr<CEntity>&, CModel& model) const;
+	void RenderEntity(CEntity* , CModel& model) const;
 	void Prepare(const glm::vec3& light_direction, const CShadowBox &box);
 	void Finish();
 	void UpdateLightViewMatrix(glm::vec3 direction, glm::vec3 center);

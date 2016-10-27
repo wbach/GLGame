@@ -26,9 +26,9 @@ public:
 
 	void AddLight(CLight light) { m_Lights.push_back(light); }
 
-	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
+	void AddEntity(shared_ptr<CEntity>& entity, bool direct = false);
 	void AddInstancedEntityFromFile(string file, std::vector<STransform>& transforms, glm::vec3 normalized_size = glm::vec3(0));
-	void AddSubEntity(shared_ptr<CEntity> parent, shared_ptr<CEntity> entity);
+	void AddSubEntity(CEntity* parent, shared_ptr<CEntity>& entity);
 	
 	void CreateNewEmptyTerrain(string name, float x, float z);
 	void CreateEmptyHeightMap(string filename, int x, int y);
@@ -41,7 +41,7 @@ public:
 	void ApplyPhysicsToObjects(float dt);
 	void ClearObjectsVelocity();
 
-	void DeleteEntity(shared_ptr<CEntity> entity);
+	void DeleteEntity(shared_ptr<CEntity>& entity);
 	bool DeleteSubEntity(shared_ptr<CEntity>& entity, int id);
 	shared_ptr<CEntity> CreateEntityFromFile(string file_name, bool instanced = false, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
 	
@@ -50,7 +50,8 @@ public:
 	CTerrain* FindTerrainById(int id);
 
 	const vector<shared_ptr<CEntity>>&	GetEntities() const;
-	std::vector<std::vector<CTerrain>>&	GetTerrains() ;
+	std::vector<CTerrain>&				GetTerrains() ;
+	CTerrain*							GetTerrain(int x, int y);
 	const vector<CLight>&				GetLights() const;
 	vector<CWaterTile>&					GetWaterTiles();
 
@@ -89,23 +90,20 @@ public:
 	const vector<string>& GetSkyBoxNightTextures() const { return m_NightSkyboxTextures; }
 	CMousePicker& GetMousePicker() { return m_MousePicker; }
 	glm::vec3 GetMousePickerTarget();
-	void SetEntityToMousePointByKey(std::shared_ptr<CEntity> entity);
+	void SetEntityToMousePointByKey(std::shared_ptr<CEntity>& entity);
 	//Remove only loaded by parser elements
 
 	bool m_IsDebug = false;
 	std::string m_SceneFile;
 
 	//ForPainting
-	FIBITMAP*	m_WholeWorrldMap;
 	CTerrain*	m_CurrentTerrain;
 
 	CPhysicsScene m_PhysicsScene;
 	std::mutex g_pages_mutex;
 
-
-	std::vector<std::vector<CTerrain>>	m_Terrains;
-	int m_TerrainsXCount;
-	int m_TerrainsYCount;
+	std::vector<CTerrain> m_Terrains;
+	int m_TerrainsCount;
 	int m_TerrainViewRadius;
 
 	float m_HeightPaintStrength = 0.1f;
@@ -130,7 +128,7 @@ protected:
 	shared_ptr<CCamera> m_Camera;
 	vector<CWaterTile>	m_WaterTiles;	
 	vector<CLight>		m_Lights;
-	vector<shared_ptr<CEntity>> m_PhysicsEntities;
+	vector<CEntity*>	m_PhysicsEntities;
 	vector<shared_ptr<CEntity>> m_Entities;
 	
 	friend class CXmlSceneParser;
