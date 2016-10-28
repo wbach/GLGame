@@ -24,8 +24,8 @@ void CShadowMapRenderer::RenderEntityRecursive(CScene* scene, CEntity* entity) c
 	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 	{
 		if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-			if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-				continue;
+		//	if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 2.5f * entity->GetMaxNormalizedSize()))
+		//		continue;
 		RenderEntityRecursive(scene, subEntity.get());
 	}
 }
@@ -79,8 +79,8 @@ void CShadowMapRenderer::Render(CScene* scene)
 			for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
 			{
 				if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-					if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-						continue;
+					//if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+					//	continue;
 				RenderEntityRecursive(scene, entity.get());
 			}
 	}
@@ -88,8 +88,8 @@ void CShadowMapRenderer::Render(CScene* scene)
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
 	{
 		if(!entity->m_Instanced)
-		if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-			continue;
+	//	if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+		//	continue;
 		RenderEntityRecursive(scene, entity.get());
 	}
 	m_ShadowShader.Stop();

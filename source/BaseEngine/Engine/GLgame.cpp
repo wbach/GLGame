@@ -61,6 +61,7 @@ void CGame::GameLoop()
     string fps_text = "FPS : ";
 	string object_count_text = "Objects : ";
 	string vertex_count_text = "Vertex : ";
+	string game_time = "Game Time : ";
 	vector<CGUIText> texts;
 
 	glm::vec2 shadow_offset(-0.002);
@@ -75,6 +76,11 @@ void CGame::GameLoop()
 	glm::vec2 vc(-0.9475, 0.6575);
 	texts.push_back(CGUIText(vertex_count_text, vc + shadow_offset, 1, glm::vec3(0, 0, 0)));
 	texts.push_back(CGUIText(vertex_count_text, vc, 1, glm::vec3(0.9)));
+
+	glm::vec2 tc(0.6475, 0.9075);
+	texts.push_back(CGUIText(game_time, tc + shadow_offset, .5f, glm::vec3(0, 0, 0)));
+	texts.push_back(CGUIText(game_time, tc, .5f, glm::vec3(0.9)));
+
 	//texts.push_back(CGUIText("Lorem Ipsum is simply dummy text of the printing and typesetting industry.\n Lorem Ipsum has been the industry's standard dummy text ever since the 1500s.", glm::vec2(-0.90, 0.7), 1, glm::vec3(1, 1, 1)));
 	
 	
@@ -128,6 +134,12 @@ void CGame::GameLoop()
 
 		texts[4].updateText(vertex_count_text + std::to_string(vertex_per_frame));
 		texts[5].updateText(vertex_count_text + std::to_string(vertex_per_frame));
+
+		int hour, minutes;
+		m_CurrScene->m_DayNightCycle.GetCurrentHour(hour, minutes);
+
+		texts[6].updateText(game_time + std::to_string(hour) +  " : " + std::to_string(minutes));
+		texts[7].updateText(game_time + std::to_string(hour) + " : " + std::to_string(minutes));
 
 		m_GuiRenderer.RenderText(texts);
 		m_DisplayManager.Update();

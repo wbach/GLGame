@@ -19,19 +19,19 @@
 			<FrontTexture>Data/Skybox/Calm/back.jpg</FrontTexture>
 		</DayTextures>
 		<NightTextures>
-			<RightTexture>Data/Skybox/Calm/left.jpg</RightTexture>
-			<LeftTexture>Data/Skybox/Calm/right.jpg</LeftTexture>
-			<TopTexture>Data/Skybox/Calm/top.jpg</TopTexture>
-			<BottomTexture>Data/Skybox/Calm/bottom.jpg</BottomTexture>
-			<BackTexture>Data/Skybox/Calm/front.jpg</BackTexture>
-			<FrontTexture>Data/Skybox/Calm/back.jpg</FrontTexture>
+			<RightTexture>Data/Skybox/Night/right.png</RightTexture>
+			<LeftTexture>Data/Skybox/Night/left.png</LeftTexture>
+			<TopTexture>Data/Skybox/Night/top.png</TopTexture>
+			<BottomTexture>Data/Skybox/Night/bottom.png</BottomTexture>
+			<BackTexture>Data/Skybox/Night/front.png</BackTexture>
+			<FrontTexture>Data/Skybox/Night/back.png</FrontTexture>
 		</NightTextures>
 	</SkyBox>
 	<Light>
 		<Type>2</Type>
 		<Position>
 			<x>100.000000</x>
-			<y>1.800000</y>
+			<y>10.000000</y>
 			<z>120.000000</z>
 		</Position>
 		<Color>

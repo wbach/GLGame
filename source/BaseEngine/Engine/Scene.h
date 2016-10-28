@@ -7,6 +7,7 @@
 #include "../Camera/Camera.h"
 #include "../Terrain/Terrain.h"
 #include "../GUI/GUI.h"
+#include "../Game/DayNightCycle.h"
 #include <memory>
 #include <string>
 #include <vector>
@@ -84,7 +85,10 @@ public:
 	
 	CGame& GetGameReference() { return m_Game; }
 
-	const glm::vec3 GetDirectionalLightPosition();
+	//First of all , day-night cycle
+	void SetDirectionalLightColour(const glm::vec3& color);
+	const CLight& GetDirectionalLight() const;
+	const glm::vec3& GetDirectionalLightPosition() const;
 
 	const vector<string>& GetSkyBoxDayTextures() const { return m_DaySkyboxTextures; }
 	const vector<string>& GetSkyBoxNightTextures() const { return m_NightSkyboxTextures; }
@@ -116,6 +120,8 @@ public:
 
 	float m_GloabalTime = 0.f;
 
+	CDayNightCycle m_DayNightCycle;
+
 	void Reset();
 	~CScene();
 protected:
@@ -125,9 +131,11 @@ protected:
 	CGame&	m_Game;
 	SGUI	m_Gui;	
 
-	shared_ptr<CCamera> m_Camera;
-	vector<CWaterTile>	m_WaterTiles;	
+	//Minimum one light on scene only (night - decrease strength)
+	CLight				m_DirectionalLight;
 	vector<CLight>		m_Lights;
+	shared_ptr<CCamera> m_Camera;
+	vector<CWaterTile>	m_WaterTiles;		
 	vector<CEntity*>	m_PhysicsEntities;
 	vector<shared_ptr<CEntity>> m_Entities;
 	

@@ -82,7 +82,7 @@ public:
 		else
 			setFirstCamera();
 		
-		lightsphere = CreateEntityFromFile(Utils::ConvertToRelativePath("Data/Meshes/Sphere/sphere.obj"), false);
+		lightsphere = CreateEntityFromFile(Utils::ConvertToRelativePath("Data/Meshes/Sphere/sphere.obj"), false, CreatePositionVector(100, 120, 10));
 		AddEntity(lightsphere, true);
 
 	/*	sphere_plane = CreateEntityFromFile("Data/Meshes/plane.obj", false, glm::vec3 (0,-1,0));
@@ -103,7 +103,7 @@ public:
 		GLuint water_dudv	= m_Loader.LoadTexture("Data/Textures/waterDUDV.png");
 		GLuint water_normal = m_Loader.LoadTexture("Data/Textures/waternormal.png");
 
-		CWaterTile water(glm::vec3(250, -0.1, 110), 100, 0.3, water_dudv, water_normal, glm::vec4(43.0f/255.f, 106.f / 255.f, 134.f/255.f, 0.2));
+		CWaterTile water(glm::vec3(250, -0.1, 110), 100, 0.1, water_dudv, water_normal, glm::vec4(43.0f/255.f, 106.f / 255.f, 134.f/255.f, 0.2));
 		m_WaterTiles.push_back(water);	
 		
 		CGUIButton testButton(&m_Game.GetInputManager(), m_Loader.LoadTexture("Data/GUI/startGameButton.png"), m_Loader.LoadTexture("Data/GUI/hoverStartGameButton.png"), m_Loader.LoadTexture("Data/GUI/pushStartGamebutton.png"), "test", glm::vec2(-0.9, -0.95), 10, glm::vec3(1), glm::vec2(0.1, 0.05));
@@ -179,15 +179,17 @@ public:
 		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());
 
 		m_GloabalTime += dt;
+		m_DayNightCycle.Update(dt);
+	//	m_GameTime.SetTime(1.f);
 
-		glm::vec3 light_point ;
-		CTerrain* terrain = m_MousePicker.GetMousePointOnTerrain(light_point, m_Game.GetInputManager().GetMousePosition());
-		light_point.y += 10;
-		for (CLight& l : m_Lights)
-		{
-			l.SetPosition(light_point);
-		}
-		lightsphere->SetPosition(light_point);
+		//glm::vec3 light_point ;
+		//CTerrain* terrain = m_MousePicker.GetMousePointOnTerrain(light_point, m_Game.GetInputManager().GetMousePosition());
+		//light_point.y += 10;
+		//for (CLight& l : m_Lights)
+		//{
+		//	l.SetPosition(light_point);
+		//}
+		//lightsphere->SetPosition(light_point);
 
 		if (m_Game.GetInputManager().GetKey(KeyCodes::P))
 		{

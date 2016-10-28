@@ -157,7 +157,7 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 	glDisable(GL_BLEND);
 	
 	// *********************************************SkyBox render******************************************
-	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), 0.f);
+	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), scene->m_DayNightCycle.GetDeltaTime(), scene->m_DayNightCycle.GetDayNightBlendFactor());
 	//*****************************************************************************************************
 	// ******************************Terrain render********************************************************
 	m_TerrainGeometryPassShader.Start();
@@ -221,7 +221,7 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 		}
 	//****************************************************************************************************
 	// **************************************Water render******************************************
-	m_WaterRenderer.Render(scene, 0.001);
+	m_WaterRenderer.Render(scene, scene->m_DayNightCycle.GetDeltaTime());
 
 	m_RendererObjectPerFrame = m_EntityRenderer.GetObjectsPerFrame() + m_TerrainRenderer.GetObjectsPerFrame();
 	m_RendererVertixesPerFrame = m_EntityRenderer.GetVertexPerFrame() + m_TerrainRenderer.GetVertexPerFrame();
@@ -261,12 +261,14 @@ void CMasterRenderer::LightPass(CScene* scene, glm::vec2 window_size, GLuint tar
 	m_LightPassShader.Start();
 	m_LightPassShader.LoadScreenSize(window_size);
 	m_LightPassShader.LoadViewMatrix(scene->GetViewMatrix());
+	m_LightPassShader.LoadSkyColour(glm::vec3(0.8) * scene->m_DayNightCycle.GetDayNightBlendFactor());
 	glm::mat4 transformation_matrix = Utils::CreateTransformationMatrix(glm::vec3(0), glm::vec3(0), glm::vec3(1.0));
 	m_LightPassShader.LoadTransformMatrix(transformation_matrix);
 	m_LightPassShader.LoadCameraPosition(scene->GetCameraPosition());
-	int lights = scene->GetLights().size();
+	m_LightPassShader.LoadLight(scene->GetDirectionalLight(), 0);
+	int lights = scene->GetLights().size() + 1;
 	m_LightPassShader.LoadLightNumber(lights);
-	int i = 0;
+	int i = 1;
 	for (const CLight& light : scene->GetLights())
 	{
 		m_LightPassShader.LoadLight(light, i++);

@@ -156,7 +156,8 @@ float ToZBuffer(sampler2D texture, vec2 coord)
 void main()									
 {									
 	vec2 tex_coord	= CalcTexCoord();
-	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;	
+	float z = ToZBuffer(DepthTexture, tex_coord) ;/// 1000;
+	
 	//FragColor = texture(NormalMap, tex_coord);	return;
 
 	vec4 normal4	= texture(NormalMap, tex_coord);
@@ -181,7 +182,7 @@ void main()
 	if (normal4.a < .5f)
 	{
 		visibility = 1.f;
-	}Powiêksz C++. 50 efektywnych sposobów na udoskonalenie Twoich programów pdf
+	}
 
 	const float gamma = 2.2f;
 	const float exposure = 0.0f; 
@@ -191,7 +192,7 @@ void main()
 	}
 	else
 	{
-		final_color = material.m_Diffuse * SkyColour; 
+		final_color = material.m_Diffuse ;//* SkyColour; 
 	}
 	//vec3 mapped = vec3(1.0) - exp(-final_color * exposure);
 	final_color = pow(final_color, vec3(1.f / gamma));

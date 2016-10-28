@@ -12,14 +12,14 @@ uniform samplerCube NightCubeMap;
 uniform float		BlendFactor ;
 uniform vec3		FogColour ;
 
-const float LowerLimit = 0.1;
-const float UpperLimit = 0.3;
+const float LowerLimit = 0.0;
+const float UpperLimit = 0.2;
 
 void main(void)
 {
     vec4 texture1	  = texture(DayCubeMap, TextureCoords);
     vec4 texture2	  = texture(NightCubeMap, TextureCoords);
-	vec4 final_colour = mix(texture1, texture2, BlendFactor);
+	vec4 final_colour = mix(texture2, texture1, BlendFactor);
 
     float factor	= (TextureCoords.y - LowerLimit)/(UpperLimit - LowerLimit );
     factor			= clamp(factor, 0.f, 1.f);

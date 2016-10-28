@@ -9,10 +9,6 @@ CLight::CLight(glm::vec3 position, glm::vec3 colour, glm::vec3 attenuation, floa
 {
 }
 
-void CLight::SetPosition(glm::vec3 position)
-{
-	m_Position = position;
-}
 
 CLight::CLight(glm::vec3 position,glm::vec3 colour,glm::vec3 attenuation)
 : m_Type(LightType::POINT_LIGHT)
@@ -71,4 +67,13 @@ const glm::vec3& CLight::GetAttenuation() const
 const float& CLight::GetCutoff() const
 {
 	return m_CutOff;
+}
+void CLight::SetPosition(const glm::vec3& position)
+{
+	m_Position = position;
+}
+
+void CLight::SetColor(const glm::vec3 & color)
+{
+	m_Colour = color;
 }

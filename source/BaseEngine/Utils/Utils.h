@@ -53,8 +53,22 @@ namespace Utils
 	static glm::vec2 s_vec2_zero(0);
 	static glm::vec3 s_vec3_zero(0);
 	static glm::mat4 s_mat4_one(1.f);
-
-
+	static glm::vec3 ColorLerpRGB(const glm::vec3& c1, const glm::vec3& c2, const float& blend) 
+	{
+		glm::vec3 color;
+		color.x = c1.x + (c2.x - c1.x) * blend;
+		color.y = c1.y + (c2.y - c1.y) * blend;
+		color.z = c1.z + (c2.z - c1.z) * blend;
+		return color;
+	}
+	static glm::vec3 RGBtoFloat(const glm::vec3& color)
+	{
+		return color / 255.f;
+	}
+	static glm::vec3 RGBtoFloat(const float& r, const float& g, const float& b )
+	{
+		return RGBtoFloat(glm::vec3(r, g, b));
+	}
 	template<class type>
 	float ToRadians(type a)
 	{

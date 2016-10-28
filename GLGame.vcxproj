@@ -157,6 +157,8 @@
     <ClCompile Include="source\BaseEngine\Display\DisplayManager.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\GLFW3\GLFW3_OpenGL.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\GameObject.cpp" />
+    <ClCompile Include="source\BaseEngine\Game\DayNightCycle.cpp" />
+    <ClCompile Include="source\BaseEngine\Game\GameTime.cpp" />
     <ClCompile Include="source\BaseEngine\GUI\Font.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\AssimpModel.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\EmptyLoader.cpp" />
@@ -228,6 +230,8 @@
     <ClInclude Include="source\BaseEngine\Engine\Renderer.h" />
     <ClInclude Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.h" />
     <ClInclude Include="source\BaseEngine\Entities\Entity.h" />
+    <ClInclude Include="source\BaseEngine\Game\DayNightCycle.h" />
+    <ClInclude Include="source\BaseEngine\Game\GameTime.h" />
     <ClInclude Include="source\BaseEngine\GUI\Font.h" />
     <ClInclude Include="source\BaseEngine\Loader\AssimpModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />

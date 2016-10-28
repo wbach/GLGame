@@ -8,7 +8,7 @@ CShadowBox::CShadowBox()
 
 void CShadowBox::Init(CCamera* camera, glm::vec2 window_size, float fov, float near_plane, float shadows_distance)
 {
-	m_Offset = 5;
+	m_Offset = 25;
 	m_Up = glm::vec4(0, 1, 0, 0);
 	m_Forward = glm::vec4(0, 0, -1, 0);
 	m_ShadowDistance = shadows_distance;

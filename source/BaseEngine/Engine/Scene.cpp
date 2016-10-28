@@ -6,6 +6,8 @@ CScene::CScene(CGame& game)
 , m_TerrainsCount(10)
 , m_TerrainViewRadius(1)
 , m_GloabalTime(0.f)
+, m_DirectionalLight(glm::vec3(10000,15000,10000), glm::vec3(0.01))
+, m_DayNightCycle(m_DirectionalLight)
 {
 	m_Loader.SetMaxTextureResolution(m_Game.GetMaxTextureResolution());
 }
@@ -530,14 +532,19 @@ void CScene::TerrainNumber(glm::vec2 xz_pos, int & x, int & z)
 }
 
 
-const glm::vec3 CScene::GetDirectionalLightPosition()
+void CScene::SetDirectionalLightColour(const glm::vec3 & color)
 {
-	for (const CLight& light : m_Lights)
-		if (light.GetType() == LightType::DIRECTIONAL_LIGHT)
-			return light.GetPosition();
-	//cout << "[Error] Directional light not found." << endl;
-	throw std::runtime_error(std::string("Directional light not found.").c_str());;
-	return glm::vec3();
+	m_DirectionalLight.SetColor(color);
+}
+
+const CLight & CScene::GetDirectionalLight() const
+{
+	return m_DirectionalLight;
+}
+
+const glm::vec3& CScene::GetDirectionalLightPosition() const
+{
+	return m_DirectionalLight.GetPosition();
 }
 
 glm::vec3 CScene::GetMousePickerTarget()

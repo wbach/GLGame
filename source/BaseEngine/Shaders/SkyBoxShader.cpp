@@ -8,7 +8,7 @@ void CSkyBoxShader::Init()
 	ConnectTextureUnits();
 	Stop();
 	m_Rotation = 0.f;
-	m_RotationSpeed = 1.f;
+	m_RotationSpeed = 0.1f;
 }
 
 void CSkyBoxShader::LoadProjectionMatrix(const glm::mat4& matrix) const

@@ -8,12 +8,12 @@ class CSkyBoxRenderer
 {
 public:
 	void Init(const glm::mat4& projection_matrix, const float& distance_view);
-	void Render(const glm::mat4& view_matrix, const float& delta_time);
+	void Render(const glm::mat4& view_matrix, const float& delta_time, const float& blend_factor);
 	void SetTextures(GLuint day, GLuint night);
 	void SetMeshId(GLuint box_id, int veretex_count);
 	void CleanUp();
 private:
-	float BindTextures(const float& delta_time) const;
+	float BindTextures(const float& blend_factor) const;
 	float m_DistanceView = 100;
 	CSkyBoxShader m_SkyBoxShader;
 
