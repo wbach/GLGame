@@ -1,6 +1,6 @@
 #include "GLFW3_OpenGL.h"
 #include <thread>
-void CGlfwOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height)
+void CGlfwOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height, bool full_screen)
 {
 	if (glfwInit() != 1)
 		exit(1);
@@ -12,6 +12,11 @@ void CGlfwOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int 
 	printf("GLFW %d.%d.%d initialized\n", major, minor, rev);
 
 	GLFWmonitor* monitor = NULL;
+
+	if (full_screen)
+	{
+		monitor = glfwGetPrimaryMonitor();
+	}
 
 	m_Window = glfwCreateWindow(width, height, window_name.c_str(), monitor, NULL);
 

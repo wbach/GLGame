@@ -16,7 +16,7 @@ namespace ApiMessages
 class CApi 
 {
 public:
-	virtual void CreateOpenGLWindow(std::string window_name, int width, int height) = 0;
+	virtual void CreateOpenGLWindow(std::string window_name, int width, int height, bool full_screen) = 0;
 	virtual void CleanUp() = 0;
 	virtual int PeekMessages() = 0;
 	virtual void UpdateWindow() = 0;

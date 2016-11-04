@@ -20,6 +20,7 @@ void CModel::CreateTransformsVbo(std::vector<glm::mat4>& m)
 		mesh.CreateTransformsVbo(m);
 	}
 	m_InstancedRendering = true;
+	m_InstancedSize = m.size();
 }
 
 CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned short> &indices, SMaterial &material)
@@ -122,6 +123,10 @@ float CModel::GetBoundingMaxSize()
 	}
 
 	return max;
+}
+const unsigned int CModel::GetInstancedSize() const
+{
+	return m_InstancedSize;
 }
 void CModel::CleanUp()
 {
@@ -230,48 +235,7 @@ void CMesh::UpdateTransformVbo(std::vector<glm::mat4>& m)
 
 void CMesh::CreateFaces()
 {
-	m_Faces.clear();
-	vector<glm::vec3> norm, vertexes;
-	for (unsigned int x = 0; x < positions.size(); x += 3)
-	{
-		float& xx = positions[x];
-		float& yy = positions[x + 1];
-		float& zz = positions[x + 2];
-		vertexes.push_back(glm::vec3(xx, yy, zz));
-	}
-	for (unsigned int x = 0; x < normals.size(); x += 3)
-	{
-		norm.push_back(glm::vec3(normals[x], normals[x + 1], normals[x + 2]));
-	}
-	for (unsigned int x = 0; x < indices.size(); x += 3)
-	{
-		SFace face;
-		face.vertex[0] = vertexes[indices[x]];
-		face.vertex[1] = vertexes[indices[x + 1]];
-		face.vertex[2] = vertexes[indices[x + 2]];
-		//face.normal = norm[this->indices[x]] ;
-
-		float Vector1[3];
-		float Vector2[3];
-
-		// wyznaczanie wektorow....
-		Vector1[0] = face.vertex[0].x - face.vertex[1].x;
-		Vector1[1] = face.vertex[0].y - face.vertex[1].y;
-		Vector1[2] = face.vertex[0].z - face.vertex[1].z;
-
-		Vector2[0] = face.vertex[1].x - face.vertex[2].x;
-		Vector2[1] = face.vertex[1].y - face.vertex[2].y;
-		Vector2[2] = face.vertex[1].z - face.vertex[2].z;
-
-		//wyznaczanie normalnych....
-		face.normal.x = Vector1[1] * Vector2[2] - Vector1[2] * Vector2[1];
-		face.normal.y = Vector1[2] * Vector2[0] - Vector1[0] * Vector2[2];
-		face.normal.z = Vector1[0] * Vector2[1] - Vector1[1] * Vector2[0];
-
-		face.normal = glm::normalize(face.normal);
-
-		m_Faces.push_back(face);
-	}
+	
 }
 
 const GLuint& CMesh::GetVao() const

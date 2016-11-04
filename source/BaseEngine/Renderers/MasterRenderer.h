@@ -10,24 +10,19 @@
 #include "../Engine/OpenGLRenderer.h"
 #include "../Water/WaterRenderer.h"
 #include "../Shaders/GrassShader.h"
+#include "../Shaders/FXAAShader.h"
+#include "FrameBuffers/DeferedFrameBuffer.h"
+#include "FrameBuffers/FilterFrameBuffer.h"
 
-namespace BufferTexture
-{
-	enum Type
-	{
-		POSITION = 0,
-		DIFFUSE,
-		NORMAL,
-		SPECULAR,
-		COUNT
-	};
-}
 class CMasterRenderer
 {
 public:
 	void ShadowPass(CScene* scene, const bool& shadows);
 	void GeometryPass(CScene* scene, const bool& shadows);
 	void LightPass(CScene* scene, glm::vec2 window_size, GLuint target);
+	void FXAApass();
+	void BindFinalPass();
+
 	void RenderWaterTextures(CScene* scene, const bool& shadows);
 	
 	void Render(CScene* scene, const bool& shadows);
@@ -39,8 +34,6 @@ public:
 	);
 	void CleanUp();
 
-	void DebugRenderTextures();
-
 	void SetSkyBoxTextures(GLuint day, GLuint night);
 	void SetSkyBoxMeshId(GLuint quad_id, int vertex_count);
 	const GLuint& GetShadowMap() const;
@@ -49,9 +42,6 @@ public:
 	const unsigned int& GetObjectsPerFrame();
 	const unsigned int& GetVertexPerFrame();
 private:
-	int CreateBuffers();
-	void SetReadBuffer(BufferTexture::Type TextureType);
-
 	GLuint m_TestDepthMap;
 
 	CWaterRenderer	   m_WaterRenderer;
@@ -64,6 +54,7 @@ private:
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
 	CLightPassShader			m_LightPassShader;
 	CGrassShader				m_GrassShader;
+	CFXAAShader					m_FxaaShader;
 
 	glm::vec4	m_ClipPlane;
 	glm::vec2	m_ReflectionSize;
@@ -76,10 +67,13 @@ private:
 	float		m_ShadowsDistance;
 
 	glm::vec2	m_WindowSize;
-	GLuint		m_Fbo;
-	GLuint		m_FinalTexture;
-	GLuint		m_DepthTexture;
-	GLuint		m_Textures[BufferTexture::Type::COUNT];
+	
+	CDefferedFrameBuffer m_DefferedFrameBuffer;
+	CFilterFrameBuffer m_FilterFrameBuffer;
+	//GLuint		m_Fbo;
+	//GLuint		m_FinalTexture;
+	//GLuint		m_DepthTexture;
+	//GLuint		m_Textures[BufferTexture::Type::COUNT];
 
 	int	   m_QuadIndicesSize;
 	GLuint m_QuadVao;
@@ -88,8 +82,6 @@ private:
 	GLuint m_QuadTexCoord;	
 
 	float m_ResoultionMultipler = .5f;
-
-	bool m_DebugRenderTextures;
 
 	unsigned int m_RendererObjectPerFrame = 0;
 	unsigned int m_RendererVertixesPerFrame = 0;

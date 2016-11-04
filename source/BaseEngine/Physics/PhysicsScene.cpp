@@ -2,53 +2,77 @@
 #include "../Utils/Utils.h"
 void CPhysicsScene::Update(float delta_time)
 {
-	int x = 0;
-	for (CRigidbody* a : m_Rigibodys)
-	{
-		
-		bool IsColl = false;
-		int y = -1;
-		for (CRigidbody* b : m_Rigibodys)
-		{
-			break;
-			y++;
-			if (y == x) continue;
-			glm::vec3 normal; float penetration;
-			if (a->m_Colider.DetectCollision(b->m_Colider))
-			{				
-				
-				if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
-				{
-					if (SphereSphere(a->m_Colider, b->m_Colider, normal, penetration))
-					{
-						
-						ResolveCollision(*a, *b, normal, delta_time);
-						PositionalCorrection(*a, *b, penetration, normal);
-						IsColl = true;
-					}
-				}				
-			}			
-			if (a->m_Colider.m_ColiderType == ColiderType::BOX_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
-			{
-				if (AABBvsSphere(a->m_Colider, b->m_Colider, normal, penetration))
-				{
-					ResolveCollision(*a, *b, normal, delta_time);
-					PositionalCorrection(*a, *b, penetration, normal);
-				}
-			}
-			if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::BOX_COLIDER)
-			{
-				if (AABBvsSphere(b->m_Colider, a->m_Colider, normal, penetration))
-				{
-					ResolveCollision(*b, *a, normal, delta_time);
-					PositionalCorrection(*b, *a, penetration, normal);
-				}
-			}
-		}
-		if(!IsColl)
-		a->ApplyGravity(delta_time, m_Gravity);
-		x++;
-	}
+	//int x = 0;
+	//for (CRigidbody* a : m_Rigibodys)
+	//{		
+	//	bool IsColl = false;
+	//	int y = -1;
+	//	for (CRigidbody* b : m_Rigibodys)
+	//	{
+	//		
+	//		y++;
+	//		if (y == x) continue;
+	//		glm::vec3 normal; float penetration;
+	//		SCollisionInfo col_info;
+	//	//	std::cout << "Check Collision" << a->m_Colider.m_ColiderType << "| " << b->m_Colider.m_ColiderType << std::endl;
+
+	//	/*	if (a->m_Colider.m_ColiderType == ColiderType::MESH_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
+	//		{
+	//			if (a->m_Colider.DetectCollision(b->m_Colider, col_info))
+	//			{
+	//				b->m_Colider.m_UpdateVector = col_info.updateVector;
+	//				IsColl = true;
+	//			}
+	//		}*/
+	//		if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::MESH_COLIDER)
+	//		{
+	//			if (b->m_Colider.DetectCollision(a->m_Colider, col_info))
+	//			{
+	//				if(!a->m_Static)
+	//				a->m_Colider.m_UpdateVector = col_info.updateVector;
+	//				a->m_Colider.m_MinYPos = col_info.collisionY;
+	//				IsColl = true;
+	//			}
+	//		}
+	//		
+
+
+	//		continue;
+	//		if (a->m_Colider.DetectCollision(b->m_Colider, col_info))
+	//		{				
+	//			
+	//			if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
+	//			{
+	//				if (SphereSphere(a->m_Colider, b->m_Colider, normal, penetration))
+	//				{						
+	//					ResolveCollision(*a, *b, normal, delta_time);
+	//					PositionalCorrection(*a, *b, penetration, normal);
+	//					IsColl = true;
+	//				}
+	//			}				
+	//		}			
+	//		if (a->m_Colider.m_ColiderType == ColiderType::BOX_COLIDER && b->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER)
+	//		{
+	//			if (AABBvsSphere(a->m_Colider, b->m_Colider, normal, penetration))
+	//			{
+	//				ResolveCollision(*a, *b, normal, delta_time);
+	//				PositionalCorrection(*a, *b, penetration, normal);
+	//			}
+	//		}
+	//		if (a->m_Colider.m_ColiderType == ColiderType::SPHERE_COLIDER && b->m_Colider.m_ColiderType == ColiderType::BOX_COLIDER)
+	//		{
+	//			if (AABBvsSphere(b->m_Colider, a->m_Colider, normal, penetration))
+	//			{
+	//				ResolveCollision(*b, *a, normal, delta_time);
+	//				PositionalCorrection(*b, *a, penetration, normal);
+	//			}
+	//		}
+	//	}
+	//	if(!a->m_Static)
+	//		a->ApplyGravity(delta_time, m_Gravity);
+	//	
+	//	x++;
+	//}
 }
 void CPhysicsScene::AddRigidBody(CRigidbody* rigidbody)
 {

@@ -13,7 +13,7 @@ public:
 	void SetMeshId(GLuint box_id, int veretex_count);
 	void CleanUp();
 private:
-	float BindTextures(const float& blend_factor) const;
+	void BindTextures(const float& blend_factor) const;
 	float m_DistanceView = 100;
 	CSkyBoxShader m_SkyBoxShader;
 

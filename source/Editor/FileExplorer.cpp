@@ -226,7 +226,7 @@ void CSceneEditor::SpawnEntity(std::string file_name, glm::vec3 normalized_scale
 		spawn_position = m_Game.GetCurrentScene()->CreatePositionVector(spawn_position.x, spawn_position.z, 0);
 	}
 
-	shared_ptr<CEntity> new_entity = m_Game.GetCurrentScene()->CreateEntityFromFile(file_name, false, spawn_position);
+	shared_ptr<CEntity> new_entity = m_Game.GetCurrentScene()->CreateEntityFromFile(file_name, ColiderType::NONE_COLIDER, glm::vec3(0), false, spawn_position);
 
 	glm::mat4 nm = m_Game.GetCurrentScene()->GetLoader().m_Models[new_entity->GetModelId()]->CalculateNormalizedMatrix(normalized_scale.x, normalized_scale.y, normalized_scale.z);
 	new_entity->SetNormalizedMatrix(nm);

@@ -59,30 +59,15 @@ void CShadowMapRenderer::Render(CScene* scene)
 	m_ShadowShader.LoadProjectionMatrix(m_ProjectionViewMatrix);
 	m_ShadowShader.LoadViewMatrix(scene->GetViewMatrix());
 
-	int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
-	scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
-
-	for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
-		for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
+	for (CTerrain* terrain : scene->GetTerrainsInCameraRange())
+	{		
+		for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
 		{
-			if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
-				continue;
-
-			CTerrain* terrain = scene->GetTerrain(x, y);
-			if (terrain == nullptr)
-				continue;
-
-			if (!terrain->m_IsInit) continue;
-
-			if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain->m_WorldCenterPosition, terrain->GetSize() / 1.5f))
-				continue;
-			for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
-			{
-				if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-					//if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-					//	continue;
-				RenderEntityRecursive(scene, entity.get());
-			}
+			if (entity->GetIsCullingChildren() && !entity->m_Instanced)
+				//if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
+				//	continue;
+			RenderEntityRecursive(scene, entity.get());
+		}
 	}
 
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())

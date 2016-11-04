@@ -44,8 +44,11 @@ public:
 
 	void DeleteEntity(shared_ptr<CEntity>& entity);
 	bool DeleteSubEntity(shared_ptr<CEntity>& entity, int id);
-	shared_ptr<CEntity> CreateEntityFromFile(string file_name, bool instanced = false, glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1));
+	shared_ptr<CEntity> CreateEntityFromFile(string file_name, const ColiderType::Type type = ColiderType::NONE_COLIDER, glm::vec3 normalized_size = glm::vec3(0, 1, 0), bool instanced = false,
+											glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1)											
+											);
 	
+	std::vector<CEntity*> GetPhysicsEntitiesInRange(const glm::vec3& position);
 	shared_ptr<CEntity> FindEntity(int id);
 	shared_ptr<CEntity> FindSubEntity(shared_ptr<CEntity>& entity, int id);
 	CTerrain* FindTerrainById(int id);
@@ -55,6 +58,7 @@ public:
 	CTerrain*							GetTerrain(int x, int y);
 	const vector<CLight>&				GetLights() const;
 	vector<CWaterTile>&					GetWaterTiles();
+	std::vector<CTerrain*>				GetTerrainsInCameraRange();
 
 	void LoadTerrainsFloora(string file_name);
 
@@ -70,7 +74,8 @@ public:
 	// create position vector (x, heightTerrain(x,z),z)
 	glm::vec3 CreatePositionVector(float x, float z, float y_offset = 0);
 	glm::vec3 CreatePositionVector(glm::vec2 xzPos, float y_offset = 0);
-
+	
+	const float GetHeightOfWorld(float x, float y,float z);
 	//return height form current terrain
 	const float GetHeightOfTerrain(float x, float z);
 	const float GetHeightOfTerrain(glm::vec2 xz_pos);
@@ -104,11 +109,12 @@ public:
 	CTerrain*	m_CurrentTerrain;
 
 	CPhysicsScene m_PhysicsScene;
+	float		  m_PhysicsDistance = 20.f;
 	std::mutex g_pages_mutex;
 
 	std::vector<CTerrain> m_Terrains;
-	int m_TerrainsCount;
-	int m_TerrainViewRadius;
+	unsigned int m_TerrainsCount;
+	unsigned int m_TerrainViewRadius;
 
 	float m_HeightPaintStrength = 0.1f;
 	bool m_ApplyLimits = false;

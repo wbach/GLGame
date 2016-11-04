@@ -16,7 +16,7 @@ namespace Renderer
 class CDisplayManager 
 {
 public:
-	int Initialize(string window_name, int renderer, int w, int h);
+	int Initialize(string window_name, int renderer, int w, int h, bool full_screen);
 	int PeekMessage();
 	void Update();
 	void Uninitialize();

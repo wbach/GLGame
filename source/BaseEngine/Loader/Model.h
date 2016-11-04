@@ -4,6 +4,7 @@
 #include "glm/glm.hpp"
 #include "../Utils/Utils.h"
 #include "Material.h"
+#include "Face.h"
 using namespace std;
 namespace VertexBufferObjects
 {
@@ -28,14 +29,6 @@ namespace LoaderType
 		COUNT
 	};
 }
-struct SFace
-{
-	glm::vec3 vertex[3];
-	glm::vec3 normal;
-	glm::vec2 uv[3];
-	glm::vec3 center;
-	float skipDistance;
-};
 class CModel;
 class CMesh
 {
@@ -104,6 +97,7 @@ public:
 	vector<CMesh>& GetModifyMeshes();
 
 	float	GetBoundingMaxSize();	
+	const unsigned int GetInstancedSize() const;
 
 	virtual void CleanUp();
 
@@ -112,11 +106,10 @@ public:
 protected:
 	string			 m_Name;
 	vector<CMesh>	 m_Meshes;
-	LoaderType::Type m_LoaderType;
-	
-	
+	LoaderType::Type m_LoaderType;	
 
-	bool		m_InstancedRendering;
+	bool m_InstancedRendering;
+	unsigned int m_InstancedSize;
 	//Bounding for all meshes in model
 	glm::vec3	m_BoundingBoxMin,
 				m_BoundingBoxMax,

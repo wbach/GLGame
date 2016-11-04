@@ -53,6 +53,11 @@ namespace Utils
 	static glm::vec2 s_vec2_zero(0);
 	static glm::vec3 s_vec3_zero(0);
 	static glm::mat4 s_mat4_one(1.f);
+	static const GLuint s_GLuint_zero = 0;
+	template <typename T>
+	T clamp(const T& n, const T& lower, const T& upper) {
+		return std::max(lower, std::min(n, upper));
+	}
 	static glm::vec3 ColorLerpRGB(const glm::vec3& c1, const glm::vec3& c2, const float& blend) 
 	{
 		glm::vec3 color;
@@ -60,6 +65,11 @@ namespace Utils
 		color.y = c1.y + (c2.y - c1.y) * blend;
 		color.z = c1.z + (c2.z - c1.z) * blend;
 		return color;
+	}
+	static glm::vec3 TransformPoint(const glm::vec3& point, const glm::mat4& matrix)
+	{
+		glm::vec4 n = matrix * glm::vec4(point, 1.0f) ;
+		return glm::vec3(n.x, n.y, n.z);
 	}
 	static glm::vec3 RGBtoFloat(const glm::vec3& color)
 	{
@@ -133,7 +143,7 @@ namespace Utils
 			return vector.z;
 	}
 	
-	static glm::mat4 CreateTransformationMatrix(const glm::vec3& translation, const glm::vec3& rotation, const glm::vec3& scale)
+	static glm::mat4 CreateTransformationMatrix(const glm::vec3& translation = glm::vec3(.0f), const glm::vec3& rotation = glm::vec3(.0f), const glm::vec3& scale = glm::vec3(1.f))
 	{
 		glm::mat4  matrix = glm::mat4(1.0);
 		matrix *= glm::translate(translation);

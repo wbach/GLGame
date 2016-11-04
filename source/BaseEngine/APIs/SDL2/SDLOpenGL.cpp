@@ -1,6 +1,6 @@
 #include "SDLOpenGL.h"
 
-void CSdlOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height)
+void CSdlOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int height, bool full_screen)
 {
 	SDL_Init(SDL_INIT_EVERYTHING);
 	unsigned int flags = SDL_WINDOW_OPENGL | SDL_WINDOW_BORDERLESS;
@@ -12,6 +12,8 @@ void CSdlOpenGlApi::CreateOpenGLWindow(std::string window_name, int width, int h
 	{
 		exit(-1);
 	}
+	if (full_screen)
+		SetFullScreen(true);
 }
 
 void CSdlOpenGlApi::CleanUp()

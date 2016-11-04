@@ -2,33 +2,41 @@
 
 void CFXAAShader::Init()
 {
-	InitShaderProgram("Data/Shaders/Game/loadingShader.vert", "Data/Shaders/Game/loadingShader.frag");
+	InitShaderProgram("Data/Shaders/PostProcess/FXAA.vert", "Data/Shaders/PostProcess/FXAA.frag");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();
 	Stop();
 }
-void CFXAAShader::LoadTransformMatrix(const glm::mat4 &) const
+void CFXAAShader::LoadFxaaSpanMax(const float &v) const
 {
+	LoadValue(location_FxaaSpanMax, v);
 }
-void CFXAAShader::LoadProjectionMatrix(const glm::mat4 &) const
+void CFXAAShader::LoadFxaaReduceMin(const float &v) const
 {
+	LoadValue(location_FxaaReduceMin, v);
 }
-void CFXAAShader::LoadViewMatrix(const glm::mat4 &) const
+void CFXAAShader::LoadFxaaReduceMul(const float &v) const
 {
+	LoadValue(location_FxaaReduceMul, v);
+}
+void CFXAAShader::LoadScreenSize(const glm::vec2& screen_size) const
+{
+	LoadValue(location_ScreenSize, screen_size);
 }
 void CFXAAShader::ConnectTextureUnits() const
 {
+	LoadValue(location_Texture, 0);
 }
 void CFXAAShader::GetAllUniformLocations()
 {
-	location_transformationMatrix = GetUniformLocation("transformationMatrix");
-	location_projectionMatrix = GetUniformLocation("projectionMatrix");
-	location_viewMatrix = GetUniformLocation("viewMatrix");
-	location_Texture = GetUniformLocation("modelTexture");
+	location_ScreenSize = GetUniformLocation("ScreenSize");
+	location_FxaaSpanMax = GetUniformLocation("FxaaSpanMax");
+	location_FxaaReduceMin = GetUniformLocation("FxaaReduceMin");
+	location_FxaaReduceMul = GetUniformLocation("FxaaReduceMul");
+	location_Texture = GetUniformLocation("FilterTexture");
 }
 void CFXAAShader::BindAttributes()
 {
 	BindAttribute(0, "position");
-	BindAttribute(1, "textureCoords");
 }

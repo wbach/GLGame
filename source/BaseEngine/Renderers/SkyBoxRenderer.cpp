@@ -19,7 +19,6 @@ void CSkyBoxRenderer::Render(const glm::mat4& view_matrix, const float&  delta_t
 	glEnableVertexAttribArray(0);
 	BindTextures(blend_factor);
 	glDrawElements(GL_TRIANGLES, m_QubeVertexCount, GL_UNSIGNED_SHORT, 0);
-	//glDrawArrays(GL_TRIANGLES, 0, m_QubeVertexCount);
 	glDisableVertexAttribArray(0);
 	glBindVertexArray(0);
 	m_SkyBoxShader.Stop();
@@ -38,7 +37,7 @@ void CSkyBoxRenderer::CleanUp()
 {
 	m_SkyBoxShader.CleanUp();
 }
-float CSkyBoxRenderer::BindTextures(const float& blend_factor) const
+void CSkyBoxRenderer::BindTextures(const float& blend_factor) const
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_DayTexture);
@@ -46,5 +45,4 @@ float CSkyBoxRenderer::BindTextures(const float& blend_factor) const
 	glBindTexture(GL_TEXTURE_CUBE_MAP, m_NightTexture);
 	//cout << blend_factor << endl;
 	m_SkyBoxShader.LoadBlendFactor(blend_factor);
-	return 1;
 }

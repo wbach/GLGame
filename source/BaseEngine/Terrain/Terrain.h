@@ -37,13 +37,15 @@ public:
 		string b_texture, string b_normal_texture);
 	void InitHeights(int x, int y);
 	void InitGrassFromFile(std::string filename, GLuint texture);
+	void InitTreesFromFile(std::string filename, glm::vec3 normalized_size, const int& offset = 0);
 
 	void CreateTerrainVertexes(int x_start, int y_start, int width, int height);
 	void CreateTerrain();
 	glm::vec3 CalculateNormalMap(int x, int z);
 
 	void GenerateTerrainMap(CLoader &loader, string heightMap);
-	vector<glm::vec3> GenerateGrassPositions(const string& filename, const int& count) const;
+	vector<glm::vec3> GenerateGrassPositions(const string& filename, const int& count, const float& min_distance) const;
+	vector<glm::vec3> GenerateTreePositions(const string& filename, const int& count, const float& min_distance, const int& trees, const float& size, const int& seleced_nr = -1) const;
 
 	void AddTerrainEntity(shared_ptr<CEntity>& e);
 	void AddTerrainGrass(const std::vector<glm::vec3>& positions, const GLuint& texture);	
@@ -72,7 +74,7 @@ public:
 	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
 	void CleanUp();
 
-	vector<shared_ptr<CEntity>> m_FloraObjects;
+	vector<CAssimModel> m_Trees;
 	vector<shared_ptr<CEntity>> m_TerrainEntities;
 
 	//To painting

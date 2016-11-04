@@ -167,6 +167,9 @@
     <ClCompile Include="source\BaseEngine\Loader\XML\XMLSceneParser.cpp" />
     <ClCompile Include="source\BaseEngine\Physics\PhysicsScene.cpp" />
     <ClCompile Include="source\BaseEngine\Physics\Rigidbody.cpp" />
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\DeferedFrameBuffer.cpp" />
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FilterFrameBuffer.cpp" />
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\MasterRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\OpenGLRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\APIs\SDL2\SDLOpenGL.cpp" />
@@ -235,12 +238,16 @@
     <ClInclude Include="source\BaseEngine\GUI\Font.h" />
     <ClInclude Include="source\BaseEngine\Loader\AssimpModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\EmptyLoader.h" />
+    <ClInclude Include="source\BaseEngine\Loader\Face.h" />
     <ClInclude Include="source\BaseEngine\Loader\FbxModel.h" />
     <ClInclude Include="source\BaseEngine\Loader\TextureLoader.h" />
     <ClInclude Include="source\BaseEngine\Loader\XML\XMLSceneParser.h" />
     <ClInclude Include="source\BaseEngine\Physics\PhysicsScene.h" />
     <ClInclude Include="source\BaseEngine\Physics\Rigidbody.h" />
     <ClInclude Include="source\BaseEngine\Renderers\DebugRenderer.h" />
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\DeferedFrameBuffer.h" />
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\FilterFrameBuffer.h" />
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\FrameBuffer.h" />
     <ClInclude Include="source\BaseEngine\Renderers\MasterRenderer.h" />
     <ClInclude Include="source\BaseEngine\Renderers\EnitityRenderer.h" />
     <ClInclude Include="source\BaseEngine\Camera\FirstPersonCamera.h" />

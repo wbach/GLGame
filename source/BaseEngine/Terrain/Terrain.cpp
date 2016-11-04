@@ -1,51 +1,51 @@
 #include "Terrain.h"
 int CTerrain::s_ID = 0;
 
-glm::vec3 CalculateTangents(const SFace& f)
-{
-	glm::vec3 delat_pos_1 = f.vertex[1] - f.vertex[0];
-	glm::vec3 delat_pos_2 = f.vertex[2] - f.vertex[0];
-
-	glm::vec2 delta_uv_1 = f.uv[1] - f.uv[0];
-	glm::vec2 delta_uv_2 = f.uv[2] - f.uv[0];
-
-	float r = 1.0f / (delta_uv_1.x * delta_uv_2.y - delta_uv_1.y * delta_uv_2.x);
-	delat_pos_1 *= delta_uv_2.y;
-	delat_pos_1 *= delta_uv_1.y;
-	glm::vec3 tangent = delat_pos_1 - delat_pos_2;
-	tangent *= r;
-	return tangent;
-}
-SFace CreateFace(const int& i1, const int& i2, const int& i3, vector<float>& vertices, std::vector<float>& texture_coords)
-{
-	SFace f1;
-	f1.vertex[0] = glm::vec3(vertices[3 * i1], vertices[3 * i1 + 1], vertices[3 * i1 + 2]);
-	f1.vertex[1] = glm::vec3(vertices[3 * i2], vertices[3 * i2 + 1], vertices[3 * i2 + 2]);
-	f1.vertex[2] = glm::vec3(vertices[3 * i3], vertices[3 * i3 + 1], vertices[3 * i3 + 2]);
-
-	f1.uv[0] = glm::vec2(texture_coords[2 * i1], texture_coords[2 * i1 + 1]);
-	f1.uv[1] = glm::vec2(texture_coords[2 * i2], texture_coords[2 * i2 + 1]);
-	f1.uv[2] = glm::vec2(texture_coords[2 * i3], texture_coords[2 * i3 + 1]);
-	return f1;
-}
-void gaussBlur_1(float** scl, float** tcl, int w, int h, float r)
-{
-	float rs = ceil(r * 2.57);     // significant radius
-	for (int i = 0; i<h; i++)
-		for (int j = 0; j<w; j++)
-		{
-			float val = 0, wsum = 0;
-			for (int iy = i - rs; iy < i + rs + 1; iy++)
-				for (int ix = j - rs; ix<j + rs + 1; ix++) {
-					int x = min(w - 1, max(0, ix));
-					int y = min(h - 1, max(0, iy));
-					int dsq = (ix - j)*(ix - j) + (iy - i)*(iy - i);
-					float wght = exp(-dsq / (2 * r*r)) / (M_PI * 2 * r*r);
-					val += scl[y][x] * wght;  wsum += wght;
-				}
-			tcl[i][j] = round(val / wsum);
-		}
-}
+//glm::vec3 CalculateTangents(const SFace& f)
+//{
+//	glm::vec3 delat_pos_1 = f.vertex[1] - f.vertex[0];
+//	glm::vec3 delat_pos_2 = f.vertex[2] - f.vertex[0];
+//
+//	glm::vec2 delta_uv_1 = f.uv[1] - f.uv[0];
+//	glm::vec2 delta_uv_2 = f.uv[2] - f.uv[0];
+//
+//	float r = 1.0f / (delta_uv_1.x * delta_uv_2.y - delta_uv_1.y * delta_uv_2.x);
+//	delat_pos_1 *= delta_uv_2.y;
+//	delat_pos_1 *= delta_uv_1.y;
+//	glm::vec3 tangent = delat_pos_1 - delat_pos_2;
+//	tangent *= r;
+//	return tangent;
+//}
+//SFace CreateFace(const int& i1, const int& i2, const int& i3, vector<float>& vertices, std::vector<float>& texture_coords)
+//{
+//	SFace f1;
+//	f1.vertex[0] = glm::vec3(vertices[3 * i1], vertices[3 * i1 + 1], vertices[3 * i1 + 2]);
+//	f1.vertex[1] = glm::vec3(vertices[3 * i2], vertices[3 * i2 + 1], vertices[3 * i2 + 2]);
+//	f1.vertex[2] = glm::vec3(vertices[3 * i3], vertices[3 * i3 + 1], vertices[3 * i3 + 2]);
+//
+//	f1.uv[0] = glm::vec2(texture_coords[2 * i1], texture_coords[2 * i1 + 1]);
+//	f1.uv[1] = glm::vec2(texture_coords[2 * i2], texture_coords[2 * i2 + 1]);
+//	f1.uv[2] = glm::vec2(texture_coords[2 * i3], texture_coords[2 * i3 + 1]);
+//	return f1;
+//}
+//void gaussBlur_1(float** scl, float** tcl, int w, int h, float r)
+//{
+//	float rs = ceil(r * 2.57f);     // significant radius
+//	for (int i = 0; i<h; i++)
+//		for (int j = 0; j<w; j++)
+//		{
+//			float val = 0, wsum = 0;
+//			for (int iy = i - rs; iy < i + rs + 1; iy++)
+//				for (int ix = j - rs; ix<j + rs + 1; ix++) {
+//					int x = min(w - 1, max(0, ix));
+//					int y = min(h - 1, max(0, iy));
+//					int dsq = (ix - j)*(ix - j) + (iy - i)*(iy - i);
+//					float wght = exp(-dsq / (2 * r*r)) / (M_PI * 2 * r*r);
+//					val += scl[y][x] * wght;  wsum += wght;
+//				}
+//			tcl[i][j] = round(val / wsum);
+//		}
+//}
 
 CTerrain::CTerrain(CLoader &loader)
 	: m_Loader(loader)
@@ -132,11 +132,57 @@ void CTerrain::InitGrassFromFile(std::string filename, GLuint texture)
 	string line;
 	while (std::getline(file, line))
 	{
-		glm::vec3 position = Get::Vector3d(line);
+		glm::vec3 position = Get::Vector3d(line);		
 		grass_positions.push_back(position);
 	}
 	file.close();
 	AddTerrainGrass(grass_positions, texture);
+}
+
+void CTerrain::InitTreesFromFile(std::string filename, glm::vec3 normalized_size, const int& offset)
+{
+	//read file
+	vector<glm::vec3> trees_positions;
+	vector<glm::vec2> tree_info;
+	std::ifstream file;
+	file.open(filename);
+	string line;
+	while (std::getline(file, line))
+	{
+		trees_positions.push_back(Get::Vector3d(line));
+		std::getline(file, line);
+		tree_info.push_back(Get::Vector2d(line));
+	}
+	file.close();
+
+	if (trees_positions.size() != tree_info.size())
+	{
+		cout << "[Error] Terrain trees file incomplete : " << filename << endl;
+		return;
+	}
+
+	// Randomize models
+	vector<vector<glm::mat4>> trees_positions_per_model;
+	for (unsigned int x = offset; x < m_Trees.size(); x++)
+	{
+		trees_positions_per_model.push_back(vector<glm::mat4>());
+;	}
+	int x = 0;
+	for (const glm::vec3& position : trees_positions)
+	{
+		int nr  = static_cast<int>(tree_info[x].x) - offset;
+		glm::mat4 normalized_matrix = m_Trees[nr].CalculateNormalizedMatrix(normalized_size.x, normalized_size.y + tree_info[x].y, normalized_size.z);
+		glm::mat4 transform_matrix =  Utils::CreateTransformationMatrix(position);
+		trees_positions_per_model[nr].push_back(transform_matrix * normalized_matrix);
+		x++;
+	}
+
+	// CreateVbos
+	int i = offset;
+	for (vector<glm::mat4>& matrixes : trees_positions_per_model)
+	{
+		m_Trees[i++].CreateTransformsVbo(matrixes);
+	}
 }
 
 void CTerrain::CreateTerrain()
@@ -311,7 +357,7 @@ void CTerrain::AddTerrainGrass(const std::vector<glm::vec3>& positions, const GL
 	m_Grass.back().Init(positions, texture);
 }
 
-vector<glm::vec3> CTerrain::GenerateGrassPositions(const string & filename, const int & count) const
+vector<glm::vec3> CTerrain::GenerateGrassPositions(const string & filename, const int & count, const float& min_distance) const
 {
 	vector<glm::vec3> grass_positions;
 	std::ofstream file;
@@ -320,15 +366,19 @@ vector<glm::vec3> CTerrain::GenerateGrassPositions(const string & filename, cons
 	for (int i = 0; i < count; i++)
 	{
 		glm::vec3 position;
-		position.x = m_Transform.position.x + (rand() % static_cast<int>(2 * TERRAIN_SIZE)) / 2.f;
-		position.z = m_Transform.position.z + (rand() % static_cast<int>(2 * TERRAIN_SIZE)) / 2.f;
+
+		float xx = static_cast<float>((rand() % static_cast<int>(2 * TERRAIN_SIZE)) )/ 2.f;
+		float zz = static_cast<float>((rand() % static_cast<int>(2 * TERRAIN_SIZE)) ) / 2.f;
+
+		position.x = m_Transform.position.x + xx;
+		position.z = m_Transform.position.z + zz;
 		position.y = GetHeightofTerrain(position.x, position.z) + 1.0f;
 
 		bool is = false;
 		for (glm::vec3& p : grass_positions)
 		{
 			float l = glm::length(position - p);
-			if (abs(l) < 1.f)
+			if (abs(l) < min_distance)
 				is = true;
 		}
 		if (!is)
@@ -361,6 +411,64 @@ vector<glm::vec3> CTerrain::GenerateGrassPositions(const string & filename, cons
 	file.close();
 	return grass_positions;
 }
+vector<glm::vec3> CTerrain::GenerateTreePositions(const string & filename, const int & count, const float& min_distance, const int& trees, const float& size, const int& seleced_nr) const
+{
+	vector<glm::vec3> trees_positions;
+	std::ofstream file;
+	file.open(filename);
+
+	for (int i = 0; i < count; i++)
+	{
+		glm::vec3 position;
+
+		float xx = static_cast<float>((rand() % static_cast<int>(2 * TERRAIN_SIZE))) / 2.f;
+		float zz = static_cast<float>((rand() % static_cast<int>(2 * TERRAIN_SIZE))) / 2.f;
+
+		position.x = m_Transform.position.x + xx;
+		position.z = m_Transform.position.z + zz;
+		position.y = GetHeightofTerrain(position.x, position.z) + 0.01f;
+
+		bool is = false;
+		for (glm::vec3& p : trees_positions)
+		{
+			float l = glm::length(position - p);
+			if (abs(l) < min_distance)
+				is = true;
+		}
+		if (!is)
+		{
+			glm::vec3 normal = GetNormalOfTerrain(position.x, position.z);
+			// Skip on rocks
+			if (normal.y < 0.5f)
+				continue;
+			float terrain_x = position.x - m_Transform.position.x;
+			float terrain_z = position.z - m_Transform.position.z;
+
+			float x = terrain_x / TERRAIN_SIZE;
+			float z = terrain_z / TERRAIN_SIZE;
+
+			int blend_x = static_cast<int>(x * (float)m_BlendMapWidth);
+			int blend_y = static_cast<int>(z * (float)m_BlendMapHeight);
+			int mx = 4 * (blend_x + (blend_y)*m_BlendMapWidth);
+
+			GLubyte b_old = m_BlendMapData[mx + 2];
+			GLubyte g_old = m_BlendMapData[mx + 1];
+			GLubyte r_old = m_BlendMapData[mx + 0];
+
+			if (b_old > 128 || g_old > 128 || r_old > 128)
+				continue;
+
+			file << position.x << "x" << position.y << "x" << position.z << endl;
+			if(seleced_nr < 0)
+				file << rand() % trees << "x" << static_cast<float>(rand()%static_cast<int>(1000.f*size) - (1000.f*size)/2.f )/1000.f  << endl;
+			else
+				file << seleced_nr << "x" << static_cast<float>(rand() % static_cast<int>(1000.f*size) - (1000.f*size) / 2.f) / 1000.f << endl;
+			trees_positions.push_back(position);
+		}
+	}
+	file.close();
+	return trees_positions;
+}
 void CTerrain::GenerateTerrainMap(CLoader &loader, string heightMap)
 {
 	std::ifstream file;
@@ -376,7 +484,7 @@ void CTerrain::GenerateTerrainMap(CLoader &loader, string heightMap)
 		{
 			line = line.substr(1);
 			resolution = Get::Vector2d(line);
-			m_HeightMapResolution = resolution.x;
+			m_HeightMapResolution = static_cast<int>(resolution.x);
 			InitHeights(m_HeightMapResolution, m_HeightMapResolution);
 		}
 		else
@@ -698,16 +806,25 @@ void CTerrain::CleanUp()
 
 	m_Model.CleanUp();
 
+	for (CAssimModel& model : m_Trees)
+	{
+		model.CleanUp();
+	}
+	m_Trees.clear();
+
 	for (shared_ptr<CEntity>& entity : m_TerrainEntities)
 	{
 		entity->CleanUp();
 		entity.reset();
 	}
+	m_TerrainEntities.clear();
 
 	for (CGrass& grass : m_Grass)
 	{
 		grass.CleanUp();
 	}
+	m_Grass.clear();
+
 	m_Heights.clear();
 	m_Normals.clear();
 

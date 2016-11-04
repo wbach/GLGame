@@ -87,8 +87,6 @@ public:
 
 	const float GetMaxNormalizedSize() { return Utils::GetMaxFromVector(m_NormalizedSize); }
 
-	void SetIsInAir(bool is) { m_IsInAir = is; }
-
 	void RecursiveResetEnities(shared_ptr<CEntity>& entity);
 	void CleanUp();
 
@@ -102,7 +100,6 @@ public:
 	bool m_IsSpecial = false;
 	CRigidbody	m_RigidBody;
 protected:	
-	bool m_IsInAir;
 	bool m_TransformsInVao;
 
 	

@@ -11,9 +11,14 @@ class CEntityRenderer
 {	
 public :
 	CEntityRenderer() {}
-	void RenderEntity(CScene* scene, CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader);
+	void RenderEntity(CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader);
 	void RenderEntityRecursive(CScene* scene, CEntity* entity, const CEntityGeometryPassShader& geomentry_shader);
 	void Render(CScene* scene, const CEntityGeometryPassShader& geomentry_shader);
+	void RenderModel(CModel& model, const CEntityGeometryPassShader& geomentry_shader,
+		const int& transform_matrixes_size = 1,
+		const std::vector<glm::mat4>& transform_matrixes = std::vector<glm::mat4>(),
+		const glm::mat4& relative_matrix = glm::mat4(1.0f)
+	);
 
 	const unsigned int& GetObjectsPerFrame();
 	const unsigned int& GetVertexPerFrame();

@@ -27,5 +27,4 @@ private:
 	int location_viewMatrix;
 	int location_modelTexture;
 	int location_alpha;
-
 };

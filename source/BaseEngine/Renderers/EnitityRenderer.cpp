@@ -4,7 +4,7 @@
 void CEntityRenderer::RenderEntityRecursive(CScene* scene, CEntity* entity, const CEntityGeometryPassShader& geomentry_shader)
 {
 	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-	RenderEntity(scene, entity, *model, geomentry_shader);
+	RenderEntity(entity, *model, geomentry_shader);
 
 	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
 	{
@@ -20,37 +20,17 @@ void CEntityRenderer::Render(CScene* scene, const CEntityGeometryPassShader& geo
 {
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
-
-
-	if (scene->GetTerrains().size() > 0)
+	
+	for (CTerrain* terrain : scene->GetTerrainsInCameraRange())
 	{
-		int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
-		scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
-
-		for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
-			for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
-			{
-				if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
-					continue;		
-
-				CTerrain* terrain = scene->GetTerrain(x, y);
-				if (terrain == nullptr)
+		for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
+		{
+			if (entity->GetIsCullingChildren() && !entity->m_Instanced)
+				if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 2.5f * entity->GetMaxNormalizedSize()))
 					continue;
-
-				if (!terrain->m_IsInit) continue;
-
-				if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain->m_WorldCenterPosition, terrain->GetSize() / 1.5f))
-					continue;
-
-				for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
-				{
-					if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-						if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 2.5f * entity->GetMaxNormalizedSize()))
-							continue;
-					RenderEntityRecursive(scene, entity.get(), geomentry_shader);
-					m_RendererObjectPerFrame++;
-				}
-			}
+			RenderEntityRecursive(scene, entity.get(), geomentry_shader);
+			m_RendererObjectPerFrame++;
+		}
 	}
 	
 	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
@@ -64,15 +44,11 @@ void CEntityRenderer::Render(CScene* scene, const CEntityGeometryPassShader& geo
 
 	//cout << "Max vertixec in models on scene: " << m_MaxVerices << endl;
 }
-const unsigned int & CEntityRenderer::GetObjectsPerFrame()
-{
-	return m_RendererObjectPerFrame;
-}
-const unsigned int & CEntityRenderer::GetVertexPerFrame()
-{
-	return m_RendererVertixesPerFrame;
-}
-void CEntityRenderer::RenderEntity(CScene* scene, CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader)
+void CEntityRenderer::RenderModel(CModel & model, const CEntityGeometryPassShader & geomentry_shader,
+	const int& transform_matrixes_size,
+	const std::vector<glm::mat4>& transform_matrixes,
+	const glm::mat4& relative_matrix
+)
 {
 	geomentry_shader.LoadUseFakeLight(static_cast<float>(model.m_UseFakeLight));
 
@@ -104,44 +80,32 @@ void CEntityRenderer::RenderEntity(CScene* scene, CEntity* entity, CModel& model
 		}
 		if (is_normal_map > 0)
 			geomentry_shader.LoadUseNormalMap(1.0f);
-		else	
+		else
 			geomentry_shader.LoadUseNormalMap(0.0f);
 
 		geomentry_shader.LoadMeshMaterial(mesh.GetMaterial());
 
 
 		if (mesh.GetMaterial().isTransparency)
-			Utils::DisableCulling();		
+			Utils::DisableCulling();
 
 		if (model.UseInstacedRendering())
 		{
-			/*std::vector<glm::mat4> matrixes;
-			int i = 0;
-			for (const STransform& transform : entity->GetTransforms())
-			{
-				if (scene->GetCamera()->CheckFrustrumSphereCulling(transform.position, 1.5f * entity->GetMaxNormalizedSize()))
-					continue;
-				matrixes.push_back(entity->GetTransformMatrixes()[i++]);
-			}
-
-			mesh.UpdateTransformVbo(matrixes);
-			
-			cout << matrixes.size() << endl;*/
 			geomentry_shader.LoadUseInstancedRendering(1.f);
-			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0, entity->GetTransformMatrixes().size());
+			glDrawElementsInstanced(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0, transform_matrixes_size);
 		}
 		else
 		{
-			for (const glm::mat4& mat : entity->GetTransformMatrixes())
+			for (const glm::mat4& mat : transform_matrixes)
 			{
 				geomentry_shader.LoadUseInstancedRendering(0.f);
-				geomentry_shader.LoadTransformMatrix(entity->GetRelativeTransformMatrix() * mat);
+				geomentry_shader.LoadTransformMatrix(relative_matrix * mat);
 				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 			}
 		}
 		if (m_MaxVerices < mesh.GetVertexCount())
 			m_MaxVerices = mesh.GetVertexCount();
-		m_RendererVertixesPerFrame += mesh.GetVertexCount() * entity->GetTransformMatrixes().size();
+		m_RendererVertixesPerFrame += mesh.GetVertexCount() * transform_matrixes.size();
 
 		glDisable(GL_TEXTURE_2D);
 		if (model.UseInstacedRendering())
@@ -152,4 +116,16 @@ void CEntityRenderer::RenderEntity(CScene* scene, CEntity* entity, CModel& model
 		glDisableVertexAttribArray(0);
 		glBindVertexArray(0);
 	}
+}
+const unsigned int & CEntityRenderer::GetObjectsPerFrame()
+{
+	return m_RendererObjectPerFrame;
+}
+const unsigned int & CEntityRenderer::GetVertexPerFrame()
+{
+	return m_RendererVertixesPerFrame;
+}
+void CEntityRenderer::RenderEntity(CEntity* entity, CModel& model, const CEntityGeometryPassShader& geomentry_shader)
+{
+	RenderModel(model, geomentry_shader, entity->GetTransformMatrixes().size() ,entity->GetTransformMatrixes(), entity->GetRelativeTransformMatrix());
 }

@@ -2,33 +2,11 @@
 
 void CTerrainRenderer::Render(CScene* scene, const CTerrainGeometryPassShader& geomentry_shader)
 {
-	if (scene->GetTerrains().size() <= 0) return;
-	
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
 
-	int x_camera, z_camera, view_radius = scene->m_TerrainViewRadius;
-	scene->TerrainNumber(scene->GetCamera()->GetPositionXZ(), x_camera, z_camera);
-
-
-	/*for (int y = 0; y < scene->m_TerrainsCount -1; y++)
-		for (int x = 0; x < scene->m_TerrainsCount - 1; x++)*/		
-	for (int y = z_camera - view_radius; y < z_camera + view_radius+1; y++)
-		for (int x = x_camera - view_radius; x < x_camera + view_radius+1; x++)
+	for (CTerrain* terrain : scene->GetTerrainsInCameraRange())
 	{
-			if (y < 0 || x < 0 || y > scene->m_TerrainsCount || x > scene->m_TerrainsCount)
-				continue;
-
-		CTerrain* terrain = scene->GetTerrain(x, y);
-		if (terrain == nullptr)
-			continue;
-		if (!terrain->m_IsInit) continue;
-
-		//if(abs(glm::length(scene->GetCamera()->GetPosition() - terrain.m_WorldCenterPosition)) > 2* terrain.GetSize()) continue;
-
-	//	if (scene->GetCamera()->CheckFrustrumSphereCulling(terrain.m_WorldCenterPosition, terrain.GetSize()))
-		//	continue;
-
 		PrepareTerrain(*terrain);
 		LoadModelMatrix(*terrain, geomentry_shader);
 		glDrawElements(GL_TRIANGLE_STRIP, terrain->m_Model.GetMeshes()[0].GetVertexCount(), GL_UNSIGNED_SHORT, 0);

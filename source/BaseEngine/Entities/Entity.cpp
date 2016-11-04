@@ -23,7 +23,6 @@ CEntity::CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
 	, m_RelativeTransformMatrix(1.f)
 	, m_IsCullingChildren(true)
 	, m_TransformsInVao(false)
-	, m_IsInAir(false)
 	, m_Instanced(false)
 {	
 	m_Id = s_ID++;

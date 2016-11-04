@@ -123,12 +123,11 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 	//{
 
 	//}
-	
-	GLfloat max_t;
-	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &max_t);
-	//float amount = min(4.f, max_t);
-	//glTexParameterf(GL_TEXTURE_2D, GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, max_t);
-
+	/*
+	GLfloat maxAnisotropy;
+	glGetFloatv(GL_MAX_TEXTURE_MAX_ANISOTROPY_EXT, &maxAnisotropy);
+	glTexParameterf(texture_id, GL_TEXTURE_MAX_ANISOTROPY_EXT, Utils::clamp(0.0f, 8.0f, maxAnisotropy));
+*/
 	if (!keepData)
 		delete[] texture;
 

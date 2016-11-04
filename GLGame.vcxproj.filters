@@ -258,6 +258,15 @@
     <ClCompile Include="source\BaseEngine\Game\DayNightCycle.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\DeferedFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FilterFrameBuffer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\BaseEngine\Display\DisplayManager.h">
@@ -480,6 +489,18 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="source\BaseEngine\Game\DayNightCycle.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\FrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\DeferedFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Renderers\FrameBuffers\FilterFrameBuffer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="source\BaseEngine\Loader\Face.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

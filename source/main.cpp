@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 	test_scene_camera_type = 1;
 #else
 	api = std::make_shared<CGlfwOpenGlApi>();
+	//api = std::make_shared<CSdlOpenGlApi>();
 #endif
 	
 	myGame.AddScene(std::make_shared<CTestSCene>(myGame, test_scene_camera_type));
@@ -59,6 +60,7 @@ int main(int argc, char *argv[])
 	editor.Init(1366, 768);
 	editor.PeekMesages();
 	myGame.OnGameLoopRun = []{editor.PeekMesages(); };
+	myGame.m_SceneParser.LoadScene(myGame.GetCurrentScene()->m_SceneFile, myGame.GetCurrentScene());
 #else
 	myGame.m_SceneParser.LoadScene(myGame.GetCurrentScene()->m_SceneFile, myGame.GetCurrentScene());
 	myGame.GetCurrentScene()->PostInitialize();

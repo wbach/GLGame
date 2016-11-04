@@ -8,7 +8,7 @@
 class CGlfwOpenGlApi : public CApi
 {
 public:
-	virtual void CreateOpenGLWindow(std:: string window_name, int width, int height) override;
+	virtual void CreateOpenGLWindow(std:: string window_name, int width, int height, bool full_screen) override;
 	virtual void CleanUp() override;
 	virtual int PeekMessages() override;
 	virtual void UpdateWindow() override;

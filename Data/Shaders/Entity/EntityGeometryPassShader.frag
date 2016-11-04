@@ -1,5 +1,5 @@
 #version 330
-#define EPSILON 0.001
+#define EPSILON 0.002
 struct SMaterial
 {
 	vec3  m_Ambient;

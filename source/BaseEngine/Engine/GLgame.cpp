@@ -21,7 +21,7 @@ CGame::CGame()
 void CGame::Initialize(std::shared_ptr<CApi>& api)
 {	
 	m_DisplayManager.SetApi(api);
-	m_DisplayManager.Initialize(m_WindowName, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y));
+	m_DisplayManager.Initialize(m_WindowName, Renderer::OPENGL, static_cast<int>(m_WindowSize.x), static_cast<int>(m_WindowSize.y), m_IsFullScreen);
 
 	CreateProjectionMatrix();
 
@@ -108,15 +108,13 @@ void CGame::GameLoop()
 	
 		if (m_CurrScene != nullptr)
 		{
+			//GetCurrentScene()->m_PhysicsScene.Update(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 			m_CurrScene->ApplyPhysicsToObjects(static_cast<float>(m_DisplayManager.GetDeltaTime()));
 			switch (m_CurrScene->Update())
 			{
 			case 1: m_ApiMessage = ApiMessages::QUIT; break;
 			case 2: m_CurrScene->CleanUp();  SetCurrentScene(1); LoadScene();  break;				
 			}
-			GetCurrentScene()->m_PhysicsScene.Update(static_cast<float>(m_DisplayManager.GetDeltaTime()));
-
-
 			m_MasterRenderer.Render(m_CurrScene, m_IsShadows);
 			//m_MasterRenderer.DebugRenderTextures();
 
@@ -148,32 +146,32 @@ void CGame::GameLoop()
 }
 void CGame::PhysicsLoop()
 {
-	int m_FrameCount = 0;
-	float m_Fps = 0;
-	float m_CurrentTime = 0, m_PreviousTime = 0;
-	while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
-	{
-		if (m_CurrScene == nullptr) continue;
+	//int m_FrameCount = 0;
+	//float m_Fps = 0;
+	//float m_CurrentTime = 0, m_PreviousTime = 0;
+	//while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
+	//{
+	//	if (m_CurrScene == nullptr) continue;
 
-		auto start = std::chrono::high_resolution_clock::now();
+	//	auto start = std::chrono::high_resolution_clock::now();
 
-		m_FrameCount++;
+	//	m_FrameCount++;
 
-		m_CurrentTime = m_DisplayManager.GetCurrentTime();
+	//	m_CurrentTime = m_DisplayManager.GetCurrentTime();
 
-		int time_interval = static_cast<int>(m_CurrentTime) - static_cast<int>(m_PreviousTime);
+	//	int time_interval = static_cast<int>(m_CurrentTime) - static_cast<int>(m_PreviousTime);
 
-		if (time_interval > 1)
-		{
-			m_Fps = static_cast<float>(m_FrameCount) / static_cast<float>(time_interval);
-			m_PreviousTime = m_CurrentTime;
-			m_FrameCount = 0;
-		}
-		auto end = std::chrono::high_resolution_clock::now();
+	//	if (time_interval > 1)
+	//	{
+	//		m_Fps = static_cast<float>(m_FrameCount) / static_cast<float>(time_interval);
+	//		m_PreviousTime = m_CurrentTime;
+	//		m_FrameCount = 0;
+	//	}
+	//	auto end = std::chrono::high_resolution_clock::now();
 
-		if (std::chrono::milliseconds(16) >  std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
-			std::this_thread::sleep_for(std::chrono::milliseconds(16) - std::chrono::duration_cast<std::chrono::milliseconds>(end - start));
-	}
+	//	if (std::chrono::milliseconds(16) >  std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
+	//		std::this_thread::sleep_for(std::chrono::milliseconds(16) - std::chrono::duration_cast<std::chrono::milliseconds>(end - start));
+	//}
 
 }
 void CGame::LoadScene()

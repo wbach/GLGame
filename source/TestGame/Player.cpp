@@ -48,10 +48,10 @@ void CPlayer::move(float deltaTime, float terrainHeight)
 
 void CPlayer::jump(float deltaTime)
 {
-	if (!m_IsInAir)
+	if (m_RigidBody.m_IsGrounded)
 	{
-		m_RigidBody.m_AngularVelocity.y = JUMP_POWER * deltaTime;
-		m_IsInAir = true;
+		m_RigidBody.m_AngularVelocity.y = JUMP_POWER ;
+		m_RigidBody.m_IsGrounded = false;
 	}
 }
 

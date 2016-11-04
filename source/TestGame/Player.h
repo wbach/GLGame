@@ -28,7 +28,7 @@ private:
 	float RUN_SPEED = Utils::KmToMs(15.f);
 	float TURN_SPEED = 160;
 	float GRAVITY = -50;
-	float JUMP_POWER = 25;
+	float JUMP_POWER = 30;
 	float currentSpeed = 0;
 	float currentTurnSpeed = 0;
 	float upwardsSpeed = 0;	

@@ -12,7 +12,7 @@ public:
 	float GetDeltaGameTime() const;
 	void SetTime(const float& time);
 protected:
-	float m_CurrentTime = 0.22f;
+	float m_CurrentTime = 0.12f;
 	float m_DeltaTime = 0.f;
 	float m_DeltaGameTime = 0.f;
 };

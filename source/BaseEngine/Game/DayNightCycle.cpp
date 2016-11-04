@@ -85,7 +85,7 @@ void CDayNightCycle::UpdateSunPosition()
 	current_pos.z = m_DefaultSunPos.z *  sin(rad);
 	m_DirectionalLight.SetPosition(current_pos);
 	//Utils::PrintVector("", current_pos);
-	std::cout << m_SunAngle << std::endl;
+	//std::cout << m_SunAngle << std::endl;
 }
 
 void CDayNightCycle::CalculateBlendFactor()

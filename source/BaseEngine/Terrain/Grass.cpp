@@ -15,7 +15,7 @@ void CGrass::Init(const std::vector<glm::vec3>& positions, const GLuint& texture
 			grassvertex.push_back(position.y);
 			grassvertex.push_back(position.z);
 		}
-	m_VertexSize = grassvertex.size();
+	m_VertexSize = positions.size();
 	m_VertexVbo = Utils::StoreDataInAttributesList(0, 3, grassvertex);
 	Utils::UnbindVao();
 }

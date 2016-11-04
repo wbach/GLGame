@@ -198,7 +198,7 @@ void main()
 	final_color = pow(final_color, vec3(1.f / gamma));
 	FragColor = vec4(final_color, 1.f);
 
-	const float contrast = .5f;
+	const float contrast = .8f;
 	FragColor.rgb = (FragColor.rgb - .5f) * (1.f + contrast) + .5f;
 	FragColor	  = mix(vec4(SkyColour, 1.f), FragColor, visibility);
 }

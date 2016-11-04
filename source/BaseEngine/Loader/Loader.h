@@ -20,7 +20,7 @@ public:
 	vector<shared_ptr<CModel>>	m_Models;
 	vector<STextInfo>			m_Textures;
 
-	void	UpdateModels(float delta_time);
+	void	UpdateModels(float delta_time);	
 	int		LoadMesh(string file_name, bool time_update = false);
 	GLuint	LoadTexture(string file_name, bool vertical_flip = false);
 	GLuint	LoadFullTexture(string file_name, GLubyte *&data, int &width, int &height);
@@ -29,6 +29,8 @@ public:
 	void	ReloadTexture(string file_name, GLuint& texture_id);
 	void	ReloadTexture(GLubyte *data, GLuint& texture_id, int width, int height);
 	void	UpdateSubTexture(GLuint& texture_id, GLubyte* subdata, int start_x, int start_y, int width, int height);
+	std::vector<SFace> LoadFaces(const std::string& filename) const;
+	CTextureLoader& GetTextureLoader();
 	void	SaveTextureToFile(string file_name, GLubyte *data, int width, int height);
 	void	CleanUp();
 

@@ -1,6 +1,6 @@
 #include "DisplayManager.h"
 #include <conio.h>
-int CDisplayManager::Initialize(string window_name, int renderer, int w, int h)
+int CDisplayManager::Initialize(string window_name, int renderer, int w, int h, bool full_screen)
 {
 	if (m_Api == nullptr)
 	{
@@ -19,7 +19,7 @@ int CDisplayManager::Initialize(string window_name, int renderer, int w, int h)
 	}*/
 
 	if (m_Api == nullptr) return -1;
-	m_Api->CreateOpenGLWindow(window_name, w, h);
+	m_Api->CreateOpenGLWindow(window_name, w, h, full_screen);
 	
 
 	switch (renderer)

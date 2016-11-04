@@ -173,54 +173,68 @@ void CXmlSceneParser::ParseTexture(rapidxml::xml_node<>* node, std::string& diff
 
 void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, CEntity* parent)
 {
-	shared_ptr<CEntity> entity = nullptr; 
-	glm::vec3 normalized_size(0);
-	bool is_global = false;
-	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
-	{			
+	glm::vec3 normalized_size(0), position(0), rotation(0), scale(0);
+	bool is_global(false), children_culling(false);
+	std::string filename, name;
+	int colider(0);
+	float attach_offset(0);
 
-		if (!std::string("File").compare(subnode->name()) && entity == nullptr)
-			entity = m_Scene->CreateEntityFromFile(Utils::ConvertToRelativePath(subnode->value()));
+	std::list<rapidxml::xml_node<>*> children_nodes;
+
+	for (rapidxml::xml_node<>* subnode = node->first_node(); subnode; subnode = subnode->next_sibling())
+	{	
+		if (!std::string("File").compare(subnode->name()))
+			filename = Utils::ConvertToRelativePath(subnode->value());	
 
 		if (!std::string("NormalizedSize").compare(subnode->name()))
 			normalized_size = ParseVector3d(subnode);
 
-		if (!std::string("ChildrenCulling").compare(subnode->name()) && entity != nullptr)
-			entity->SetIsCullingChildren(std::stoi(subnode->value()) != 0 ? true : false);
+		if (!std::string("ChildrenCulling").compare(subnode->name()))
+			children_culling = std::stoi(subnode->value()) != 0 ? true : false;		
 
-		if (!std::string("Name").compare(subnode->name()) && entity != nullptr)
-			entity->SetName(subnode->value());
+		if (!std::string("Name").compare(subnode->name()))
+			name = subnode->value();		
 
-		if (!std::string("Position").compare(subnode->name()) && entity != nullptr)
-			entity->SetPosition(ParseVector3d(subnode));
+		if (!std::string("Position").compare(subnode->name()))
+			position = ParseVector3d(subnode);			
 
-		if (!std::string("AttachYOffset").compare(subnode->name()) && entity != nullptr)
-			entity->GetAttachYOffset() = std::stof(std::string(subnode->value()));
+		if (!std::string("AttachYOffset").compare(subnode->name()))
+			attach_offset = std::stof(std::string(subnode->value()));
 
-		if (!std::string("Rotation").compare(subnode->name()) && entity != nullptr)
-			entity->SetRotation(ParseVector3d(subnode));
+		if (!std::string("Rotation").compare(subnode->name()))
+			rotation = ParseVector3d(subnode);		
 
-		if (!std::string("Scale").compare(subnode->name()) && entity != nullptr)
-			entity->SetScale(ParseVector3d(subnode));
+		if (!std::string("Scale").compare(subnode->name()))
+			scale = ParseVector3d(subnode);			
 
-		if (!std::string("Global").compare(subnode->name()) && entity != nullptr)
+		if (!std::string("ColiderType").compare(subnode->name()))
+			colider = std::stoi(subnode->value());			
+
+		if (!std::string("Global").compare(subnode->name()))
 			is_global = ParaseBolean(subnode);
 
-		if (!std::string("Entity").compare(subnode->name()) && entity != nullptr)
-			ParaseEntity(subnode, entity.get());
+		if (!std::string("Entity").compare(subnode->name()))
+			children_nodes.push_back(subnode);
 	}
+	shared_ptr<CEntity> entity = nullptr;
+	entity = m_Scene->CreateEntityFromFile(filename, static_cast<ColiderType::Type>(colider), normalized_size, false, position, rotation, scale);
 
-	if (entity != nullptr)
+	if (entity == nullptr)
+		return;
+
+	entity->SetIsCullingChildren(children_culling);
+	entity->GetAttachYOffset() = attach_offset;	
+
+	for (rapidxml::xml_node<>* n : children_nodes)
 	{
-		glm::mat4 normalized_matrix = m_Scene->GetLoader().m_Models[entity->GetModelId()]->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
-		entity->SetNormalizedMatrix(normalized_matrix);
-		entity->SetNormalizedSize(normalized_size);
-		//m_Scene->GetLoader().m_Models[entity->GetModelId()]->CreateTransformsVbo(entity->GetTransformMatrixes());
-		if (parent == nullptr)
-			m_Scene->AddEntity(entity, is_global);
-		else
-			m_Scene->AddSubEntity(parent, entity);
-	}
+		ParaseEntity(n, entity.get());
+	}			
+	entity->CalculateEntityTransformMatrix();
+	if (parent == nullptr)
+		m_Scene->AddEntity(entity, is_global);
+	else
+		m_Scene->AddSubEntity(parent, entity);
+	
 	
 }
 
@@ -332,8 +346,8 @@ void CXmlSceneParser::SaveToFile(std::string file_name, CScene* scene)
 		AddEntityNode(dokument, root, entity, 1);
 	}
 
-	for (int y = 0; y < scene->m_TerrainsCount; y++)
-		for (int x = 0; x < scene->m_TerrainsCount; x++)	
+	for (unsigned int y = 0; y < scene->m_TerrainsCount; y++)
+		for (unsigned int x = 0; x < scene->m_TerrainsCount; x++)
 	{
 		CTerrain* terrain = scene->GetTerrain(x, y);
 		if (terrain == nullptr)
@@ -457,6 +471,8 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	rapidxml::xml_node<>* normalized = document.allocate_node(rapidxml::node_element, "NormalizedSize");
 	AddVectorToNode(document, normalized, entity->GetNormalizedSize());	
 
+	rapidxml::xml_node<>* colider_type = document.allocate_node(rapidxml::node_element, "ColiderType", "2");
+
 	rapidxml::xml_node<>* _global = document.allocate_node(rapidxml::node_element, "Global", document.allocate_string(std::to_string(global).c_str()));
 	
 	entity_node->append_node(file);
@@ -467,6 +483,7 @@ void CXmlSceneParser::AddEntityNode(rapidxml::xml_document<>& document, rapidxml
 	entity_node->append_node(rotation);
 	entity_node->append_node(scale);
 	entity_node->append_node(normalized);
+	entity_node->append_node(colider_type);
 	entity_node->append_node(_global);
 
 	for (const shared_ptr<CEntity>& child : entity->GetChildrenEntities())

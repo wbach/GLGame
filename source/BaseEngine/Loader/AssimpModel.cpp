@@ -27,6 +27,28 @@ void CAssimModel::InitModel(string file_name)
 	RecursiveProcess("Data/Textures/" , scene->mRootNode, scene);
 }
 
+void CAssimModel::ReadCollisions(string file_name, vector<float>& postions, vector<float>& normals, vector<unsigned int>& indices)
+{
+	if (!Utils::CheckFile(file_name))
+	{
+		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
+		return;
+	}		
+
+	Assimp::Importer importer;
+	unsigned int flags = aiProcess_Triangulate | aiProcess_CalcTangentSpace | aiProcess_GenSmoothNormals;
+	//if(normals == "flat" ) flags |= aiProcess_GenNormals ;
+	//if(normals == "smooth" ) flags |= aiProcess_GenSmoothNormals ;
+
+	const aiScene *scene = importer.ReadFile(file_name.c_str(), flags);
+	if (scene->mFlags == AI_SCENE_FLAGS_INCOMPLETE || !scene->mRootNode)
+	{
+		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
+		return;
+	}
+	RecursiveProcess(scene, scene->mRootNode, postions, normals, indices);
+}
+
 const string& CAssimModel::GetName() const
 {
 	return m_Name;
@@ -39,6 +61,40 @@ void CAssimModel::CleanUp()
 		mesh.CleanUp();
 	}
 	m_Meshes.clear();
+}
+void CAssimModel::RecursiveProcess(const aiScene *scene, aiNode * node, vector<float>& postions, vector<float>& normals, vector<unsigned int>& indices)
+{
+	//proces
+	for (unsigned int i = 0; i<node->mNumMeshes; i++)
+	{
+		aiMesh *mesh = scene->mMeshes[node->mMeshes[i]];	
+
+		for (unsigned int i = 0; i< mesh->mNumVertices; i++)
+		{
+			postions.push_back(mesh->mVertices[i].x);
+			postions.push_back(mesh->mVertices[i].y);
+			postions.push_back(mesh->mVertices[i].z);
+
+			normals.push_back(mesh->mNormals[i].x);
+			normals.push_back(mesh->mNormals[i].y);
+			normals.push_back(mesh->mNormals[i].z);			
+		}
+
+		int offset = indices.size();
+		for (unsigned short i = 0; i<mesh->mNumFaces; i++)
+		{
+			aiFace face = mesh->mFaces[i];
+			for (unsigned short j = 0; j<face.mNumIndices; j++)
+			{
+				indices.push_back(face.mIndices[j] + offset);
+			}
+		}
+	}
+	//r
+	for (unsigned int i = 0; i <node->mNumChildren; i++)
+	{
+		RecursiveProcess(scene, node->mChildren[i], postions, normals, indices);
+	}
 }
 void CAssimModel::ProcessMesh(string file_path, aiMesh* mesh, const aiScene* scene)
 {
@@ -136,8 +192,11 @@ void CAssimModel::ProcessMesh(string file_path, aiMesh* mesh, const aiScene* sce
 	{
 		aiString str;
 		mat->GetTexture(aiTextureType_DIFFUSE, i, &str);
+		string s(str.C_Str());
+		s = Utils::ConvertToRelativePath(s);
+		s = s.substr(s.find_last_of('/') + 1);
 		STextInfo texture;
-		texture.id = m_TextureLodaer.LoadTexture(file_path + str.C_Str());
+		texture.id = m_TextureLodaer.LoadTexture(file_path + s.c_str());
 		texture.type = MaterialTexture::DIFFUSE;
 		material.textures.push_back(texture);
 	}

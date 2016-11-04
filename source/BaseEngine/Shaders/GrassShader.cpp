@@ -2,7 +2,7 @@
 
 void CGrassShader::Init()
 {
-	InitShaderProgram("Data/Shaders/Grass/GrassShader.vert", "Data/Shaders/Grass/GrassShader.frag", "Data/Shaders/Grass/GrassShader.gs");
+	InitShaderProgram("Data/Shaders/Grass/GrassShader.vert", "Data/Shaders/Grass/GrassShader.frag", "Data/Shaders/Grass/GrassShader.geom");
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();
