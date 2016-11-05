@@ -167,6 +167,7 @@
     <ClCompile Include="source\BaseEngine\Loader\XML\XMLSceneParser.cpp" />
     <ClCompile Include="source\BaseEngine\Physics\PhysicsScene.cpp" />
     <ClCompile Include="source\BaseEngine\Physics\Rigidbody.cpp" />
+    <ClCompile Include="source\BaseEngine\Renderers\DebugRenderer.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\DeferedFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FilterFrameBuffer.cpp" />
     <ClCompile Include="source\BaseEngine\Renderers\FrameBuffers\FrameBuffer.cpp" />

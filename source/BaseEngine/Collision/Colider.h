@@ -43,11 +43,12 @@ public:
 	CColider(SAabb aabb);
 	CColider(std::vector<SFace> faces);
 
+	void TransformFaces(const glm::mat4& matrix);
 	void SetPosition(glm::vec3 position);	
 	const glm::vec3& GetPosition() const;
 	float GetHeight(const float& x, const float& y, const float& z) const;
 	bool DetectCollision(CColider& colider, std::list<SCollisionInfo>& colision_info) const;
-	
+	std::vector<SFace>& GetFaces() { return m_Faces; }
 	SAabb m_Aabb;
 	SSphere m_Sphere;
 	ColiderType::Type m_ColiderType = ColiderType::NONE_COLIDER;
@@ -58,9 +59,6 @@ private:
 	bool DetectSphereSphere(const SSphere& a, const SSphere& b, SCollisionInfo& colision_info) const;
 	bool DetectFaceSphere(const SSphere& a, const std::vector<SFace>& m_Faces, std::list<SCollisionInfo>& colision_info) const;
 	bool DettectAABBAABB(const SAabb& a, const SAabb& b, SCollisionInfo& colision_info) const;
-
-	bool DetectSphereTriangleCollision(const glm::vec3& sp, const float& r, const SFaceVertex& vertexes, const glm::vec3& normal, SCollisionInfo& colision_info) const;
-	float IntersectTriangle(const glm::vec3& normal, const glm::vec3& rayPos, const glm::vec3& rayDirection, const SFaceVertex& vertexes) const;
-
 	std::vector<SFace> m_Faces;
+	std::vector<SFace> m_OrginalFaces;
 };

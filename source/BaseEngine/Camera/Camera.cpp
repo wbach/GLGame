@@ -45,6 +45,19 @@ void CCamera::InvertPitch()
 	m_Pitch *= -1.0f;
 }
 
+const glm::vec3 CCamera::GetDirection() const
+{
+	float pitch = Utils::ToRadians(m_Pitch);
+	float yaw = Utils::ToRadians(m_Yaw);
+	float xzLen = cos(pitch);
+	glm::vec3 dir;
+	dir.z = xzLen * cos(yaw);
+	dir.y = sin(pitch);
+	dir.x = xzLen * sin(-yaw);
+	dir = glm::normalize(dir) *-1.f;
+	return dir;
+}
+
 const glm::vec3& CCamera::GetPosition() const
 {
 	return m_Position;

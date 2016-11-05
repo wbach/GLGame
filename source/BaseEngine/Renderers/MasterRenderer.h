@@ -9,6 +9,7 @@
 #include "../Engine/Scene.h"
 #include "../Engine/OpenGLRenderer.h"
 #include "../Water/WaterRenderer.h"
+#include "DebugRenderer.h"
 #include "../Shaders/GrassShader.h"
 #include "../Shaders/FXAAShader.h"
 #include "FrameBuffers/DeferedFrameBuffer.h"
@@ -49,6 +50,7 @@ private:
 	CEntityRenderer    m_EntityRenderer;
 	CSkyBoxRenderer    m_SkyBoxRenderer;
 	CShadowMapRenderer m_ShadowMapRenderer;
+	CDebugRenderer	   m_DebugRenderer;
 
 	CEntityGeometryPassShader	m_EntityGeometryPassShader;
 	CTerrainGeometryPassShader	m_TerrainGeometryPassShader;
@@ -56,6 +58,7 @@ private:
 	CGrassShader				m_GrassShader;
 	CFXAAShader					m_FxaaShader;
 
+	glm::mat4	m_ProjectionMatrix;
 	glm::vec4	m_ClipPlane;
 	glm::vec2	m_ReflectionSize;
 	glm::vec2	m_RefractionSize;

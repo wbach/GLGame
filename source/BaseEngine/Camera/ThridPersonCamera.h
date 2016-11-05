@@ -17,7 +17,7 @@ private:
 	void LockCamera();
 	void SetCaptureMouse(bool capture);	
 	void CalculateCameraPosition(float horizontal_distance, float vertical_distance);
-
+	void SetPosition(glm::vec3 position);
 	float CalculateHorizontalDistance();
 	float CalculateVerticalDistance();
 

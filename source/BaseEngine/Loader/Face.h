@@ -6,6 +6,7 @@ struct SCollisionInfo
 	bool	  collision = false;
 	glm::vec3 updateVector = glm::vec3(0.f);
 	float	  collisionY = 0.f;
+	float	  t = 0.f;
 };
 struct SFaceVertex
 {

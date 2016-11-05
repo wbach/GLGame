@@ -1,5 +1,7 @@
 #pragma once
 #include <vector>
+#include "../Loader/Face.h"
+#include <GL/glew.h>
 namespace DebugMeshes
 {
 	enum Ids
@@ -11,6 +13,6 @@ namespace DebugMeshes
 class CDebugRenderer
 {
 public:
-	//void Init()
+	void DrawLineMesh(const glm::mat4& MVP ,const std::vector<SFace>& faces) const;
 	int m_ModelsId[DebugMeshes::COUNT];
 };

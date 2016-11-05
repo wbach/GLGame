@@ -50,7 +50,10 @@ void CThirdPersonCamera::Move()
 
 	__super::Move();
 }
-
+void CThirdPersonCamera::SetPosition(glm::vec3 position)
+{
+	m_Position = position;	
+}
 void CThirdPersonCamera::CalculateCameraPosition(float horizontal_distance, float vertical_distance)
 {
 	float theata  = m_LookAtRotation.y  + m_AngleAroundPlayer;
@@ -84,15 +87,11 @@ glm::vec2 CThirdPersonCamera::CalcualteMouseMove()
 
 void CThirdPersonCamera::CalculatePitch(glm::vec2 d_move)
 {
-	//if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT))
 		m_Pitch -= d_move.y;
 }
 
 void CThirdPersonCamera::CalculateAngleAroundPlayer(glm::vec2 d_move)
 {
-	//if (SDL_GetMouseState(NULL, NULL) & SDL_BUTTON(SDL_BUTTON_RIGHT)) 
-	//{
-		float angle_change	 = d_move.x;
-		m_AngleAroundPlayer -= angle_change;
-	//}
+	float angle_change	 = d_move.x;
+	m_AngleAroundPlayer -= angle_change;
 }

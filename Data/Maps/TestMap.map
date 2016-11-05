@@ -47,34 +47,6 @@
 		<CutOff>0.000000</CutOff>
 	</Light>
 	<Entity>
-		<File>Data/Meshes/Sphere/sphere.obj</File>
-		<Name>sphere.obj</Name>
-		<ChildrenCulling >1</ChildrenCulling >
-		<Position>
-			<x>100.000000</x>
-			<y>10.420000</y>
-			<z>120.000000</z>
-		</Position>
-		<AttachYOffset>0.000000</AttachYOffset>
-		<Rotation>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Rotation>
-		<Scale>
-			<x>1.000000</x>
-			<y>1.000000</y>
-			<z>1.000000</z>
-		</Scale>
-		<NormalizedSize>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</NormalizedSize>
-		<ColiderType>2</ColiderType>
-		<Global>1</Global>
-	</Entity>
-	<Entity>
 		<File>Data/Meshes/Barrel/barrel.obj</File>
 		<Name>barrel.obj</Name>
 		<ChildrenCulling >1</ChildrenCulling >
@@ -689,62 +661,6 @@
 			<ColiderType>2</ColiderType>
 			<Global>0</Global>
 		</Entity>
-	</Entity>
-	<Entity>
-		<File>Data/Meshes/woodland_pack_1/WOODLAND_PACK/WOODLAND_TREES/f_tree3/obj__tree3.obj</File>
-		<Name>obj__tree3.obj</Name>
-		<ChildrenCulling >1</ChildrenCulling >
-		<Position>
-			<x>109.587997</x>
-			<y>55.452999</y>
-			<z>131.283005</z>
-		</Position>
-		<AttachYOffset>0.000000</AttachYOffset>
-		<Rotation>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Rotation>
-		<Scale>
-			<x>1.000000</x>
-			<y>1.000000</y>
-			<z>1.000000</z>
-		</Scale>
-		<NormalizedSize>
-			<x>0.000000</x>
-			<y>10.000000</y>
-			<z>0.000000</z>
-		</NormalizedSize>
-		<ColiderType>2</ColiderType>
-		<Global>0</Global>
-	</Entity>
-	<Entity>
-		<File>Data/Meshes/woodland_pack_1/WOODLAND_PACK/WOODLAND_TREES/f_tree6/obj__tree6.obj</File>
-		<Name>obj__tree6.obj</Name>
-		<ChildrenCulling >1</ChildrenCulling >
-		<Position>
-			<x>108.088997</x>
-			<y>0.133000</y>
-			<z>102.281998</z>
-		</Position>
-		<AttachYOffset>0.000000</AttachYOffset>
-		<Rotation>
-			<x>0.000000</x>
-			<y>0.000000</y>
-			<z>0.000000</z>
-		</Rotation>
-		<Scale>
-			<x>1.000000</x>
-			<y>1.000000</y>
-			<z>1.000000</z>
-		</Scale>
-		<NormalizedSize>
-			<x>0.000000</x>
-			<y>10.000000</y>
-			<z>0.000000</z>
-		</NormalizedSize>
-		<ColiderType>2</ColiderType>
-		<Global>0</Global>
 	</Entity>
 	<Entity>
 		<File>Data/Meshes/GothicWallGate/G3_Myrtana_Castle_Wall_Entrance_01.obj</File>

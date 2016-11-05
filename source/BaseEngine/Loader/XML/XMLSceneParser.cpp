@@ -217,7 +217,10 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, CEntity* parent)
 			children_nodes.push_back(subnode);
 	}
 	shared_ptr<CEntity> entity = nullptr;
-	entity = m_Scene->CreateEntityFromFile(filename, static_cast<ColiderType::Type>(colider), normalized_size, false, position, rotation, scale);
+	glm::mat4 parent_matrix(1.f);
+	if (parent != nullptr)
+		parent_matrix = parent->GetTransformMatrix();
+	entity = m_Scene->CreateEntityFromFile(filename, static_cast<ColiderType::Type>(colider), normalized_size, false, position, rotation, scale, parent_matrix);
 
 	if (entity == nullptr)
 		return;
@@ -229,13 +232,15 @@ void CXmlSceneParser::ParaseEntity(rapidxml::xml_node<>* node, CEntity* parent)
 	{
 		ParaseEntity(n, entity.get());
 	}			
+
 	entity->CalculateEntityTransformMatrix();
-	if (parent == nullptr)
+	if (parent == nullptr)	
 		m_Scene->AddEntity(entity, is_global);
 	else
+	{
 		m_Scene->AddSubEntity(parent, entity);
-	
-	
+		//entity->m_RigidBody.m_Colider.TransformFaces(entity->GetTransformMatrix());
+	}
 }
 
 void CXmlSceneParser::LoadScene(std::string file_name, CScene* scene, void(*func)(int p))

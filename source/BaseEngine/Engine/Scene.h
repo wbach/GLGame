@@ -45,7 +45,8 @@ public:
 	void DeleteEntity(shared_ptr<CEntity>& entity);
 	bool DeleteSubEntity(shared_ptr<CEntity>& entity, int id);
 	shared_ptr<CEntity> CreateEntityFromFile(string file_name, const ColiderType::Type type = ColiderType::NONE_COLIDER, glm::vec3 normalized_size = glm::vec3(0, 1, 0), bool instanced = false,
-											glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1)											
+											glm::vec3 pos = glm::vec3(10, 10, 0), glm::vec3 rot = glm::vec3(0), glm::vec3 scale = glm::vec3(1, 1, 1),
+											const glm::mat4& parent_matrix = glm::mat4(1.f)
 											);
 	
 	std::vector<CEntity*> GetPhysicsEntitiesInRange(const glm::vec3& position);

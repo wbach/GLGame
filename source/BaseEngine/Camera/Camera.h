@@ -30,11 +30,12 @@ public:
 	void SetRoll(float roll);
 	void SetYaw(float yaw);
 	
+	const glm::vec3 GetDirection() const;
 	const glm::vec3& GetPosition() const;
 	const glm::vec3 GetRotation() const;
 	const glm::mat4& GetViewMatrix() const;
 	const glm::vec2 GetPositionXZ() const;
-	void SetPosition(glm::vec3 position);
+	virtual void SetPosition(glm::vec3 position);
 
 	void UpdateFrustrum();
 	bool CheckFrustrumSphereCulling(const glm::vec3& position, const float& radius);

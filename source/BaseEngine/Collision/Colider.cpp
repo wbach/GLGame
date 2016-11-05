@@ -22,9 +22,22 @@ CColider::CColider(SAabb aabb)
 CColider::CColider(std::vector<SFace> faces)
 : m_ColiderType(ColiderType::MESH_COLIDER)
 , m_Faces(faces)
+, m_OrginalFaces(faces)
 , m_UpdateVector(0)
 {
 
+}
+
+void CColider::TransformFaces(const glm::mat4 & matrix)
+{
+	m_Faces = m_OrginalFaces;
+	for (SFace& face : m_Faces)
+	{
+		face.vertexes.v1 = Utils::TransformPoint(face.vertexes.v1, matrix);
+		face.vertexes.v2 = Utils::TransformPoint(face.vertexes.v2, matrix);
+		face.vertexes.v3 = Utils::TransformPoint(face.vertexes.v3, matrix);
+		face.CalculateNormal();
+	}
 }
 
 void CColider::SetPosition(glm::vec3 position)
@@ -64,7 +77,7 @@ float CColider::GetHeight(const float& x, const float& y, const float& z) const
 		{			
 			glm::vec3 ray_dir(0.f, -1.f, 0.f);			
 			
-			float h = IntersectTriangle(face.normal, glm::vec3(x, y, z), ray_dir, face.vertexes);
+			float h = Utils::IntersectTriangle(face.normal, glm::vec3(x, y, z), ray_dir, face.vertexes);
 			//Utils::PrintVector("", glm::vec3(h, 0, z));
 			if (h > 0)
 				if ((yy - h) > height)
@@ -140,7 +153,7 @@ bool CColider::DetectFaceSphere(const SSphere& a, const std::vector<SFace>& face
 	for (const SFace& face : faces)
 	{
 		SCollisionInfo info;
-		DetectSphereTriangleCollision(a.position, a.radius, face.vertexes, face.normal, info);
+		Utils::DetectSphereTriangleCollision(a.position, a.radius, face.vertexes, face.normal, info);
 		if (info.collision)
 		{
 			is_col = true;
@@ -157,50 +170,4 @@ bool CColider::DettectAABBAABB(const SAabb & a, const SAabb & b, SCollisionInfo&
 	if (a.max.y < b.min.y || a.min.y > b.max.y) return false;
 	if (a.max.z < b.min.z || a.min.z > b.max.z) return false;
 	return true;
-}
-float CColider::IntersectTriangle(const glm::vec3& normal, const glm::vec3& rayPos, const glm::vec3& rayDirection, const SFaceVertex& vertexes) const
-{
-	glm::vec3 v0 = vertexes.v3 - vertexes.v1;
-	glm::vec3 v1 = vertexes.v2 - vertexes.v1;
-	float d = -1 * (glm::dot(normal, vertexes.v1));
-	float t = -(normal.x*rayPos.x + normal.y*rayPos.y + normal.z*rayPos.z + d) / (normal.x*rayDirection.x + normal.y*rayDirection.y + normal.z*rayDirection.z);
-	glm::vec3 point = rayPos + t*rayDirection;
-	glm::vec3 v2 = point - vertexes.v1;
-	float dot00 = glm::dot(v0, v0);
-	float dot01 = glm::dot(v0, v1);
-	float dot02 = glm::dot(v0, v2);
-	float dot11 = glm::dot(v1, v1);
-	float dot12 = glm::dot(v1, v2);
-	float invDenom = 1 / (dot00 * dot11 - dot01 * dot01);
-	float u = (dot11 * dot02 - dot01 * dot12) * invDenom;
-	float v = (dot00 * dot12 - dot01 * dot02) * invDenom;
-	if ((u >= 0) && (v >= 0) && (u + v < 1)) 
-	{
-		return t;
-	}
-	else return -1;
-}
-bool CColider::DetectSphereTriangleCollision(const glm::vec3& sp, const float& r, const SFaceVertex& vertexes, const glm::vec3& normal, SCollisionInfo& colision_info) const
-{
-	glm::vec3 n = glm::normalize(normal);
-
-	GLfloat dist1 = IntersectTriangle(-n, sp, n, vertexes);
-	GLfloat dist2 = IntersectTriangle(n, sp, -n, vertexes);
-
-	colision_info.collision = false;
-	colision_info.normal = n;
-	colision_info.updateVector = glm::vec3(0);
-
-	if (dist2 > 0 && dist2 < r) {
-		colision_info.normal = n;
-		colision_info.collision = true;
-		colision_info.updateVector = n*(r - dist2);
-	}
-	else if (dist1 > 0 && dist1 < r) {
-		colision_info.normal = -n;
-		colision_info.updateVector = -n*(r - dist1);
-		colision_info.collision = true;
-		colision_info.collisionY = sp.y + colision_info.updateVector.y;
-	}
-	return colision_info.collision;
 }

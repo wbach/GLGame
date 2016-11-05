@@ -271,7 +271,6 @@ void CScene::ApplyPhysicsToObjects(float dt)
 	{
 		bodys.push_back(entity->m_RigidBody);
 	}
-	cout << bodys.size() << endl;
 	for (CEntity* entity : m_PhysicsEntities)
 	{		
 		if (entity->m_RigidBody.m_Static)
@@ -378,7 +377,7 @@ bool CScene::DeleteSubEntity(shared_ptr<CEntity>& entity, int id)
 	}
 	return false;
 }
-shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, const ColiderType::Type type, glm::vec3 normalized_size , bool instanced, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale)
+shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, const ColiderType::Type type, glm::vec3 normalized_size , bool instanced, glm::vec3 pos, glm::vec3 rot, glm::vec3 scale, const glm::mat4& parent_matrix)
 {	
 	std::string filename = Utils::ConvertToRelativePath(file_name);
 	std::string name = filename.substr(filename.find_last_of('/') + 1);
@@ -387,6 +386,8 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, const Colider
 	//file_name = col_fname;
 	shared_ptr<CEntity> new_entity;
 	new_entity = make_shared<CEntity>(pos, rot, scale);		
+	new_entity->SetRelativeMatrix(parent_matrix);
+	new_entity->CalculateEntityTransformMatrix();
 
 	int model_id = m_Loader.LoadMesh(file_name);
 
@@ -401,6 +402,7 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, const Colider
 
 	new_entity->m_BoundingSize = m_Loader.m_Models[model_id]->GetBoundingMaxSize();
 	new_entity->AddModel(model_id);
+
 	if(instanced)
 		m_Loader.m_Models[model_id]->CreateTransformsVbo(new_entity->GetTransformMatrixes());
 
@@ -418,14 +420,10 @@ shared_ptr<CEntity> CScene::CreateEntityFromFile(string file_name, const Colider
 			}
 
 			vector<SFace> faces = m_Loader.LoadFaces(col_fname);
-			for (SFace& face : faces)
-			{
-				face.vertexes.v1 = Utils::TransformPoint(face.vertexes.v1, new_entity->GetTransformMatrix());
-				face.vertexes.v2 = Utils::TransformPoint(face.vertexes.v2, new_entity->GetTransformMatrix());
-				face.vertexes.v3 = Utils::TransformPoint(face.vertexes.v3, new_entity->GetTransformMatrix());
-				face.CalculateNormal();
-			}		
 			new_entity->m_RigidBody = CRigidbody(faces);
+			//new_entity->CalculateEntityTransformMatrix();
+			//Utils::PrintMatrix("Mat: ", new_entity->GetTransformMatrix());			
+			new_entity->m_RigidBody.m_Colider.TransformFaces(new_entity->GetRelativeTransformMatrix()* new_entity->GetTransformMatrix());
 			m_PhysicsEntities.push_back(new_entity.get());
 		}
 		break;

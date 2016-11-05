@@ -16,6 +16,7 @@ class CTestSCene : public CScene
 	shared_ptr<CEntity>  lightsphere; 
 	int m_CameraType = 0;
 	float time_x = 0;	
+	float camera_or_distance;
 public:
     bool thridCamera = true;
 	CTestSCene(CGame& game, int camera_type)
@@ -113,7 +114,7 @@ public:
 			setThridCamera();
 		else
 			setFirstCamera();
-		
+		camera_or_distance = m_Camera->GetDistance();
 		//lightsphere = CreateEntityFromFile(Utils::ConvertToRelativePath("Data/Meshes/Sphere/sphere.obj"), ColiderType::NONE_COLIDER, false, CreatePositionVector(100.f, 120.f, 10.f));
 		//AddEntity(lightsphere, true);
 
@@ -329,6 +330,45 @@ public:
 	}
 	void LockCameraUnderTerrain()
 	{
+		float camera_r = 1.f;
+
+		m_Camera->SetDistance(camera_or_distance);
+		m_Camera->Move();
+		glm::vec3 orginal_pos = m_Camera->GetPosition();
+		glm::vec3 orginal_dir = m_Camera->GetDirection();
+		CRigidbody crb(SSphere(m_Camera->GetPosition(), camera_r));
+
+		float camera_distance = m_Camera->GetDistance();
+
+		std::list<CRigidbody> bodys;
+		float camera_min_distance = .25f;
+		for (CEntity* entity : m_PhysicsEntities)
+		{
+			for (SFace& f : entity->m_RigidBody.m_Colider.GetFaces())
+			{
+				float x = Utils::IntersectTriangle(f.normal, orginal_pos, orginal_dir, f.vertexes);
+				float y = Utils::IntersectTriangle(-f.normal, orginal_pos, orginal_dir, f.vertexes);
+				if (x > 0 && x < camera_or_distance + 0.001f)
+				{
+					camera_distance -= x;
+					if (camera_distance < camera_min_distance)
+						camera_distance = camera_min_distance;
+					m_Camera->SetDistance(camera_distance);
+					m_Camera->Move();
+				}
+				if (y > 0 && y < camera_or_distance + 0.001f)
+				{
+					camera_distance -= y;
+					if (camera_distance < camera_min_distance)
+						camera_distance = camera_min_distance;
+					m_Camera->SetDistance(camera_distance);
+					m_Camera->Move();
+				}
+
+			}
+			bodys.push_back(entity->m_RigidBody);
+		}
+
 		glm::vec2 camera_position = glm::vec2(m_Camera->GetPosition().x, m_Camera->GetPosition().z);
 		int x, z;
 		TerrainNumber(camera_position, x, z);
@@ -342,6 +382,8 @@ public:
 			m_Camera->SetPosition(glm::vec3(camera_position.x, height + .1f, camera_position.y));
 			m_Camera->UpdateViewMatrix();
 		}
+		
+		
 	}
 	const glm::mat4& GetViewMatrix() override { return m_Camera->GetViewMatrix(); }
 };

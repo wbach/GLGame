@@ -6,6 +6,8 @@ void CMasterRenderer::Init(CCamera* camera, glm::vec2 window_size, glm::mat4& pr
 	float view_distance
 	)
 {
+	m_ProjectionMatrix = projection_matrix;
+
 	m_WindowSize = window_size;
 
 	m_ViewDistance = view_distance + 60;
@@ -138,6 +140,11 @@ void CMasterRenderer::Render(CScene* scene, const bool& shadows)
 	LightPass(scene, m_WindowSize, m_FilterFrameBuffer.GetFbo());
 	BindFinalPass();
 	FXAApass();
+	//for (const shared_ptr<CEntity>& en : scene->GetEntities())
+	//{
+	//	m_DebugRenderer.DrawLineMesh(m_ProjectionMatrix * scene->GetCamera()->GetViewMatrix(), en->m_RigidBody.m_Colider.GetFaces());
+	//}
+	
 }
 void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 {
