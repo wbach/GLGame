@@ -87,7 +87,7 @@ public:
 	float m_AvarageHeight;	
 
 	// Grass and other flora elements - flowers...
-	std::vector<CGrass> m_Grass;
+	std::list<CGrass> m_Grass;
 
 	CLoader&	 m_Loader;
 	CEmptyLoader m_Model;

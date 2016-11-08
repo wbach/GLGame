@@ -45,8 +45,8 @@ int main(int argc, char *argv[])
 	api = std::make_shared<CSdlOpenGlApi>();
 	test_scene_camera_type = 1;
 #else
-	api = std::make_shared<CGlfwOpenGlApi>();
-	//api = std::make_shared<CSdlOpenGlApi>();
+	//api = std::make_shared<CGlfwOpenGlApi>();
+	api = std::make_shared<CSdlOpenGlApi>();
 #endif
 	
 	myGame.AddScene(std::make_shared<CTestSCene>(myGame, test_scene_camera_type));

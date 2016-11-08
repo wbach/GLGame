@@ -27,7 +27,7 @@ public:
 
 	void AddLight(CLight light) { m_Lights.push_back(light); }
 
-	void AddEntity(shared_ptr<CEntity>& entity, bool direct = false);
+	void AddEntity(shared_ptr<CEntity> entity, bool direct = false);
 	void AddInstancedEntityFromFile(string file, std::vector<STransform>& transforms, glm::vec3 normalized_size = glm::vec3(0));
 	void AddSubEntity(CEntity* parent, shared_ptr<CEntity>& entity);
 	
@@ -49,7 +49,12 @@ public:
 											const glm::mat4& parent_matrix = glm::mat4(1.f)
 											);
 	
-	std::vector<CEntity*> GetPhysicsEntitiesInRange(const glm::vec3& position);
+	void GetEntitiesRecursive(std::list<CEntity*>& list, CEntity* entity);
+	std::list<CEntity*> GetEntitiesInCameraRange();
+	void CheckEntitiesInCameraRange();
+
+	std::list<CEntity*> GetPhysicsEntitiesInRange(const glm::vec3& position);
+	vector<CEntity*>&	GetPhysicsEntities() { return m_PhysicsEntities; }
 	shared_ptr<CEntity> FindEntity(int id);
 	shared_ptr<CEntity> FindSubEntity(shared_ptr<CEntity>& entity, int id);
 	CTerrain* FindTerrainById(int id);
@@ -59,7 +64,8 @@ public:
 	CTerrain*							GetTerrain(int x, int y);
 	const vector<CLight>&				GetLights() const;
 	vector<CWaterTile>&					GetWaterTiles();
-	std::vector<CTerrain*>				GetTerrainsInCameraRange();
+	std::list<CTerrain*>				GetTerrainsInCameraRange();
+	void CheckTerrainInCameraRange();
 
 	void LoadTerrainsFloora(string file_name);
 
@@ -111,6 +117,8 @@ public:
 
 	CPhysicsScene m_PhysicsScene;
 	float		  m_PhysicsDistance = 20.f;
+
+	float m_MaxEntityViewDistane = 200.f;
 	std::mutex g_pages_mutex;
 
 	std::vector<CTerrain> m_Terrains;
@@ -150,6 +158,8 @@ protected:
 
 	vector<string> m_DaySkyboxTextures;
 	vector<string> m_NightSkyboxTextures;
+	std::list<CEntity*> m_EntitiesInCameraRenge;
+	std::list<CTerrain*> m_TerrainInCameraRange;
 };
 
 

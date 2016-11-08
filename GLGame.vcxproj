@@ -212,6 +212,8 @@
     <ClCompile Include="source\Editor\WindowProcedure.cpp" />
     <ClCompile Include="source\main.cpp" />
     <ClCompile Include="source\BaseEngine\Loader\Model.cpp" />
+    <ClCompile Include="source\RPGpack\Hero.cpp" />
+    <ClCompile Include="source\RPGpack\HeroClass\Knight.cpp" />
     <ClCompile Include="source\TestGame\Player.cpp" />
     <ClCompile Include="source\BaseEngine\Engine\Scene.cpp" />
     <ClCompile Include="source\BaseEngine\Shaders\ShaderProgram.cpp" />
@@ -288,6 +290,13 @@
     <ClInclude Include="source\Editor\HwndsList.h" />
     <ClInclude Include="source\Editor\IdsList.h" />
     <ClInclude Include="source\Editor\SceneEditor.h" />
+    <ClInclude Include="source\RPGpack\CharacterStats.h" />
+    <ClInclude Include="source\RPGpack\Player.h" />
+    <ClInclude Include="source\RPGpack\GameCharacter.h" />
+    <ClInclude Include="source\RPGpack\Hero.h" />
+    <ClInclude Include="source\RPGpack\HeroClass\Knight.h" />
+    <ClInclude Include="source\RPGpack\Merchant.h" />
+    <ClInclude Include="source\RPGpack\Monster.h" />
     <ClInclude Include="source\TestGame\Player.h" />
     <ClInclude Include="source\BaseEngine\Engine\Scene.h" />
     <ClInclude Include="source\BaseEngine\Shaders\ShaderProgram.h" />

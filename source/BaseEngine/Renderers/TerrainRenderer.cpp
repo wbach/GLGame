@@ -5,7 +5,7 @@ void CTerrainRenderer::Render(CScene* scene, const CTerrainGeometryPassShader& g
 	m_RendererObjectPerFrame = 0;
 	m_RendererVertixesPerFrame = 0;
 
-	for (CTerrain* terrain : scene->GetTerrainsInCameraRange())
+	for (const auto& terrain : scene->GetTerrainsInCameraRange())
 	{
 		PrepareTerrain(*terrain);
 		LoadModelMatrix(*terrain, geomentry_shader);

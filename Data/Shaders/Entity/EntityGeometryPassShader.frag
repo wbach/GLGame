@@ -85,7 +85,7 @@ void main()
     }
 	float shadow_factor = UseShadows > 0.5f ? CalculateShadowFactor() : 1.f;
 	WorldPosOut      = WorldPos0;					
-	DiffuseOut       = texture_color * vec4(ModelMaterial.m_Diffuse, 1.0f) * shadow_factor;	
+	DiffuseOut       = texture_color;// * vec4(ModelMaterial.m_Diffuse, 1.0f)  * shadow_factor;	
 
 	vec3 normal;
 

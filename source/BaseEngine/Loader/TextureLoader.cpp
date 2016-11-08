@@ -82,7 +82,7 @@ GLuint CTextureLoader::LoadFullTexture(string file_name, bool keepData, GLubyte 
 {
 	string file = file_name.substr(file_name.find_last_of('/') + 1);
 
-	for (const STextInfo& t : m_Textures)
+	for (const auto& t : m_Textures)
 	{
 		if (file.compare(t.filename) == 0)
 			return t.id;
@@ -150,7 +150,7 @@ GLuint CTextureLoader::LoadCubeMap(const vector<string>& filenames)
 	glGenTextures(1, &tex);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, tex);
 	int i = 0;
-	for (string file : filenames)
+	for (const auto& file : filenames)
 	{
 		GLubyte* data = nullptr;
 		int width, height;

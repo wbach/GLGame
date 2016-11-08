@@ -3,6 +3,7 @@
 #include <fstream>
 #include <string>
 #include <vector>
+#include <unordered_map>
 #include <memory>
 #include <stdlib.h>
 #include "../Utils/Utils.h"
@@ -10,7 +11,7 @@
 #include "Model.h"
 #include "AssimpModel.h"
 #include "FbxModel.h"
-
+#include <thread>
 using namespace std;
 
 class CLoader
@@ -19,8 +20,11 @@ public:
 	CLoader();
 	vector<shared_ptr<CModel>>	m_Models;
 	vector<STextInfo>			m_Textures;
-
+	
+	void	AddModelToUpdate(const unsigned int& eid, const unsigned int& mid);
 	void	UpdateModels(float delta_time);	
+	void    CreateUpdateThread();
+	void	UpdateModelsThread();
 	int		LoadMesh(string file_name, bool time_update = false);
 	GLuint	LoadTexture(string file_name, bool vertical_flip = false);
 	GLuint	LoadFullTexture(string file_name, GLubyte *&data, int &width, int &height);
@@ -37,6 +41,9 @@ public:
 	void	SetMaxTextureResolution(const glm::vec2& resolution);
 private:
 	CTextureLoader	m_TextureLoader;
+	unordered_map<int, int>   m_IndexesInFrame;
 	vector<int>	m_IndexesUpdatingModels;
+	std::thread animation_thread;
+	bool m_UpdateThreadRun;
 };
 

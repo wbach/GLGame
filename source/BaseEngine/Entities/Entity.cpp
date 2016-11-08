@@ -215,22 +215,15 @@ const glm::mat4 & CEntity::GetRelativeTransformMatrix(unsigned int i)
 	return m_RelativeTransformMatrix;
 }
 
-void CEntity::AddModel(unsigned int model_id, std::string path)
+void CEntity::SetModelId(unsigned int model_id, std::string path)
 {
-	m_ModelId.push_back(model_id);
+	m_ModelID = model_id;
 	m_FullPathFile = path;
 }
 
-const int& CEntity::GetModelId(unsigned int i) const
+const int& CEntity::GetModelId() const
 {
-	if (i < m_ModelId.size())
-	{
-		if (i == 0)
-			return m_ModelId[m_CurrentModelId];
-		return m_ModelId[i];
-	}
-	else
-		return Utils::s_intmone;		
+	return m_ModelID;
 }
 
 void CEntity::Update()

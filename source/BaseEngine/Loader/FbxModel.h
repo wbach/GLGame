@@ -4,7 +4,8 @@
 #include <GL/glew.h>
 #include <fbxsdk.h>
 #include "TextureLoader.h"
-
+#include <unordered_map>
+#include <thread>
 class CFbxModel : public CModel
 {
 public:
@@ -27,6 +28,8 @@ private:
 	bool SetCurrentAnimStack(int index);
 
 	void Update(float delta_time) override;	
+	void Update();
+
 	void UpdateNodeRecursive(FbxNode* node, FbxTime& time, FbxAnimLayer* anim_layer, FbxAMatrix& parent_global_position, FbxPose* pose);
 	void UpdateNode(FbxNode* node, FbxTime& time, FbxAnimLayer* anim_layer, FbxAMatrix& parent_global_position,	FbxAMatrix& global_position, FbxPose* pose);
 	void UpdateMesh(FbxNode* node, FbxTime& time, FbxAnimLayer* anim_layer, FbxAMatrix& global_position, FbxPose* pose);
@@ -46,7 +49,37 @@ private:
 	void MatrixAddToDiagonal(FbxAMatrix& pMatrix, double pValue);
 	void MatrixAdd(FbxAMatrix& pDstMatrix, FbxAMatrix& pSrcMatrix);
 
-	void OnTimerClick() const;
+	virtual void SetCurrentFrame(unsigned int& current_frame) override
+	{
+		m_CurrentTime = m_Start;
+		m_CurrentFrameBones = current_frame;
+
+		for (unsigned int i = 0; i < current_frame; i++)
+		{
+			m_CurrentTime += m_FrameTime;
+		}
+	}
+	void OnTimerClick();
+
+	virtual const std::vector<glm::mat4>& GetBonesTransforms(unsigned int mesh_id) override
+	{ 
+		if(!m_SaveBonesTransform)
+			return  m_BoneTransformMatrixes; 
+
+		FbxTime durration = m_Stop - m_Start;
+		double a = durration.GetSecondDouble();
+		double b = m_CurrentTime.GetSecondDouble();
+	
+		m_BoneTransformMatrixesPerTime.clear();
+
+		unsigned int startui = m_FrameBonesTransforms * mesh_id;
+		for (unsigned int i = startui; i < startui + m_FrameBonesTransforms; i++)
+		{
+			m_BoneTransformMatrixesPerTime.push_back(m_BoneTransformMatrixes[i]);
+		}
+		return m_BoneTransformMatrixesPerTime;
+	}
+	glm::mat4 FbxMatrixToGlm(FbxAMatrix&  m);
 
 	FbxDouble3 GetMaterialProperty(	const FbxSurfaceMaterial* material, const char* property_name, const char* factor_property_name, GLuint& texture_id);
 
@@ -71,4 +104,17 @@ private:
 
 	string			m_Name;
 	CTextureLoader&	m_TextureLodaer;
+
+	std::vector<float> m_UpdateVertices;
+
+	// For all subMeshes
+	std::vector<SBonesInfo> m_BonesInfo;
+	std::vector<glm::mat4> m_BoneTransformMatrixes;
+	std::vector<glm::mat4> m_BoneTransformMatrixesPerTime;
+
+	bool m_SaveBonesTransform = true;
+	bool m_SavingBonesTransforms = false;
+	unsigned int  m_FrameBonesTransformsOffset = 0;
+	unsigned int  m_FrameBonesTransforms = 0;
+	unsigned int  m_CurrentFrameBones = 0;
 };

@@ -8,6 +8,9 @@
 #include "glm/gtc/matrix_transform.hpp"
 #include "glm/gtx/transform.hpp"
 #include "glm/gtc/type_ptr.hpp"
+
+const int MAX_BONES = 100;
+
 using namespace std;
 class CShaderProgram 
 {

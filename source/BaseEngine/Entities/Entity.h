@@ -15,8 +15,8 @@ public:
 	CEntity(glm::vec3 pos, glm::vec3 rot);
 	CEntity(glm::vec3 pos, glm::vec3 rot, glm::vec3 scale);	
 	
-	void AddModel(unsigned int model_id, std::string full_path = "");
-	const int& GetModelId(unsigned int i = 0) const;
+	void SetModelId(unsigned int model_id, std::string path = "");
+	const int& GetModelId() const;
 
 	void Update();
 
@@ -59,6 +59,8 @@ public:
 	const STransform& GetTransform(unsigned int i = 0);
 	const glm::mat4& GetTransformMatrix(unsigned int i = 0);
 	const glm::mat4& GetRelativeTransformMatrix(unsigned int i = 0);
+
+	unsigned int& GetAnimationFrame() { return m_CurrentAnimationFrame; }
 
 	vector<STransform>& GetTransforms() { return m_Transforms; }
 	vector<glm::mat4>& GetTransformMatrixes() { return m_TransformMatrixes; }
@@ -118,8 +120,13 @@ protected:
 
 	string m_FullPathFile;
 	string m_Name;
-	int m_CurrentModelId = 0;
-	std::vector<int> m_ModelId;
+
+	unsigned int m_ModelID = 0;
+
+	//One model in memory for all entities, so we need have time from outside (each entity can have diffrent animation progress)
+	unsigned int m_CurrentAnimationFrame = 0;
+	//int m_CurrentModelId = 0;
+	//std::vector<int> m_ModelId;
 
 	int		   m_Id;
 	static int s_ID;

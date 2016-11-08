@@ -12,7 +12,6 @@ CFbxModel::CFbxModel(CTextureLoader & texture_lodaer)
 , m_Time(0)
 , m_FramePerSecond(60.f)
 {
-	m_UseFakeLight = false;
 }
 
 void CFbxModel::InitModel(string file_name)
@@ -47,6 +46,25 @@ void CFbxModel::InitModel(string file_name)
 	}
 	LoadFile();
 	SetCurrentAnimStack(0);
+
+	if (!m_SaveBonesTransform)
+		return;
+	m_SavingBonesTransforms = true;
+	int i = 0;
+	while (1)
+	{
+		Update();
+		m_CurrentTime += m_FrameTime;
+
+		if (m_Stop < m_CurrentTime)
+		{
+			break;
+		}
+		i++;
+	}
+	m_SavingBonesTransforms = false;
+	m_FrameBonesTransformsOffset = i;
+	//cout << m_BoneTransformMatrixes.size() << endl;
 }
 void CFbxModel::InitializeSdkObjects(FbxManager*& manager, FbxScene*& scene)
 {
@@ -208,19 +226,12 @@ void CFbxModel::LoadCacheRecursive(FbxNode* node, FbxAnimLayer* anim_layer)
 bool CFbxModel::InitializeMesh(FbxMesh * pMesh)
 {
 	if (!pMesh->GetNode())
-		return false;
-	SMaterial material;
+		return false;	
 
-	vector<float> postions;
-	vector<float> text_coords;
-	vector<float> normals;
-	vector<float> tangents;
-	vector<float> diffuse;
-	vector<float> specular;
-	vector<float> ambient;
-	vector<unsigned short> indices;
+	m_BonesInfo.push_back(SBonesInfo());
+	SBonesInfo& bones_info = m_BonesInfo.back();
 
-	const int lPolygonCount = pMesh->GetPolygonCount();
+	const int lPolygonCount = pMesh->GetPolygonCount();	
 
 	// Count the polygon count of each material
 	FbxLayerElementArrayTemplate<int>* lMaterialIndice = NULL;
@@ -245,6 +256,30 @@ bool CFbxModel::InitializeMesh(FbxMesh * pMesh)
 	FbxVector4 lCurrentNormal;
 	FbxVector2 lCurrentUV;
 	
+	SMaterial material;
+
+	vector<float> postions;
+	vector<float> text_coords;
+	vector<float> normals;
+	vector<float> tangents;
+	vector<float> diffuse;
+	vector<float> specular;
+	vector<float> ambient;
+	vector<unsigned short> indices;
+
+	unordered_map<int, int> points;
+	for (int x = 0; x < pMesh->GetControlPointsCount(); x++)
+	{
+		current_vertex = lControlPoints[x];
+		postions.push_back(static_cast<float>(current_vertex[0]));
+		postions.push_back(static_cast<float>(current_vertex[1]));
+		postions.push_back(static_cast<float>(current_vertex[2]));
+	}
+	text_coords.resize(2 * pMesh->GetControlPointsCount());
+	normals.resize(3 * pMesh->GetControlPointsCount());
+	tangents.resize(3 * pMesh->GetControlPointsCount());
+	indices.reserve( pMesh->GetControlPointsCount());
+
 	int lVertexCount = 0;
 	for (int lPolygonIndex = 0; lPolygonIndex < lPolygonCount; ++lPolygonIndex)
 	{
@@ -256,37 +291,93 @@ bool CFbxModel::InitializeMesh(FbxMesh * pMesh)
 			material = m_Materials[lMaterialIndex];
 			//material.diffuse = glm::vec3(1.0);
 		}
-
+	
 		for (int lVerticeIndex = 0; lVerticeIndex < 3; ++lVerticeIndex)
 		{
-			const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
+			const int lControlPointIndex = pMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);			
+
+			current_vertex = lControlPoints[lControlPointIndex];			
 			
-			indices.push_back(static_cast<unsigned short>(lVertexCount));
-
-			current_vertex = lControlPoints[lControlPointIndex];
-			postions.push_back(static_cast<float>(current_vertex[0]));
-			postions.push_back(static_cast<float>(current_vertex[1]));
-			postions.push_back(static_cast<float>(current_vertex[2]));
-
-			tangents.push_back(0);
-			tangents.push_back(0);
-			tangents.push_back(0);
+			indices.push_back(static_cast<unsigned short>(lControlPointIndex));			
 
 			pMesh->GetPolygonVertexNormal(lPolygonIndex, lVerticeIndex, lCurrentNormal);
-			normals.push_back(static_cast<float>(lCurrentNormal[0]));
-			normals.push_back(static_cast<float>(lCurrentNormal[1]));
-			normals.push_back(static_cast<float>(lCurrentNormal[2]));
+			normals[3 * lControlPointIndex] = static_cast<float>(lCurrentNormal[0]);
+			normals[3 * lControlPointIndex+1] = static_cast<float>(lCurrentNormal[1]);
+			normals[3 * lControlPointIndex+2] = static_cast<float>(lCurrentNormal[2]);
 
 			bool lUnmappedUV;
 			pMesh->GetPolygonVertexUV(lPolygonIndex, lVerticeIndex, uv_name, lCurrentUV, lUnmappedUV);
-			text_coords.push_back(static_cast<float>(lCurrentUV[0]));
-			text_coords.push_back(static_cast<float>(lCurrentUV[1]));			
+		
+			text_coords[2*lControlPointIndex] = lCurrentUV[0];
+			text_coords[2*lControlPointIndex+1] = lCurrentUV[1];		
 			
 			++lVertexCount;
 		}
 	}
+	
+	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
 
-	CMesh* mesh = AddMesh("FBX mesh", postions, text_coords, normals, tangents, indices, material);
+	lVertexCount = pMesh->GetControlPointsCount();
+	int lSkinCount = pMesh->GetDeformerCount(FbxDeformer::eSkin);
+
+	bones_info.bones.resize(lPolygonCount*3);
+	int count = 0;
+	unsigned int BoneIndex = 0;
+
+	for (int lSkinIndex = 0; lSkinIndex < lSkinCount; ++lSkinIndex)
+	{
+		
+		FbxSkin * lSkinDeformer = (FbxSkin *)pMesh->GetDeformer(lSkinIndex, FbxDeformer::eSkin);
+		int lClusterCount = lSkinDeformer->GetClusterCount();
+
+		for (int lClusterIndex = 0; lClusterIndex<lClusterCount; ++lClusterIndex)
+		{
+			FbxCluster* lCluster = lSkinDeformer->GetCluster(lClusterIndex);
+			if (!lCluster->GetLink())
+				continue;
+
+			string BoneName(lCluster->GetLink()->GetName());
+			
+			if (bones_info.bone_mapping.find(BoneName) == bones_info.bone_mapping.end())
+			{
+				// Allocate an index for a new bone
+				BoneIndex = bones_info.num_bones;
+				bones_info.num_bones++;
+				SBoneInfo bi;
+				bones_info.bone_info.push_back(bi);
+				bones_info.bone_info[BoneIndex].BoneOffset = glm::mat4(0.0f);
+				bones_info.bone_mapping[BoneName] = BoneIndex;
+			}
+			else
+			{
+				BoneIndex = bones_info.bone_mapping[BoneName];
+			}	
+
+			for (int k = 0; k < lCluster->GetControlPointIndicesCount(); ++k)
+			{
+				int lIndex = lCluster->GetControlPointIndices()[k];
+
+				// Sometimes, the mesh can have less points than at the time of the skinning
+				// because a smooth operator was active when skinning but has been deactivated during export.
+				if (lIndex >= lVertexCount)
+					continue;
+
+				double lWeight = lCluster->GetControlPointWeights()[k];
+
+				if (lWeight == 0.0)
+					continue;	
+
+
+				if (lClusterMode == FbxCluster::eAdditive)
+				{		
+					// Set the link to 1.0 just to know this vertex is influenced by a link.
+					lWeight = 1.0;
+				}				
+				bones_info.bones[lIndex].AddBoneData(BoneIndex, lWeight);
+			}
+		}
+	}
+	CMesh* mesh = AddMesh("FBX mesh", postions, text_coords, normals, tangents, indices, material, bones_info.bones);
 	pMesh->SetUserDataPtr(mesh);
 	return false;
 }
@@ -400,13 +491,27 @@ bool CFbxModel::SetCurrentAnimStack(int index)
 	return true;
 }
 void CFbxModel::Update(float delta_time)
-{
+{	
 	m_Time += delta_time;
 	if (m_Time < (1.f / m_FramePerSecond))	
 		return;	
 	m_Time = 0;
-
+	
 	OnTimerClick();
+
+	for (const auto& i : m_CurrentFrames)
+	{
+		(*i)++;
+		if ((*i) > m_FrameBonesTransformsOffset)
+			(*i) = 0;
+	}
+
+	if (m_SaveBonesTransform)
+		return;
+	Update();
+}
+void CFbxModel::Update()
+{
 	FbxPose* pose = nullptr;
 	if (m_PoseIndex != -1)
 	{
@@ -473,8 +578,8 @@ void CFbxModel::UpdateMesh(FbxNode* node, FbxTime& time, FbxAnimLayer* anim_laye
 	FbxVector4* lVertexArray = NULL;
 	if (!lMeshCache || lHasDeformation)
 	{
-		lVertexArray = new FbxVector4[lVertexCount];
-		memcpy(lVertexArray, lMesh->GetControlPoints(), lVertexCount * sizeof(FbxVector4));
+		//lVertexArray = new FbxVector4[lVertexCount];
+		//memcpy(lVertexArray, lMesh->GetControlPoints(), lVertexCount * sizeof(FbxVector4));
 	}
 
 	if (lHasDeformation)
@@ -504,30 +609,10 @@ void CFbxModel::UpdateMesh(FbxNode* node, FbxTime& time, FbxAnimLayer* anim_laye
 				// Deform the vertex array with the skin deformer.
 				ComputeSkinDeformation(global_position, lMesh, time, lVertexArray, pose);
 			}
-		}
-
-		if (lMeshCache)
-		{
-			std::vector<float> vertices;
-		
-			const int lPolygonCount = lMesh->GetPolygonCount();
-			
-			for (int lPolygonIndex = 0; lPolygonIndex < lPolygonCount; ++lPolygonIndex)
-			{
-				for (int lVerticeIndex = 0; lVerticeIndex < 3; ++lVerticeIndex)
-				{
-					const int lControlPointIndex = lMesh->GetPolygonVertex(lPolygonIndex, lVerticeIndex);
-
-					vertices.push_back(static_cast<float>(lVertexArray[lControlPointIndex][0]));
-					vertices.push_back(static_cast<float>(lVertexArray[lControlPointIndex][1]));
-					vertices.push_back(static_cast<float>(lVertexArray[lControlPointIndex][2]));		
-				}
-			}
-			lMeshCache->UpdateVertexPosition(vertices);
-		}
+		}		
 	}
 
-	delete[] lVertexArray;
+//	delete[] lVertexArray;
 }
 void CFbxModel::ReadVertexCacheData(FbxMesh* mesh, FbxTime& time, FbxVector4* verttex_array)
 {
@@ -702,13 +787,12 @@ void CFbxModel::ComputeSkinDeformation(FbxAMatrix& global_position, FbxMesh* mes
 
 	FbxSkin * skin_deformer = (FbxSkin *)mesh->GetDeformer(0, FbxDeformer::eSkin);
 	FbxSkin::EType skinning_type = skin_deformer->GetSkinningType();
-
 	if (skinning_type == FbxSkin::eLinear || skinning_type == FbxSkin::eRigid)
-	{
+	{	
 		ComputeLinearDeformation(global_position, mesh, time, vertex_vrray, pose);
 	}
 	else if (skinning_type == FbxSkin::eDualQuaternion)
-	{
+	{		
 		ComputeDualQuaternionDeformation(global_position, mesh, time, vertex_vrray, pose);
 	}
 	else if (skinning_type == FbxSkin::eBlend)
@@ -729,6 +813,7 @@ void CFbxModel::ComputeSkinDeformation(FbxAMatrix& global_position, FbxMesh* mes
 		// DQSVertex: vertex that is deformed by dual quaternion skinning method;
 		// LinearVertex: vertex that is deformed by classic linear skinning method;
 		int blend_weights_count = skin_deformer->GetControlPointIndicesCount();
+		
 		for (int bw_index = 0; bw_index < blend_weights_count; ++bw_index)
 		{
 			double blend_weight = skin_deformer->GetControlPointBlendWeights()[bw_index];
@@ -739,27 +824,11 @@ void CFbxModel::ComputeSkinDeformation(FbxAMatrix& global_position, FbxMesh* mes
 }
 void CFbxModel::ComputeLinearDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxTime& pTime, FbxVector4* pVertexArray, FbxPose* pPose)
 {
-
-	// All the links must have the same link mode.
-	FbxCluster::ELinkMode lClusterMode = ((FbxSkin*)pMesh->GetDeformer(0, FbxDeformer::eSkin))->GetCluster(0)->GetLinkMode();
-
-	int lVertexCount = pMesh->GetControlPointsCount();
-	FbxAMatrix* lClusterDeformation = new FbxAMatrix[lVertexCount];
-	memset(lClusterDeformation, 0, lVertexCount * sizeof(FbxAMatrix));
-
-	double* lClusterWeight = new double[lVertexCount];
-	memset(lClusterWeight, 0, lVertexCount * sizeof(double));
-
-	if (lClusterMode == FbxCluster::eAdditive)
-	{
-		for (int i = 0; i < lVertexCount; ++i)
-		{
-			lClusterDeformation[i].SetIdentity();
-		}
-	}
-
+	//m_BoneTransformMatrixes[0].clear();
 	// For all skins and all clusters, accumulate their deformation and weight
 	// on each vertices and store them in lClusterDeformation and lClusterWeight.
+
+	m_FrameBonesTransforms = 0;
 	int lSkinCount = pMesh->GetDeformerCount(FbxDeformer::eSkin);
 	for (int lSkinIndex = 0; lSkinIndex<lSkinCount; ++lSkinIndex)
 	{
@@ -774,77 +843,23 @@ void CFbxModel::ComputeLinearDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* p
 
 			FbxAMatrix lVertexTransformMatrix;
 			ComputeClusterDeformation(pGlobalPosition, pMesh, lCluster, lVertexTransformMatrix, pTime, pPose);
+			unsigned int id = 0;
 
-			int lVertexIndexCount = lCluster->GetControlPointIndicesCount();
-			for (int k = 0; k < lVertexIndexCount; ++k)
+			if (m_SavingBonesTransforms)
 			{
-				int lIndex = lCluster->GetControlPointIndices()[k];
-
-				// Sometimes, the mesh can have less points than at the time of the skinning
-				// because a smooth operator was active when skinning but has been deactivated during export.
-				if (lIndex >= lVertexCount)
-					continue;
-
-				double lWeight = lCluster->GetControlPointWeights()[k];
-
-				if (lWeight == 0.0)
-				{
-					continue;
-				}
-
-				// Compute the influence of the link on the vertex.
-				FbxAMatrix lInfluence = lVertexTransformMatrix;
-				MatrixScale(lInfluence, lWeight);
-
-				if (lClusterMode == FbxCluster::eAdditive)
-				{
-					// Multiply with the product of the deformations on the vertex.
-					MatrixAddToDiagonal(lInfluence, 1.0 - lWeight);
-					lClusterDeformation[lIndex] = lInfluence * lClusterDeformation[lIndex];
-
-					// Set the link to 1.0 just to know this vertex is influenced by a link.
-					lClusterWeight[lIndex] = 1.0;
-				}
-				else // lLinkMode == FbxCluster::eNormalize || lLinkMode == FbxCluster::eTotalOne
-				{
-					// Add to the sum of the deformations on the vertex.
-					MatrixAdd(lClusterDeformation[lIndex], lInfluence);
-
-					// Add to the sum of weights to either normalize or complete the vertex.
-					lClusterWeight[lIndex] += lWeight;
-				}
-			}//For each vertex			
-		}//lClusterCount
-	}
-
-	//Actually deform each vertices here by information stored in lClusterDeformation and lClusterWeight
-	for (int i = 0; i < lVertexCount; i++)
-	{
-		FbxVector4 lSrcVertex = pVertexArray[i];
-		FbxVector4& lDstVertex = pVertexArray[i];
-		double lWeight = lClusterWeight[i];
-
-		// Deform the vertex if there was at least a link with an influence on the vertex,
-		if (lWeight != 0.0)
-		{
-			lDstVertex = lClusterDeformation[i].MultT(lSrcVertex);
-			if (lClusterMode == FbxCluster::eNormalize)
-			{
-				// In the normalized link mode, a vertex is always totally influenced by the links. 
-				lDstVertex /= lWeight;
+				m_BoneTransformMatrixes.push_back(FbxMatrixToGlm(lVertexTransformMatrix));
+				m_FrameBonesTransforms++;
 			}
-			else if (lClusterMode == FbxCluster::eTotalOne)
+			else
 			{
-				// In the total 1 link mode, a vertex can be partially influenced by the links. 
-				lSrcVertex *= (1.0 - lWeight);
-				lDstVertex += lSrcVertex;
-			}
+				if (m_BoneTransformMatrixes.size() < m_FrameBonesTransforms + 1) m_BoneTransformMatrixes.push_back(glm::mat4(1.f));
+				m_BoneTransformMatrixes[m_FrameBonesTransforms++] = (FbxMatrixToGlm(lVertexTransformMatrix));
+			}			
 		}
 	}
 
-	delete[] lClusterDeformation;
-	delete[] lClusterWeight;
 
+	//cout << m_BoneTransformMatrixes[0].size() << endl;
 }
 void CFbxModel::ComputeDualQuaternionDeformation(FbxAMatrix& pGlobalPosition, FbxMesh* pMesh, FbxTime& pTime, FbxVector4* pVertexArray, FbxPose* pPose)
 {
@@ -1144,18 +1159,30 @@ const string& CFbxModel::GetName() const
 	return m_Name;
 }
 
-void CFbxModel::OnTimerClick() const
+void CFbxModel::OnTimerClick()
 {
 	// Loop in the animation stack if not paused.
 	if (m_Stop > m_Start)
-	{
+	{		
 		m_CurrentTime += m_FrameTime;
-
+		m_CurrentFrameBones += 1;
+		
 		if (m_CurrentTime > m_Stop)
 		{
 			m_CurrentTime = m_Start;
+			m_CurrentFrameBones = 0;
 		}
 	}
+}
+
+glm::mat4 CFbxModel::FbxMatrixToGlm(FbxAMatrix & mx)
+{
+	glm::mat4 m;
+	m[0][0] = mx[0][0]; m[0][1] = mx[0][1]; m[0][2] = mx[0][2]; m[0][3] = mx[0][3];
+	m[1][0] = mx[1][0]; m[1][1] = mx[1][1]; m[1][2] = mx[1][2]; m[1][3] = mx[1][3];
+	m[2][0] = mx[2][0]; m[2][1] = mx[2][1]; m[2][2] = mx[2][2]; m[2][3] = mx[2][3];
+	m[3][0] = mx[3][0]; m[3][1] = mx[3][1]; m[3][2] = mx[3][2]; m[3][3] = mx[3][3];
+	return m;
 }
 
 void CFbxModel::CleanUp()

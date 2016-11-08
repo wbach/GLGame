@@ -5,15 +5,19 @@
 #include "../BaseEngine/Camera/ThridPersonCamera.h"
 #include "../BaseEngine/Camera/FirstPersonCamera.h"
 #include "../BaseEngine/GUI/GUIButton.h"
-#include "Player.h"
+#include "../RPGpack/Player.h"
 #include "../BaseEngine/Engine/GLgame.h"
+#include "../RPGpack/HeroClass/Knight.h"
 class CTestSCene : public CScene
 {
     CLight m_DirLight;
 	CLight m_PointLight;
 	shared_ptr<CEntity> sphere_plane;
-    shared_ptr<CEntity> songo;	
+    shared_ptr<CPlayer<CKnight>> player;	
 	shared_ptr<CEntity>  lightsphere; 
+	shared_ptr<CEntity> bob;
+	vector<shared_ptr<CKnight>> knights;
+
 	int m_CameraType = 0;
 	float time_x = 0;	
 	float camera_or_distance;
@@ -28,8 +32,6 @@ public:
 	}
 	int Initialize() override
 	{
-		
-
 		for (unsigned int z = 0; z < m_TerrainsCount; z++)
 			for (unsigned int x = 0; x < m_TerrainsCount; x++)
 			{
@@ -56,7 +58,7 @@ public:
 				);
 	
 				string grass_file = "Data/Terrain/GrassPositions/terrain_" + name + ".terrain";
-				//current_terrain.GenerateGrassPositions(grass_file, 10000, 1.5f);
+				//current_terrain.GenerateGrassPositions(grass_file, 10000, 1.0f);
 				current_terrain.InitGrassFromFile(grass_file, m_Loader.LoadTexture("Data/Textures/G3_Nature_Plant_Grass_06_Diffuse_01.png"));				
 			
 				//string sh_file = "Data/Terrain/Flora/shterrain_" + name + ".terrain";
@@ -73,9 +75,8 @@ public:
 				}
 				
 				string trees_file = "Data/Terrain/TreesPositions/terrain_" + name + ".terrain";
-				current_terrain.GenerateTreePositions(trees_file, 1000, 7.f, current_terrain.m_Trees.size(), 2);
-				current_terrain.InitTreesFromFile(trees_file, glm::vec3(0, 10, 0));			
-
+				//current_terrain.GenerateTreePositions(trees_file, 1000, 7.f, current_terrain.m_Trees.size(), 2);
+				current_terrain.InitTreesFromFile(trees_file, glm::vec3(0, 10, 0));
 
 				//Flora
 				CAssimModel fern(m_Loader.GetTextureLoader());
@@ -85,58 +86,50 @@ public:
 				current_terrain.m_Trees.push_back(fern);
 
 				string flora_file = "Data/Terrain/Flora/terrain_" + name + ".terrain";
-			//	current_terrain.GenerateTreePositions(flora_file, 1000, 10.f, 1, 0.1, 6);
+				current_terrain.GenerateTreePositions(flora_file, 1000, 10.f, 1, 0.1, 6);
 				current_terrain.InitTreesFromFile(flora_file, glm::vec3(0, 1, 0), 6);
 			}		
-		
 
-		songo = make_shared<CPlayer>(&m_Game.GetInputManager(), CreatePositionVector(100, 120));
-		songo->SetName("Player");
-		unsigned int model_id = m_Loader.LoadMesh("Data/Meshes/Garen/garen_idle.fbx", true);
-		unsigned int model_id2 = m_Loader.LoadMesh("Data/Meshes/Garen/garen_run.fbx", true);
-		glm::vec3 normalized_size(0, 1.8f, 0);
-		glm::mat4 nm = m_Loader.m_Models[model_id]->CalculateNormalizedMatrix(normalized_size.x, normalized_size.y, normalized_size.z);
-		m_Loader.m_Models[model_id]->m_UseFakeLight = true;
-		m_Loader.m_Models[model_id2]->m_UseFakeLight = true;
-		songo->SetNormalizedMatrix(nm);
-		songo->AddModel(model_id, "Data/Meshes/Garen/garen_idle.fbx");
-		songo->AddModel(model_id2, "Data/Meshes/Garen/garen_idle.fbx");
-		songo->SetNormalizedSize(normalized_size);
-		//m_IsSpecial - enity created in code not from file
-		songo->m_IsSpecial = true;
-		songo->m_RigidBody = CRigidbody(SSphere(glm::vec3(0), 0.5));
-		songo->m_RigidBody.m_Static = false;
-		m_PhysicsScene.AddRigidBody(&songo->m_RigidBody);
-		AddEntity(songo, true);
-		m_PhysicsEntities.push_back(songo.get());
+		player = make_shared<CPlayer<CKnight>>(&m_Game.GetInputManager(), CreatePositionVector(100, 120));
+		player->Create(this);
+		AddEntity(player, true);
+
+		//shared_ptr<CKnight> knight = make_shared<CKnight>();
+		//	knight->Create(this);
+		//	knight->SetPosition(CreatePositionVector(100, 130));
+		//	AddEntity(knight, true);
+		//	knights.push_back(knight);
+
+		//for (int y = 0; y < 1; y++)
+		//	for (int x = 0; x < 1; x++)
+		//	{//Data/Meshes/Garen/garen_idle.fbx
+		//		//"Data/Meshes/Bob/boblampclean.md5mesh"
+		//		bob = CreateEntityFromFile("Data/Meshes/Garen/garen_idle.fbx", ColiderType::NONE_COLIDER, glm::vec3(0, 0, 1.5));
+		//		bob->SetPosition(CreatePositionVector(x+100, 130 - y));
+		//		bob->SetRotation(glm::vec3(180, 0, 180));
+		//		m_Loader.m_Models[bob->GetModelId()]->m_TimeUpdate = true;
+		//		m_Loader.m_Models[bob->GetModelId()]->m_BoneUpdate = true;
+		//		m_Loader.m_Models[bob->GetModelId()]->SetTime(x / 100);
+		//		AddEntity(bob, true);
+		//	}
+
+
+		for (int y = 0; y < 2; y++)
+		for (int x = 0; x < 10; x++)
+		{
+			shared_ptr<CKnight> knight = make_shared<CKnight>();
+			knight->Create(this);
+			knight->SetPosition(CreatePositionVector(101+x, 120+y));
+			AddEntity(knight, true);
+			knights.push_back(knight);
+		}
+		
 
 		if (m_CameraType == 0)
 			setThridCamera();
 		else
 			setFirstCamera();
 		camera_or_distance = m_Camera->GetDistance();
-		//lightsphere = CreateEntityFromFile(Utils::ConvertToRelativePath("Data/Meshes/Sphere/sphere.obj"), ColiderType::NONE_COLIDER, false, CreatePositionVector(100.f, 120.f, 10.f));
-		//AddEntity(lightsphere, true);
-
-
-	//	sphere_plane = CreateEntityFromFile("Data/Meshes/housestorage1/houseStorage.obj", ColiderType::MESH_COLIDER ,false, CreatePositionVector(80.f, 140.f, 2.f), glm::vec3(0), glm::vec3(1.0));
-	//	
-	//	sphere_plane->SetName("sphere_plane");
-	//	sphere_plane->m_IsSpecial = true;
-	//	sphere_plane->SetNormalizedSize(glm::vec3(1000));
-	//	model_id = sphere_plane->GetModelId();
-	////	m_Loader.m_Models[model_id]->m_UseFakeLight = true;
-	//	AddEntity(sphere_plane, true);
-
-		//normalized_size = glm::vec3(0, 1.f, 0);
-		//shared_ptr<CEntity> cube = CreateEntityFromFile("Data/Meshes/Cube.obj", false, CreatePositionVector(200 , 350 , 10));
-		//cube->SetName("Test physics cube");
-		//cube->m_IsSpecial = true;
-		//cube->SetNormalizedSize(normalized_size);
-		//cube->m_RigidBody = CRigidbody(SAabb(glm::vec3(-1, -1, -1) * 5.f, glm::vec3(1, 1, 1) * 5.f));
-		//AddEntity(cube, true);
-		//m_PhysicsEntities.push_back(cube);
-		//m_PhysicsScene.AddRigidBody(&cube->m_RigidBody);
 
 		GLuint water_dudv	= m_Loader.LoadTexture("Data/Textures/waterDUDV.png");
 		GLuint water_normal = m_Loader.LoadTexture("Data/Textures/waternormal.png");
@@ -152,17 +145,17 @@ public:
 		time_x = 0;
 
 		m_DayNightCycle.SetTime(0.5f);
+
 		return 0;
 	}
 	virtual void PostInitialize() override
 	{		
+	//	m_Loader.CreateUpdateThread();
 	}
 	void setFirstCamera()
 	{
-		//songo->getReferencedPosition(), songo->getReferencedRotation()
         m_Camera.reset();
 		m_Camera = make_shared<CFirstPersonCamera>(&m_Game.GetInputManager(), &m_Game.GetDisplayManager());
-	//	m_Camera->SetPosition(CreatePositionVector(songo->GetPositionXZ(),10));
 		m_Camera->SetPitch(5.6f);
 		m_Camera->SetYaw(94.0f);
 		m_Camera->SetProjectionMatrix(m_Game.GetProjectionMatrix());
@@ -170,30 +163,20 @@ public:
 	void setThridCamera()
 	{
 		m_Camera.reset();
-		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(),songo->GetReferencedPosition(), songo->GetReferencedRotation());
+		m_Camera = make_shared<CThirdPersonCamera>(&m_Game.GetInputManager(), player->GetReferencedPosition(), player->GetReferencedRotation());
 		m_Camera->SetProjectionMatrix(m_Game.GetProjectionMatrix());
 	}
 	
 	int Update() override
 	{
-		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());
+		float dt = static_cast<float>(m_Game.GetDisplayManager().GetDeltaTime());	
 
 		m_GloabalTime += dt;
 		m_DayNightCycle.Update(dt);
-	//	m_GameTime.SetTime(1.f);
-
-		//glm::vec3 light_point ;
-		//CTerrain* terrain = m_MousePicker.GetMousePointOnTerrain(light_point, m_Game.GetInputManager().GetMousePosition());
-		//light_point.y += 10;
-		//for (CLight& l : m_Lights)
-		//{
-		//	l.SetPosition(light_point);
-		//}
-		//lightsphere->SetPosition(light_point);
 
 		if (m_Game.GetInputManager().GetKey(KeyCodes::P))
 		{
-			for (CEntity* entity : m_PhysicsEntities)
+			for (const auto& entity : m_PhysicsEntities)
 			{
 				entity->m_RigidBody.m_AngularVelocity = glm::vec3(0, 0, 0);
 			}
@@ -234,8 +217,8 @@ public:
 			CTerrain* terr = m_MousePicker.GetMousePointOnTerrain(point, m_Game.GetInputManager().GetMousePosition());
 			if (terr != nullptr)
 			{	
-				for (unsigned int y = (unsigned int)terr->GetPosition().z-1; y < (unsigned int)terr->GetPosition().z + 2; y++)
-					for (unsigned int x = (unsigned int)terr->GetPosition().x - 1; x < (unsigned int)terr->GetPosition().x + 2; x++)
+				for (int y = terr->GetPosition().z-1; y < terr->GetPosition().z + 2; y++)
+					for (int x =terr->GetPosition().x - 1; x < terr->GetPosition().x + 2; x++)
 					{
 						if (y < 0 || x < 0 || y > m_TerrainsCount || x > m_TerrainsCount)
 							continue;
@@ -251,33 +234,24 @@ public:
 		if (m_Game.GetInputManager().GetKey(KeyCodes::E))
 		{
 			glm::vec3 point;
-			//CTerrain& terrain = m_Game.GetCurrentScene()->m_Terrains[x][y];
 			CTerrain* terrain = m_MousePicker.GetMousePointOnTerrain(point, m_Game.GetInputManager().GetMousePosition());
 			if (terrain != nullptr)
 			{
-				for (unsigned int y = (unsigned int)terrain->GetPosition().z - 1; y < (unsigned int)terrain->GetPosition().z + 2; y++)
-					for (unsigned int x = (unsigned int)terrain->GetPosition().x - 1; x < (unsigned int)terrain->GetPosition().x + 2; x++)
+				for (int y = terrain->GetPosition().z - 1; y < terrain->GetPosition().z + 2; y++)
+					for (int x = terrain->GetPosition().x - 1; x < terrain->GetPosition().x + 2; x++)
 					{
 						if (y < 0 || x < 0 || y > m_TerrainsCount || x > m_TerrainsCount)
 							continue;
 						terrain->PaintBlendMap(point, m_BrushSize, m_PaintColor);
 					}
 			}			
-		}		
-		
-		//sphere->IncrasePosition(m_Game.m_PhysicsScene.m_Rigibodys[sphere->m_PhysicsBodyIndex].m_AngularVelocity * dt);
+		}
+		player->Move(dt);
+		for (const auto& knight : knights)
+		{
+			knight->Move(dt);
+		}
 
-		static_cast<CPlayer*>(songo.get())->calculateMove(dt);
-		static_cast<CPlayer*>(songo.get())->move(dt, GetHeightOfTerrain(songo->GetPositionXZ()));
-		
-
-		//cout << "H: " << GetHeightOfWorld(songo->GetPositionXZ().x, songo->GetPositionXZ().y)<< endl;;
-
-		//int xx, zz;
-	//	TerrainNumber(songo->GetPositionXZ(), xx, zz);
-		//if (xx >= 0 && zz >= 0)
-		//Utils::PrintVector("Normal: ", );
-	//	m_Terrains[xx][zz].GetNormalOfTerrain(songo->GetPositionXZ().x, songo->GetPositionXZ().y);
 		glm::vec2 window_size = m_Game.GetDisplayManager().GetWindowSize();		
 
 		if (m_Gui.guiButtons[0].CheckStatus(window_size) == GuiButtonState::ACTIVE)
@@ -295,11 +269,11 @@ public:
 	{
 		m_Loader.CleanUp();
 			
-		for (CTerrain& t : m_Terrains)
+		for (auto& t : m_Terrains)
 			t.CleanUp();
 		m_Terrains.clear();
 
-		for (shared_ptr<CEntity>& entity : m_Entities)
+		for (auto& entity : m_Entities)
 		{
 			entity->CleanUp();
 			entity.reset();
@@ -307,14 +281,18 @@ public:
 		m_Entities.clear();
 
 
-		for (CWaterTile& tile : m_WaterTiles)
+		for (auto& tile : m_WaterTiles)
 		{
 			tile.CleanUp();
 		}
-		shared_ptr<CCamera> m_Camera;
-		vector<CWaterTile>	m_WaterTiles;
-		vector<CLight>		m_Lights;
 		
+		for (auto& knight : knights)
+		{
+			knight->CleanUp();
+			knight.reset();
+		}
+		knights.clear();
+
 		m_WaterTiles.clear();
 		m_DaySkyboxTextures.clear();
 		m_NightSkyboxTextures.clear();
@@ -323,13 +301,16 @@ public:
 		m_Gui.guiTexts.clear();		
 		m_Lights.clear();
 		m_Camera.reset();
-		songo.reset();
+		player.reset();
 		m_PhysicsEntities.clear();
 		m_PhysicsScene.m_Rigibodys.clear();
 		return 0;
 	}
 	void LockCameraUnderTerrain()
 	{
+		if (m_CameraType != 0)
+			return;
+
 		float camera_r = 1.f;
 
 		m_Camera->SetDistance(camera_or_distance);
@@ -342,9 +323,9 @@ public:
 
 		std::list<CRigidbody> bodys;
 		float camera_min_distance = .25f;
-		for (CEntity* entity : m_PhysicsEntities)
+		for (auto& entity : m_PhysicsEntities)
 		{
-			for (SFace& f : entity->m_RigidBody.m_Colider.GetFaces())
+			for (auto& f : entity->m_RigidBody.m_Colider.GetFaces())
 			{
 				float x = Utils::IntersectTriangle(f.normal, orginal_pos, orginal_dir, f.vertexes);
 				float y = Utils::IntersectTriangle(-f.normal, orginal_pos, orginal_dir, f.vertexes);

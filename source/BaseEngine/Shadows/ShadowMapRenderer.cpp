@@ -16,19 +16,6 @@ void CShadowMapRenderer::Init(CCamera* camera, glm::vec2 window_size, float fov,
 	m_LightViewMatrix = glm::mat4(1.f);
 	m_ShadowBox.SetLightViewMatrix(m_LightViewMatrix);
 }
-void CShadowMapRenderer::RenderEntityRecursive(CScene* scene, CEntity* entity) const
-{
-	shared_ptr<CModel>& model = scene->GetLoader().m_Models[entity->GetModelId()];
-	RenderEntity(entity, *model);
-
-	for (const shared_ptr<CEntity>& subEntity : entity->GetChildrenEntities())
-	{
-		if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-		//	if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 2.5f * entity->GetMaxNormalizedSize()))
-		//		continue;
-		RenderEntityRecursive(scene, subEntity.get());
-	}
-}
 void CShadowMapRenderer::Render(CScene* scene)
 {
 	if (!m_IsInitialized)
@@ -59,23 +46,10 @@ void CShadowMapRenderer::Render(CScene* scene)
 	m_ShadowShader.LoadProjectionMatrix(m_ProjectionViewMatrix);
 	m_ShadowShader.LoadViewMatrix(scene->GetViewMatrix());
 
-	for (CTerrain* terrain : scene->GetTerrainsInCameraRange())
-	{		
-		for (const shared_ptr<CEntity>& entity : terrain->m_TerrainEntities)
-		{
-			if (entity->GetIsCullingChildren() && !entity->m_Instanced)
-				//if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-				//	continue;
-			RenderEntityRecursive(scene, entity.get());
-		}
-	}
-
-	for (const shared_ptr<CEntity>& entity : scene->GetEntities())
+	for (CEntity* entity : scene->GetEntitiesInCameraRange())
 	{
-		if(!entity->m_Instanced)
-	//	if (scene->GetCamera()->CheckFrustrumSphereCulling(entity->GetWorldPosition(), 1.5f * entity->GetMaxNormalizedSize()))
-		//	continue;
-		RenderEntityRecursive(scene, entity.get());
+		CModel* model = scene->GetLoader().m_Models[entity->GetModelId()].get();
+		RenderEntity(entity, *model);
 	}
 	m_ShadowShader.Stop();
 	Finish();
@@ -115,12 +89,31 @@ void CShadowMapRenderer::RenderEntity(CEntity* entity, CModel & model) const
 		glEnableVertexAttribArray(1);
 		if (model.UseInstacedRendering())
 			glEnableVertexAttribArray(4);
+		if (mesh.UseBoneTransform())
+		{
+			glEnableVertexAttribArray(8);
+			glEnableVertexAttribArray(9);
+		}
+
 		int i = 0;
 		for (const STextInfo& td : mesh.GetMaterial().textures)
 		{
 			glActiveTexture(GL_TEXTURE0 + i);
 			glBindTexture(GL_TEXTURE_2D, td.id);			
 		}
+
+		m_ShadowShader.LoadUseBonesTransformation(static_cast<float>(mesh.UseBoneTransform()));
+		if (model.m_BoneUpdate)
+		{
+			const std::vector<glm::mat4>& transforms = model.GetBonesTransforms(entity->GetAnimationFrame());// m_BoneTransformMatrixes;
+
+			int mid = 0;
+			for (const glm::mat4& m : transforms)
+			{
+				m_ShadowShader.LoadBoneTransform(m, mid++);
+			}
+		}
+
 		if (model.UseInstacedRendering())
 		{
 			m_ShadowShader.LoadUseInstancedRendering(1.f);
@@ -134,6 +127,11 @@ void CShadowMapRenderer::RenderEntity(CEntity* entity, CModel & model) const
 				m_ShadowShader.LoadTransformMatrix(entity->GetRelativeTransformMatrix() * mat);
 				glDrawElements(GL_TRIANGLES, mesh.GetVertexCount(), GL_UNSIGNED_SHORT, 0);
 			}
+		}
+		if (mesh.UseBoneTransform())
+		{
+			glDisableVertexAttribArray(9);
+			glDisableVertexAttribArray(8);
 		}
 		if (model.UseInstacedRendering())
 			glDisableVertexAttribArray(4);

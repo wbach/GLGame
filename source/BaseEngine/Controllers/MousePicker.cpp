@@ -109,8 +109,11 @@ CTerrain* CMousePicker::GetTerrain(float world_x, float world_z)
 {
 	int x = static_cast<int>(world_x / TERRAIN_SIZE);
 	int z = static_cast<int>(world_z / TERRAIN_SIZE);
-	if (x < 0 || z < 0)
+
+	int i = x + m_TerrainsHeight*z;
+
+	if ( i > m_Terrains->size() || i < 0)
 		return nullptr;
-	return nullptr;
-	//return &(*m_Terrains)[x + m_TerrainsHeight*z];
+	//return nullptr;
+	return &(*m_Terrains)[i];
 }

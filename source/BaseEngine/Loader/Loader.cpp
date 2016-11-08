@@ -1,18 +1,21 @@
 #include "Loader.h"
 CLoader::CLoader()
 : m_TextureLoader(m_Textures)
+, m_UpdateThreadRun(false)
 {
 }
 
 void CLoader::CleanUp()
 {
-	for (shared_ptr<CModel>& model : m_Models)
+	m_UpdateThreadRun = false;
+	//animation_thread.join();
+
+	for (auto& model : m_Models)
 	{
 		model->CleanUp();
-		model.reset();
 	}
 	
-	for (STextInfo& text : m_Textures)
+	for (auto& text : m_Textures)
 		text.CleanUp();
 
 	m_Textures.clear();
@@ -23,14 +26,75 @@ void CLoader::SetMaxTextureResolution(const glm::vec2& resolution)
 {
 	m_TextureLoader.SetMaxTextureResolution(resolution);
 }
+void CLoader::CreateUpdateThread()
+{
+	animation_thread =  std::thread(&CLoader::UpdateModelsThread, this);
+	//animation_thread.detach();
+}
+void CLoader::AddModelToUpdate(const unsigned int& eid, const unsigned int& mid)
+{
+	m_IndexesInFrame.insert({ eid, mid });
+}
 void CLoader::UpdateModels(float delta_time)
 {
-	for (int index : m_IndexesUpdatingModels)
+	//cout << m_IndexesInFrame.size() << endl;
+	std::unordered_map<int, int> entities_map_update;
+	for (const auto& n : m_IndexesInFrame)
 	{
-		m_Models[index]->Update(delta_time);
+		if (!entities_map_update.insert({ n.first, 0 }).second)
+			continue;
+		if (!entities_map_update.insert({ n.second, 0 }).second)
+			continue;
+		m_Models[n.second]->Update(delta_time);
 	}
+	m_IndexesInFrame.clear();
 }
-int CLoader::LoadMesh(string file_name,bool time_update)
+void CLoader::UpdateModelsThread()
+{
+	int m_FrameCount = 0;
+	float m_Fps = 0;
+	float m_CurrentTime = 0, m_PreviousTime = 0;
+	float time = 0;
+	m_UpdateThreadRun = true;
+	while (m_UpdateThreadRun)
+	{
+		auto start = std::chrono::high_resolution_clock::now();
+		 
+		cout << "Animation to fps: " << m_Fps << endl;
+		for (const auto& n : m_IndexesInFrame)
+		{
+			m_Models[n.first]->Update(time);
+		}
+		m_IndexesInFrame.clear();
+		
+		time += 0.1;
+
+		if (time > 1000)
+			time = 0;
+
+
+			
+
+			m_FrameCount++;
+
+		//	m_CurrentTime = m_DisplayManager.GetCurrentTime();
+
+			int time_interval = static_cast<int>(m_CurrentTime) - static_cast<int>(m_PreviousTime);
+
+			if (time_interval > 1)
+			{
+				m_Fps = static_cast<float>(m_FrameCount) / static_cast<float>(time_interval);
+				m_PreviousTime = m_CurrentTime;
+				m_FrameCount = 0;
+			}
+			auto end = std::chrono::high_resolution_clock::now();
+
+			if (std::chrono::milliseconds(16) >  std::chrono::duration_cast<std::chrono::milliseconds>(end - start))
+				std::this_thread::sleep_for(std::chrono::milliseconds(16) - std::chrono::duration_cast<std::chrono::milliseconds>(end - start));
+	}
+	
+}
+int CLoader::LoadMesh(string file_name, bool time_update)
 {
 	if (!Utils::CheckFile(file_name)) {
 		std::cout << "[Error] The file " << file_name << " wasnt successfuly opened " << std::endl;
@@ -52,9 +116,12 @@ int CLoader::LoadMesh(string file_name,bool time_update)
 		model = make_shared<CAssimModel>(m_TextureLoader);
 
 	model->InitModel(file_name);
+	model->m_TimeUpdate = time_update;
+	model->SetName(file_name);
 	m_Models.push_back(model);
-	if(time_update)
-		m_IndexesUpdatingModels.push_back(m_Models.size() - 1);
+	model->SetId(m_Models.size() - 1);
+	//if(time_update)
+	//	m_IndexesUpdatingModels.push_back(m_Models.size() - 1);
 
 	return m_Models.size() - 1;
 }

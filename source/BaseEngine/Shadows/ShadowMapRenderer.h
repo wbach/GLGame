@@ -11,7 +11,6 @@ public:
 	CShadowMapRenderer();
 	void Init(CCamera* camera, glm::vec2 window_size, float fov, float near_plane, float shadow_map_size = 2048, float shadows_distance = 35);
 	void Render(CScene* scene);
-	void RenderEntityRecursive(CScene* scene, CEntity* entity) const;
 	void SetShadowMapSize(float size);
 	void CleanUp();
 	const GLuint& GetShadowMap() const;

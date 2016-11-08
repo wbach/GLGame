@@ -11,11 +11,13 @@ CModel::CModel()
 	, m_BoundingSize(0)
 {
 	m_UseFakeLight = false;
+	m_TimeUpdate = false;
+	m_BoneUpdate = false;
 }
 
 void CModel::CreateTransformsVbo(std::vector<glm::mat4>& m)
 {
-	for (CMesh& mesh : m_Meshes)
+	for (auto& mesh : m_Meshes)
 	{
 		mesh.CreateTransformsVbo(m);
 	}
@@ -23,7 +25,7 @@ void CModel::CreateTransformsVbo(std::vector<glm::mat4>& m)
 	m_InstancedSize = m.size();
 }
 
-CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned short> &indices, SMaterial &material)
+CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text_coords, vector<float>&normals, vector<float>&tangents,vector<unsigned short> &indices, SMaterial &material, vector<SVertexBoneData>& bones)
 {
 	CMesh mesh;
 	// Normalize to define scale (height) 1 unit = 1 metr
@@ -38,18 +40,24 @@ CMesh* CModel::AddMesh(string name, vector<float> &positions, vector<float>&text
 	mesh.tangents = tangents;
 	mesh.text_coords = text_coords;
 	mesh.CreateVaoMesh();
+
+	if (!bones.empty())
+	{
+	//	cout << "Bones: " << bones.size() << endl;
+		mesh.CreateBoneVbo(bones);
+	}
 	m_Meshes.push_back(mesh);
 	return &m_Meshes.back();
 }
 void CModel::CreateMeshesVaos()
 {
-	for (CMesh& mesh : m_Meshes)
+	for (auto& mesh : m_Meshes)
 		mesh.CreateVaoMesh();
 }
 void CModel::CalculateBoudnigBox()
 {
 	bool first = true;
-	for (CMesh& mesh : m_Meshes)
+	for (const auto& mesh : m_Meshes)
 	{
 		if (first)
 		{
@@ -112,7 +120,7 @@ const vector<CMesh>& CModel::GetMeshes() const
 float CModel::GetBoundingMaxSize()
 {
 	float max = FLT_MIN;
-	for (CMesh& mesh : m_Meshes)
+	for (auto& mesh : m_Meshes)
 	{
 		if (max < mesh.GetBoundingSize().x)
 			max = mesh.GetBoundingSize().x;
@@ -130,7 +138,7 @@ const unsigned int CModel::GetInstancedSize() const
 }
 void CModel::CleanUp()
 {
-	for (CMesh& mesh : m_Meshes)
+	for (auto& mesh : m_Meshes)
 	{
 		mesh.CleanUp();
 	}
@@ -169,7 +177,7 @@ void CMesh::CleanUp()
 void CMesh::UpdateVertexPosition(const vector<float>& vertices) const
 {	
 	glBindBuffer(GL_ARRAY_BUFFER, m_Vbos[VertexBufferObjects::POSITION]);
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(float), &vertices[0], GL_DYNAMIC_DRAW);
+	glBufferSubData(GL_ARRAY_BUFFER, 0, vertices.size() * sizeof(float), &vertices[0]);
 }
 
 void CMesh::CreateVaoMesh()
@@ -231,6 +239,20 @@ void CMesh::UpdateTransformVbo(std::vector<glm::mat4>& m)
 	glBufferData(GL_ARRAY_BUFFER, sizeof(glm::mat4) * m.size(), &m[0], GL_DYNAMIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+}
+
+void CMesh::CreateBoneVbo(const vector<SVertexBoneData>& bones)
+{
+	glBindVertexArray(m_Vao);
+	glGenBuffers(1, &m_Vbos[VertexBufferObjects::BONES]);
+	glBindBuffer(GL_ARRAY_BUFFER, m_Vbos[VertexBufferObjects::BONES]);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(bones[0]) * bones.size(), &bones[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(8);
+	glVertexAttribIPointer(8, 4, GL_INT, sizeof(SVertexBoneData), (const GLvoid*)0);
+	glEnableVertexAttribArray(9);
+	glVertexAttribPointer(9, 4, GL_FLOAT, GL_FALSE, sizeof(SVertexBoneData), (const GLvoid*) 16);
+	glBindVertexArray(0);	
+	m_BonesInShader = true;
 }
 
 void CMesh::CreateFaces()

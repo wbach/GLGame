@@ -1,6 +1,7 @@
 #pragma once
 #include "ShaderProgram.h"
 #include "../Loader/Material.h"
+
 class CEntityGeometryPassShader : public CShaderProgram
 {
 public:
@@ -25,6 +26,9 @@ public:
 	void LoadShadowValues(const float& is, const float& distance, const float& shadow_map_size) const;
 
 	void LoadClipPlane(const glm::vec4 clip_plane = glm::vec4(0, 1, 0, 100000)) const;
+
+	void LoadUseBonesTransformation(const float& is) const;
+	void LoadBoneTransform(const glm::mat4& transform, unsigned int id) const;
 private:
 	int location_TransformationMatrix;
 	int location_ProjectionMatrix;
@@ -50,4 +54,9 @@ private:
 	int location_ClipPlane;
 	int location_ViewDistance;
 	int location_UseFakeLighting;
+
+	//Animations
+	int location_UseBoneTransform;
+	int location_Bones[MAX_BONES];
+
 };

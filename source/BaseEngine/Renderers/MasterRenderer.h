@@ -24,6 +24,8 @@ public:
 	void FXAApass();
 	void BindFinalPass();
 
+	void UpdateBonesTransform(CScene* scene, CShaderProgram* shaderprogram);
+
 	void RenderWaterTextures(CScene* scene, const bool& shadows);
 	
 	void Render(CScene* scene, const bool& shadows);

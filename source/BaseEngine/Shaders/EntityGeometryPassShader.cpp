@@ -6,6 +6,17 @@ void CEntityGeometryPassShader::Init()
 	Start();
 	GetAllUniformLocations();
 	ConnectTextureUnits();
+	
+	for (int x =0; x < MAX_BONES; x++)
+	{
+		glm::mat4 m(1.f);
+		LoadBoneTransform(m, x);
+	}
+	glm::mat4 m(1.f);
+	//m *= glm::translate(glm::vec3(0, -1, 0));
+	m *= glm::rotate(20.f, glm::vec3(0, 1, 0));
+	LoadBoneTransform(m, 9);
+
 	Stop();
 }
 void CEntityGeometryPassShader::GetAllUniformLocations()
@@ -35,6 +46,17 @@ void CEntityGeometryPassShader::GetAllUniformLocations()
 
 	//Skip render
 	location_ViewDistance	= GetUniformLocation("ViewDistance");
+
+	//Animations
+	location_UseBoneTransform = GetUniformLocation("UseBoneTransform");
+
+	for (int x = 0; x < MAX_BONES; x++)
+	{
+		char tmpVariableName[50]; ; memset(tmpVariableName, 0, 50);
+		sprintf(tmpVariableName, "Bones[%i]", x);
+		location_Bones[x] = GetUniformLocation(tmpVariableName);
+	}
+
 }
 void CEntityGeometryPassShader::ConnectTextureUnits()
 {
@@ -93,6 +115,14 @@ void CEntityGeometryPassShader::LoadShadowValues(const float& is, const float& d
 void CEntityGeometryPassShader::LoadClipPlane(const glm::vec4 clip_plane) const
 {
 	LoadValue(location_ClipPlane, clip_plane);
+}
+void CEntityGeometryPassShader::LoadUseBonesTransformation(const float & is) const
+{
+	LoadValue(location_UseBoneTransform, is);
+}
+void CEntityGeometryPassShader::LoadBoneTransform(const glm::mat4 & transform, unsigned int id) const
+{
+	LoadValue(location_Bones[id], transform);
 }
 void CEntityGeometryPassShader::LoadViewDistance(const float& distance) const
 {

@@ -87,8 +87,8 @@ void CGame::GameLoop()
 	vector<CGUITexture> debug_textures;
 	//debug_textures.push_back(CGUITexture(m_MasterRenderer.GetShadowMap(), glm::vec2(0.5), glm::vec2(0.25,0.25) ));
 	
-	std::thread physics_thread(&CGame::PhysicsLoop, this);
-
+//	std::thread physics_thread(&CGame::PhysicsLoop, this);
+	
 	while (m_ApiMessage != ApiMessages::QUIT && !m_FroceQuit)
 	{	
 		m_ApiMessage = m_DisplayManager.PeekMessage();
@@ -142,7 +142,7 @@ void CGame::GameLoop()
 		m_GuiRenderer.RenderText(texts);
 		m_DisplayManager.Update();
 	}
-	physics_thread.detach();
+	//physics_thread.detach();
 }
 void CGame::PhysicsLoop()
 {

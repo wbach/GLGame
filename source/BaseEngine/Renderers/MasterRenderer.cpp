@@ -94,7 +94,7 @@ void CMasterRenderer::RenderWaterTextures(CScene* scene, const bool& shadows)
 	glEnable(GL_CLIP_DISTANCE0);
 	m_WaterRenderer.SetIsRender(false);
 
-	for (const CWaterTile& tile : scene->GetWaterTiles())
+	for (const auto& tile : scene->GetWaterTiles())
 	{		
 		glm::vec3 camera_position = scene->GetCamera()->GetPosition();
 		float distance = 2 * (camera_position.y - tile.GetPosition().y);
@@ -128,6 +128,9 @@ void CMasterRenderer::RenderWaterTextures(CScene* scene, const bool& shadows)
 }
 void CMasterRenderer::Render(CScene* scene, const bool& shadows)
 {
+	scene->CheckEntitiesInCameraRange();
+	scene->CheckTerrainInCameraRange();
+
 	if (m_WaterQuality > 0.5f)
 	RenderWaterTextures(scene, shadows);
 
@@ -140,6 +143,9 @@ void CMasterRenderer::Render(CScene* scene, const bool& shadows)
 	LightPass(scene, m_WindowSize, m_FilterFrameBuffer.GetFbo());
 	BindFinalPass();
 	FXAApass();
+
+
+
 	//for (const shared_ptr<CEntity>& en : scene->GetEntities())
 	//{
 	//	m_DebugRenderer.DrawLineMesh(m_ProjectionMatrix * scene->GetCamera()->GetViewMatrix(), en->m_RigidBody.m_Colider.GetFaces());
@@ -154,8 +160,7 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 	glEnable(GL_DEPTH_TEST);
 	glDisable(GL_BLEND);
 
-	std::vector<CTerrain*> current_terrains = scene->GetTerrainsInCameraRange();
-
+	std::list<CTerrain*> current_terrains = scene->GetTerrainsInCameraRange();
 
 	// *********************************************SkyBox render******************************************
 	m_SkyBoxRenderer.Render(scene->GetViewMatrix(), scene->m_DayNightCycle.GetDeltaTime(), scene->m_DayNightCycle.GetDayNightBlendFactor());
@@ -173,6 +178,7 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 	m_TerrainRenderer.Render(scene, m_TerrainGeometryPassShader);
 	m_TerrainGeometryPassShader.Stop();
 	//****************************************************************************************************
+	Utils::DisableCulling();
 	// **************************************Entities render**********************************************
 	m_EntityGeometryPassShader.Start();
 	if (shadows)
@@ -186,10 +192,10 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 	m_EntityGeometryPassShader.LoadViewMatrix(scene->GetViewMatrix());	
 	m_EntityRenderer.Render(scene, m_EntityGeometryPassShader);
 	// **************************************Trees use entity render******************************************
-	for (CTerrain* terrain : current_terrains)
+	for (const auto& terrain : current_terrains)
 	{
 		Utils::DisableCulling();
-		for (CAssimModel& model : terrain->m_Trees)
+		for (auto& model : terrain->m_Trees)
 		{
 			m_EntityRenderer.RenderModel(model, m_EntityGeometryPassShader, model.GetInstancedSize());
 		}
@@ -202,7 +208,7 @@ void CMasterRenderer::GeometryPass(CScene* scene, const bool& shadows)
 
 	// **************************************Grass(Flora) render******************************************	
 	
-	for (CTerrain* terrain : current_terrains)
+	for (const auto& terrain : current_terrains)
 	{
 		m_GrassShader.Start();
 		if (shadows)
@@ -256,7 +262,7 @@ void CMasterRenderer::LightPass(CScene* scene, glm::vec2 window_size, GLuint tar
 	int lights = scene->GetLights().size() + 1;
 	m_LightPassShader.LoadLightNumber(lights);
 	int i = 1;
-	for (const CLight& light : scene->GetLights())
+	for (const auto& light : scene->GetLights())
 	{
 		m_LightPassShader.LoadLight(light, i++);
 	}
@@ -275,6 +281,13 @@ void CMasterRenderer::BindFinalPass()
 {
 	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 	glClear(GL_COLOR_BUFFER_BIT);
+}
+void CMasterRenderer::UpdateBonesTransform(CScene* scene, CShaderProgram * shaderprogram)
+{
+	for (const auto& en : scene->GetEntities())
+	{
+
+	}
 }
 void CMasterRenderer::SetSkyBoxTextures(GLuint day, GLuint night)
 {
